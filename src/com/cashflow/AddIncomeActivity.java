@@ -12,10 +12,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
+import com.cashflow.database.Dao;
 import com.cashflow.database.DbHelper;
-import com.cashflow.database.IncomeContract;
+import com.cashflow.database.DatabaseContracts;
 
 public class AddIncomeActivity extends Activity {
+	
+	private static int TRUE = 1;
 
 	@SuppressLint("NewApi")
 	@Override
@@ -55,13 +58,6 @@ public class AddIncomeActivity extends Activity {
 	}
 	
 	public void addIncome(View view) {
-		System.out.println("add incom 1");
-		DbHelper mDbHelper = new DbHelper(this);
-		System.out.println("add incom 2");
-		
-		// Gets the data repository in write mode
-		SQLiteDatabase db = mDbHelper.getWritableDatabase();
-		
 		//Get values
 		EditText editText = (EditText) findViewById(R.id.editText1);
 		int amount = Integer.parseInt(editText.getText().toString());
@@ -74,18 +70,14 @@ public class AddIncomeActivity extends Activity {
 
 		// Create a new map of values, where column names are the keys
 		ContentValues values = new ContentValues();
-		values.put(IncomeContract.Income.COLUMN_NAME_AMOUNT, amount);
-		values.put(IncomeContract.Income.COLUMN_NAME_DATE, date);
-		values.put(IncomeContract.Income.COLUMN_NAME_NOTE, note);
-
-		// Insert the new row, returning the primary key value of the new row
-		long newRowId;
-		newRowId = db.insert(
-				IncomeContract.Income.TABLE_NAME,
-				IncomeContract.Income.COLUMN_NAME_NULLABLE,
-		         values);
+		values.put(DatabaseContracts.Statement.COLUMN_NAME_AMOUNT, amount);
+		values.put(DatabaseContracts.Statement.COLUMN_NAME_DATE, date);
+		values.put(DatabaseContracts.Statement.COLUMN_NAME_IS_INCOME, TRUE);
+		values.put(DatabaseContracts.Statement.COLUMN_NAME_NOTE, note);
 		
-		System.out.println("newRowID: "+ newRowId);
+		Dao dao = new Dao(this);
+		dao.save(values);
+		
 	}
 
 }
