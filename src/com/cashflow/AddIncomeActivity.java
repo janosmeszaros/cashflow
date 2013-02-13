@@ -12,8 +12,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
+import com.cashflow.database.DbHelper;
 import com.cashflow.database.IncomeContract;
-import com.cashflow.database.IncomeContract.IncomeDbHelper;
 
 public class AddIncomeActivity extends Activity {
 
@@ -56,7 +56,7 @@ public class AddIncomeActivity extends Activity {
 	
 	public void addIncome(View view) {
 		System.out.println("add incom 1");
-		IncomeDbHelper mDbHelper = new IncomeDbHelper(this);
+		DbHelper mDbHelper = new DbHelper(this);
 		System.out.println("add incom 2");
 		
 		// Gets the data repository in write mode
