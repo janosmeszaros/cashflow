@@ -15,13 +15,13 @@ public class Dao {
 	
 	public void save(ContentValues values){
 		// Insert the new row, returning the primary key value of the new row
-				long newRowId;
-				newRowId = writableDb.insert(
-						DatabaseContracts.Statement.TABLE_NAME,
-						DatabaseContracts.Statement.COLUMN_NAME_NULLABLE,
-				         values);
-				
-				System.out.println("newRowID: "+ newRowId);
+		long newRowId;
+		newRowId = writableDb.insert(
+				DatabaseContracts.Statement.TABLE_NAME,
+				DatabaseContracts.Statement.COLUMN_NAME_NULLABLE,
+		         values);
+		
+		System.out.println("newRowID: "+ newRowId);
 	}
 	
 }

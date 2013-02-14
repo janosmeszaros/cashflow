@@ -1,22 +1,27 @@
 package com.cashflow;
 
+import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.util.Calendar;
+
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.ContentValues;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
+import com.cashflow.components.DatePickerFragment;
 import com.cashflow.database.Dao;
-import com.cashflow.database.DbHelper;
 import com.cashflow.database.DatabaseContracts;
 
-public class AddIncomeActivity extends Activity {
+public class AddIncomeActivity extends FragmentActivity {
 	
 	private static int TRUE = 1;
 
@@ -31,6 +36,12 @@ public class AddIncomeActivity extends Activity {
 			// Show the Up button in the action bar.
 			getActionBar().setDisplayHomeAsUpEnabled(true);
 		}
+		
+		final Calendar calendar = Calendar.getInstance();
+		DateFormat fmtDateAndTime = DateFormat.getDateInstance(DateFormat.MEDIUM);
+		
+		Button dateButton = (Button) findViewById(R.id.dateButton);
+		dateButton.setText( fmtDateAndTime.format(calendar.getTime()));
 	}
 
 	@Override
@@ -57,27 +68,38 @@ public class AddIncomeActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 	
+
 	public void addIncome(View view) {
 		//Get values
-		EditText editText = (EditText) findViewById(R.id.editText1);
-		int amount = Integer.parseInt(editText.getText().toString());
+		EditText amountText = (EditText) findViewById(R.id.amountText);
 		
-		EditText editText2 = (EditText) findViewById(R.id.editText2);
-		int date = Integer.parseInt(editText2.getText().toString());
+		BigDecimal amount = BigDecimal.ZERO;
+		if(amountText.length() != 0){
+			amount = new BigDecimal(amountText.getText().toString());
+		}
 		
-		EditText editText3 = (EditText) findViewById(R.id.editText3);
-		String note = editText3.getText().toString();
+		Button dateButton = (Button) findViewById(R.id.dateButton);
+		String date = dateButton.getText().toString();
+		
+		EditText notesText = (EditText) findViewById(R.id.notesText);
+		String note = notesText.getText().toString();
 
 		// Create a new map of values, where column names are the keys
 		ContentValues values = new ContentValues();
-		values.put(DatabaseContracts.Statement.COLUMN_NAME_AMOUNT, amount);
+		values.put(DatabaseContracts.Statement.COLUMN_NAME_AMOUNT, amount.toString());
 		values.put(DatabaseContracts.Statement.COLUMN_NAME_DATE, date);
 		values.put(DatabaseContracts.Statement.COLUMN_NAME_IS_INCOME, TRUE);
 		values.put(DatabaseContracts.Statement.COLUMN_NAME_NOTE, note);
 		
 		Dao dao = new Dao(this);
 		dao.save(values);
-		
+		finish();
+	}
+	
+	public void showDatePickerDialog(View view){
+		DialogFragment newFragment = new DatePickerFragment();
+	    newFragment.show(getSupportFragmentManager(), "datePicker");
+	    
 	}
 
 }
