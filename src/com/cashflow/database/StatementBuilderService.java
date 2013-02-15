@@ -2,6 +2,9 @@ package com.cashflow.database;
 
 import java.math.BigDecimal;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import android.app.Activity;
 import android.content.ContentValues;
 
@@ -10,8 +13,10 @@ import android.content.ContentValues;
  * @author Kornel_Refi
  */
 public class StatementBuilderService {
+    private static final Logger LOG = LoggerFactory.getLogger(StatementBuilderService.class);
     private static final int TRUE = 1;
     private static final int FALSE = 0;
+
     private Activity activity;
 
     /**
@@ -75,6 +80,8 @@ public class StatementBuilderService {
         values.put(DatabaseContracts.Statement.COLUMN_NAME_DATE, date);
         values.put(DatabaseContracts.Statement.COLUMN_NAME_IS_INCOME, isIncome ? TRUE : FALSE);
         values.put(DatabaseContracts.Statement.COLUMN_NAME_NOTE, note);
+
+        LOG.debug("Content created: " + values);
 
         return values;
     }

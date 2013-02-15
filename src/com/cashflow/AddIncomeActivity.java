@@ -89,7 +89,7 @@ public class AddIncomeActivity extends FragmentActivity {
         String note = notesText.getText().toString();
 
         StatementBuilderService builderService = new StatementBuilderService(this);
-        if (builderService.saveStatement(amountStr, date, note)) {
+        if (builderService.saveStatement(amountStr, date, note, true)) {
             finish();
         }
     }

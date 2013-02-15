@@ -39,8 +39,6 @@ public class Dao {
         long newRowId;
         // Insert the new row, returning the primary key value of the new row
         newRowId = writableDb.insert(DatabaseContracts.Statement.TABLE_NAME, DatabaseContracts.Statement.COLUMN_NAME_NULLABLE, values);
-
-        // TODO Check logging framework for android
-        LOG.debug("newRowID: " + newRowId);
+        LOG.debug("New row created with row ID: " + newRowId);
     }
 }
