@@ -15,5 +15,6 @@
     <string name="date_label">Date: </string>
     <string name="amount_label">Amount:</string>
     <string name="notes_label">Notes:</string>
+    <string name="amount_hint">0.00</string>
 
 </resources>

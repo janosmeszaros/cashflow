@@ -92,8 +92,11 @@ public class AddIncomeActivity extends FragmentActivity {
 		values.put(DatabaseContracts.Statement.COLUMN_NAME_NOTE, note);
 		
 		Dao dao = new Dao(this);
-		dao.save(values);
-		finish();
+		
+		if(amount.compareTo(BigDecimal.ZERO) != 0){
+			dao.save(values);
+			finish();
+		}
 	}
 	
 	public void showDatePickerDialog(View view){

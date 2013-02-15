@@ -19,7 +19,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/textView1"
-        android:layout_alignLeft="@+id/button1"
         android:layout_alignParentRight="true"
         android:ems="10"
         android:inputType="textMultiLine" />
@@ -61,8 +60,8 @@
         android:layout_marginTop="28dp"
         android:digits="0123456789."
         android:ems="10"
-        android:inputType="numberDecimal"
-        android:hint="1.00"/>
+        android:hint="@string/amount_hint"
+        android:inputType="numberDecimal" />
 
     <Button
         android:id="@+id/dateButton"
