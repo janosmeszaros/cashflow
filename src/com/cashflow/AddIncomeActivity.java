@@ -1,11 +1,9 @@
 package com.cashflow;
 
-import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.util.Calendar;
 
 import android.annotation.SuppressLint;
-import android.content.ContentValues;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -18,8 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.cashflow.components.DatePickerFragment;
-import com.cashflow.database.Dao;
-import com.cashflow.database.DatabaseContracts;
+import com.cashflow.database.StatementBuilderService;
 
 /**
  * Add new income.
@@ -27,8 +24,6 @@ import com.cashflow.database.DatabaseContracts;
  *
  */
 public class AddIncomeActivity extends FragmentActivity {
-
-    private static final int TRUE = 1;
 
     @SuppressLint("NewApi")
     @Override
@@ -93,38 +88,10 @@ public class AddIncomeActivity extends FragmentActivity {
         EditText notesText = (EditText) findViewById(R.id.notesText);
         String note = notesText.getText().toString();
 
-        if (saveIncome(amountStr, date, note)) {
+        StatementBuilderService builderService = new StatementBuilderService(this);
+        if (builderService.saveStatement(amountStr, date, note)) {
             finish();
         }
-    }
-
-    private boolean saveIncome(String amountStr, String date, String note) {
-        BigDecimal amount = parseAmount(amountStr);
-
-        // Create a new map of values, where column names are the keys
-        ContentValues values = createContentValue(amount, date, note);
-
-        //TODO create as stateless service in constructor
-        Dao dao = new Dao(this);
-
-        boolean result = false;
-
-        if (amount.compareTo(BigDecimal.ZERO) != 0) {
-            dao.save(values);
-            result = true;
-        }
-
-        return result;
-    }
-
-    private BigDecimal parseAmount(String amountStr) {
-        BigDecimal amount = BigDecimal.ZERO;
-
-        if (amountStr.length() != 0) {
-            amount = new BigDecimal(amountStr);
-        }
-
-        return amount;
     }
 
     /**
@@ -134,17 +101,6 @@ public class AddIncomeActivity extends FragmentActivity {
     public void showDatePickerDialog(View view) {
         DialogFragment newFragment = new DatePickerFragment();
         newFragment.show(getSupportFragmentManager(), "datePicker");
-    }
-
-    public ContentValues createContentValue(BigDecimal amount, String date, String note) {
-        // Create a new map of values, where column names are the keys
-        ContentValues values = new ContentValues();
-        values.put(DatabaseContracts.Statement.COLUMN_NAME_AMOUNT, amount.toString());
-        values.put(DatabaseContracts.Statement.COLUMN_NAME_DATE, date);
-        values.put(DatabaseContracts.Statement.COLUMN_NAME_IS_INCOME, TRUE);
-        values.put(DatabaseContracts.Statement.COLUMN_NAME_NOTE, note);
-
-        return values;
     }
 
 }
