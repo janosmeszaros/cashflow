@@ -5,14 +5,33 @@ import java.math.BigDecimal;
 import android.app.Activity;
 import android.content.ContentValues;
 
+/**
+ * Class to create statment for dao.
+ * @author Kornel_Refi
+ */
 public class StatementBuilderService {
     private static final int TRUE = 1;
     private Activity activity;
 
+    /**
+     * Default constructor which gets a context for DbHelper.
+     * @param activity
+     *            Required for DbHelper.
+     */
     public StatementBuilderService(Activity activity) {
         this.activity = activity;
     }
 
+    /**
+     * Creates the statement from data and then saves it to db.
+     * @param amountStr
+     *            amount of the statement.
+     * @param date
+     *            Date of the statement.
+     * @param note
+     *            Note for the statement.
+     * @return true if saving was successful, false otherwise.
+     */
     public boolean saveStatement(String amountStr, String date, String note) {
         boolean result = false;
         BigDecimal amount = parseAmount(amountStr);

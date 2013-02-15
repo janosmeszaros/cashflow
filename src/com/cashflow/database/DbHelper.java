@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 /**
  * Database handler class.
  * @author Kornel_Refi
- *
  */
 public class DbHelper extends SQLiteOpenHelper {
 
@@ -15,6 +14,11 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "CashFlow.db";
 
+    /**
+     * Default constructor which gets a context for DbHelper.
+     * @param context
+     *            Required for SQLiteOpenHelper.
+     */
     public DbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }

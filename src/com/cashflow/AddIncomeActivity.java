@@ -21,7 +21,6 @@ import com.cashflow.database.StatementBuilderService;
 /**
  * Add new income.
  * @author Kornel_Refi
- *
  */
 public class AddIncomeActivity extends FragmentActivity {
 
@@ -76,9 +75,10 @@ public class AddIncomeActivity extends FragmentActivity {
     /**
      * Add new income onClick method.
      * @param view
+     *            Required for onclick.
      */
     public void addIncome(View view) {
-        //Get values
+        // Get values
         EditText amountText = (EditText) findViewById(R.id.amountText);
         String amountStr = amountText.getText().toString();
 
@@ -97,6 +97,7 @@ public class AddIncomeActivity extends FragmentActivity {
     /**
      * Date button onClick method.
      * @param view
+     *            Required for onclick.
      */
     public void showDatePickerDialog(View view) {
         DialogFragment newFragment = new DatePickerFragment();

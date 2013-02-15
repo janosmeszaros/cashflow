@@ -12,6 +12,10 @@ import android.widget.Button;
 
 import com.cashflow.components.DatePickerFragment;
 
+/**
+ * Expense adding.
+ * @author Janos_Gyula_Meszaros
+ */
 public class AddExpenseActivity extends FragmentActivity {
 
     @Override
@@ -33,6 +37,11 @@ public class AddExpenseActivity extends FragmentActivity {
         return true;
     }
 
+    /**
+     * Show the date picker. DateButton on click method.
+     * @param view
+     *            Required for onclick.
+     */
     public void showDatePickerDialog(View view) {
         DialogFragment newFragment = new DatePickerFragment();
         newFragment.show(getSupportFragmentManager(), "datePicker");
