@@ -49,7 +49,7 @@ public class StatementBuilderService {
 
     private boolean checkIfNotZero(BigDecimal amount) {
         boolean result = true;
-        if (amount.compareTo(BigDecimal.ZERO) != 0) {
+        if (amount.compareTo(BigDecimal.ZERO) == 0) {
             result = false;
         }
         return result;

@@ -1,5 +1,8 @@
 package com.cashflow.database;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import android.app.Activity;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
@@ -9,6 +12,7 @@ import android.database.sqlite.SQLiteDatabase;
  * @author Kornel_Refi
  */
 public class Dao {
+    private static final Logger LOG = LoggerFactory.getLogger(Dao.class);
     private final SQLiteDatabase writableDb;
 
     /**
@@ -37,6 +41,6 @@ public class Dao {
         newRowId = writableDb.insert(DatabaseContracts.Statement.TABLE_NAME, DatabaseContracts.Statement.COLUMN_NAME_NULLABLE, values);
 
         // TODO Check logging framework for android
-        System.out.println("newRowID: " + newRowId);
+        LOG.debug("newRowID: " + newRowId);
     }
 }
