@@ -41,6 +41,9 @@ public class MainActivity extends Activity {
      * @param view
      */
     public void addExpense(View view) {
+        Intent intent = new Intent(this, AddExpenseActivity.class);
+        startActivity(intent);
+    }
 
     }
 
