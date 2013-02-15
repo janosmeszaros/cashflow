@@ -5,11 +5,11 @@
     tools:context=".AddIncomeActivity" >
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/textViewDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView2"
-        android:layout_below="@+id/textView2"
+        android:layout_alignLeft="@+id/textViewAmount"
+        android:layout_below="@+id/textViewAmount"
         android:layout_marginTop="36dp"
         android:text="@string/date_label"
         android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -18,7 +18,7 @@
         android:id="@+id/notesText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/textView1"
+        android:layout_alignBottom="@+id/textViewNotes"
         android:layout_alignParentRight="true"
         android:ems="10"
         android:inputType="textMultiLine" />
@@ -33,17 +33,17 @@
         android:text="@string/add_income_button" />
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/textViewNotes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView3"
-        android:layout_below="@+id/textView3"
+        android:layout_alignLeft="@+id/textViewDate"
+        android:layout_below="@+id/textViewDate"
         android:layout_marginTop="40dp"
         android:text="@string/notes_label"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/textViewAmount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/amountText"
@@ -67,8 +67,8 @@
         android:id="@+id/dateButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView3"
-        android:layout_alignBottom="@+id/textView3"
+        android:layout_alignBaseline="@+id/textViewDate"
+        android:layout_alignBottom="@+id/textViewDate"
         android:layout_alignLeft="@+id/amountText"
         android:layout_alignParentRight="true"
         android:onClick="showDatePickerDialog" />

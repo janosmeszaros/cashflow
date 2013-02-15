@@ -1,5 +1,11 @@
 /bin
+
 /gen
+
+/res
+/layout
+/*.tmp
+.checkstyle
 .classpath
 .project
-/res/layout/*.tmp
+.settings/*

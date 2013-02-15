@@ -4,24 +4,34 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 
+/**
+ * .
+ * @author Kornel_Refi
+ *
+ */
 public class Dao {
-	private SQLiteDatabase writableDb;
-	
-	public Dao(Activity activity) {
-		DbHelper mDbHelper = new DbHelper(activity);
-		// Gets the data repository in write mode
-		this.writableDb = mDbHelper.getWritableDatabase();
-	}
-	
-	public void save(ContentValues values){
-		// Insert the new row, returning the primary key value of the new row
-		long newRowId;
-		newRowId = writableDb.insert(
-				DatabaseContracts.Statement.TABLE_NAME,
-				DatabaseContracts.Statement.COLUMN_NAME_NULLABLE,
-		         values);
-		
-		System.out.println("newRowID: "+ newRowId);
-	}
-	
+    private final SQLiteDatabase writableDb;
+
+    public Dao(Activity activity) {
+        //TODO what if activity is null?
+        this.writableDb = createWritableDatabase(activity);
+    }
+
+    private SQLiteDatabase createWritableDatabase(Activity activity) {
+        DbHelper mDbHelper = new DbHelper(activity);
+        return mDbHelper.getWritableDatabase();
+    }
+
+    /**
+     * Persists values to the database.
+     * @param values
+     */
+    public void save(ContentValues values) {
+        long newRowId;
+        // Insert the new row, returning the primary key value of the new row
+        newRowId = writableDb.insert(DatabaseContracts.Statement.TABLE_NAME, DatabaseContracts.Statement.COLUMN_NAME_NULLABLE, values);
+
+        //TODO Check logging framework for android
+        System.out.println("newRowID: " + newRowId);
+    }
 }
