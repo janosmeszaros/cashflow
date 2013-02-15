@@ -9,7 +9,6 @@ import android.view.View;
 /**
  * Main activity.
  * @author Kornel_Refi
- *
  */
 public class MainActivity extends Activity {
 
@@ -43,8 +42,6 @@ public class MainActivity extends Activity {
     public void addExpense(View view) {
         Intent intent = new Intent(this, AddExpenseActivity.class);
         startActivity(intent);
-    }
-
     }
 
     /**

@@ -3,12 +3,16 @@ package com.cashflow;
 import java.text.DateFormat;
 import java.util.Calendar;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
+import android.view.View;
 import android.widget.Button;
 
-public class AddExpenseActivity extends Activity {
+import com.cashflow.components.DatePickerFragment;
+
+public class AddExpenseActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +31,11 @@ public class AddExpenseActivity extends Activity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.activity_add_expense, menu);
         return true;
+    }
+
+    public void showDatePickerDialog(View view) {
+        DialogFragment newFragment = new DatePickerFragment();
+        newFragment.show(getSupportFragmentManager(), "datePicker");
     }
 
 }

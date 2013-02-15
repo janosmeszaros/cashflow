@@ -14,21 +14,25 @@ public class StatementBuilderService {
     }
 
     public boolean saveStatement(String amountStr, String date, String note) {
+        boolean result = false;
         BigDecimal amount = parseAmount(amountStr);
 
-        // Create a new map of values, where column names are the keys
-        ContentValues values = createContentValue(amount, date, note);
+        if (checkIfNotZero(amount)) {
+            ContentValues values = createContentValue(amount, date, note);
 
-        //TODO create as stateless service in constructor
-        Dao dao = new Dao(activity);
-
-        boolean result = false;
-
-        if (amount.compareTo(BigDecimal.ZERO) != 0) {
+            Dao dao = new Dao(activity);
             dao.save(values);
+
             result = true;
         }
+        return result;
+    }
 
+    private boolean checkIfNotZero(BigDecimal amount) {
+        boolean result = true;
+        if (amount.compareTo(BigDecimal.ZERO) != 0) {
+            result = false;
+        }
         return result;
     }
 
@@ -42,7 +46,7 @@ public class StatementBuilderService {
         return amount;
     }
 
-    public ContentValues createContentValue(BigDecimal amount, String date, String note) {
+    private ContentValues createContentValue(BigDecimal amount, String date, String note) {
         // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
         values.put(DatabaseContracts.Statement.COLUMN_NAME_AMOUNT, amount.toString());

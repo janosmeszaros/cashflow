@@ -11,13 +11,14 @@
         android:id="@+id/LinearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:weightSum="1" >
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="5dp"
             android:text="@string/amount_label"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -27,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="5dp"
             android:digits="0123456789."
             android:ems="10"
             android:hint="@string/amount_hint"
@@ -39,7 +40,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:weightSum="1" >
 
         <TextView
             android:id="@+id/textView3"
@@ -55,12 +57,12 @@
             android:layout_marginBottom="20dp"
             android:layout_marginLeft="40dp"
             android:onClick="showDatePickerDialog" />
-
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:weightSum="1" >
 
         <TextView
             android:id="@+id/textView1"
@@ -77,16 +79,15 @@
             android:layout_marginLeft="35dp"
             android:ems="10"
             android:inputType="textMultiLine" />
-
     </LinearLayout>
 
     <Button
         android:id="@+id/addExpenseButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:layout_marginBottom="14dp"
         android:onClick="addExpense"
-        android:layout_gravity="center_horizontal"
         android:text="@string/add_expense_button" />
 
 </LinearLayout>
