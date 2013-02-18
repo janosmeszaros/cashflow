@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 /**
  * Database handler class.
  * @author Kornel_Refi
- *
  */
 public class DbHelper extends SQLiteOpenHelper {
 
@@ -15,13 +14,18 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "CashFlow.db";
 
+    /**
+     * Default constructor which gets a context for DbHelper.
+     * @param context
+     *            Required for SQLiteOpenHelper.
+     */
     public DbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(DatabaseContracts.Statement.SQL_CREATE_ENTRIES);
+        db.execSQL(DatabaseContracts.AbstractStatement.SQL_CREATE_ENTRIES);
 
     }
 
@@ -29,7 +33,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // This database is only a cache for online data, so its upgrade policy is
         // to simply to discard the data and start over
-        db.execSQL(DatabaseContracts.Statement.SQL_DELETE_ENTRIES);
+        db.execSQL(DatabaseContracts.AbstractStatement.SQL_DELETE_ENTRIES);
         onCreate(db);
     }
 

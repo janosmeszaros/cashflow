@@ -2,33 +2,64 @@ package com.cashflow.database;
 
 import java.math.BigDecimal;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import android.app.Activity;
 import android.content.ContentValues;
 
+/**
+ * Class to create statement for dao.
+ * @author Kornel_Refi
+ */
 public class StatementBuilderService {
+    private static final Logger LOG = LoggerFactory.getLogger(StatementBuilderService.class);
     private static final int TRUE = 1;
+    private static final int FALSE = 0;
+
     private Activity activity;
 
+    /**
+     * Default constructor which gets a context for DbHelper.
+     * @param activity
+     *            Required for DbHelper.
+     */
     public StatementBuilderService(Activity activity) {
         this.activity = activity;
     }
 
-    public boolean saveStatement(String amountStr, String date, String note) {
+    /**
+     * Creates the statement from data and then saves it to db.
+     * @param amountStr
+     *            amount of the statement.
+     * @param date
+     *            Date of the statement.
+     * @param note
+     *            Note for the statement.
+     * @param isIncome
+     *            True if the statement is income, false otherwise
+     * @return true if saving was successful, false otherwise.
+     */
+    public boolean saveStatement(String amountStr, String date, String note, boolean isIncome) {
+        boolean result = false;
         BigDecimal amount = parseAmount(amountStr);
 
-        // Create a new map of values, where column names are the keys
-        ContentValues values = createContentValue(amount, date, note);
+        if (checkIfNotZero(amount)) {
+            ContentValues values = createContentValue(amount, date, note, isIncome);
 
-        //TODO create as stateless service in constructor
-        Dao dao = new Dao(activity);
-
-        boolean result = false;
-
-        if (amount.compareTo(BigDecimal.ZERO) != 0) {
+            Dao dao = new Dao(activity);
             dao.save(values);
+
             result = true;
         }
+        return result;
+    }
 
+    private boolean checkIfNotZero(BigDecimal amount) {
+        boolean result = true;
+        if (amount.compareTo(BigDecimal.ZERO) == 0) {
+            result = false;
+        }
         return result;
     }
 
@@ -42,13 +73,15 @@ public class StatementBuilderService {
         return amount;
     }
 
-    public ContentValues createContentValue(BigDecimal amount, String date, String note) {
+    private ContentValues createContentValue(BigDecimal amount, String date, String note, boolean isIncome) {
         // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
-        values.put(DatabaseContracts.Statement.COLUMN_NAME_AMOUNT, amount.toString());
-        values.put(DatabaseContracts.Statement.COLUMN_NAME_DATE, date);
-        values.put(DatabaseContracts.Statement.COLUMN_NAME_IS_INCOME, TRUE);
-        values.put(DatabaseContracts.Statement.COLUMN_NAME_NOTE, note);
+        values.put(DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT, amount.toString());
+        values.put(DatabaseContracts.AbstractStatement.COLUMN_NAME_DATE, date);
+        values.put(DatabaseContracts.AbstractStatement.COLUMN_NAME_IS_INCOME, isIncome ? TRUE : FALSE);
+        values.put(DatabaseContracts.AbstractStatement.COLUMN_NAME_NOTE, note);
+
+        LOG.debug("Content created: " + values);
 
         return values;
     }

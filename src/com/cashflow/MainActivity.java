@@ -9,7 +9,6 @@ import android.view.View;
 /**
  * Main activity.
  * @author Kornel_Refi
- *
  */
 public class MainActivity extends Activity {
 
@@ -29,6 +28,7 @@ public class MainActivity extends Activity {
     /**
      * Add new income onClick method.
      * @param view
+     *            Required for onclick.
      */
     public void addIncome(View view) {
         Intent intent = new Intent(this, AddIncomeActivity.class);
@@ -39,13 +39,17 @@ public class MainActivity extends Activity {
     /**
      * Add new Expense onClick method.
      * @param view
+     *            Required for onclick.
      */
     public void addExpense(View view) {
-
+        Intent intent = new Intent(this, AddExpenseActivity.class);
+        startActivity(intent);
     }
 
     /**
      * List incomes onClick method.
+     * @param view
+     *            Required for onclick.
      */
     public void listIncomes(View view) {
 
@@ -54,6 +58,7 @@ public class MainActivity extends Activity {
     /**
      * List expenses onClick method.
      * @param view
+     *            Required for onclick.
      */
     public void listExpenses(View view) {
 

@@ -16,7 +16,6 @@ import com.cashflow.R;
 /**
  * DatePicker fragment.
  * @author Kornel_Refi
- *
  */
 public class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
@@ -32,9 +31,7 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
         return new DatePickerDialog(getActivity(), this, year, month, day);
     }
 
-    /**
-     * Done button onClick method.
-     */
+    @Override
     public void onDateSet(DatePicker view, int year, int month, int day) {
         Date setDate = getDateForYearMonthDay(year, month, day);
 

@@ -1,5 +1,8 @@
 package com.cashflow.database;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import android.app.Activity;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
@@ -7,13 +10,18 @@ import android.database.sqlite.SQLiteDatabase;
 /**
  * .
  * @author Kornel_Refi
- *
  */
 public class Dao {
+    private static final Logger LOG = LoggerFactory.getLogger(Dao.class);
     private final SQLiteDatabase writableDb;
 
+    /**
+     * Default constructor which get an activity.
+     * @param activity
+     *            Required for DbHelper.
+     */
     public Dao(Activity activity) {
-        //TODO what if activity is null?
+        // TODO what if activity is null?
         this.writableDb = createWritableDatabase(activity);
     }
 
@@ -25,13 +33,12 @@ public class Dao {
     /**
      * Persists values to the database.
      * @param values
+     *            Values to save.
      */
     public void save(ContentValues values) {
         long newRowId;
         // Insert the new row, returning the primary key value of the new row
-        newRowId = writableDb.insert(DatabaseContracts.Statement.TABLE_NAME, DatabaseContracts.Statement.COLUMN_NAME_NULLABLE, values);
-
-        //TODO Check logging framework for android
-        System.out.println("newRowID: " + newRowId);
+        newRowId = writableDb.insert(DatabaseContracts.AbstractStatement.TABLE_NAME, DatabaseContracts.AbstractStatement.COLUMN_NAME_NULLABLE, values);
+        LOG.debug("New row created with row ID: " + newRowId);
     }
 }
