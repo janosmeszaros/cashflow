@@ -68,6 +68,7 @@ public class AddExpenseActivity extends FragmentActivity {
     public void showDatePickerDialog(View view) {
         DialogFragment newFragment = new DatePickerFragment();
         newFragment.show(getSupportFragmentManager(), "datePicker");
+
     }
 
 }

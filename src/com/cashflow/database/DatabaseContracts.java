@@ -20,8 +20,9 @@ public abstract class DatabaseContracts {
      *
      */
     public abstract static class Statement implements BaseColumns {
-        //if you instead set this to "null", then the framework will not insert a row when there are no values
-        public static final String COLUMN_NAME_NULLABLE = null;
+<<<<<<< .mine        //if you instead set this to "null", then the framework will not insert a row when there are no values
+=======        // if you instead set this to "null", then the framework will not insert a row when there are no values
+>>>>>>> .theirs        public static final String COLUMN_NAME_NULLABLE = null;
         public static final String TABLE_NAME = "income";
         public static final String COLUMN_NAME_AMOUNT = "amount";
         public static final String COLUMN_NAME_IS_INCOME = "is_income";
