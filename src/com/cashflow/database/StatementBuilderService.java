@@ -76,10 +76,10 @@ public class StatementBuilderService {
     private ContentValues createContentValue(BigDecimal amount, String date, String note, boolean isIncome) {
         // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
-        values.put(DatabaseContracts.Statement.COLUMN_NAME_AMOUNT, amount.toString());
-        values.put(DatabaseContracts.Statement.COLUMN_NAME_DATE, date);
-        values.put(DatabaseContracts.Statement.COLUMN_NAME_IS_INCOME, isIncome ? TRUE : FALSE);
-        values.put(DatabaseContracts.Statement.COLUMN_NAME_NOTE, note);
+        values.put(DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT, amount.toString());
+        values.put(DatabaseContracts.AbstractStatement.COLUMN_NAME_DATE, date);
+        values.put(DatabaseContracts.AbstractStatement.COLUMN_NAME_IS_INCOME, isIncome ? TRUE : FALSE);
+        values.put(DatabaseContracts.AbstractStatement.COLUMN_NAME_NOTE, note);
 
         LOG.debug("Content created: " + values);
 

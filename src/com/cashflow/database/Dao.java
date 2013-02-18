@@ -38,7 +38,7 @@ public class Dao {
     public void save(ContentValues values) {
         long newRowId;
         // Insert the new row, returning the primary key value of the new row
-        newRowId = writableDb.insert(DatabaseContracts.Statement.TABLE_NAME, DatabaseContracts.Statement.COLUMN_NAME_NULLABLE, values);
+        newRowId = writableDb.insert(DatabaseContracts.AbstractStatement.TABLE_NAME, DatabaseContracts.AbstractStatement.COLUMN_NAME_NULLABLE, values);
         LOG.debug("New row created with row ID: " + newRowId);
     }
 }

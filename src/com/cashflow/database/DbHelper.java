@@ -25,7 +25,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(DatabaseContracts.Statement.SQL_CREATE_ENTRIES);
+        db.execSQL(DatabaseContracts.AbstractStatement.SQL_CREATE_ENTRIES);
 
     }
 
@@ -33,7 +33,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // This database is only a cache for online data, so its upgrade policy is
         // to simply to discard the data and start over
-        db.execSQL(DatabaseContracts.Statement.SQL_DELETE_ENTRIES);
+        db.execSQL(DatabaseContracts.AbstractStatement.SQL_DELETE_ENTRIES);
         onCreate(db);
     }
 
