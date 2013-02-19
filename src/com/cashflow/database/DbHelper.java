@@ -8,19 +8,48 @@ import android.database.sqlite.SQLiteOpenHelper;
  * Database handler class.
  * @author Kornel_Refi
  */
-public class DbHelper extends SQLiteOpenHelper {
+public final class DbHelper extends SQLiteOpenHelper {
 
     // If you change the database schema, you must increment the database version.
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "CashFlow.db";
+
+    private static DbHelper reader;
+    private static DbHelper writer;
 
     /**
      * Default constructor which gets a context for DbHelper.
      * @param context
      *            Required for SQLiteOpenHelper.
      */
-    public DbHelper(Context context) {
+    private DbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+
+    /**
+     * Returns a read-only {@link SQLiteDatabase} instance
+     * @param context
+     *            context for the databasehelper.
+     * @return readable database.
+     */
+    public static synchronized SQLiteDatabase getReadableDatabase(final Context context) {
+        if (reader == null) {
+            reader = new DbHelper(context.getApplicationContext());
+        }
+        return reader.getReadableDatabase();
+    }
+
+    /**
+     * Returns a writable {@link SQLiteDatabase} instance
+     * @param context
+     *            context for the databasehelper.
+     * @return writable database.
+     */
+    public static synchronized SQLiteDatabase getWritableDatabase(final Context context) {
+        if (writer == null) {
+            writer = new DbHelper(context.getApplicationContext());
+        }
+        return writer.getWritableDatabase();
     }
 
     @Override

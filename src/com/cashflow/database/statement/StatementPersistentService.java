@@ -1,31 +1,35 @@
-package com.cashflow.database;
+package com.cashflow.database.statement;
 
 import java.math.BigDecimal;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import android.app.Activity;
 import android.content.ContentValues;
+
+import com.cashflow.database.DatabaseContracts;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * Class to create statement for dao.
  * @author Kornel_Refi
  */
-public class StatementBuilderService {
-    private static final Logger LOG = LoggerFactory.getLogger(StatementBuilderService.class);
+@Singleton
+public class StatementPersistentService {
+    private static final Logger LOG = LoggerFactory.getLogger(StatementPersistentService.class);
     private static final int TRUE = 1;
     private static final int FALSE = 0;
-
-    private Activity activity;
+    private final StatementDao dao;
 
     /**
      * Default constructor which gets a context for DbHelper.
      * @param activity
      *            Required for DbHelper.
      */
-    public StatementBuilderService(Activity activity) {
-        this.activity = activity;
+    @Inject
+    public StatementPersistentService(StatementDao dao) {
+        this.dao = dao;
     }
 
     /**
@@ -47,7 +51,6 @@ public class StatementBuilderService {
         if (checkIfNotZero(amount)) {
             ContentValues values = createContentValue(amount, date, note, isIncome);
 
-            Dao dao = new Dao(activity);
             dao.save(values);
 
             result = true;

@@ -6,16 +6,26 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 
+import com.cashflow.database.statement.StatementDao;
+import com.cashflow.database.statement.StatementPersistentService;
+import com.google.inject.Inject;
+
 /**
  * Main activity.
  * @author Kornel_Refi
  */
 public class MainActivity extends Activity {
+    @Inject
+    StatementDao statementDao;
+
+    @Inject
+    StatementPersistentService statementPersistentService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
     }
 
     @Override

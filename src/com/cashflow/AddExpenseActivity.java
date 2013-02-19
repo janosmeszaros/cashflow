@@ -3,22 +3,26 @@ package com.cashflow;
 import java.text.DateFormat;
 import java.util.Calendar;
 
+import roboguice.activity.RoboFragmentActivity;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.cashflow.components.DatePickerFragment;
-import com.cashflow.database.StatementBuilderService;
+import com.cashflow.database.statement.StatementPersistentService;
+import com.google.inject.Inject;
 
 /**
  * Expense adding.
  * @author Janos_Gyula_Meszaros
  */
-public class AddExpenseActivity extends FragmentActivity {
+public class AddExpenseActivity extends RoboFragmentActivity {
+
+    @Inject
+    private StatementPersistentService service;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +58,7 @@ public class AddExpenseActivity extends FragmentActivity {
         EditText notesText = (EditText) findViewById(R.id.notesText);
         String note = notesText.getText().toString();
 
-        StatementBuilderService builderService = new StatementBuilderService(this);
-        if (builderService.saveStatement(amountStr, date, note, false)) {
+        if (service.saveStatement(amountStr, date, note, false)) {
             finish();
         }
     }

@@ -3,10 +3,10 @@ package com.cashflow;
 import java.text.DateFormat;
 import java.util.Calendar;
 
+import roboguice.activity.RoboFragmentActivity;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,13 +14,17 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.cashflow.components.DatePickerFragment;
-import com.cashflow.database.StatementBuilderService;
+import com.cashflow.database.statement.StatementPersistentService;
+import com.google.inject.Inject;
 
 /**
  * Add new income.
  * @author Kornel_Refi
  */
-public class AddIncomeActivity extends FragmentActivity {
+public class AddIncomeActivity extends RoboFragmentActivity {
+
+    @Inject
+    private StatementPersistentService service;
 
     @SuppressLint("NewApi")
     @Override
@@ -86,8 +90,7 @@ public class AddIncomeActivity extends FragmentActivity {
         EditText notesText = (EditText) findViewById(R.id.notesText);
         String note = notesText.getText().toString();
 
-        StatementBuilderService builderService = new StatementBuilderService(this);
-        if (builderService.saveStatement(amountStr, date, note, true)) {
+        if (service.saveStatement(amountStr, date, note, true)) {
             finish();
         }
     }
