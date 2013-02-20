@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.util.Calendar;
 
 import roboguice.activity.RoboFragmentActivity;
+import roboguice.inject.InjectView;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -26,6 +27,13 @@ public class AddIncomeActivity extends RoboFragmentActivity {
     @Inject
     private StatementPersistentService service;
 
+    @InjectView(R.id.amountText)
+    private EditText amountText;
+    @InjectView(R.id.dateButton)
+    private Button dateButton;
+    @InjectView(R.id.notesText)
+    private EditText notesText;
+
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +49,6 @@ public class AddIncomeActivity extends RoboFragmentActivity {
         final Calendar calendar = Calendar.getInstance();
         DateFormat fmtDateAndTime = DateFormat.getDateInstance(DateFormat.MEDIUM);
 
-        Button dateButton = (Button) findViewById(R.id.dateButton);
         dateButton.setText(fmtDateAndTime.format(calendar.getTime()));
     }
 
@@ -80,14 +87,8 @@ public class AddIncomeActivity extends RoboFragmentActivity {
      *            Required for onclick.
      */
     public void addIncome(View view) {
-        // Get values
-        EditText amountText = (EditText) findViewById(R.id.amountText);
         String amountStr = amountText.getText().toString();
-
-        Button dateButton = (Button) findViewById(R.id.dateButton);
         String date = dateButton.getText().toString();
-
-        EditText notesText = (EditText) findViewById(R.id.notesText);
         String note = notesText.getText().toString();
 
         if (service.saveStatement(amountStr, date, note, true)) {
