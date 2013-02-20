@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 
 import com.cashflow.database.DatabaseContracts;
 import com.google.inject.Inject;
@@ -56,6 +57,31 @@ public class StatementPersistentService {
             result = true;
         }
         return result;
+    }
+
+    /**
+     * Get all statement from a statement type.
+     * @param type
+     *            specify the statement type which has to be returned.
+     * @return a cursor which contains the values.
+     */
+    public Cursor getStatement(StatementType type) {
+        Cursor result = null;
+        if (isExpense(type)) {
+            result = dao.getExpenses();
+        } else if (isIncome(type)) {
+            result = dao.getIncomes();
+        }
+
+        return result;
+    }
+
+    private boolean isIncome(StatementType type) {
+        return type.equals(StatementType.Income);
+    }
+
+    private boolean isExpense(StatementType type) {
+        return type.equals(StatementType.Expense);
     }
 
     private boolean checkIfNotZero(BigDecimal amount) {

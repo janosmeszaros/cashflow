@@ -62,7 +62,8 @@ public class MainActivity extends Activity {
      *            Required for onclick.
      */
     public void listIncomes(View view) {
-
+        Intent intent = new Intent(this, ListIncomes.class);
+        startActivity(intent);
     }
 
     /**
@@ -71,7 +72,8 @@ public class MainActivity extends Activity {
      *            Required for onclick.
      */
     public void listExpenses(View view) {
-
+        Intent intent = new Intent(this, ListExpenses.class);
+        startActivity(intent);
     }
 
 }
