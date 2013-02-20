@@ -2,10 +2,15 @@ package com.cashflow;
 
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_DATE;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import roboguice.activity.RoboListActivity;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.view.View;
 
 import com.cashflow.database.statement.StatementPersistentService;
 import com.cashflow.database.statement.StatementType;
@@ -16,22 +21,13 @@ import com.google.inject.Inject;
  * @author Janos_Gyula_Meszaros
  */
 public class ListExpenses extends RoboListActivity {
+    private static final Logger LOG = LoggerFactory.getLogger(ListExpenses.class);
     private String[] fromColumns = { COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE };
     private int[] toViews = { R.id.toptext, R.id.bottomtext };
 
     private SimpleCursorAdapter mAdapter;
     @Inject
     private StatementPersistentService service;
-
-    // /**
-    // * Simple constructor which takes provider to database connection.
-    // * @param provider
-    // * to takes database connection.
-    // */
-    // @Inject
-    // public ListExpenses(SQLiteDbProvider provider) {
-    // this.provider = provider;
-    // }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,4 +42,12 @@ public class ListExpenses extends RoboListActivity {
         setListAdapter(mAdapter);
     }
 
+    /**
+     * anyád
+     * @param view
+     *            anyád
+     */
+    public void onClick(View view) {
+        LOG.debug("Edit button clicked");
+    }
 }
