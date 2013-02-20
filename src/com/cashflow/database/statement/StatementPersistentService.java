@@ -69,8 +69,15 @@ public class StatementPersistentService {
         Cursor result = null;
         if (isExpense(type)) {
             result = dao.getExpenses();
+        } else if (isIncome(type)) {
+            result = dao.getIncomes();
         }
+
         return result;
+    }
+
+    private boolean isIncome(StatementType type) {
+        return type.equals(StatementType.Income);
     }
 
     private boolean isExpense(StatementType type) {

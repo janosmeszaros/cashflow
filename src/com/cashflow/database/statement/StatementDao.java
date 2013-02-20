@@ -5,6 +5,7 @@ import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_N
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_DATE;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_NOTE;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.EXPENSE_SELECTION;
+import static com.cashflow.database.DatabaseContracts.AbstractStatement.INCOME_SELECTION;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.TABLE_NAME;
 
 import org.slf4j.Logger;
@@ -66,6 +67,19 @@ public class StatementDao {
         SQLiteDatabase db = provider.getReadableDb();
         Cursor cursor =
                 db.query(TABLE_NAME, PROJECTION, EXPENSE_SELECTION,
+                        null,
+                        null, null, null);
+        return cursor;
+    }
+
+    /**
+     * Returns all of the incomes.
+     * @return Cursor which contains the data.
+     */
+    public Cursor getIncomes() {
+        SQLiteDatabase db = provider.getReadableDb();
+        Cursor cursor =
+                db.query(TABLE_NAME, PROJECTION, INCOME_SELECTION,
                         null,
                         null, null, null);
         return cursor;

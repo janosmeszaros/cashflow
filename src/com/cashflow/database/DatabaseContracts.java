@@ -30,6 +30,8 @@ public abstract class DatabaseContracts {
 
         public static final String EXPENSE_SELECTION = "("
                 + COLUMN_NAME_IS_INCOME + " == 0)";
+        public static final String INCOME_SELECTION = "("
+                + COLUMN_NAME_IS_INCOME + " == 1)";
 
         static final String SQL_CREATE_ENTRIES = "CREATE TABLE " + DatabaseContracts.AbstractStatement.TABLE_NAME + " ("
                 + DatabaseContracts.AbstractStatement._ID + " INTEGER PRIMARY KEY,"
