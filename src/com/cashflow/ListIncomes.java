@@ -10,6 +10,7 @@ import roboguice.activity.RoboListActivity;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.view.Menu;
 import android.view.View;
 
 import com.cashflow.database.statement.StatementPersistentService;
@@ -17,10 +18,10 @@ import com.cashflow.database.statement.StatementType;
 import com.google.inject.Inject;
 
 /**
- * Class for the list expense activity.
+ * Basic class to list incomes.
  * @author Janos_Gyula_Meszaros
  */
-public class ListExpenses extends RoboListActivity {
+public class ListIncomes extends RoboListActivity {
     private static final Logger LOG = LoggerFactory.getLogger(ListExpenses.class);
     private String[] fromColumns = { COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE };
     private int[] toViews = { R.id.toptext, R.id.bottomtext };
@@ -34,12 +35,19 @@ public class ListExpenses extends RoboListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_statements);
 
-        Cursor cursor = service.getStatement(StatementType.Expense);
+        Cursor cursor = service.getStatement(StatementType.Income);
 
         mAdapter = new SimpleCursorAdapter(this,
                 R.layout.list_statements_row, cursor,
                 fromColumns, toViews, 0);
         setListAdapter(mAdapter);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.list_incomes, menu);
+        return true;
     }
 
     /**
@@ -50,4 +58,5 @@ public class ListExpenses extends RoboListActivity {
     public void onClick(View view) {
         LOG.debug("Edit button clicked");
     }
+
 }

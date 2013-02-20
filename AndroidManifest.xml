@@ -39,6 +39,10 @@
             android:name="com.cashflow.ListExpenses"
             android:label="@string/title_activity_list_expenses" >
         </activity>
+        <activity
+            android:name="com.cashflow.ListIncomes"
+            android:label="@string/title_activity_list_incomes" >
+        </activity>
     </application>
 
 </manifest>
