@@ -16,10 +16,10 @@ import com.google.inject.Inject;
  */
 public class MainActivity extends Activity {
     @Inject
-    StatementDao statementDao;
+    private StatementDao statementDao;
 
     @Inject
-    StatementPersistentService statementPersistentService;
+    private StatementPersistentService statementPersistentService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

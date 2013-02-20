@@ -24,8 +24,8 @@ public class StatementPersistentService {
 
     /**
      * Default constructor which gets a context for DbHelper.
-     * @param activity
-     *            Required for DbHelper.
+     * @param dao
+     *            {@link StatementDao} to use to save data.
      */
     @Inject
     public StatementPersistentService(StatementDao dao) {

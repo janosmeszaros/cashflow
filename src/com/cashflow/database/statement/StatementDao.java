@@ -4,14 +4,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import android.content.ContentValues;
-import android.content.Context;
 
 import com.cashflow.database.DatabaseContracts;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * .
+ * Basic dao for the statements.
  * @author Kornel_Refi
  */
 @Singleton
@@ -21,18 +20,18 @@ public class StatementDao {
     private SQLiteDbProvider provider;
 
     /**
-     * Default constructor which get an activity.
-     * @param context
-     *            Required for DbHelper.
+     * Default constructor which get an Provider.
+     * @param provider
+     *            Provider to get database.
      */
-    //TODO javadoc refresh
     @Inject
     public StatementDao(SQLiteDbProvider provider) {
+        nullCheck(provider);
         this.provider = provider;
     }
 
-    private void nullCheck(Context context) {
-        if (context == null) {
+    private void nullCheck(SQLiteDbProvider provider) {
+        if (provider == null) {
             throw new IllegalArgumentException();
         }
     }

@@ -7,6 +7,10 @@ import com.cashflow.database.statement.StatementPersistentService;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 
+/**
+ * Roboguice configuration file.
+ * @author Janos_Gyula_Meszaros
+ */
 public class AppModule implements Module {
 
     @Override
