@@ -71,7 +71,8 @@ public class MainActivity extends Activity {
      *            Required for onclick.
      */
     public void listExpenses(View view) {
-
+        Intent intent = new Intent(this, ListExpenses.class);
+        startActivity(intent);
     }
 
 }
