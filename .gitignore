@@ -1,8 +1,6 @@
 /bin
-
 /gen
 /libs
-/res
 /layout
 /*.tmp
 .checkstyle

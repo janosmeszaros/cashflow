@@ -1,9 +1,8 @@
-package com.cashflow.database.statement;
+package com.cashflow.database;
 
 import android.app.Application;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.cashflow.database.DbHelper;
 import com.google.inject.Inject;
 
 /**

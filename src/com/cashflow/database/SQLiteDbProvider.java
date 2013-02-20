@@ -1,4 +1,4 @@
-package com.cashflow.database.statement;
+package com.cashflow.database;
 
 import android.database.sqlite.SQLiteDatabase;
 
