@@ -9,11 +9,6 @@ import android.database.sqlite.SQLiteOpenHelper;
  * @author Kornel_Refi
  */
 public final class DbHelper extends SQLiteOpenHelper {
-
-    // If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 1;
-    public static final String DATABASE_NAME = "CashFlow.db";
-
     private static DbHelper reader;
     private static DbHelper writer;
 
@@ -23,7 +18,7 @@ public final class DbHelper extends SQLiteOpenHelper {
      *            Required for SQLiteOpenHelper.
      */
     private DbHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        super(context, DatabaseContracts.DATABASE_NAME, null, DatabaseContracts.DATABASE_VERSION);
     }
 
     /**

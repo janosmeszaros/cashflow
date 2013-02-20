@@ -1,7 +1,7 @@
 package com.cashflow;
 
-import com.cashflow.database.statement.DbHelperSQLiteDbProvider;
-import com.cashflow.database.statement.SQLiteDbProvider;
+import com.cashflow.database.DbHelperSQLiteDbProvider;
+import com.cashflow.database.SQLiteDbProvider;
 import com.cashflow.database.statement.StatementDao;
 import com.cashflow.database.statement.StatementPersistentService;
 import com.google.inject.Binder;
