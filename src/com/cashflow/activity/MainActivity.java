@@ -1,5 +1,8 @@
 package com.cashflow.activity;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
 import android.content.Intent;
@@ -18,6 +21,7 @@ import com.google.inject.Inject;
  * @author Kornel_Refi
  */
 public class MainActivity extends RoboActivity {
+    private static final Logger LOG = LoggerFactory.getLogger(MainActivity.class);
 
     @Inject
     private StatementPersistentService statementPersistentService;
@@ -42,6 +46,15 @@ public class MainActivity extends RoboActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.activity_main, menu);
         return true;
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        LOG.debug("MainActivity's focus changed to: " + hasFocus);
+        if (hasFocus) {
+            String value = String.valueOf(balance.getBalance());
+            balanceText.setText(value);
+        }
     }
 
     /**

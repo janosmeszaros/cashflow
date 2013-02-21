@@ -18,11 +18,15 @@ import com.cashflow.database.statement.StatementType;
  */
 public final class Balance {
     private static final Logger LOG = LoggerFactory.getLogger(Balance.class);
-    private BigDecimal balance = new BigDecimal(0);
+    private volatile BigDecimal amountBalance = BigDecimal.ZERO;
     private StatementPersistentService service;
 
     private Balance(StatementPersistentService service) {
         this.service = service;
+    }
+
+    public double getBalance() {
+        return amountBalance.doubleValue();
     }
 
     /**
@@ -38,12 +42,32 @@ public final class Balance {
         return balance;
     }
 
+    /**
+     * Subtract the amount from the current stored balance.
+     * @param amount
+     *            amount to subtract.
+     */
+    public void subtract(BigDecimal amount) {
+        amountBalance = amountBalance.subtract(amount);
+        LOG.debug("The new balance is after subtracting: " + amountBalance.doubleValue());
+    }
+
+    /**
+     * Add the amount from the current stored balance.
+     * @param amount
+     *            amount to add.
+     */
+    public void add(BigDecimal amount) {
+        amountBalance = amountBalance.add(amount);
+        LOG.debug("The new balance is after adding: " + amountBalance.doubleValue());
+    }
+
     private void countBalance() {
         double expenses = countSumOfStatement(service.getStatement(StatementType.Expense));
         double incomes = countSumOfStatement(service.getStatement(StatementType.Income));
 
-        balance = BigDecimal.valueOf(incomes - expenses);
-        LOG.debug("starting balance is: " + balance.doubleValue());
+        amountBalance = BigDecimal.valueOf(incomes - expenses);
+        LOG.debug("starting balance is: " + amountBalance.doubleValue());
     }
 
     private double countSumOfStatement(Cursor statement) {
@@ -57,10 +81,6 @@ public final class Balance {
         }
 
         return amount;
-    }
-
-    public double getBalance() {
-        return balance.doubleValue();
     }
 
 }
