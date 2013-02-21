@@ -13,6 +13,27 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>com.google.android</groupId>
+			<artifactId>android</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.android</groupId>
+			<artifactId>support-v4</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.google.android</groupId>
+			<artifactId>annotations</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-android</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.roboguice</groupId>
+			<artifactId>roboguice</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.pivotallabs</groupId>
 			<artifactId>robolectric</artifactId>
 			<version>1.2</version>
