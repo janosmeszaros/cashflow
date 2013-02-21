@@ -4,6 +4,9 @@ import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_N
 
 import java.math.BigDecimal;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import android.database.Cursor;
 
 import com.cashflow.database.statement.StatementPersistentService;
@@ -14,6 +17,7 @@ import com.cashflow.database.statement.StatementType;
  * @author Janos_Gyula_Meszaros
  */
 public final class Balance {
+    private static final Logger LOG = LoggerFactory.getLogger(Balance.class);
     private BigDecimal balance = new BigDecimal(0);
     private StatementPersistentService service;
 
@@ -39,6 +43,7 @@ public final class Balance {
         double incomes = countSumOfStatement(service.getStatement(StatementType.Income));
 
         balance = BigDecimal.valueOf(incomes - expenses);
+        LOG.debug("starting balance is" + balance.doubleValue());
     }
 
     private double countSumOfStatement(Cursor statement) {
