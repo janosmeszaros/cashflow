@@ -36,9 +36,6 @@ public class MainActivity extends RoboActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        String balanceString = String.valueOf(balance.getBalance());
-        balanceText.setText(balanceString);
     }
 
     @Override
