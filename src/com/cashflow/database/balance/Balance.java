@@ -43,13 +43,14 @@ public final class Balance {
         double incomes = countSumOfStatement(service.getStatement(StatementType.Income));
 
         balance = BigDecimal.valueOf(incomes - expenses);
-        LOG.debug("starting balance is" + balance.doubleValue());
+        LOG.debug("starting balance is: " + balance.doubleValue());
     }
 
     private double countSumOfStatement(Cursor statement) {
         int index = statement.getColumnIndex(COLUMN_NAME_AMOUNT);
         double amount = 0L;
 
+        statement.moveToFirst();
         while (!statement.isAfterLast()) {
             amount += statement.getLong(index);
             statement.moveToNext();
