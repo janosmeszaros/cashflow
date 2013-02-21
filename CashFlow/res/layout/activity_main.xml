@@ -1,0 +1,80 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity" >
+
+    <TextView
+        android:id="@+id/textViewBalance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textViewBalanceAmount"
+        android:layout_alignBottom="@+id/textViewBalanceAmount"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="20dp"
+        android:text="@string/balance_string"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/textViewBalanceCurrency"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textViewBalanceAmount"
+        android:layout_alignBottom="@+id/textViewBalanceAmount"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="21dp"
+        android:text="@string/currency"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/textViewBalanceAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="22dp"
+        android:layout_marginTop="30dp"
+        android:layout_toLeftOf="@+id/textViewBalanceCurrency"
+        android:text="@string/balance_value"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <Button
+        android:id="@+id/addIncomeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textViewBalance"
+        android:layout_below="@+id/textViewBalance"
+        android:layout_marginTop="54dp"
+        android:onClick="addIncome"
+        android:text="@string/add_income_button" />
+
+    <Button
+        android:id="@+id/addExpenseButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/addIncomeButton"
+        android:layout_alignBottom="@+id/addIncomeButton"
+        android:layout_alignRight="@+id/textViewBalanceCurrency"
+        android:onClick="addExpense"
+        android:text="@string/add_expense_button" />
+
+    <Button
+        android:id="@+id/listIncomesButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/addIncomeButton"
+        android:layout_below="@+id/addIncomeButton"
+        android:layout_marginTop="24dp"
+        android:onClick="listIncomes"
+        android:text="@string/list_incomes_button" />
+
+    <Button
+        android:id="@+id/listExpensesButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/listIncomesButton"
+        android:layout_alignBottom="@+id/listIncomesButton"
+        android:layout_alignLeft="@+id/addExpenseButton"
+        android:onClick="listExpenses"
+        android:text="@string/list_expenses_button" />
+
+</RelativeLayout>
