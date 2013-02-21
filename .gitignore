@@ -12,3 +12,5 @@
 /CashFlow/lint.xml
 /CashFlowTest/.classpath
 /CashFlowTest/.project
+/CashFlowTest/target
+/CashFlowTest/.settings/*

@@ -2,15 +2,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.cashflow</groupId>
-	<artifactId>cashflow</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<parent>
+		<groupId>com.cashflow</groupId>
+		<artifactId>cashflow-parent</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+		<relativePath>../CashFlowParent/pom.xml</relativePath>
+	</parent>
+	<artifactId>CashFlow</artifactId>
 	<packaging>apk</packaging>
 	<name>CashFlow</name>
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.version>3.0.3</maven.version>
-	</properties>
+
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<plugins>
@@ -31,43 +32,6 @@
 				</configuration>
 				<extensions>true</extensions>
 			</plugin>
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-				</configuration>
-			</plugin>
-
 		</plugins>
 	</build>
-	<dependencies>
-		<dependency>
-			<groupId>com.google.android</groupId>
-			<artifactId>android</artifactId>
-			<version>2.3.3</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.google.android</groupId>
-			<artifactId>support-v4</artifactId>
-			<version>r7</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-android</artifactId>
-			<version>1.6.1-RC1</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.android</groupId>
-			<artifactId>annotations</artifactId>
-			<version>4.1.1.4</version>
-		</dependency>
-		<dependency>
-            <groupId>org.roboguice</groupId>
-            <artifactId>roboguice</artifactId>
-            <version>2.0</version>
-        </dependency>
-	</dependencies>
 </project>
