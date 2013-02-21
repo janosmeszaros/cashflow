@@ -1,5 +1,6 @@
 package com.cashflow.activity;
 
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.util.Calendar;
 
@@ -16,6 +17,7 @@ import android.widget.EditText;
 
 import com.cashflow.R;
 import com.cashflow.components.DatePickerFragment;
+import com.cashflow.database.balance.Balance;
 import com.cashflow.database.statement.StatementPersistentService;
 import com.google.inject.Inject;
 
@@ -34,6 +36,8 @@ public class AddIncomeActivity extends RoboFragmentActivity {
     private Button dateButton;
     @InjectView(R.id.notesText)
     private EditText notesText;
+    @Inject
+    private Balance balance;
 
     @SuppressLint("NewApi")
     @Override
@@ -83,7 +87,7 @@ public class AddIncomeActivity extends RoboFragmentActivity {
     }
 
     /**
-     * Add new income onClick method.
+     * Add new income onClick method. Save the income to database. If the save was successful then refresh the balance.
      * @param view
      *            Required for onclick.
      */
@@ -93,6 +97,7 @@ public class AddIncomeActivity extends RoboFragmentActivity {
         String note = notesText.getText().toString();
 
         if (service.saveStatement(amountStr, date, note, true)) {
+            balance.add(new BigDecimal(amountStr));
             finish();
         }
     }

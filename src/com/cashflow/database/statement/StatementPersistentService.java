@@ -51,9 +51,7 @@ public class StatementPersistentService {
 
         if (checkIfNotZero(amount)) {
             ContentValues values = createContentValue(amount, date, note, isIncome);
-
             dao.save(values);
-
             result = true;
         }
         return result;
