@@ -1,8 +1,4 @@
-package com.cashflow.activity;
-
-import java.util.HashMap;
-import java.util.Map.Entry;
-import java.util.Set;
+package com.cashflow.activity.util;
 
 import roboguice.RoboGuice;
 import roboguice.config.DefaultRoboModule;
@@ -17,25 +13,24 @@ import com.xtremelabs.robolectric.Robolectric;
 
 public class TestGuiceModule extends AbstractModule {
 
-    private HashMap<Class<?>, Object> bindings;
+    // private HashMap<Class<?>, Object> bindings;
 
     public TestGuiceModule() {
-        bindings = new HashMap<Class<?>, Object>();
+        // bindings = new HashMap<Class<?>, Object>();
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     protected void configure() {
-        //        bind(Activity.class).toProvider(ActivityProvider.class).in(ContextSingleton.class);
-        Set<Entry<Class<?>, Object>> entries = bindings.entrySet();
-        for (Entry<Class<?>, Object> entry : entries) {
-            bind((Class<Object>) entry.getKey()).toInstance(entry.getValue());
-        }
+        // bind(Activity.class).toProvider(MainActivityProvider.class).in(ContextSingleton.class);
+        // Set<Entry<Class<?>, Object>> entries = bindings.entrySet();
+        // for (Entry<Class<?>, Object> entry : entries) {
+        // bind((Class<Object>) entry.getKey()).toInstance(entry.getValue());
+        // }
     }
 
-    public void addBinding(Class<?> type, Object object) {
-        bindings.put(type, object);
-    }
+    // public void addBinding(Class<?> type, Object object) {
+    // bindings.put(type, object);
+    // }
 
     public static void setUp(Object testObject, TestGuiceModule module) {
         Module roboGuiceModule = RoboGuice.newDefaultRoboModule(Robolectric.application);

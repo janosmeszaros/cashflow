@@ -1,25 +1,35 @@
 package com.cashflow.activity;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertThat;
+
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 
+import android.content.Intent;
+import android.view.View;
+
+import com.cashflow.R;
+import com.cashflow.activity.util.TestGuiceModule;
+import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
+import com.xtremelabs.robolectric.shadows.ShadowActivity;
+import com.xtremelabs.robolectric.shadows.ShadowIntent;
 
 @RunWith(RobolectricTestRunner.class)
 public class MainActivityTest {
 
-    //    @Mock
-    //    ConvertFeetToMeterListener listener;
+    // @Mock
+    // ConvertFeetToMeterListener listener;
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         TestGuiceModule module = new TestGuiceModule();
-        //        module.addBinding(ConvertFeetToMeterListener.class, listener);
+        // module.addBinding(ConvertFeetToMeterListener.class, listener);
         TestGuiceModule.setUp(this, module);
     }
 
@@ -30,11 +40,19 @@ public class MainActivityTest {
 
     @Test
     public void onCreateShouldAttachConversionListenerToConvertButton() {
-        //        MetricActivity activity = new MetricActivity();
+        MainActivity activity = new MainActivity();
 
-        //        activity.onCreate(null);
-        //
-        //        ShadowView button = Robolectric.shadowOf(activity.findViewById(R.id.convert_button));
-        Assert.assertTrue(true);
+        activity.onCreate(null);
+
+        View addIncome = activity.findViewById(R.id.addIncomeButton);
+
+        addIncome.performClick();
+
+        ShadowActivity shadowActivity = Robolectric.shadowOf(activity);
+        Intent startedIntent = shadowActivity.getNextStartedActivity();
+        ShadowIntent shadowIntent = Robolectric.shadowOf(startedIntent);
+
+        assertThat(shadowIntent.getComponent().getClassName(), equalTo(AddIncomeActivity.class.getName()));
+
     }
 }
