@@ -39,7 +39,7 @@ public class MainActivityTest {
     }
 
     @Test
-    public void onCreateShouldAttachConversionListenerToConvertButton() {
+    public void addIncomeButtonClickShouldCreateAddIncomeActivity() {
         MainActivity activity = new MainActivity();
 
         activity.onCreate(null);
@@ -53,6 +53,60 @@ public class MainActivityTest {
         ShadowIntent shadowIntent = Robolectric.shadowOf(startedIntent);
 
         assertThat(shadowIntent.getComponent().getClassName(), equalTo(AddIncomeActivity.class.getName()));
+
+    }
+
+    @Test
+    public void addExpenseButtonClickShouldCreateAddExpenseeActivity() {
+        MainActivity activity = new MainActivity();
+
+        activity.onCreate(null);
+
+        View addExpense = activity.findViewById(R.id.addExpenseButton);
+
+        addExpense.performClick();
+
+        ShadowActivity shadowActivity = Robolectric.shadowOf(activity);
+        Intent startedIntent = shadowActivity.getNextStartedActivity();
+        ShadowIntent shadowIntent = Robolectric.shadowOf(startedIntent);
+
+        assertThat(shadowIntent.getComponent().getClassName(), equalTo(AddExpenseActivity.class.getName()));
+
+    }
+
+    @Test
+    public void ListExpensesButtonClickShouldCreateListExpensesActivity() {
+        MainActivity activity = new MainActivity();
+
+        activity.onCreate(null);
+
+        View listExpenses = activity.findViewById(R.id.listExpensesButton);
+
+        listExpenses.performClick();
+
+        ShadowActivity shadowActivity = Robolectric.shadowOf(activity);
+        Intent startedIntent = shadowActivity.getNextStartedActivity();
+        ShadowIntent shadowIntent = Robolectric.shadowOf(startedIntent);
+
+        assertThat(shadowIntent.getComponent().getClassName(), equalTo(ListExpensesActivity.class.getName()));
+
+    }
+
+    @Test
+    public void listIncomesButtonClickShouldCreateListIncomesActivity() {
+        MainActivity activity = new MainActivity();
+
+        activity.onCreate(null);
+
+        View listIncomes = activity.findViewById(R.id.listIncomesButton);
+
+        listIncomes.performClick();
+
+        ShadowActivity shadowActivity = Robolectric.shadowOf(activity);
+        Intent startedIntent = shadowActivity.getNextStartedActivity();
+        ShadowIntent shadowIntent = Robolectric.shadowOf(startedIntent);
+
+        assertThat(shadowIntent.getComponent().getClassName(), equalTo(ListIncomesActivity.class.getName()));
 
     }
 }

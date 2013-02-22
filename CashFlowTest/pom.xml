@@ -11,6 +11,26 @@
 	<artifactId>CashFlowTest</artifactId>
 	<name>CashFlowTest</name>
 
+	<!-- PIT -->
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.pitest</groupId>
+				<artifactId>pitest-maven</artifactId>
+				<version>0.29</version>
+				<configuration>
+					<targetClasses>
+						<param>com.cashflow.*</param>
+					</targetClasses>
+					<targetTests>
+						<param>com.cashflow</param>
+					</targetTests>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<!-- PIT ends -->
+
 	<dependencies>
 		<dependency>
 			<groupId>com.google.android</groupId>
