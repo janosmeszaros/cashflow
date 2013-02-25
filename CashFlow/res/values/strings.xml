@@ -8,6 +8,7 @@
     <string name="balance_value">1234</string>
     <string name="add_expense_button">Add Expense</string>
     <string name="add_income_button">Add Income</string>
+    <string name="submit_button">Submit</string>
     <string name="list_expenses_button">List Expenses</string>
     <string name="list_incomes_button">List Incomes</string>
     <string name="title_activity_add_income">Add Income</string>

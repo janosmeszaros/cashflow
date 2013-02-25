@@ -81,12 +81,12 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/addExpenseButton"
+        android:id="@+id/submitButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:layout_marginBottom="14dp"
         android:onClick="addExpense"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/add_expense_button" />
+        android:text="@string/submit_button" />
 
 </LinearLayout>

@@ -38,7 +38,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <Button
-        android:id="@+id/addIncomeButton"
+        android:id="@+id/submitButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/textViewBalance"
@@ -51,8 +51,8 @@
         android:id="@+id/addExpenseButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/addIncomeButton"
-        android:layout_alignBottom="@+id/addIncomeButton"
+        android:layout_alignBaseline="@+id/submitButton"
+        android:layout_alignBottom="@+id/submitButton"
         android:layout_alignRight="@+id/textViewBalanceCurrency"
         android:onClick="addExpense"
         android:text="@string/add_expense_button" />
@@ -61,8 +61,8 @@
         android:id="@+id/listIncomesButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/addIncomeButton"
-        android:layout_below="@+id/addIncomeButton"
+        android:layout_alignLeft="@+id/submitButton"
+        android:layout_below="@+id/submitButton"
         android:layout_marginTop="24dp"
         android:onClick="listIncomes"
         android:text="@string/list_incomes_button" />

@@ -24,13 +24,13 @@
         android:inputType="textMultiLine" />
 
     <Button
-        android:id="@+id/addIncomeButton"
+        android:id="@+id/submitButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:onClick="addIncome"
-        android:text="@string/add_income_button" />
+        android:text="@string/submit_button" />
 
     <TextView
         android:id="@+id/textViewNotes"
