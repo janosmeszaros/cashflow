@@ -36,6 +36,10 @@
             android:label="@string/title_activity_add_expense" >
         </activity>
         <activity
+            android:name="com.cashflow.activity.EditIncomeActivity"
+            android:label="@string/title_activity_edit_incomes" >
+        </activity>
+        <activity
             android:name="com.cashflow.activity.ListExpensesActivity"
             android:label="@string/title_activity_list_expenses" >
         </activity>

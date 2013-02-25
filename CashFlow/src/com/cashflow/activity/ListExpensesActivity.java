@@ -2,6 +2,7 @@ package com.cashflow.activity;
 
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_DATE;
+import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_NOTE;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,8 +24,8 @@ import com.google.inject.Inject;
  */
 public class ListExpensesActivity extends RoboListActivity {
     private static final Logger LOG = LoggerFactory.getLogger(ListExpensesActivity.class);
-    private String[] fromColumns = { COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE };
-    private int[] toViews = { R.id.toptext, R.id.bottomtext };
+    private String[] fromColumns = { COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE, COLUMN_NAME_NOTE };
+    private int[] toViews = { R.id.row_amount, R.id.row_date, R.id.row_note };
 
     private SimpleCursorAdapter mAdapter;
     @Inject

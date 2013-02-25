@@ -74,6 +74,30 @@ public class StatementPersistentService {
         return result;
     }
 
+    /**
+     * Updates statement with the specified id.
+     * @param id
+     *            id.
+     * @param amountStr
+     *            new amount for the statement.
+     * @param date
+     *            new date for the statement.
+     * @param note
+     *            new note for the statement.
+     * @param type
+     *            type of the statement.
+     * @return true if successful.
+     */
+    public boolean updateStatement(String id, String amountStr, String date, String note, StatementType type) {
+        boolean result = true;
+        BigDecimal amount = parseAmount(amountStr);
+
+        ContentValues value = createContentValue(amount, date, note, isIncome(type));
+        dao.update(value, id);
+
+        return result;
+    }
+
     private boolean isIncome(StatementType type) {
         return type.equals(StatementType.Income);
     }
@@ -112,4 +136,5 @@ public class StatementPersistentService {
 
         return values;
     }
+
 }

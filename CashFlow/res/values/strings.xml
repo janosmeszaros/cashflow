@@ -21,6 +21,7 @@
     <string name="main_no_items">No expenses to diplay</string>
     <string name="edit_button">Edit button</string>
     <string name="title_activity_list_incomes">List Incomes</string>
+    <string name="title_activity_edit_incomes">Edit Incomes</string>
     <string name="hello_world">Hello world!</string>
 
 </resources>

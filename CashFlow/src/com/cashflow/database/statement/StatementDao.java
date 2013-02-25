@@ -60,6 +60,18 @@ public class StatementDao {
     }
 
     /**
+     * Updates statement row with specified id.
+     * @param values
+     *            data needs to be updated.
+     * @param id
+     *            row id.
+     */
+    public void update(ContentValues values, String id) {
+        int update = provider.getWritableDb().update(TABLE_NAME, values, _ID + " = " + id, null);
+        LOG.debug("Num of rows updated: " + update);
+    }
+
+    /**
      * Returns all of the expenses.
      * @return Cursor which contains the data.
      */

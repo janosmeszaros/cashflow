@@ -1,5 +1,10 @@
 package com.cashflow.activity;
 
+import static com.cashflow.constants.EditConstants.AMOUNT_EXTRA;
+import static com.cashflow.constants.EditConstants.DATE_EXTRA;
+import static com.cashflow.constants.EditConstants.ID_EXTRA;
+import static com.cashflow.constants.EditConstants.NOTE_EXTRA;
+
 import java.math.BigDecimal;
 
 import roboguice.activity.RoboFragmentActivity;
@@ -15,13 +20,17 @@ import com.cashflow.R;
 import com.cashflow.components.DatePickerFragment;
 import com.cashflow.database.balance.Balance;
 import com.cashflow.database.statement.StatementPersistentService;
+import com.cashflow.database.statement.StatementType;
 import com.google.inject.Inject;
 
+/**
+ * Activity for editing incomes.
+ * @author Janos_Gyula_Meszaros
+ */
 public class EditIncomeActivity extends RoboFragmentActivity {
 
     @Inject
     private StatementPersistentService service;
-
     @InjectView(R.id.amountText)
     private EditText amountText;
     @InjectView(R.id.dateButton)
@@ -38,10 +47,8 @@ public class EditIncomeActivity extends RoboFragmentActivity {
         setContentView(R.layout.activity_add_income);
 
         intent = getIntent();
+        fillFieldsWithData();
 
-        if (intent.getBooleanExtra(IS_EDITED_EXTRA, false)) {
-            fillFieldsWithData();
-        }
     }
 
     private void fillFieldsWithData() {
@@ -61,7 +68,7 @@ public class EditIncomeActivity extends RoboFragmentActivity {
         String note = notesText.getText().toString();
         String id = intent.getStringExtra(ID_EXTRA);
 
-        if (service.updateStatement(id, amountStr, date, note, true)) {
+        if (service.updateStatement(id, amountStr, date, note, StatementType.Income)) {
             refreshBalance(amountStr);
             finish();
         }
@@ -72,7 +79,7 @@ public class EditIncomeActivity extends RoboFragmentActivity {
         BigDecimal currentAmount = new BigDecimal(amountStr);
         BigDecimal sum = originalAmount.subtract(currentAmount);
 
-        balance.add(new BigDecimal(amountStr));
+        balance.subtract(sum);
     }
 
     /**

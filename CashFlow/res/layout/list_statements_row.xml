@@ -18,14 +18,30 @@
         android:orientation="vertical" >
 
         <TextView
-            android:id="@+id/toptext"
+            android:id="@+id/row_id"
+            android:visibility="gone"
             android:layout_width="fill_parent"
             android:layout_height="0dip"
             android:layout_weight="1"
             android:gravity="center_vertical" />
 
         <TextView
-            android:id="@+id/bottomtext"
+            android:id="@+id/row_amount"
+            android:layout_width="fill_parent"
+            android:layout_height="0dip"
+            android:layout_weight="1"
+            android:gravity="center_vertical" />
+
+        <TextView
+            android:id="@+id/row_note"
+            android:layout_width="fill_parent"
+            android:layout_height="0dip"
+            android:layout_weight="1"
+            android:ellipsize="marquee"
+            android:singleLine="true" />
+
+        <TextView
+            android:id="@+id/row_date"
             android:layout_width="fill_parent"
             android:layout_height="0dip"
             android:layout_weight="1"
@@ -33,15 +49,14 @@
             android:singleLine="true" />
     </LinearLayout>
 
-
-        <ImageButton
-            android:id="@+id/edit"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_marginRight="6dip"
-            android:background="@drawable/edit_background"
-            android:src="@drawable/edit_query"
-            android:onClick="onClick" android:contentDescription="@string/edit_button"/>
-
+    <ImageButton
+        android:id="@+id/edit"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_marginRight="6dip"
+        android:background="@drawable/edit_background"
+        android:contentDescription="@string/edit_button"
+        android:onClick="onClick"
+        android:src="@drawable/edit_query" />
 
 </LinearLayout>
