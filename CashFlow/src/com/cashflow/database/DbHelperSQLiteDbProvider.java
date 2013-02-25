@@ -1,5 +1,8 @@
 package com.cashflow.database;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import android.app.Application;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -12,6 +15,7 @@ import com.google.inject.Inject;
 public class DbHelperSQLiteDbProvider implements SQLiteDbProvider {
 
     private final Application application;
+    private static final Logger LOG = LoggerFactory.getLogger(DbHelperSQLiteDbProvider.class);
 
     /**
      * Constructor.
@@ -24,6 +28,7 @@ public class DbHelperSQLiteDbProvider implements SQLiteDbProvider {
     public DbHelperSQLiteDbProvider(Application application) {
         nullCheck(application);
         this.application = application;
+        LOG.debug("anyád");
     }
 
     private void nullCheck(Application application) {
