@@ -13,4 +13,6 @@
 /CashFlowTest/.classpath
 /CashFlowTest/.project
 /CashFlowTest/target
+/CashFlowTest/test-output/*
 /CashFlowTest/.settings/*
+

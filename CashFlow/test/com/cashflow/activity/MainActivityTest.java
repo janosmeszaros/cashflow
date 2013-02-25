@@ -19,6 +19,11 @@ import com.xtremelabs.robolectric.RobolectricTestRunner;
 import com.xtremelabs.robolectric.shadows.ShadowActivity;
 import com.xtremelabs.robolectric.shadows.ShadowIntent;
 
+/**
+ * {@link MainActivity} test.
+ * @author Kornel_Refi
+ *
+ */
 @RunWith(RobolectricTestRunner.class)
 public class MainActivityTest {
 
@@ -75,7 +80,7 @@ public class MainActivityTest {
     }
 
     @Test
-    public void ListExpensesButtonClickShouldCreateListExpensesActivity() {
+    public void listExpensesButtonClickShouldCreateListExpensesActivity() {
         MainActivity activity = new MainActivity();
 
         activity.onCreate(null);

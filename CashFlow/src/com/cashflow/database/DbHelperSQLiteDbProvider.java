@@ -14,8 +14,8 @@ import com.google.inject.Inject;
  */
 public class DbHelperSQLiteDbProvider implements SQLiteDbProvider {
 
-    private final Application application;
     private static final Logger LOG = LoggerFactory.getLogger(DbHelperSQLiteDbProvider.class);
+    private final Application application;
 
     /**
      * Constructor.

@@ -11,15 +11,22 @@ import com.google.inject.Module;
 import com.google.inject.util.Modules;
 import com.xtremelabs.robolectric.Robolectric;
 
+/**
+ * Guice module for tests.
+ * @author Kornel_Refi
+ *
+ */
 public class TestGuiceModule extends AbstractModule {
-
-    public TestGuiceModule() {
-    }
 
     @Override
     protected void configure() {
     }
 
+    /**
+     * Before test.
+     * @param testObject underTest
+     * @param module Guice module
+     */
     public static void setUp(Object testObject, TestGuiceModule module) {
         Module roboGuiceModule = RoboGuice.newDefaultRoboModule(Robolectric.application);
         Module productionModule = Modules.override(roboGuiceModule).with(new AppModule());
@@ -29,6 +36,9 @@ public class TestGuiceModule extends AbstractModule {
         injector.injectMembers(testObject);
     }
 
+    /**
+     * After test.
+     */
     public static void tearDown() {
         RoboGuice.util.reset();
         Application app = Robolectric.application;

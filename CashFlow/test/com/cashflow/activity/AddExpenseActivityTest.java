@@ -10,6 +10,11 @@ import org.mockito.MockitoAnnotations;
 import com.cashflow.activity.util.TestGuiceModule;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
+/**
+ * {@link AddExpenseActivity} test.
+ * @author Kornel_Refi
+ *
+ */
 @RunWith(RobolectricTestRunner.class)
 public class AddExpenseActivityTest {
 

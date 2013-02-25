@@ -27,7 +27,7 @@ import com.google.inject.Singleton;
 @Singleton
 public class StatementDao {
     private static final Logger LOG = LoggerFactory.getLogger(StatementDao.class);
-    private static final String[] PROJECTION = new String[] { _ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE, COLUMN_NAME_NOTE };
+    private static final String[] PROJECTION = new String[]{_ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE, COLUMN_NAME_NOTE};
 
     private SQLiteDbProvider provider;
 

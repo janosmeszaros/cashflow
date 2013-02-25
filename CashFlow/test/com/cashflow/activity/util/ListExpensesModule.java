@@ -17,6 +17,11 @@ import com.google.inject.Module;
 import com.google.inject.util.Modules;
 import com.xtremelabs.robolectric.Robolectric;
 
+/**
+ * Injecting module for ListExpensesActivity test.
+ * @author Kornel_Refi
+ *
+ */
 public class ListExpensesModule extends AbstractModule {
 
     private HashMap<Class<?>, Object> bindings;
@@ -38,6 +43,11 @@ public class ListExpensesModule extends AbstractModule {
         bindings.put(type, object);
     }
 
+    /**
+     * Before test.
+     * @param testObject underTest
+     * @param module Guice module
+     */
     public static void setUp(Object testObject, ListExpensesModule module) {
         Module roboGuiceModule = RoboGuice.newDefaultRoboModule(Robolectric.application);
         Module productionModule = Modules.override(roboGuiceModule).with(new AppModule());
@@ -47,6 +57,9 @@ public class ListExpensesModule extends AbstractModule {
         injector.injectMembers(testObject);
     }
 
+    /**
+     * After test.
+     */
     public static void tearDown() {
         RoboGuice.util.reset();
         Application app = Robolectric.application;

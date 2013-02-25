@@ -13,7 +13,6 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
-        RoboGuice.setBaseApplicationInjector(this, RoboGuice.DEFAULT_STAGE,
-                RoboGuice.newDefaultRoboModule(this), new AppModule());
+        RoboGuice.setBaseApplicationInjector(this, RoboGuice.DEFAULT_STAGE, RoboGuice.newDefaultRoboModule(this), new AppModule());
     }
 }

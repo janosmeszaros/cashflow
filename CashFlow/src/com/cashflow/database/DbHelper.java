@@ -22,7 +22,7 @@ public final class DbHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * Returns a read-only {@link SQLiteDatabase} instance
+     * Returns a read-only {@link SQLiteDatabase} instance.
      * @param context
      *            context for the databasehelper.
      * @return readable database.
@@ -35,7 +35,7 @@ public final class DbHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * Returns a writable {@link SQLiteDatabase} instance
+     * Returns a writable {@link SQLiteDatabase} instance.
      * @param context
      *            context for the databasehelper.
      * @return writable database.

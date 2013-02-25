@@ -6,12 +6,14 @@ import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_N
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import roboguice.activity.RoboListActivity;
+import roboguice.activity.RoboActivity;
+import roboguice.inject.InjectView;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.Menu;
 import android.view.View;
+import android.widget.ListView;
 
 import com.cashflow.R;
 import com.cashflow.database.statement.StatementPersistentService;
@@ -22,14 +24,16 @@ import com.google.inject.Inject;
  * Basic class to list incomes.
  * @author Janos_Gyula_Meszaros
  */
-public class ListIncomesActivity extends RoboListActivity {
+public class ListIncomesActivity extends RoboActivity {
     private static final Logger LOG = LoggerFactory.getLogger(ListIncomesActivity.class);
-    private String[] fromColumns = { COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE };
-    private int[] toViews = { R.id.toptext, R.id.bottomtext };
+    private String[] fromColumns = {COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE};
+    private int[] toViews = {R.id.toptext, R.id.bottomtext};
 
     private SimpleCursorAdapter mAdapter;
     @Inject
     private StatementPersistentService service;
+    @InjectView(R.id.list_statement)
+    private ListView list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,10 +42,8 @@ public class ListIncomesActivity extends RoboListActivity {
 
         Cursor cursor = service.getStatement(StatementType.Income);
 
-        mAdapter = new SimpleCursorAdapter(this,
-                R.layout.list_statements_row, cursor,
-                fromColumns, toViews, 0);
-        setListAdapter(mAdapter);
+        mAdapter = new SimpleCursorAdapter(this, R.layout.list_statements_row, cursor, fromColumns, toViews, 0);
+        list.setAdapter(mAdapter);
     }
 
     @Override
@@ -52,9 +54,9 @@ public class ListIncomesActivity extends RoboListActivity {
     }
 
     /**
-     * anyád
+     * Edit button onClick method.
      * @param view
-     *            anyád
+     *            {@link View}
      */
     public void onClick(View view) {
         LOG.debug("Edit button clicked");
