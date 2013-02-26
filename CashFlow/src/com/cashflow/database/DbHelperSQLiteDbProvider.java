@@ -22,13 +22,12 @@ public class DbHelperSQLiteDbProvider implements SQLiteDbProvider {
      * @param application
      *            Context which is used to create database instances. Can't be <code>null</code>.
      * @throws IllegalArgumentException
-     *             if argument is null.
+     *             if argument is <code>null</code>
      */
     @Inject
     public DbHelperSQLiteDbProvider(Application application) {
         nullCheck(application);
         this.application = application;
-        LOG.debug("anyád");
     }
 
     private void nullCheck(Application application) {

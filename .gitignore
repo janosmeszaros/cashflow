@@ -16,5 +16,6 @@
 /CashFlowTest/target
 /CashFlowTest/test-output/*
 /CashFlowTest/.settings/*
+/CashFlowTest/.checkstyle
 
 

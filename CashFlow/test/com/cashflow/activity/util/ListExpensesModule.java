@@ -1,6 +1,7 @@
 package com.cashflow.activity.util;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -24,12 +25,13 @@ import com.xtremelabs.robolectric.Robolectric;
  */
 public class ListExpensesModule extends AbstractModule {
 
-    private HashMap<Class<?>, Object> bindings;
+    private Map<Class<?>, Object> bindings;
 
     public ListExpensesModule() {
         bindings = new HashMap<Class<?>, Object>();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected void configure() {
         bind(Activity.class).toProvider(ListExpensesActivityProvider.class).in(ContextSingleton.class);
