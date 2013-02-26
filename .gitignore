@@ -3,6 +3,7 @@
 
 /CashFlow/libs
 /CashFlow/layout
+/CashFlow/tmp/*
 /CashFlow/*.tmp
 /CashFlow/.checkstyle
 /CashFlow/.classpath
@@ -15,4 +16,5 @@
 /CashFlowTest/target
 /CashFlowTest/test-output/*
 /CashFlowTest/.settings/*
+
 

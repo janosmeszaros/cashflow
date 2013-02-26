@@ -34,7 +34,7 @@ public class StatementPersistentService {
     }
 
     /**
-     * Creates the statement from data and then saves it to db.
+     * Creates the statement from data and then saves it to database.
      * @param amountStr
      *            amount of the statement.
      * @param date
@@ -42,8 +42,8 @@ public class StatementPersistentService {
      * @param note
      *            Note for the statement.
      * @param isIncome
-     *            True if the statement is income, false otherwise
-     * @return true if saving was successful, false otherwise.
+     *            <code>true</code> if the statement is income, <code>false</code> otherwise
+     * @return <code>true</code> if saving was successful, <code>false</code> otherwise.
      */
     public boolean saveStatement(String amountStr, String date, String note, boolean isIncome) {
         boolean result = false;

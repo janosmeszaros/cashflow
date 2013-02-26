@@ -9,8 +9,6 @@
 
 	<name>CashFlowParent</name>
 
-
-
 	<modules>
 		<module>../CashFlow</module>
 		<module>../CashFlowTest</module>
@@ -26,6 +24,7 @@
 		<slf4j.version>1.6.1-RC1</slf4j.version>
 		<roboguice.version>2.0</roboguice.version>
 		<hamcrest.version>1.3</hamcrest.version>
+		<ch.qos.logback.version>1.0.9</ch.qos.logback.version>
 	</properties>
 
 	<build>
@@ -39,9 +38,9 @@
 					<target>${java.version}</target>
 				</configuration>
 			</plugin>
-
 		</plugins>
 	</build>
+	
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -74,6 +73,18 @@
 				<groupId>org.hamcrest</groupId>
 				<artifactId>hamcrest-all</artifactId>
 				<version>${hamcrest.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>ch.qos.logback</groupId>
+				<artifactId>logback-core</artifactId>
+				<version>${ch.qos.logback.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>ch.qos.logback</groupId>
+				<artifactId>logback-classic</artifactId>
+				<version>${ch.qos.logback.version}</version>
 				<scope>test</scope>
 			</dependency>
 		</dependencies>
