@@ -4,7 +4,7 @@ package com.cashflow.constants;
  * Contains constants to the edit form.
  * @author Janos_Gyula_Meszaros
  */
-public final class EditConstants {
+public final class Constants {
     public static final String IS_EDITED_EXTRA = "edited";
     public static final String AMOUNT_EXTRA = "amount";
     public static final String NOTE_EXTRA = "note";
@@ -12,6 +12,10 @@ public final class EditConstants {
     public static final String ID_EXTRA = "id";
     public static final int EDIT_ACTIVITY_CODE = 0;
 
-    private EditConstants() {
+    public static final String STATEMENT_TYPE_EXTRA = "type";
+    public static final String INCOME_EXTRA = "income";
+    public static final String EXPENSE_EXTRA = "expense";
+
+    private Constants() {
     }
 }

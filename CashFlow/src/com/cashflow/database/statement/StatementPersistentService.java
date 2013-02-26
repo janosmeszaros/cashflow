@@ -41,16 +41,16 @@ public class StatementPersistentService {
      *            Date of the statement.
      * @param note
      *            Note for the statement.
-     * @param isIncome
-     *            True if the statement is income, false otherwise
+     * @param type
+     *            Statement's type
      * @return true if saving was successful, false otherwise.
      */
-    public boolean saveStatement(String amountStr, String date, String note, boolean isIncome) {
+    public boolean saveStatement(String amountStr, String date, String note, StatementType type) {
         boolean result = false;
         BigDecimal amount = parseAmount(amountStr);
 
         if (checkIfNotZero(amount)) {
-            ContentValues values = createContentValue(amount, date, note, isIncome);
+            ContentValues values = createContentValue(amount, date, note, type);
             dao.save(values);
             result = true;
         }
@@ -92,7 +92,7 @@ public class StatementPersistentService {
         boolean result = true;
         BigDecimal amount = parseAmount(amountStr);
 
-        ContentValues value = createContentValue(amount, date, note, isIncome(type));
+        ContentValues value = createContentValue(amount, date, note, type);
         dao.update(value, id);
 
         return result;
@@ -124,12 +124,12 @@ public class StatementPersistentService {
         return amount;
     }
 
-    private ContentValues createContentValue(BigDecimal amount, String date, String note, boolean isIncome) {
+    private ContentValues createContentValue(BigDecimal amount, String date, String note, StatementType type) {
         // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
         values.put(DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT, amount.toString());
         values.put(DatabaseContracts.AbstractStatement.COLUMN_NAME_DATE, date);
-        values.put(DatabaseContracts.AbstractStatement.COLUMN_NAME_IS_INCOME, isIncome ? TRUE : FALSE);
+        values.put(DatabaseContracts.AbstractStatement.COLUMN_NAME_IS_INCOME, isIncome(type) ? TRUE : FALSE);
         values.put(DatabaseContracts.AbstractStatement.COLUMN_NAME_NOTE, note);
 
         LOG.debug("Content created: " + values);

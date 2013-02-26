@@ -1,9 +1,11 @@
 package com.cashflow.activity;
 
-import static com.cashflow.constants.EditConstants.AMOUNT_EXTRA;
-import static com.cashflow.constants.EditConstants.DATE_EXTRA;
-import static com.cashflow.constants.EditConstants.ID_EXTRA;
-import static com.cashflow.constants.EditConstants.NOTE_EXTRA;
+import static com.cashflow.constants.Constants.AMOUNT_EXTRA;
+import static com.cashflow.constants.Constants.DATE_EXTRA;
+import static com.cashflow.constants.Constants.ID_EXTRA;
+import static com.cashflow.constants.Constants.INCOME_EXTRA;
+import static com.cashflow.constants.Constants.NOTE_EXTRA;
+import static com.cashflow.constants.Constants.STATEMENT_TYPE_EXTRA;
 
 import java.math.BigDecimal;
 
@@ -30,8 +32,8 @@ import com.google.inject.Inject;
  * Activity for editing incomes.
  * @author Janos_Gyula_Meszaros
  */
-public class EditIncomeActivity extends RoboFragmentActivity {
-    private static final Logger LOG = LoggerFactory.getLogger(EditIncomeActivity.class);
+public class EditStatementActivity extends RoboFragmentActivity {
+    private static final Logger LOG = LoggerFactory.getLogger(EditStatementActivity.class);
     @Inject
     private StatementPersistentService service;
     @InjectView(R.id.amountText)
@@ -44,20 +46,20 @@ public class EditIncomeActivity extends RoboFragmentActivity {
     @Inject
     private Balance balance;
 
+    private StatementType type;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_income);
+        LOG.debug("EditStatementActivity is creating...");
+        setContentView(R.layout.activity_add_statement);
 
         intent = getIntent();
         fillFieldsWithData();
+        setStatementType();
+        setTitle();
 
-    }
-
-    private void fillFieldsWithData() {
-        amountText.setText(intent.getStringExtra(AMOUNT_EXTRA));
-        notesText.setText(intent.getStringExtra(NOTE_EXTRA));
-        dateButton.setText(intent.getStringExtra(DATE_EXTRA));
+        LOG.debug("EditStatementActivity has created with type: " + type);
     }
 
     /**
@@ -65,13 +67,13 @@ public class EditIncomeActivity extends RoboFragmentActivity {
      * @param view
      *            Required for onclick.
      */
-    public void addIncome(View view) {
+    public void submit(View view) {
         String amountStr = amountText.getText().toString();
         String date = dateButton.getText().toString();
         String note = notesText.getText().toString();
         String id = intent.getStringExtra(ID_EXTRA);
 
-        if (isValuesChanged(amountStr, date, note) && service.updateStatement(id, amountStr, date, note, StatementType.Income)) {
+        if (isValuesChanged(amountStr, date, note) && service.updateStatement(id, amountStr, date, note, type)) {
             refreshBalance(amountStr);
             setResult(RESULT_OK);
         } else {
@@ -79,6 +81,16 @@ public class EditIncomeActivity extends RoboFragmentActivity {
         }
 
         finish();
+    }
+
+    /**
+     * Date button onClick method.
+     * @param view
+     *            Required for onclick.
+     */
+    public void showDatePickerDialog(View view) {
+        DialogFragment newFragment = new DatePickerFragment();
+        newFragment.show(getSupportFragmentManager(), "datePicker");
     }
 
     private boolean isValuesChanged(String amountStr, String date, String note) {
@@ -100,14 +112,25 @@ public class EditIncomeActivity extends RoboFragmentActivity {
         balance.subtract(sum);
     }
 
-    /**
-     * Date button onClick method.
-     * @param view
-     *            Required for onclick.
-     */
-    public void showDatePickerDialog(View view) {
-        DialogFragment newFragment = new DatePickerFragment();
-        newFragment.show(getSupportFragmentManager(), "datePicker");
+    private void setTitle() {
+        if (type.equals(StatementType.Income)) {
+            setTitle(R.string.title_activity_edit_incomes);
+        } else {
+            setTitle(R.string.title_activity_edit_expenses);
+        }
     }
 
+    private void fillFieldsWithData() {
+        amountText.setText(intent.getStringExtra(AMOUNT_EXTRA));
+        notesText.setText(intent.getStringExtra(NOTE_EXTRA));
+        dateButton.setText(intent.getStringExtra(DATE_EXTRA));
+    }
+
+    private void setStatementType() {
+        if (getIntent().getStringExtra(STATEMENT_TYPE_EXTRA).equals(INCOME_EXTRA)) {
+            type = StatementType.Income;
+        } else {
+            type = StatementType.Expense;
+        }
+    }
 }

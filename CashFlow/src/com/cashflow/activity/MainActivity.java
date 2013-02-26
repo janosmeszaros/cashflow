@@ -1,5 +1,9 @@
 package com.cashflow.activity;
 
+import static com.cashflow.constants.Constants.EXPENSE_EXTRA;
+import static com.cashflow.constants.Constants.INCOME_EXTRA;
+import static com.cashflow.constants.Constants.STATEMENT_TYPE_EXTRA;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,7 +64,8 @@ public class MainActivity extends RoboActivity {
      *            Required for onclick.
      */
     public void addIncome(View view) {
-        Intent intent = new Intent(this, AddIncomeActivity.class);
+        Intent intent = new Intent(this, AddStatementActivity.class);
+        intent.putExtra(STATEMENT_TYPE_EXTRA, INCOME_EXTRA);
         startActivity(intent);
 
     }
@@ -71,7 +76,8 @@ public class MainActivity extends RoboActivity {
      *            Required for onclick.
      */
     public void addExpense(View view) {
-        Intent intent = new Intent(this, AddExpenseActivity.class);
+        Intent intent = new Intent(this, AddStatementActivity.class);
+        intent.putExtra(STATEMENT_TYPE_EXTRA, EXPENSE_EXTRA);
         startActivity(intent);
     }
 
@@ -81,7 +87,8 @@ public class MainActivity extends RoboActivity {
      *            Required for onclick.
      */
     public void listIncomes(View view) {
-        Intent intent = new Intent(this, ListIncomesActivity.class);
+        Intent intent = new Intent(this, ListStatementActivity.class);
+        intent.putExtra(STATEMENT_TYPE_EXTRA, INCOME_EXTRA);
         startActivity(intent);
     }
 
@@ -91,7 +98,8 @@ public class MainActivity extends RoboActivity {
      *            Required for onclick.
      */
     public void listExpenses(View view) {
-        Intent intent = new Intent(this, ListExpensesActivity.class);
+        Intent intent = new Intent(this, ListStatementActivity.class);
+        intent.putExtra(STATEMENT_TYPE_EXTRA, EXPENSE_EXTRA);
         startActivity(intent);
     }
 
