@@ -35,6 +35,7 @@
 		</plugins>
 	</build>
 	<dependencies>
+		<!-- Android -->
 		<dependency>
 			<groupId>com.google.android</groupId>
 			<artifactId>android</artifactId>
@@ -48,10 +49,12 @@
 			<groupId>com.google.android</groupId>
 			<artifactId>annotations</artifactId>
 		</dependency>
+		<!-- Android logger -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-android</artifactId>
 		</dependency>
+		<!-- RoboGuice inject framework -->
 		<dependency>
 			<groupId>org.roboguice</groupId>
 			<artifactId>roboguice</artifactId>

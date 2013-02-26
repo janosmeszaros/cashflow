@@ -32,6 +32,9 @@
 	<!-- PIT ends -->
 
 	<dependencies>
+
+		<!-- CashFlow -->
+
 		<dependency>
 			<groupId>com.cashflow</groupId>
 			<artifactId>CashFlow</artifactId>
@@ -43,10 +46,12 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+
+		<!-- Android -->
+
 		<dependency>
 			<groupId>com.google.android</groupId>
 			<artifactId>android</artifactId>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.google.android</groupId>
@@ -56,6 +61,17 @@
 			<groupId>com.google.android</groupId>
 			<artifactId>annotations</artifactId>
 		</dependency>
+
+		<!-- Tests -->
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.roboguice</groupId>
 			<artifactId>roboguice</artifactId>
@@ -63,29 +79,17 @@
 		<dependency>
 			<groupId>com.pivotallabs</groupId>
 			<artifactId>robolectric</artifactId>
-			<version>1.2</version>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.8.2</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.hamcrest</groupId>
 			<artifactId>hamcrest-all</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-all</artifactId>
-			<version>1.8.4</version>
-		</dependency>
+
+		<!-- Logging -->
+
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>1.7.2</version>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>

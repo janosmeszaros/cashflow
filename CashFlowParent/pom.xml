@@ -15,16 +15,23 @@
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.version>3.0.3</maven.version>
-		<junit.version>4.10</junit.version>
-		<java.version>1.6</java.version>
-		<android.version>4.1.1.4</android.version>
-		<android.support.version>r7</android.support.version>
+		<!-- Group IDs -->
+		<android.groupid>com.google.android</android.groupid>
+		<logback.groupid>ch.qos.logback</logback.groupid>
+		<!-- Versions -->
 		<android.annotations.version>4.1.1.4</android.annotations.version>
-		<slf4j.version>1.6.1-RC1</slf4j.version>
-		<roboguice.version>2.0</roboguice.version>
-		<hamcrest.version>1.3</hamcrest.version>
+		<android.support.version>r7</android.support.version>
+		<android.version>4.1.1.4</android.version>
+		<com.pivotallabs.robolectric.version>1.2</com.pivotallabs.robolectric.version>
 		<ch.qos.logback.version>1.0.9</ch.qos.logback.version>
+		<hamcrest.version>1.3</hamcrest.version>
+		<java.version>1.6</java.version>
+		<junit.version>4.11</junit.version>
+		<maven.version>3.0.3</maven.version>
+		<org.mockito.mockito-all>1.9.5</org.mockito.mockito-all>
+		<org.slf4j.slf4j-android.version>1.6.1-RC1</org.slf4j.slf4j-android.version>
+		<org.slf4j.slf4j-api.version>1.7.2</org.slf4j.slf4j-api.version>
+		<roboguice.version>2.0</roboguice.version>
 	</properties>
 
 	<build>
@@ -44,31 +51,58 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>com.google.android</groupId>
+				<groupId>${android.groupid}</groupId>
 				<artifactId>android</artifactId>
 				<version>${android.version}</version>
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
-				<groupId>com.google.android</groupId>
+				<groupId>${android.groupid}</groupId>
 				<artifactId>support-v4</artifactId>
 				<version>${android.support.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.google.android</groupId>
+				<groupId>${android.groupid}</groupId>
 				<artifactId>annotations</artifactId>
 				<version>${android.annotations.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-android</artifactId>
-				<version>${slf4j.version}</version>
+				<version>${org.slf4j.slf4j-android.version}</version>
 				<scope>runtime</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${org.slf4j.slf4j-api.version}</version>
+			</dependency>
+
+			<!-- Tests -->
+
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>${junit.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-all</artifactId>
+				<version>${org.mockito.mockito-all}</version>
+				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.roboguice</groupId>
 				<artifactId>roboguice</artifactId>
 				<version>${roboguice.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.pivotallabs</groupId>
+				<artifactId>robolectric</artifactId>
+				<version>${com.pivotallabs.robolectric.version}</version>
+				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.hamcrest</groupId>
@@ -77,26 +111,17 @@
 				<scope>test</scope>
 			</dependency>
 			<dependency>
-				<groupId>ch.qos.logback</groupId>
+				<groupId>${logback.groupid}</groupId>
 				<artifactId>logback-core</artifactId>
 				<version>${ch.qos.logback.version}</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
-				<groupId>ch.qos.logback</groupId>
+				<groupId>${logback.groupid}</groupId>
 				<artifactId>logback-classic</artifactId>
 				<version>${ch.qos.logback.version}</version>
 				<scope>test</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-	<dependencies>
-
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.slf4j</groupId> -->
-<!-- 			<artifactId>slf4j-api</artifactId> -->
-<!-- 			<version>1.7.2</version> -->
-<!-- 		</dependency> -->
-
-	</dependencies>
 </project>
