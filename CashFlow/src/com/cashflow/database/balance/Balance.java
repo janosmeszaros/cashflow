@@ -48,6 +48,7 @@ public final class Balance {
      *            amount to subtract.
      */
     public void subtract(BigDecimal amount) {
+        LOG.debug("Subtracting " + amount.doubleValue() + " from " + amountBalance.doubleValue());
         amountBalance = amountBalance.subtract(amount);
         LOG.debug("The new balance is after subtracting: " + amountBalance.doubleValue());
     }
@@ -58,6 +59,7 @@ public final class Balance {
      *            amount to add.
      */
     public void add(BigDecimal amount) {
+        LOG.debug("Adding " + amount.doubleValue() + " to " + amountBalance.doubleValue());
         amountBalance = amountBalance.add(amount);
         LOG.debug("The new balance is after adding: " + amountBalance.doubleValue());
     }
@@ -67,7 +69,7 @@ public final class Balance {
         double incomes = countSumOfStatement(service.getStatement(StatementType.Income));
 
         amountBalance = BigDecimal.valueOf(incomes - expenses);
-        LOG.debug("starting balance is: " + amountBalance.doubleValue());
+        LOG.debug("Starting balance is: " + amountBalance.doubleValue());
     }
 
     private double countSumOfStatement(Cursor statement) {

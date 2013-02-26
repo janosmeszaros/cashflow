@@ -2,8 +2,8 @@ package com.cashflow.activity;
 
 import static com.cashflow.constants.EditConstants.AMOUNT_EXTRA;
 import static com.cashflow.constants.EditConstants.DATE_EXTRA;
+import static com.cashflow.constants.EditConstants.EDIT_ACTIVITY_CODE;
 import static com.cashflow.constants.EditConstants.ID_EXTRA;
-import static com.cashflow.constants.EditConstants.IS_EDITED_EXTRA;
 import static com.cashflow.constants.EditConstants.NOTE_EXTRA;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_DATE;
@@ -43,7 +43,12 @@ public class ListIncomesActivity extends RoboListActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LOG.debug("ListIncomesActivity is creating...");
+
         setContentView(R.layout.activity_list_statements);
+        getDataFromDatabase();
+
+        LOG.debug("ListIncomesActivity has created...");
     }
 
     @Override
@@ -51,19 +56,6 @@ public class ListIncomesActivity extends RoboListActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.list_incomes, menu);
         return true;
-    }
-
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        LOG.debug("ListIncomesActivity's focus changed to: " + hasFocus);
-        if (hasFocus) {
-            Cursor cursor = service.getStatement(StatementType.Income);
-
-            mAdapter = new SimpleCursorAdapter(this,
-                    R.layout.list_statements_row, cursor,
-                    fromColumns, toViews, 0);
-            setListAdapter(mAdapter);
-        }
     }
 
     /**
@@ -75,7 +67,17 @@ public class ListIncomesActivity extends RoboListActivity {
         LOG.debug("Edit button clicked");
         Intent intent = new Intent(this, EditIncomeActivity.class);
         addExtras((View) view.getParent(), intent);
-        startActivity(intent);
+        startActivityForResult(intent, EDIT_ACTIVITY_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        LOG.debug("ListIncomesActivity's onActivityResult method called with params: \nrequestCode: " + requestCode + "\nresultCode: "
+                + requestCode);
+        if (isEditActivity(requestCode, resultCode)) {
+            getDataFromDatabase();
+        }
     }
 
     private void addExtras(View view, Intent intent) {
@@ -84,12 +86,26 @@ public class ListIncomesActivity extends RoboListActivity {
         TextView note = (TextView) view.findViewById(R.id.row_note);
         TextView date = (TextView) view.findViewById(R.id.row_date);
 
-        intent.putExtra(IS_EDITED_EXTRA, true);
-
         intent.putExtra(ID_EXTRA, id.getText());
         intent.putExtra(AMOUNT_EXTRA, amount.getText());
         intent.putExtra(NOTE_EXTRA, note.getText());
         intent.putExtra(DATE_EXTRA, date.getText());
 
+    }
+
+    private boolean isEditActivity(int requestCode, int resultCode) {
+        return resultCode == RESULT_OK && requestCode == EDIT_ACTIVITY_CODE;
+    }
+
+    private void getDataFromDatabase() {
+        LOG.debug("Starting query.");
+
+        Cursor cursor = service.getStatement(StatementType.Income);
+        mAdapter = new SimpleCursorAdapter(this,
+                R.layout.list_statements_row, cursor,
+                fromColumns, toViews, 0);
+        setListAdapter(mAdapter);
+
+        LOG.debug("Query has done.");
     }
 }

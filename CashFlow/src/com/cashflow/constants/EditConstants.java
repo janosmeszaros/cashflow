@@ -10,6 +10,7 @@ public final class EditConstants {
     public static final String NOTE_EXTRA = "note";
     public static final String DATE_EXTRA = "date";
     public static final String ID_EXTRA = "id";
+    public static final int EDIT_ACTIVITY_CODE = 0;
 
     private EditConstants() {
     }

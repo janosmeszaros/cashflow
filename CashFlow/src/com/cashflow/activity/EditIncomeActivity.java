@@ -7,6 +7,9 @@ import static com.cashflow.constants.EditConstants.NOTE_EXTRA;
 
 import java.math.BigDecimal;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import roboguice.activity.RoboFragmentActivity;
 import roboguice.inject.InjectView;
 import android.content.Intent;
@@ -28,7 +31,7 @@ import com.google.inject.Inject;
  * @author Janos_Gyula_Meszaros
  */
 public class EditIncomeActivity extends RoboFragmentActivity {
-
+    private static final Logger LOG = LoggerFactory.getLogger(EditIncomeActivity.class);
     @Inject
     private StatementPersistentService service;
     @InjectView(R.id.amountText)
@@ -68,16 +71,31 @@ public class EditIncomeActivity extends RoboFragmentActivity {
         String note = notesText.getText().toString();
         String id = intent.getStringExtra(ID_EXTRA);
 
-        if (service.updateStatement(id, amountStr, date, note, StatementType.Income)) {
+        if (isValuesChanged(amountStr, date, note) && service.updateStatement(id, amountStr, date, note, StatementType.Income)) {
             refreshBalance(amountStr);
-            finish();
+            setResult(RESULT_OK);
+        } else {
+            setResult(RESULT_CANCELED);
         }
+
+        finish();
+    }
+
+    private boolean isValuesChanged(String amountStr, String date, String note) {
+        boolean result = false;
+        if (amountStr.equals(intent.getStringExtra(AMOUNT_EXTRA)) || date.equals(intent.getStringExtra(DATE_EXTRA))
+                || note.equals(intent.getStringExtra(DATE_EXTRA))) {
+            result = true;
+        }
+        return result;
     }
 
     private void refreshBalance(String amountStr) {
         BigDecimal originalAmount = new BigDecimal(intent.getStringExtra(AMOUNT_EXTRA));
         BigDecimal currentAmount = new BigDecimal(amountStr);
         BigDecimal sum = originalAmount.subtract(currentAmount);
+
+        LOG.debug("Original amount " + originalAmount.doubleValue() + " changed to " + currentAmount.doubleValue());
 
         balance.subtract(sum);
     }
