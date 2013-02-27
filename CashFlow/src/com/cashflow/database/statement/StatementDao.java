@@ -1,11 +1,9 @@
 package com.cashflow.database.statement;
 
 import static android.provider.BaseColumns._ID;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_DATE;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_NOTE;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.EXPENSE_SELECTION;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.INCOME_SELECTION;
+import static com.cashflow.database.DatabaseContracts.AbstractStatement.PROJECTION;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.TABLE_NAME;
 
 import org.slf4j.Logger;
@@ -27,7 +25,6 @@ import com.google.inject.Singleton;
 @Singleton
 public class StatementDao {
     private static final Logger LOG = LoggerFactory.getLogger(StatementDao.class);
-    private static final String[] PROJECTION = new String[]{_ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE, COLUMN_NAME_NOTE};
 
     private SQLiteDbProvider provider;
 
