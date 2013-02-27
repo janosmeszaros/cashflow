@@ -101,7 +101,7 @@ public class AddStatementActivity extends RoboFragmentActivity {
             type = StatementType.Income;
         } else {
             type = StatementType.Expense;
-}
+        }
     }
 
     private void setTitle() {

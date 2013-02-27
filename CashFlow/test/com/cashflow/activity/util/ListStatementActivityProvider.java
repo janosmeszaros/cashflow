@@ -1,17 +1,16 @@
 package com.cashflow.activity.util;
 
-import com.cashflow.activity.ListExpensesActivity;
+import com.cashflow.activity.ListStatementActivity;
 import com.google.inject.Provider;
 
 /**
  * {@link ListExpensesActivity} {@link Provider}.
  * @author Kornel_Refi
- *
  */
-public class ListExpensesActivityProvider implements Provider<ListExpensesActivity> {
+public class ListStatementActivityProvider implements Provider<ListStatementActivity> {
 
     @Override
-    public ListExpensesActivity get() {
-        return new ListExpensesActivity();
+    public ListStatementActivity get() {
+        return new ListStatementActivity();
     }
 }

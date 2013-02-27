@@ -25,7 +25,6 @@ import com.xtremelabs.robolectric.RobolectricTestRunner;
 /**
  * {@link ListExpensesActivity} test.
  * @author Kornel_Refi
- *
  */
 @RunWith(RobolectricTestRunner.class)
 public class ListExpensesActivityTest {
@@ -37,8 +36,8 @@ public class ListExpensesActivityTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         ListExpensesModule module = new ListExpensesModule();
-        MatrixCursor matrixCursor = new MatrixCursor(new String[]{COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE});
-        matrixCursor.addRow(new Object[]{1234L, "2012"});
+        MatrixCursor matrixCursor = new MatrixCursor(new String[] { COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE });
+        matrixCursor.addRow(new Object[] { 1234L, "2012" });
         when(statementPersistentService.getStatement(StatementType.Expense)).thenReturn(matrixCursor);
         when(statementPersistentService.getStatement(StatementType.Income)).thenReturn(new MatrixCursor(new String[] {}));
 
@@ -53,7 +52,7 @@ public class ListExpensesActivityTest {
 
     @Test
     public void shouldContainList() {
-        ListExpensesActivity activity = new ListExpensesActivity();
+        ListStatementActivity activity = new ListStatementActivity();
         activity.onCreate(null);
 
         ListView listView = (ListView) activity.findViewById(R.id.list_statement);
@@ -61,6 +60,6 @@ public class ListExpensesActivityTest {
         SimpleCursorAdapter adapter = (SimpleCursorAdapter) listView.getAdapter();
         Cursor cursor = adapter.getCursor();
         // cursor is null
-        //        cursor.moveToFirst();
+        cursor.moveToFirst();
     }
 }

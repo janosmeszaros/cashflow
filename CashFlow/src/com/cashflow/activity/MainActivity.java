@@ -76,7 +76,6 @@ public class MainActivity extends RoboActivity {
      *            Required for onclick.
      */
     public void addExpense(View view) {
-        Intent intent = new Intent(this, AddExpenseActivity.class);
         Intent intent = new Intent(this, AddStatementActivity.class);
         intent.putExtra(STATEMENT_TYPE_EXTRA, EXPENSE_EXTRA);
         startActivity(intent);

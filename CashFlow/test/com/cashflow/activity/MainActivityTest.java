@@ -22,7 +22,6 @@ import com.xtremelabs.robolectric.shadows.ShadowIntent;
 /**
  * {@link MainActivity} test.
  * @author Kornel_Refi
- *
  */
 @RunWith(RobolectricTestRunner.class)
 public class MainActivityTest {
@@ -57,7 +56,7 @@ public class MainActivityTest {
         Intent startedIntent = shadowActivity.getNextStartedActivity();
         ShadowIntent shadowIntent = Robolectric.shadowOf(startedIntent);
 
-        assertThat(shadowIntent.getComponent().getClassName(), equalTo(AddIncomeActivity.class.getName()));
+        assertThat(shadowIntent.getComponent().getClassName(), equalTo(AddStatementActivity.class.getName()));
 
     }
 
@@ -75,7 +74,7 @@ public class MainActivityTest {
         Intent startedIntent = shadowActivity.getNextStartedActivity();
         ShadowIntent shadowIntent = Robolectric.shadowOf(startedIntent);
 
-        assertThat(shadowIntent.getComponent().getClassName(), equalTo(AddExpenseActivity.class.getName()));
+        assertThat(shadowIntent.getComponent().getClassName(), equalTo(AddStatementActivity.class.getName()));
 
     }
 
@@ -93,7 +92,7 @@ public class MainActivityTest {
         Intent startedIntent = shadowActivity.getNextStartedActivity();
         ShadowIntent shadowIntent = Robolectric.shadowOf(startedIntent);
 
-        assertThat(shadowIntent.getComponent().getClassName(), equalTo(ListExpensesActivity.class.getName()));
+        assertThat(shadowIntent.getComponent().getClassName(), equalTo(ListStatementActivity.class.getName()));
 
     }
 
@@ -111,7 +110,7 @@ public class MainActivityTest {
         Intent startedIntent = shadowActivity.getNextStartedActivity();
         ShadowIntent shadowIntent = Robolectric.shadowOf(startedIntent);
 
-        assertThat(shadowIntent.getComponent().getClassName(), equalTo(ListIncomesActivity.class.getName()));
+        assertThat(shadowIntent.getComponent().getClassName(), equalTo(ListStatementActivity.class.getName()));
 
     }
 }

@@ -1,8 +1,5 @@
 package com.cashflow.database;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import android.app.Application;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -13,8 +10,6 @@ import com.google.inject.Inject;
  * @author Janos_Gyula_Meszaros
  */
 public class DbHelperSQLiteDbProvider implements SQLiteDbProvider {
-
-    private static final Logger LOG = LoggerFactory.getLogger(DbHelperSQLiteDbProvider.class);
     private final Application application;
 
     /**

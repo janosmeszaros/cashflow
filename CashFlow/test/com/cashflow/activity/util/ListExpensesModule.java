@@ -34,7 +34,7 @@ public class ListExpensesModule extends AbstractModule {
     @SuppressWarnings("unchecked")
     @Override
     protected void configure() {
-        bind(Activity.class).toProvider(ListExpensesActivityProvider.class).in(ContextSingleton.class);
+        bind(Activity.class).toProvider(ListStatementActivityProvider.class).in(ContextSingleton.class);
         Set<Entry<Class<?>, Object>> entries = bindings.entrySet();
         for (Entry<Class<?>, Object> entry : entries) {
             bind((Class<Object>) entry.getKey()).toInstance(entry.getValue());
