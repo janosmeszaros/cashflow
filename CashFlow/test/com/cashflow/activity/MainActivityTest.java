@@ -49,7 +49,7 @@ public class MainActivityTest {
 
         activity.onCreate(null);
 
-        View addIncome = activity.findViewById(R.id.addIncomeButton);
+        View addIncome = activity.findViewById(R.id.submitButton);
 
         addIncome.performClick();
 

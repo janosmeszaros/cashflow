@@ -41,16 +41,16 @@ public class StatementPersistentService {
      *            Date of the statement.
      * @param note
      *            Note for the statement.
-     * @param isIncome
-     *            <code>true</code> if the statement is income, <code>false</code> otherwise
-     * @return <code>true</code> if saving was successful, <code>false</code> otherwise.
+     * @param type
+     *            Statement's type
+     * @return true if saving was successful, false otherwise.
      */
-    public boolean saveStatement(String amountStr, String date, String note, boolean isIncome) {
+    public boolean saveStatement(String amountStr, String date, String note, StatementType type) {
         boolean result = false;
         BigDecimal amount = parseAmount(amountStr);
 
         if (checkIfNotZero(amount)) {
-            ContentValues values = createContentValue(amount, date, note, isIncome);
+            ContentValues values = createContentValue(amount, date, note, type);
             dao.save(values);
             result = true;
         }
@@ -70,6 +70,30 @@ public class StatementPersistentService {
         } else if (isIncome(type)) {
             result = dao.getIncomes();
         }
+
+        return result;
+    }
+
+    /**
+     * Updates statement with the specified id.
+     * @param id
+     *            id.
+     * @param amountStr
+     *            new amount for the statement.
+     * @param date
+     *            new date for the statement.
+     * @param note
+     *            new note for the statement.
+     * @param type
+     *            type of the statement.
+     * @return true if successful.
+     */
+    public boolean updateStatement(String id, String amountStr, String date, String note, StatementType type) {
+        boolean result = true;
+        BigDecimal amount = parseAmount(amountStr);
+
+        ContentValues value = createContentValue(amount, date, note, type);
+        dao.update(value, id);
 
         return result;
     }
@@ -100,16 +124,17 @@ public class StatementPersistentService {
         return amount;
     }
 
-    private ContentValues createContentValue(BigDecimal amount, String date, String note, boolean isIncome) {
+    private ContentValues createContentValue(BigDecimal amount, String date, String note, StatementType type) {
         // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
         values.put(DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT, amount.toString());
         values.put(DatabaseContracts.AbstractStatement.COLUMN_NAME_DATE, date);
-        values.put(DatabaseContracts.AbstractStatement.COLUMN_NAME_IS_INCOME, isIncome ? TRUE : FALSE);
+        values.put(DatabaseContracts.AbstractStatement.COLUMN_NAME_IS_INCOME, isIncome(type) ? TRUE : FALSE);
         values.put(DatabaseContracts.AbstractStatement.COLUMN_NAME_NOTE, note);
 
         LOG.debug("Content created: " + values);
 
         return values;
     }
+
 }
