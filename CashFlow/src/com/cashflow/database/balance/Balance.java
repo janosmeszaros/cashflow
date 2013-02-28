@@ -72,14 +72,14 @@ public final class Balance {
         LOG.debug("Starting balance is: " + amountBalance.doubleValue());
     }
 
-    private double countSumOfStatement(Cursor statement) {
-        int index = statement.getColumnIndex(COLUMN_NAME_AMOUNT);
+    private double countSumOfStatement(Cursor cursor) {
+        int index = cursor.getColumnIndex(COLUMN_NAME_AMOUNT);
         double amount = 0L;
 
-        statement.moveToFirst();
-        while (!statement.isAfterLast()) {
-            amount += statement.getLong(index);
-            statement.moveToNext();
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            amount += cursor.getLong(index);
+            cursor.moveToNext();
         }
 
         return amount;

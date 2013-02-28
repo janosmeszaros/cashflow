@@ -26,7 +26,7 @@
 		<ch.qos.logback.version>1.0.9</ch.qos.logback.version>
 		<hamcrest.version>1.3</hamcrest.version>
 		<java.version>1.6</java.version>
-		<junit.version>4.11</junit.version>
+		<junit.version>4.10</junit.version>
 		<maven.version>3.0.3</maven.version>
 		<org.mockito.mockito-all>1.9.5</org.mockito.mockito-all>
 		<org.slf4j.slf4j-android.version>1.6.1-RC1</org.slf4j.slf4j-android.version>
@@ -92,11 +92,11 @@
 				<version>${org.mockito.mockito-all}</version>
 				<scope>test</scope>
 			</dependency>
+
 			<dependency>
 				<groupId>org.roboguice</groupId>
 				<artifactId>roboguice</artifactId>
 				<version>${roboguice.version}</version>
-				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>com.pivotallabs</groupId>

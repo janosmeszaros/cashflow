@@ -1,47 +1,51 @@
 package com.cashflow.database.balance;
 
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.when;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import android.database.MatrixCursor;
 
 import com.cashflow.database.statement.StatementPersistentService;
 import com.cashflow.database.statement.StatementType;
+import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 /**
  * {@link Balance} test.
  * @author Kornel_Refi
- *
  */
+@RunWith(RobolectricTestRunner.class)
 public class BalanceTest {
-    private static final Logger LOG = LoggerFactory.getLogger(BalanceTest.class);
     private Balance underTest;
     @Mock
     private StatementPersistentService statementPersistentServiceMock;
+    @Mock
+    private MatrixCursor matrixCursorMock;
 
     @Before
     public void setup() {
+
         MockitoAnnotations.initMocks(this);
 
-        MatrixCursor matrixCursor = new MatrixCursor(new String[]{COLUMN_NAME_AMOUNT});
-        matrixCursor.addRow(new Object[]{1234L});
-        when(statementPersistentServiceMock.getStatement(StatementType.Expense)).thenReturn(matrixCursor);
-        when(statementPersistentServiceMock.getStatement(StatementType.Income)).thenReturn(matrixCursor);
+        when(statementPersistentServiceMock.getStatement(StatementType.Expense)).thenReturn(matrixCursorMock);
+        when(statementPersistentServiceMock.getStatement(StatementType.Income)).thenReturn(matrixCursorMock);
+
+        when(matrixCursorMock.getColumnIndex(COLUMN_NAME_AMOUNT)).thenReturn(0);
+        when(matrixCursorMock.isAfterLast()).thenReturn(false, true, false, true);
+        when(matrixCursorMock.getLong(0)).thenReturn(1L, 2L);
 
         underTest = Balance.getInstance(statementPersistentServiceMock);
     }
 
     @Test
-    public void test() {
-        LOG.debug("Balance: " + underTest);
-        Assert.assertTrue(true);
+    public void testBalanceShouldBeOne() {
+        assertThat(underTest.getBalance(), equalTo(1D));
     }
 }
