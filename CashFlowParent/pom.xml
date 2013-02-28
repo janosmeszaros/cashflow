@@ -70,7 +70,7 @@
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-android</artifactId>
 				<version>${org.slf4j.slf4j-android.version}</version>
-				<scope>runtime</scope>
+				<scope>compile</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>
