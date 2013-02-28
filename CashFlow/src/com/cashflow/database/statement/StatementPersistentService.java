@@ -1,20 +1,26 @@
 package com.cashflow.database.statement;
 
+import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
+import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_DATE;
+import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_IS_INCOME;
+import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_NOTE;
+
 import java.math.BigDecimal;
 
+import org.apache.commons.lang.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import com.cashflow.database.DatabaseContracts;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
  * Class to create statement for dao.
  * @author Kornel_Refi
+ * @author Janos_Gyula_Meszaros
  */
 @Singleton
 public class StatementPersistentService {
@@ -26,10 +32,13 @@ public class StatementPersistentService {
     /**
      * Default constructor which gets a context for DbHelper.
      * @param dao
-     *            {@link StatementDao} to use to save data.
+     *            {@link StatementDao} to use to save data. Can't be null.
+     * @throws IllegalArgumentException
+     *             when dao is null.
      */
     @Inject
     public StatementPersistentService(StatementDao dao) {
+        validateInput(dao);
         this.dao = dao;
     }
 
@@ -43,9 +52,11 @@ public class StatementPersistentService {
      *            Note for the statement.
      * @param type
      *            Statement's type
-     * @return true if saving was successful, false otherwise.
+     * @return true if saving was successful and the amount wasn't zero, false otherwise.
      */
     public boolean saveStatement(String amountStr, String date, String note, StatementType type) {
+        validateInput(type, amountStr, date);
+
         boolean result = false;
         BigDecimal amount = parseAmount(amountStr);
 
@@ -64,11 +75,13 @@ public class StatementPersistentService {
      * @return a cursor which contains the values.
      */
     public Cursor getStatement(StatementType type) {
+        validateInput(type);
+
         Cursor result = null;
-        if (isExpense(type)) {
-            result = dao.getExpenses();
-        } else if (isIncome(type)) {
+        if (isIncome(type)) {
             result = dao.getIncomes();
+        } else {
+            result = dao.getExpenses();
         }
 
         return result;
@@ -89,6 +102,8 @@ public class StatementPersistentService {
      * @return true if successful.
      */
     public boolean updateStatement(String id, String amountStr, String date, String note, StatementType type) {
+        validateInput(type, amountStr, date, id);
+
         boolean result = true;
         BigDecimal amount = parseAmount(amountStr);
 
@@ -102,10 +117,6 @@ public class StatementPersistentService {
         return type.equals(StatementType.Income);
     }
 
-    private boolean isExpense(StatementType type) {
-        return type.equals(StatementType.Expense);
-    }
-
     private boolean checkIfNotZero(BigDecimal amount) {
         boolean result = true;
         if (amount.compareTo(BigDecimal.ZERO) == 0) {
@@ -117,24 +128,30 @@ public class StatementPersistentService {
     private BigDecimal parseAmount(String amountStr) {
         BigDecimal amount = BigDecimal.ZERO;
 
-        if (amountStr.length() != 0) {
+        try {
             amount = new BigDecimal(amountStr);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException();
         }
-
         return amount;
     }
 
     private ContentValues createContentValue(BigDecimal amount, String date, String note, StatementType type) {
-        // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
-        values.put(DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT, amount.toString());
-        values.put(DatabaseContracts.AbstractStatement.COLUMN_NAME_DATE, date);
-        values.put(DatabaseContracts.AbstractStatement.COLUMN_NAME_IS_INCOME, isIncome(type) ? TRUE : FALSE);
-        values.put(DatabaseContracts.AbstractStatement.COLUMN_NAME_NOTE, note);
+        values.put(COLUMN_NAME_AMOUNT, amount.toString());
+        values.put(COLUMN_NAME_DATE, date);
+        values.put(COLUMN_NAME_IS_INCOME, isIncome(type) ? TRUE : FALSE);
+        values.put(COLUMN_NAME_NOTE, note);
 
         LOG.debug("Content created: " + values);
 
         return values;
     }
 
+    private void validateInput(Object obj, String... params) {
+        for (String string : params) {
+            Validate.notEmpty(string);
+        }
+        Validate.notNull(obj);
+    }
 }

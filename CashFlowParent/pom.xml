@@ -32,6 +32,7 @@
 		<org.slf4j.slf4j-android.version>1.6.1-RC1</org.slf4j.slf4j-android.version>
 		<org.slf4j.slf4j-api.version>1.7.2</org.slf4j.slf4j-api.version>
 		<roboguice.version>2.0</roboguice.version>
+		<apache.commons.version>2.6</apache.commons.version>
 	</properties>
 
 	<build>
@@ -76,6 +77,11 @@
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-api</artifactId>
 				<version>${org.slf4j.slf4j-api.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-lang</groupId>
+				<artifactId>commons-lang</artifactId>
+				<version>${apache.commons.version}</version>
 			</dependency>
 
 			<!-- Tests -->
