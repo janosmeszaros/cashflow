@@ -27,6 +27,9 @@ public class ListExpensesModule extends AbstractModule {
 
     private Map<Class<?>, Object> bindings;
 
+    /**
+     * Creates a new Guice module for ListExpenseActivity testing.
+     */
     public ListExpensesModule() {
         bindings = new HashMap<Class<?>, Object>();
     }
@@ -41,6 +44,11 @@ public class ListExpensesModule extends AbstractModule {
         }
     }
 
+    /**
+     * Add binding.
+     * @param type class name
+     * @param object actual object
+     */
     public void addBinding(Class<?> type, Object object) {
         bindings.put(type, object);
     }

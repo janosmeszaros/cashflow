@@ -15,13 +15,15 @@ import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_N
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import roboguice.activity.RoboListActivity;
+import roboguice.activity.RoboActivity;
+import roboguice.inject.InjectView;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.Menu;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.cashflow.R;
@@ -34,7 +36,7 @@ import com.google.inject.Inject;
  * Basic class to list incomes.
  * @author Janos_Gyula_Meszaros
  */
-public class ListStatementActivity extends RoboListActivity {
+public class ListStatementActivity extends RoboActivity {
     private static final Logger LOG = LoggerFactory.getLogger(ListStatementActivity.class);
     private String[] fromColumns = { AbstractStatement._ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE, COLUMN_NAME_NOTE };
     private int[] toViews = { R.id.row_id, R.id.row_amount, R.id.row_date, R.id.row_note };
@@ -43,6 +45,8 @@ public class ListStatementActivity extends RoboListActivity {
     private SimpleCursorAdapter mAdapter;
     @Inject
     private StatementPersistentService service;
+    @InjectView(R.id.list_statement)
+    private ListView list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +118,7 @@ public class ListStatementActivity extends RoboListActivity {
         mAdapter = new SimpleCursorAdapter(this,
                 R.layout.list_statements_row, cursor,
                 fromColumns, toViews, 0);
-        setListAdapter(mAdapter);
+        list.setAdapter(mAdapter);
 
         LOG.debug("Query has done.");
     }
