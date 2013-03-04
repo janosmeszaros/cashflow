@@ -56,4 +56,10 @@ public class BalanceTest {
         underTest.subtract(BigDecimal.ONE);
         assertThat(underTest.getBalance(), equalTo(0D));
     }
+
+    @Test
+    public void testAddResultShouldBeTwo() {
+        underTest.add(BigDecimal.ONE);
+        assertThat(underTest.getBalance(), equalTo(2D));
+    }
 }
