@@ -11,6 +11,15 @@
 	<artifactId>CashFlowTest</artifactId>
 	<name>CashFlowTest</name>
 
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<version>2.5.2</version>
+			</plugin>
+		</plugins>
+	</reporting>
 
 	<build>
 		<testSourceDirectory>../CashFlow/test</testSourceDirectory>
@@ -61,35 +70,45 @@
 					</execution>
 				</executions>
 			</plugin>
-			  <plugin>
-    <artifactId>maven-clean-plugin</artifactId>
-    <version>2.5</version>
-    <configuration>
-      <filesets>
-        <fileset>
-          <directory>${basedir}/</directory>
-          		  <excludes>
-			<exclude>pom.xml</exclude>
-			<exclude>.project</exclude>
-			<exclude>.classpath</exclude>
-		  </excludes>
-		  <includes>
-            <include>**/res</include>
-            <include>**/AndroidManifest.xml</include>
-          </includes>
-        </fileset>
-		        <fileset>
-          <directory>${basedir}/res</directory>
-		  <includes>
-            <include>**</include>
-          </includes>
-        </fileset>
-      </filesets>
-    </configuration>
-  </plugin>
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>2.5</version>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>${basedir}/</directory>
+							<excludes>
+								<exclude>pom.xml</exclude>
+								<exclude>.project</exclude>
+								<exclude>.classpath</exclude>
+							</excludes>
+							<includes>
+								<include>**/res</include>
+								<include>**/AndroidManifest.xml</include>
+							</includes>
+						</fileset>
+						<fileset>
+							<directory>${basedir}/res</directory>
+							<includes>
+								<include>**</include>
+							</includes>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<configuration>
+					<instrumentation>
+						<includes>
+							<include>../CashFlow/test/**</include>
+						</includes>
+					</instrumentation>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
-
 
 	<dependencies>
 

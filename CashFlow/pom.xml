@@ -12,6 +12,7 @@
 	<packaging>apk</packaging>
 	<name>CashFlow</name>
 
+
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<plugins>
