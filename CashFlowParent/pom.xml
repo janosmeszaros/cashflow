@@ -30,7 +30,6 @@
 		<java.version>1.6</java.version>
 		<junit.version>4.10</junit.version>
 		<maven.version>3.0.3</maven.version>
-		<net.sourceforge.cobertura.cobertura.version>1.9.4.1</net.sourceforge.cobertura.cobertura.version>
 		<org.mockito.mockito-all>1.9.5</org.mockito.mockito-all>
 		<org.slf4j.slf4j-android.version>1.6.1-RC1</org.slf4j.slf4j-android.version>
 		<org.slf4j.slf4j-api.version>1.7.2</org.slf4j.slf4j-api.version>
@@ -165,17 +164,6 @@
 				<version>${ch.qos.logback.version}</version>
 				<scope>test</scope>
 			</dependency>
-			<dependency>
-				<groupId>net.sourceforge.cobertura</groupId>
-				<artifactId>cobertura</artifactId>
-				<version>${net.sourceforge.cobertura.cobertura.version}</version>
-			</dependency>
 		</dependencies>
 	</dependencyManagement>
-	<dependencies>
-		<dependency>
-			<groupId>net.sourceforge.cobertura</groupId>
-			<artifactId>cobertura</artifactId>
-		</dependency>
-	</dependencies>
 </project>
