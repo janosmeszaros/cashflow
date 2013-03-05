@@ -1,7 +1,12 @@
 package com.cashflow.activity;
 
+import static com.cashflow.constants.Constants.INCOME_EXTRA;
+import static com.cashflow.constants.Constants.STATEMENT_TYPE_EXTRA;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_DATE;
+import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_NOTE;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.when;
 
 import org.junit.After;
@@ -12,9 +17,15 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import android.content.Intent;
+import android.database.Cursor;
 import android.database.MatrixCursor;
+import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 
+import com.cashflow.R;
 import com.cashflow.activity.util.ListExpensesModule;
+import com.cashflow.database.DatabaseContracts.AbstractStatement;
 import com.cashflow.database.statement.StatementPersistentService;
 import com.cashflow.database.statement.StatementType;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
@@ -28,20 +39,20 @@ public class ListExpensesActivityTest {
 
     @Mock
     private StatementPersistentService statementPersistentService;
-    @Mock
-    private MatrixCursor matrixCursor;
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         ListExpensesModule module = new ListExpensesModule();
-        MatrixCursor matrixCursor = new MatrixCursor(new String[]{COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE});
-        matrixCursor.addRow(new Object[]{1234L, "2012"});
+        MatrixCursor matrixCursor =
+                new MatrixCursor(new String[] { AbstractStatement._ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE, COLUMN_NAME_NOTE });
+        matrixCursor.addRow(new Object[] { 1, 1234L, "2012", "note" });
         when(statementPersistentService.getStatement(StatementType.Expense)).thenReturn(matrixCursor);
         when(statementPersistentService.getStatement(StatementType.Income)).thenReturn(matrixCursor);
 
         module.addBinding(StatementPersistentService.class, statementPersistentService);
         ListExpensesModule.setUp(this, module);
+
     }
 
     @After
@@ -53,17 +64,19 @@ public class ListExpensesActivityTest {
     public void shouldTrue() {
         Assert.assertTrue(true);
     }
-    //    @Test
-    //    public void shouldContainList() {
-    //        ListStatementActivity activity = new ListStatementActivity();
-    //        activity.setIntent(new Intent().putExtra(STATEMENT_TYPE_EXTRA, INCOME_EXTRA));
-    //        activity.onCreate(null);
-    //        
-    //        ListView listView = (ListView) activity.findViewById(R.id.list_statement);
-    //        
-    //        SimpleCursorAdapter adapter = (SimpleCursorAdapter) listView.getAdapter();
-    //        Cursor cursor = adapter.getCursor();
-    //        // cursor is null
-    //        cursor.moveToFirst();
-    //    }
+
+    @Test
+    public void shouldContainList() {
+        ListStatementActivity activity = new ListStatementActivity();
+        activity.setIntent(new Intent().putExtra(STATEMENT_TYPE_EXTRA, INCOME_EXTRA));
+        activity.onCreate(null);
+
+        ListView listView = (ListView) activity.findViewById(R.id.list_statement);
+
+        SimpleCursorAdapter adapter = (SimpleCursorAdapter) listView.getAdapter();
+        Cursor cursor = adapter.getCursor();
+        // cursor is null
+        assertThat(cursor.getColumnCount(), equalTo(4));
+        assertThat(cursor.getInt(0), equalTo(1));
+    }
 }

@@ -17,13 +17,14 @@ import org.slf4j.LoggerFactory;
 
 import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import com.cashflow.R;
@@ -111,13 +112,15 @@ public class ListStatementActivity extends RoboActivity {
         return resultCode == RESULT_OK && requestCode == EDIT_ACTIVITY_CODE;
     }
 
+    @SuppressLint("NewApi")
     private void getDataFromDatabase() {
         LOG.debug("Starting query for type: " + type);
 
         Cursor cursor = service.getStatement(type);
+
         mAdapter = new SimpleCursorAdapter(this,
                 R.layout.list_statements_row, cursor,
-                fromColumns, toViews, 0);
+                fromColumns, toViews);
         list.setAdapter(mAdapter);
 
         LOG.debug("Query has done.");
