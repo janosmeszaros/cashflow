@@ -33,8 +33,7 @@
 				<version>2.6</version>
 				<executions>
 					<execution>
-						<id>copy-resources</id>
-						<!-- here the phase you need -->
+						<id>copy-res-directory</id>
 						<phase>validate</phase>
 						<goals>
 							<goal>copy-resources</goal>
@@ -53,8 +52,7 @@
 						</configuration>
 					</execution>
 					<execution>
-						<id>copy-resources2</id>
-						<!-- here the phase you need -->
+						<id>copy-AndroidManifest</id>
 						<phase>validate</phase>
 						<goals>
 							<goal>copy-resources</goal>
@@ -73,7 +71,7 @@
 						</configuration>
 					</execution>
 					<execution>
-						<id>copy-resources-for-cobertura</id>
+						<id>copy-test-classes-for-cobertura</id>
 						<phase>validate</phase>
 						<goals>
 							<goal>copy-resources</goal>
@@ -92,7 +90,7 @@
 						</configuration>
 					</execution>
 					<execution>
-						<id>copy-resources-for-cobertura2</id>
+						<id>copy-production-classes-for-cobertura</id>
 						<phase>validate</phase>
 						<goals>
 							<goal>copy-resources</goal>
