@@ -1,0 +1,16 @@
+package com.cashflow.activity.util;
+
+import com.cashflow.activity.AddStatementActivity;
+import com.google.inject.Provider;
+
+/**
+ * {@link ListExpensesActivity} {@link Provider}.
+ * @author Kornel_Refi
+ */
+public class AddStatementActivityProvider implements Provider<AddStatementActivity> {
+
+    @Override
+    public AddStatementActivity get() {
+        return new AddStatementActivity();
+    }
+}

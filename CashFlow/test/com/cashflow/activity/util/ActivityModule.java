@@ -15,6 +15,7 @@ import android.app.Application;
 import com.cashflow.AppModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
+import com.google.inject.Provider;
 import com.google.inject.util.Modules;
 import com.xtremelabs.robolectric.Robolectric;
 
@@ -23,21 +24,24 @@ import com.xtremelabs.robolectric.Robolectric;
  * @author Kornel_Refi
  *
  */
-public class ListExpensesModule extends AbstractModule {
+public class ActivityModule extends AbstractModule {
 
     private Map<Class<?>, Object> bindings;
+    private Provider provider;
 
     /**
      * Creates a new Guice module for ListExpenseActivity testing.
+     * @param provider provider to bind the activity.
      */
-    public ListExpensesModule() {
+    public ActivityModule(Provider provider) {
         bindings = new HashMap<Class<?>, Object>();
+        this.provider = provider;
     }
 
     @SuppressWarnings("unchecked")
     @Override
     protected void configure() {
-        bind(Activity.class).toProvider(ListStatementActivityProvider.class).in(ContextSingleton.class);
+        bind(Activity.class).toProvider(provider).in(ContextSingleton.class);
         Set<Entry<Class<?>, Object>> entries = bindings.entrySet();
         for (Entry<Class<?>, Object> entry : entries) {
             bind((Class<Object>) entry.getKey()).toInstance(entry.getValue());
@@ -58,7 +62,7 @@ public class ListExpensesModule extends AbstractModule {
      * @param testObject underTest
      * @param module Guice module
      */
-    public static void setUp(Object testObject, ListExpensesModule module) {
+    public static void setUp(Object testObject, ActivityModule module) {
         Module roboGuiceModule = RoboGuice.newDefaultRoboModule(Robolectric.application);
         Module productionModule = Modules.override(roboGuiceModule).with(new AppModule());
         Module testModule = Modules.override(productionModule).with(module);

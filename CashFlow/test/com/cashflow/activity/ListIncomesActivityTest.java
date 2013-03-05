@@ -24,7 +24,8 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
 import com.cashflow.R;
-import com.cashflow.activity.util.ListExpensesModule;
+import com.cashflow.activity.util.ActivityModule;
+import com.cashflow.activity.util.ListStatementActivityProvider;
 import com.cashflow.database.DatabaseContracts.AbstractStatement;
 import com.cashflow.database.statement.StatementPersistentService;
 import com.cashflow.database.statement.StatementType;
@@ -33,6 +34,7 @@ import com.xtremelabs.robolectric.RobolectricTestRunner;
 /**
  * {@link ListExpensesActivity} test.
  * @author Kornel_Refi
+ * @author Janos_Gyula_Meszaros
  */
 @RunWith(RobolectricTestRunner.class)
 public class ListIncomesActivityTest {
@@ -45,20 +47,20 @@ public class ListIncomesActivityTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        ListExpensesModule module = new ListExpensesModule();
+        ActivityModule module = new ActivityModule(new ListStatementActivityProvider());
         MatrixCursor matrixCursor = new MatrixCursor(fromColumns);
         matrixCursor.addRow(values);
         when(statementPersistentService.getStatement(StatementType.Expense)).thenReturn(matrixCursor);
         when(statementPersistentService.getStatement(StatementType.Income)).thenReturn(matrixCursor);
 
         module.addBinding(StatementPersistentService.class, statementPersistentService);
-        ListExpensesModule.setUp(this, module);
+        ActivityModule.setUp(this, module);
 
     }
 
     @After
     public void tearDown() {
-        ListExpensesModule.tearDown();
+        ActivityModule.tearDown();
     }
 
     @Test
