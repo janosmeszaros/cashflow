@@ -39,8 +39,8 @@ import com.google.inject.Inject;
  */
 public class ListStatementActivity extends RoboActivity {
     private static final Logger LOG = LoggerFactory.getLogger(ListStatementActivity.class);
-    private String[] fromColumns = { AbstractStatement._ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE, COLUMN_NAME_NOTE };
-    private int[] toViews = { R.id.row_id, R.id.row_amount, R.id.row_date, R.id.row_note };
+    private String[] fromColumns = {AbstractStatement._ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE, COLUMN_NAME_NOTE};
+    private int[] toViews = {R.id.row_id, R.id.row_amount, R.id.row_date, R.id.row_note};
 
     private StatementType type;
     private SimpleCursorAdapter mAdapter;
@@ -118,9 +118,7 @@ public class ListStatementActivity extends RoboActivity {
 
         Cursor cursor = service.getStatement(type);
 
-        mAdapter = new SimpleCursorAdapter(this,
-                R.layout.list_statements_row, cursor,
-                fromColumns, toViews);
+        mAdapter = new SimpleCursorAdapter(this, R.layout.list_statements_row, cursor, fromColumns, toViews);
         list.setAdapter(mAdapter);
 
         LOG.debug("Query has done.");
