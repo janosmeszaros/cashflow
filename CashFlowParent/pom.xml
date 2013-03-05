@@ -22,6 +22,7 @@
 		<android.annotations.version>4.1.1.4</android.annotations.version>
 		<android.support.version>r7</android.support.version>
 		<android.version>4.1.1.4</android.version>
+		<apache.commons.version>2.6</apache.commons.version>
 		<cobertura.version>1.9.2</cobertura.version>
 		<com.pivotallabs.robolectric.version>1.2</com.pivotallabs.robolectric.version>
 		<ch.qos.logback.version>1.0.9</ch.qos.logback.version>
@@ -33,7 +34,6 @@
 		<org.slf4j.slf4j-android.version>1.6.1-RC1</org.slf4j.slf4j-android.version>
 		<org.slf4j.slf4j-api.version>1.7.2</org.slf4j.slf4j-api.version>
 		<roboguice.version>2.0</roboguice.version>
-		<apache.commons.version>2.6</apache.commons.version>
 	</properties>
 
 	<build>
