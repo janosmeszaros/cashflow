@@ -74,10 +74,7 @@ public class StatementDao {
      */
     public Cursor getExpenses() {
         SQLiteDatabase db = provider.getReadableDb();
-        Cursor cursor =
-                db.query(TABLE_NAME, PROJECTION, EXPENSE_SELECTION,
-                        null,
-                        null, null, null);
+        Cursor cursor = db.query(TABLE_NAME, PROJECTION, EXPENSE_SELECTION, null, null, null, null);
         return cursor;
     }
 
@@ -87,10 +84,7 @@ public class StatementDao {
      */
     public Cursor getIncomes() {
         SQLiteDatabase db = provider.getReadableDb();
-        Cursor cursor =
-                db.query(TABLE_NAME, PROJECTION, INCOME_SELECTION,
-                        null,
-                        null, null, null);
+        Cursor cursor = db.query(TABLE_NAME, PROJECTION, INCOME_SELECTION, null, null, null, null);
         return cursor;
     }
 }
