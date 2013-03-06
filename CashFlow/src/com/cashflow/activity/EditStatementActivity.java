@@ -42,9 +42,13 @@ public class EditStatementActivity extends RoboFragmentActivity {
     private Button dateButton;
     @InjectView(R.id.notesText)
     private EditText notesText;
-    private Intent intent;
     @Inject
     private Balance balance;
+
+    private String originalAmount;
+    private String originalNotes;
+    private String originalDate;
+    private String originalId;
 
     private StatementType type;
 
@@ -54,12 +58,20 @@ public class EditStatementActivity extends RoboFragmentActivity {
         LOG.debug("EditStatementActivity is creating...");
         setContentView(R.layout.activity_add_statement);
 
-        intent = getIntent();
+        getOriginalDatas();
         fillFieldsWithData();
         setStatementType();
         setTitle();
 
         LOG.debug("EditStatementActivity has created with type: " + type);
+    }
+
+    private void getOriginalDatas() {
+        Intent intent = getIntent();
+        originalAmount = intent.getStringExtra(AMOUNT_EXTRA);
+        originalNotes = intent.getStringExtra(NOTE_EXTRA);
+        originalDate = intent.getStringExtra(DATE_EXTRA);
+        originalId = intent.getStringExtra(ID_EXTRA);
     }
 
     /**
@@ -71,7 +83,7 @@ public class EditStatementActivity extends RoboFragmentActivity {
         String amountStr = amountText.getText().toString();
         String date = dateButton.getText().toString();
         String note = notesText.getText().toString();
-        String id = intent.getStringExtra(ID_EXTRA);
+        String id = originalId;
 
         if (isValuesChanged(amountStr, date, note) && service.updateStatement(id, amountStr, date, note, type)) {
             refreshBalance(amountStr);
@@ -94,16 +106,15 @@ public class EditStatementActivity extends RoboFragmentActivity {
     }
 
     private boolean isValuesChanged(String amountStr, String date, String note) {
-        boolean result = false;
-        if (amountStr.equals(intent.getStringExtra(AMOUNT_EXTRA)) || date.equals(intent.getStringExtra(DATE_EXTRA))
-                || note.equals(intent.getStringExtra(DATE_EXTRA))) {
-            result = true;
+        boolean result = true;
+        if (amountStr.equals(originalAmount) && date.equals(originalDate) && note.equals(originalNotes)) {
+            result = false;
         }
         return result;
     }
 
     private void refreshBalance(String amountStr) {
-        BigDecimal originalAmount = new BigDecimal(intent.getStringExtra(AMOUNT_EXTRA));
+        BigDecimal originalAmount = new BigDecimal(this.originalAmount);
         BigDecimal currentAmount = new BigDecimal(amountStr);
         BigDecimal sum = originalAmount.subtract(currentAmount);
 
@@ -121,9 +132,9 @@ public class EditStatementActivity extends RoboFragmentActivity {
     }
 
     private void fillFieldsWithData() {
-        amountText.setText(intent.getStringExtra(AMOUNT_EXTRA));
-        notesText.setText(intent.getStringExtra(NOTE_EXTRA));
-        dateButton.setText(intent.getStringExtra(DATE_EXTRA));
+        amountText.setText(originalAmount);
+        notesText.setText(originalNotes);
+        dateButton.setText(originalDate);
     }
 
     private void setStatementType() {

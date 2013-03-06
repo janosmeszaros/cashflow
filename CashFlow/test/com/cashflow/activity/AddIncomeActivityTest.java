@@ -34,8 +34,7 @@ import com.cashflow.database.statement.StatementType;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 /**
- * {@link AddExpenseActivity} test.
- * @author Kornel_Refi
+ * {@link AddIncomeActivity} test.
  * @author Janos_Gyula_Meszaros
  *
  */
