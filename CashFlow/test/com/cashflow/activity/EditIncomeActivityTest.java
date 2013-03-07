@@ -114,7 +114,7 @@ public class EditIncomeActivityTest {
 
     @Test
     public void testSubmitWhenAmountHasChangedThanShouldCallProperFunctionAndRefreshBalanceAndResultCodeShouldBeOK() {
-        setViewsValues(activity, CHANGED_AMOUNT, NOTES, DATE);
+        setViewsValues(CHANGED_AMOUNT, NOTES, DATE);
 
         activity.submit(null);
 
@@ -125,7 +125,7 @@ public class EditIncomeActivityTest {
 
     @Test
     public void testSubmitWhenDateHasChangedThanShouldCallProperFunctionAndRefreshBalanceAndResultCodeShouldBeOK() {
-        setViewsValues(activity, AMOUNT, NOTES, CHANGED_DATE);
+        setViewsValues(AMOUNT, NOTES, CHANGED_DATE);
 
         activity.submit(null);
 
@@ -136,7 +136,7 @@ public class EditIncomeActivityTest {
 
     @Test
     public void testSubmitWhenNotesHasChangedThanShouldCallProperFunctionAndRefreshBalanceAndResultCodeShouldBeOK() {
-        setViewsValues(activity, AMOUNT, CHANGED_NOTE, DATE);
+        setViewsValues(AMOUNT, CHANGED_NOTE, DATE);
 
         activity.submit(null);
 
@@ -147,14 +147,14 @@ public class EditIncomeActivityTest {
 
     @Test
     public void testSubmitWhenNothingHasChangedThanCallProperFunctionAndResultCodeShouldBeCanceled() {
-        setViewsValues(activity, AMOUNT, NOTES, DATE);
+        setViewsValues(AMOUNT, NOTES, DATE);
 
         activity.submit(null);
 
         assertThat(shadowFragmentActivity.getResultCode(), equalTo(RESULT_CANCELED));
     }
 
-    private void setViewsValues(EditStatementActivity activity, String amountValue, String notesValue, String dateValue) {
+    private void setViewsValues(String amountValue, String notesValue, String dateValue) {
         EditText notes = (EditText) activity.findViewById(R.id.notesText);
         notes.setText(notesValue);
         EditText amount = (EditText) activity.findViewById(R.id.amountText);
