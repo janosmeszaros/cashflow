@@ -23,8 +23,8 @@ import com.google.inject.Singleton;
  * @author Janos_Gyula_Meszaros
  */
 @Singleton
-public class StatementPersistentService {
-    private static final Logger LOG = LoggerFactory.getLogger(StatementPersistentService.class);
+public class StatementPersistenceService {
+    private static final Logger LOG = LoggerFactory.getLogger(StatementPersistenceService.class);
     private static final int TRUE = 1;
     private static final int FALSE = 0;
     private final StatementDao dao;
@@ -37,7 +37,7 @@ public class StatementPersistentService {
      *             when dao is null.
      */
     @Inject
-    public StatementPersistentService(StatementDao dao) {
+    public StatementPersistenceService(StatementDao dao) {
         validateInput(dao);
         this.dao = dao;
     }

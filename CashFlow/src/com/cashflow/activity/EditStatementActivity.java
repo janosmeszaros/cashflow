@@ -24,7 +24,7 @@ import android.widget.EditText;
 import com.cashflow.R;
 import com.cashflow.components.DatePickerFragment;
 import com.cashflow.database.balance.Balance;
-import com.cashflow.database.statement.StatementPersistentService;
+import com.cashflow.database.statement.StatementPersistenceService;
 import com.cashflow.database.statement.StatementType;
 import com.google.inject.Inject;
 
@@ -35,7 +35,7 @@ import com.google.inject.Inject;
 public class EditStatementActivity extends RoboFragmentActivity {
     private static final Logger LOG = LoggerFactory.getLogger(EditStatementActivity.class);
     @Inject
-    private StatementPersistentService service;
+    private StatementPersistenceService service;
     @InjectView(R.id.amountText)
     private EditText amountText;
     @InjectView(R.id.dateButton)

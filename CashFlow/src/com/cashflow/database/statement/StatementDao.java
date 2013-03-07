@@ -57,7 +57,7 @@ public class StatementDao {
     }
 
     /**
-     * Updates statement row with specified id.
+     * Updates a statement row with specified id.
      * @param values
      *            data needs to be updated.
      * @param id

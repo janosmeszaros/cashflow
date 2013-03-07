@@ -15,7 +15,7 @@ import org.mockito.MockitoAnnotations;
 
 import android.database.MatrixCursor;
 
-import com.cashflow.database.statement.StatementPersistentService;
+import com.cashflow.database.statement.StatementPersistenceService;
 import com.cashflow.database.statement.StatementType;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
@@ -27,7 +27,7 @@ import com.xtremelabs.robolectric.RobolectricTestRunner;
 public class BalanceTest {
     private Balance underTest;
     @Mock
-    private StatementPersistentService statementPersistentServiceMock;
+    private StatementPersistenceService statementPersistentServiceMock;
     @Mock
     private MatrixCursor matrixCursorMock;
 

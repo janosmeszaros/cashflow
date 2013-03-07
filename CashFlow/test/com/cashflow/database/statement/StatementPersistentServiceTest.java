@@ -32,7 +32,7 @@ public class StatementPersistentServiceTest {
     private static final String NOTE = "note";
     private static final String DATE_STR = "2012.01.01";
     private static final String EMPTY_STR = "";
-    private StatementPersistentService underTest;
+    private StatementPersistenceService underTest;
     @Mock
     private StatementDao dao;
     @Mock
@@ -50,40 +50,40 @@ public class StatementPersistentServiceTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testWhenConstructorGetsNullThenThrowsIllegalArgumentException() {
-        underTest = new StatementPersistentService(null);
+        underTest = new StatementPersistenceService(null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testSaveStatementWhenAmountStrIsEmptyThenShouldThrowException() {
-        underTest = new StatementPersistentService(dao);
+        underTest = new StatementPersistenceService(dao);
 
         underTest.saveStatement(EMPTY_STR, DATE_STR, NOTE, StatementType.Expense);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testSaveStatementWhenDateIsEmptyThenShouldThrowException() {
-        underTest = new StatementPersistentService(dao);
+        underTest = new StatementPersistenceService(dao);
 
         underTest.saveStatement(AMOUNT_STR, EMPTY_STR, NOTE, StatementType.Expense);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testSaveStatementWhenStatementTypeIsEmptyThenShouldThrowException() {
-        underTest = new StatementPersistentService(dao);
+        underTest = new StatementPersistenceService(dao);
 
         underTest.saveStatement(AMOUNT_STR, DATE_STR, EMPTY_STR, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testSaveStatementWhenAmountIsNotANumberStringIsEmptyThenShouldThrowException() {
-        underTest = new StatementPersistentService(dao);
+        underTest = new StatementPersistenceService(dao);
 
         underTest.saveStatement(WRONG_AMOUNT_FORMAT, DATE_STR, NOTE, StatementType.Expense);
     }
 
     @Test
     public void testSaveStatementWhenAmountIsZeroStringIsEmptyThenShouldReturnFalse() {
-        underTest = new StatementPersistentService(dao);
+        underTest = new StatementPersistenceService(dao);
 
         boolean statement = underTest.saveStatement(ZERO_AMOUNT, DATE_STR, NOTE, StatementType.Expense);
 
@@ -92,7 +92,7 @@ public class StatementPersistentServiceTest {
 
     @Test
     public void testSaveStatementWhenEveryParameterIsFineThenShouldCallDaosSaveMethodAndReturnTrue() {
-        underTest = new StatementPersistentService(dao);
+        underTest = new StatementPersistenceService(dao);
         // ContentValues values = createContentValue(new BigDecimal(AMOUNT_STR), DATE_STR, NOTE, StatementType.Expense);
 
         boolean statement = underTest.saveStatement(AMOUNT_STR, DATE_STR, NOTE, StatementType.Expense);
@@ -110,14 +110,14 @@ public class StatementPersistentServiceTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testGetStatementWhenTypeIsNullThenShouldThrowException() {
-        underTest = new StatementPersistentService(dao);
+        underTest = new StatementPersistenceService(dao);
 
         underTest.getStatement(null);
     }
 
     @Test
     public void testGetStatementWhenTypeIsExpenseThenShouldReturnCursorWithExpenses() {
-        underTest = new StatementPersistentService(dao);
+        underTest = new StatementPersistenceService(dao);
 
         Cursor statement = underTest.getStatement(StatementType.Expense);
 
@@ -127,7 +127,7 @@ public class StatementPersistentServiceTest {
 
     @Test
     public void testGetStatementWhenTypeIsIncomesThenShouldReturnCursorWithIncomes() {
-        underTest = new StatementPersistentService(dao);
+        underTest = new StatementPersistenceService(dao);
 
         Cursor statement = underTest.getStatement(StatementType.Income);
 
@@ -137,42 +137,42 @@ public class StatementPersistentServiceTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testUpdateStatementWhenAmountStrIsEmptyThenShouldThrowException() {
-        underTest = new StatementPersistentService(dao);
+        underTest = new StatementPersistenceService(dao);
 
         underTest.updateStatement(ID_STR, EMPTY_STR, DATE_STR, NOTE, StatementType.Expense);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testUpdateStatementWhenDateIsEmptyThenShouldThrowException() {
-        underTest = new StatementPersistentService(dao);
+        underTest = new StatementPersistenceService(dao);
 
         underTest.updateStatement(ID_STR, AMOUNT_STR, EMPTY_STR, NOTE, StatementType.Expense);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testUpdateStatementWhenStatementTypeIsEmptyThenShouldThrowException() {
-        underTest = new StatementPersistentService(dao);
+        underTest = new StatementPersistenceService(dao);
 
         underTest.updateStatement(ID_STR, AMOUNT_STR, DATE_STR, EMPTY_STR, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testUpdateStatementWhenAmountIsNotANumberStringIsEmptyThenShouldThrowException() {
-        underTest = new StatementPersistentService(dao);
+        underTest = new StatementPersistenceService(dao);
 
         underTest.updateStatement(ID_STR, WRONG_AMOUNT_FORMAT, DATE_STR, NOTE, StatementType.Expense);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testUpdateStatementWhenIdStrIsEmptyThenShouldThrowException() {
-        underTest = new StatementPersistentService(dao);
+        underTest = new StatementPersistenceService(dao);
 
         underTest.updateStatement(EMPTY_STR, AMOUNT_STR, DATE_STR, NOTE, StatementType.Expense);
     }
 
     @Test
     public void testUpdateStatementWhenEveryParameterIsFineThenShouldCallDaosUpdateMethodAndReturnTrue() {
-        underTest = new StatementPersistentService(dao);
+        underTest = new StatementPersistenceService(dao);
         // ContentValues values = createContentValue(new BigDecimal(AMOUNT_STR), DATE_STR, NOTE, StatementType.Expense);
 
         boolean statement = underTest.updateStatement(ID_STR, AMOUNT_STR, DATE_STR, NOTE, StatementType.Expense);

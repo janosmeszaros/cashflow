@@ -27,7 +27,7 @@ import com.cashflow.R;
 import com.cashflow.activity.util.ActivityModule;
 import com.cashflow.activity.util.ListStatementActivityProvider;
 import com.cashflow.database.DatabaseContracts.AbstractStatement;
-import com.cashflow.database.statement.StatementPersistentService;
+import com.cashflow.database.statement.StatementPersistenceService;
 import com.cashflow.database.statement.StatementType;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
@@ -42,7 +42,7 @@ public class ListExpensesActivityTest {
     private String[] fromColumns = {AbstractStatement._ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE, COLUMN_NAME_NOTE};
     private Object[] values = new Object[]{1, 1234L, "2012", "note"};
     @Mock
-    private StatementPersistentService statementPersistentService;
+    private StatementPersistenceService statementPersistentService;
 
     @Before
     public void setUp() {
@@ -53,7 +53,7 @@ public class ListExpensesActivityTest {
         when(statementPersistentService.getStatement(StatementType.Expense)).thenReturn(matrixCursor);
         when(statementPersistentService.getStatement(StatementType.Income)).thenReturn(matrixCursor);
 
-        module.addBinding(StatementPersistentService.class, statementPersistentService);
+        module.addBinding(StatementPersistenceService.class, statementPersistentService);
         ActivityModule.setUp(this, module);
 
     }

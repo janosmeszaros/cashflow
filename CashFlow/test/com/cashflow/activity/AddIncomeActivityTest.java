@@ -29,7 +29,7 @@ import com.cashflow.activity.util.ActivityModule;
 import com.cashflow.activity.util.AddStatementActivityProvider;
 import com.cashflow.database.DatabaseContracts.AbstractStatement;
 import com.cashflow.database.balance.Balance;
-import com.cashflow.database.statement.StatementPersistentService;
+import com.cashflow.database.statement.StatementPersistenceService;
 import com.cashflow.database.statement.StatementType;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
@@ -48,7 +48,7 @@ public class AddIncomeActivityTest {
     private String[] fromColumns = {AbstractStatement._ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE, COLUMN_NAME_NOTE};
     private Object[] values = new Object[]{1, 1234L, "2012", "note"};
     @Mock
-    private StatementPersistentService statementPersistentService;
+    private StatementPersistenceService statementPersistentService;
     private Balance balance;
 
     @Before
@@ -58,7 +58,7 @@ public class AddIncomeActivityTest {
 
         setUpPersistentService();
 
-        module.addBinding(StatementPersistentService.class, statementPersistentService);
+        module.addBinding(StatementPersistenceService.class, statementPersistentService);
         balance = Balance.getInstance(statementPersistentService);
         module.addBinding(Balance.class, balance);
         ActivityModule.setUp(this, module);

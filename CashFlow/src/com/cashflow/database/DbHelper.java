@@ -47,9 +47,14 @@ public final class DbHelper extends SQLiteOpenHelper {
         return writer.getWritableDatabase();
     }
 
+    /**
+     * This method is invoked when the database doesn't exists.
+     * @param db {@link SQLiteDatabase}
+     */
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(DatabaseContracts.AbstractStatement.SQL_CREATE_ENTRIES);
+        db.execSQL(DatabaseContracts.AbstractCategory.SQL_CREATE_ENTRIES);
 
     }
 
@@ -58,6 +63,7 @@ public final class DbHelper extends SQLiteOpenHelper {
         // This database is only a cache for online data, so its upgrade policy is
         // to simply to discard the data and start over
         db.execSQL(DatabaseContracts.AbstractStatement.SQL_DELETE_ENTRIES);
+        db.execSQL(DatabaseContracts.AbstractCategory.SQL_DELETE_ENTRIES);
         onCreate(db);
     }
 

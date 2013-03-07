@@ -29,7 +29,7 @@ import android.widget.TextView;
 
 import com.cashflow.R;
 import com.cashflow.database.DatabaseContracts.AbstractStatement;
-import com.cashflow.database.statement.StatementPersistentService;
+import com.cashflow.database.statement.StatementPersistenceService;
 import com.cashflow.database.statement.StatementType;
 import com.google.inject.Inject;
 
@@ -45,7 +45,7 @@ public class ListStatementActivity extends RoboActivity {
     private StatementType type;
     private SimpleCursorAdapter mAdapter;
     @Inject
-    private StatementPersistentService service;
+    private StatementPersistenceService service;
     @InjectView(R.id.list_statement)
     private ListView list;
 

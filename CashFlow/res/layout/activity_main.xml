@@ -77,4 +77,14 @@
         android:onClick="listExpenses"
         android:text="@string/list_expenses_button" />
 
+    <Button
+        android:id="@+id/createCategoryButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/listIncomesButton"
+        android:layout_marginTop="26dp"
+        android:text="@string/button_create_categories"
+        android:onClick="createCategories" />
+
 </RelativeLayout>

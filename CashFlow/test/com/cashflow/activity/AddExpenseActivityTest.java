@@ -29,7 +29,7 @@ import com.cashflow.activity.util.ActivityModule;
 import com.cashflow.activity.util.AddStatementActivityProvider;
 import com.cashflow.database.DatabaseContracts.AbstractStatement;
 import com.cashflow.database.balance.Balance;
-import com.cashflow.database.statement.StatementPersistentService;
+import com.cashflow.database.statement.StatementPersistenceService;
 import com.cashflow.database.statement.StatementType;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
@@ -47,7 +47,7 @@ public class AddExpenseActivityTest {
     private String[] fromColumns = {AbstractStatement._ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE, COLUMN_NAME_NOTE};
     private Object[] values = new Object[]{1, 1234L, "2012", "note"};
     @Mock
-    private StatementPersistentService statementPersistentService;
+    private StatementPersistenceService statementPersistenceService;
     private Balance balance;
 
     @Before
@@ -57,8 +57,8 @@ public class AddExpenseActivityTest {
 
         setUpPersistentService();
 
-        module.addBinding(StatementPersistentService.class, statementPersistentService);
-        balance = Balance.getInstance(statementPersistentService);
+        module.addBinding(StatementPersistenceService.class, statementPersistenceService);
+        balance = Balance.getInstance(statementPersistenceService);
         module.addBinding(Balance.class, balance);
         ActivityModule.setUp(this, module);
     }
@@ -67,9 +67,9 @@ public class AddExpenseActivityTest {
         MatrixCursor cursor = new MatrixCursor(fromColumns);
         cursor.addRow(values);
 
-        when(statementPersistentService.getStatement(StatementType.Expense)).thenReturn(cursor);
-        when(statementPersistentService.getStatement(StatementType.Income)).thenReturn(cursor);
-        when(statementPersistentService.saveStatement(anyString(), anyString(), anyString(), (StatementType) anyObject())).thenReturn(true);
+        when(statementPersistenceService.getStatement(StatementType.Expense)).thenReturn(cursor);
+        when(statementPersistenceService.getStatement(StatementType.Income)).thenReturn(cursor);
+        when(statementPersistenceService.saveStatement(anyString(), anyString(), anyString(), (StatementType) anyObject())).thenReturn(true);
     }
 
     @After
@@ -95,7 +95,7 @@ public class AddExpenseActivityTest {
 
         activity.submit(null);
 
-        verify(statementPersistentService).saveStatement(AMOUNT, DATE, NOTES, StatementType.Expense);
+        verify(statementPersistenceService).saveStatement(AMOUNT, DATE, NOTES, StatementType.Expense);
         assertThat(balance.getBalance(), equalTo(-1234D));
     }
 
