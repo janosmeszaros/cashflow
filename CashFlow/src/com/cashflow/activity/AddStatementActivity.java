@@ -27,7 +27,7 @@ import com.cashflow.database.statement.StatementType;
 import com.google.inject.Inject;
 
 /**
- * Expense adding.
+ * Statement adding. It gets it's type in the intent in extra named by <code>STATEMENT_TYPE_EXTRA</code>
  * @author Janos_Gyula_Meszaros
  */
 public class AddStatementActivity extends RoboFragmentActivity {
@@ -51,10 +51,7 @@ public class AddStatementActivity extends RoboFragmentActivity {
         LOG.debug("AddStatementActivity is creating...");
 
         setContentView(R.layout.activity_add_statement);
-
-        final Calendar calendar = Calendar.getInstance();
-        DateFormat fmtDateAndTime = DateFormat.getDateInstance(DateFormat.MEDIUM);
-        dateButton.setText(fmtDateAndTime.format(calendar.getTime()));
+        setDateButtonText();
         setStatementType();
         setTitle();
 
@@ -69,8 +66,8 @@ public class AddStatementActivity extends RoboFragmentActivity {
     }
 
     /**
-     * Onclick event for add expense button on add expense screen. Save the expense to database. If the save was successful then refresh the
-     * balance.
+     * Onclick event for add statement button on add statement screen. Save the expense to database. If the save was successful then refresh the
+     * balance else sets the result to canceled and close the activity. 
      * @param view
      *            Required for onclick.
      */
@@ -80,9 +77,12 @@ public class AddStatementActivity extends RoboFragmentActivity {
         String note = notesText.getText().toString();
 
         if (service.saveStatement(amountStr, date, note, type)) {
-            balance.subtract(new BigDecimal(amountStr));
-            finish();
+            refreshBalance(amountStr);
+            setResult(RESULT_OK);
+        } else {
+            setResult(RESULT_CANCELED);
         }
+        finish();
     }
 
     /**
@@ -96,12 +96,33 @@ public class AddStatementActivity extends RoboFragmentActivity {
 
     }
 
+    private void refreshBalance(String amountStr) {
+        BigDecimal amount = new BigDecimal(amountStr);
+
+        if (isIncome(type)) {
+            balance.add(amount);
+        } else {
+
+            balance.subtract(amount);
+        }
+
+    }
+
     private void setStatementType() {
-        if (getIntent().getStringExtra(STATEMENT_TYPE_EXTRA).equals(INCOME_EXTRA)) {
+        String statementType = getIntent().getStringExtra(STATEMENT_TYPE_EXTRA);
+        if (isIncome(statementType)) {
             type = StatementType.Income;
         } else {
             type = StatementType.Expense;
         }
+    }
+
+    private boolean isIncome(String type) {
+        return type.equals(INCOME_EXTRA);
+    }
+
+    private boolean isIncome(StatementType type) {
+        return type.equals(StatementType.Income);
     }
 
     private void setTitle() {
@@ -110,6 +131,12 @@ public class AddStatementActivity extends RoboFragmentActivity {
         } else {
             setTitle(R.string.title_activity_add_expense);
         }
+    }
+
+    private void setDateButtonText() {
+        final Calendar calendar = Calendar.getInstance();
+        DateFormat fmtDateAndTime = DateFormat.getDateInstance(DateFormat.MEDIUM);
+        dateButton.setText(fmtDateAndTime.format(calendar.getTime()));
     }
 
 }

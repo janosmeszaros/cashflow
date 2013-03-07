@@ -1,5 +1,7 @@
 package com.cashflow.activity;
 
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
 import static com.cashflow.constants.Constants.INCOME_EXTRA;
 import static com.cashflow.constants.Constants.STATEMENT_TYPE_EXTRA;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
@@ -9,6 +11,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -31,10 +34,12 @@ import com.cashflow.database.DatabaseContracts.AbstractStatement;
 import com.cashflow.database.balance.Balance;
 import com.cashflow.database.statement.StatementPersistentService;
 import com.cashflow.database.statement.StatementType;
+import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
+import com.xtremelabs.robolectric.shadows.ShadowFragmentActivity;
 
 /**
- * {@link AddIncomeActivity} test.
+ * {@link AddStatementActivity} test, specially this class tests the income adding functionality.
  * @author Janos_Gyula_Meszaros
  *
  */
@@ -44,11 +49,13 @@ public class AddIncomeActivityTest {
     private static final String NOTES = "notes";
     private static final String DATE = "2013";
     private static final String AMOUNT = "1234";
+    private static final String SAME_AMOUNT = "12";
     private String[] fromColumns = {AbstractStatement._ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE, COLUMN_NAME_NOTE};
     private Object[] values = new Object[]{1, 1234L, "2012", "note"};
+    private Balance balance;
+    private AddStatementActivity activity;
     @Mock
     private StatementPersistentService statementPersistentService;
-    private Balance balance;
 
     @Before
     public void setUp() {
@@ -56,20 +63,13 @@ public class AddIncomeActivityTest {
         ActivityModule module = new ActivityModule(new AddStatementActivityProvider());
 
         setUpPersistentService();
+        addBindings(module);
 
-        module.addBinding(StatementPersistentService.class, statementPersistentService);
-        balance = Balance.getInstance(statementPersistentService);
-        module.addBinding(Balance.class, balance);
         ActivityModule.setUp(this, module);
-    }
 
-    private void setUpPersistentService() {
-        MatrixCursor cursor = new MatrixCursor(fromColumns);
-        cursor.addRow(values);
-
-        when(statementPersistentService.getStatement(StatementType.Expense)).thenReturn(cursor);
-        when(statementPersistentService.getStatement(StatementType.Income)).thenReturn(cursor);
-        when(statementPersistentService.saveStatement(anyString(), anyString(), anyString(), (StatementType) anyObject())).thenReturn(true);
+        activity = new AddStatementActivity();
+        activity.setIntent(new Intent().putExtra(STATEMENT_TYPE_EXTRA, INCOME_EXTRA));
+        activity.onCreate(null);
     }
 
     @After
@@ -79,10 +79,6 @@ public class AddIncomeActivityTest {
 
     @Test
     public void testWhenIncomeActivityThanTitleShouldBeAddExpense() {
-        AddStatementActivity activity = new AddStatementActivity();
-        activity.setIntent(new Intent().putExtra(STATEMENT_TYPE_EXTRA, INCOME_EXTRA));
-        activity.onCreate(null);
-
         assertThat((String) activity.getTitle(), equalTo(activity.getString(R.string.title_activity_add_income)));
     }
 
@@ -97,24 +93,50 @@ public class AddIncomeActivityTest {
     //    }
 
     @Test
-    public void testSubmitWhenOkThanCallProperFunctionAndRefreshBalanceAndCloseing() {
-        AddStatementActivity activity = new AddStatementActivity();
-        activity.setIntent(new Intent().putExtra(STATEMENT_TYPE_EXTRA, INCOME_EXTRA));
-        activity.onCreate(null);
-        setViewsValues(activity);
+    public void testSubmitWhenOkThanCallProperFunctionRefreshBalanceSetResultToTrueAndClose() {
+        ShadowFragmentActivity shadowActivity = Robolectric.shadowOf(activity);
+        setViewsValues(AMOUNT);
 
         activity.submit(null);
 
         verify(statementPersistentService).saveStatement(AMOUNT, DATE, NOTES, StatementType.Income);
-        assertThat(balance.getBalance(), equalTo(-1234D));
+        assertThat(shadowActivity.getResultCode(), equalTo(RESULT_OK));
+        assertThat(balance.getBalance(), equalTo(1234D));
     }
 
-    private void setViewsValues(AddStatementActivity activity) {
+    @Test
+    public void testSubmitWhenAmountIsTheSameThanSetResultToCanceledAndClose() {
+        ShadowFragmentActivity shadowActivity = Robolectric.shadowOf(activity);
+        setViewsValues(SAME_AMOUNT);
+
+        activity.submit(null);
+
+        verify(statementPersistentService).saveStatement(SAME_AMOUNT, DATE, NOTES, StatementType.Income);
+        assertThat(shadowActivity.getResultCode(), equalTo(RESULT_CANCELED));
+    }
+
+    private void setViewsValues(String amountStr) {
         EditText notes = (EditText) activity.findViewById(R.id.notesText);
         notes.setText(NOTES);
         EditText amount = (EditText) activity.findViewById(R.id.amountText);
-        amount.setText(AMOUNT);
+        amount.setText(amountStr);
         Button button = (Button) activity.findViewById(R.id.dateButton);
         button.setText(DATE);
+    }
+
+    private void addBindings(ActivityModule module) {
+        module.addBinding(StatementPersistentService.class, statementPersistentService);
+        balance = Balance.getInstance(statementPersistentService);
+        module.addBinding(Balance.class, balance);
+    }
+
+    private void setUpPersistentService() {
+        MatrixCursor cursor = new MatrixCursor(fromColumns);
+        cursor.addRow(values);
+
+        when(statementPersistentService.getStatement(StatementType.Expense)).thenReturn(cursor);
+        when(statementPersistentService.getStatement(StatementType.Income)).thenReturn(cursor);
+        when(statementPersistentService.saveStatement(eq(AMOUNT), anyString(), anyString(), (StatementType) anyObject())).thenReturn(true);
+        when(statementPersistentService.saveStatement(eq(SAME_AMOUNT), anyString(), anyString(), (StatementType) anyObject())).thenReturn(false);
     }
 }

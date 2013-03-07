@@ -44,7 +44,7 @@ import com.xtremelabs.robolectric.RobolectricTestRunner;
 import com.xtremelabs.robolectric.shadows.ShadowFragmentActivity;
 
 /**
- * {@link EditExpenseActivity} test.
+ * {@link EditStatementActivity} test, specially this class tests the income editing functionality.
  * @author Janos_Gyula_Meszaros
  *
  */
@@ -59,9 +59,11 @@ public class EditIncomeActivityTest {
     private static final String AMOUNT = "1234";
     private String[] fromColumns = {AbstractStatement._ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE, COLUMN_NAME_NOTE};
     private Object[] values = new Object[]{1, 1234L, CHANGED_DATE, "note"};
+    private EditStatementActivity activity;
+    private ShadowFragmentActivity shadowFragmentActivity;
+    private Balance balance;
     @Mock
     private StatementPersistentService statementPersistentService;
-    private Balance balance;
 
     @Before
     public void setUp() {
@@ -69,11 +71,14 @@ public class EditIncomeActivityTest {
         ActivityModule module = new ActivityModule(new AddStatementActivityProvider());
 
         setUpPersistentService();
+        addBindings(module);
 
-        module.addBinding(StatementPersistentService.class, statementPersistentService);
-        balance = Balance.getInstance(statementPersistentService);
-        module.addBinding(Balance.class, balance);
         ActivityModule.setUp(this, module);
+
+        activity = new EditStatementActivity();
+        shadowFragmentActivity = Robolectric.shadowOf(activity);
+        activity.setIntent(setUpIntentData());
+        activity.onCreate(null);
     }
 
     private void setUpPersistentService() {
@@ -94,20 +99,11 @@ public class EditIncomeActivityTest {
 
     @Test
     public void testWhenEditIncomeActivityThanTitleShouldBeEditIncome() {
-        EditStatementActivity activity = new EditStatementActivity();
-        activity.setIntent(new Intent().putExtra(STATEMENT_TYPE_EXTRA, INCOME_EXTRA));
-        activity.onCreate(null);
-
         assertThat((String) activity.getTitle(), equalTo(activity.getString(R.string.title_activity_edit_incomes)));
     }
 
     @Test
     public void testWhenEditIncomeActivityCreatedThanShouldFillUpViewsWithDataFromIntent() {
-        EditStatementActivity activity = new EditStatementActivity();
-        activity.setIntent(setUpIntentData());
-
-        activity.onCreate(null);
-
         TextView amount = (TextView) activity.findViewById(R.id.amountText);
         TextView note = (TextView) activity.findViewById(R.id.notesText);
         Button date = (Button) activity.findViewById(R.id.dateButton);
@@ -118,10 +114,6 @@ public class EditIncomeActivityTest {
 
     @Test
     public void testSubmitWhenAmountHasChangedThanShouldCallProperFunctionAndRefreshBalanceAndResultCodeShouldBeOK() {
-        EditStatementActivity activity = new EditStatementActivity();
-        ShadowFragmentActivity shadowFragmentActivity = Robolectric.shadowOf(activity);
-        activity.setIntent(setUpIntentData());
-        activity.onCreate(null);
         setViewsValues(activity, CHANGED_AMOUNT, NOTES, DATE);
 
         activity.submit(null);
@@ -133,10 +125,6 @@ public class EditIncomeActivityTest {
 
     @Test
     public void testSubmitWhenDateHasChangedThanShouldCallProperFunctionAndRefreshBalanceAndResultCodeShouldBeOK() {
-        EditStatementActivity activity = new EditStatementActivity();
-        ShadowFragmentActivity shadowFragmentActivity = Robolectric.shadowOf(activity);
-        activity.setIntent(setUpIntentData());
-        activity.onCreate(null);
         setViewsValues(activity, AMOUNT, NOTES, CHANGED_DATE);
 
         activity.submit(null);
@@ -148,10 +136,6 @@ public class EditIncomeActivityTest {
 
     @Test
     public void testSubmitWhenNotesHasChangedThanShouldCallProperFunctionAndRefreshBalanceAndResultCodeShouldBeOK() {
-        EditStatementActivity activity = new EditStatementActivity();
-        ShadowFragmentActivity shadowFragmentActivity = Robolectric.shadowOf(activity);
-        activity.setIntent(setUpIntentData());
-        activity.onCreate(null);
         setViewsValues(activity, AMOUNT, CHANGED_NOTE, DATE);
 
         activity.submit(null);
@@ -163,10 +147,6 @@ public class EditIncomeActivityTest {
 
     @Test
     public void testSubmitWhenNothingHasChangedThanCallProperFunctionAndResultCodeShouldBeCanceled() {
-        EditStatementActivity activity = new EditStatementActivity();
-        ShadowFragmentActivity shadowFragmentActivity = Robolectric.shadowOf(activity);
-        activity.setIntent(setUpIntentData());
-        activity.onCreate(null);
         setViewsValues(activity, AMOUNT, NOTES, DATE);
 
         activity.submit(null);
@@ -192,4 +172,11 @@ public class EditIncomeActivityTest {
         intent.putExtra(STATEMENT_TYPE_EXTRA, INCOME_EXTRA);
         return intent;
     }
+
+    private void addBindings(ActivityModule module) {
+        module.addBinding(StatementPersistentService.class, statementPersistentService);
+        balance = Balance.getInstance(statementPersistentService);
+        module.addBinding(Balance.class, balance);
+    }
+
 }

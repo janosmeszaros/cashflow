@@ -32,7 +32,7 @@ import com.cashflow.database.statement.StatementType;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 /**
- * {@link ListExpensesActivity} test.
+ * {@link ListStatementActivity} test, specially this class tests the expense listing functionality.
  * @author Kornel_Refi
  * @author Janos_Gyula_Meszaros
  */

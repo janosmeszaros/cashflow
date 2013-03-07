@@ -44,7 +44,7 @@ import com.xtremelabs.robolectric.RobolectricTestRunner;
 import com.xtremelabs.robolectric.shadows.ShadowFragmentActivity;
 
 /**
- * {@link EditExpenseActivity} test.
+ * {@link EditStatementActivity} test, specially this class tests the expense editing functionality.
  * @author Janos_Gyula_Meszaros
  *
  */
@@ -59,9 +59,11 @@ public class EditExpenseActivityTest {
     private static final String AMOUNT = "1234";
     private String[] fromColumns = {AbstractStatement._ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE, COLUMN_NAME_NOTE};
     private Object[] values = new Object[]{1, 1234L, CHANGED_DATE, "note"};
+    private EditStatementActivity activity;
+    private ShadowFragmentActivity shadowFragmentActivity;
+    private Balance balance;
     @Mock
     private StatementPersistentService statementPersistentService;
-    private Balance balance;
 
     @Before
     public void setUp() {
@@ -69,22 +71,14 @@ public class EditExpenseActivityTest {
         ActivityModule module = new ActivityModule(new AddStatementActivityProvider());
 
         setUpPersistentService();
+        addBindings(module);
 
-        module.addBinding(StatementPersistentService.class, statementPersistentService);
-        balance = Balance.getInstance(statementPersistentService);
-        module.addBinding(Balance.class, balance);
         ActivityModule.setUp(this, module);
-    }
 
-    private void setUpPersistentService() {
-        MatrixCursor cursor = new MatrixCursor(fromColumns);
-        cursor.addRow(values);
-
-        when(statementPersistentService.getStatement(StatementType.Expense)).thenReturn(cursor);
-        when(statementPersistentService.getStatement(StatementType.Income)).thenReturn(cursor);
-        when(statementPersistentService.saveStatement(anyString(), anyString(), anyString(), (StatementType) anyObject())).thenReturn(true);
-        when(statementPersistentService.updateStatement(anyString(), anyString(), anyString(), anyString(), (StatementType) anyObject())).thenReturn(
-                true);
+        activity = new EditStatementActivity();
+        shadowFragmentActivity = Robolectric.shadowOf(activity);
+        activity.setIntent(setUpIntentData());
+        activity.onCreate(null);
     }
 
     @After
@@ -94,20 +88,11 @@ public class EditExpenseActivityTest {
 
     @Test
     public void testWhenEditExpenseActivityThanTitleShouldBeEditExpense() {
-        EditStatementActivity activity = new EditStatementActivity();
-        activity.setIntent(new Intent().putExtra(STATEMENT_TYPE_EXTRA, EXPENSE_EXTRA));
-        activity.onCreate(null);
-
         assertThat((String) activity.getTitle(), equalTo(activity.getString(R.string.title_activity_edit_expenses)));
     }
 
     @Test
     public void testWhenEditExpenseActivityCreatedThanShouldFillUpViewsWithDataFromIntent() {
-        EditStatementActivity activity = new EditStatementActivity();
-        activity.setIntent(setUpIntentData());
-
-        activity.onCreate(null);
-
         TextView amount = (TextView) activity.findViewById(R.id.amountText);
         TextView note = (TextView) activity.findViewById(R.id.notesText);
         Button date = (Button) activity.findViewById(R.id.dateButton);
@@ -118,10 +103,6 @@ public class EditExpenseActivityTest {
 
     @Test
     public void testSubmitWhenAmountHasChangedThanShouldCallProperFunctionAndRefreshBalanceAndResultCodeShouldBeOK() {
-        EditStatementActivity activity = new EditStatementActivity();
-        ShadowFragmentActivity shadowFragmentActivity = Robolectric.shadowOf(activity);
-        activity.setIntent(setUpIntentData());
-        activity.onCreate(null);
         setViewsValues(activity, CHANGED_AMOUNT, NOTES, DATE);
 
         activity.submit(null);
@@ -133,10 +114,6 @@ public class EditExpenseActivityTest {
 
     @Test
     public void testSubmitWhenDateHasChangedThanShouldCallProperFunctionAndRefreshBalanceAndResultCodeShouldBeOK() {
-        EditStatementActivity activity = new EditStatementActivity();
-        ShadowFragmentActivity shadowFragmentActivity = Robolectric.shadowOf(activity);
-        activity.setIntent(setUpIntentData());
-        activity.onCreate(null);
         setViewsValues(activity, AMOUNT, NOTES, CHANGED_DATE);
 
         activity.submit(null);
@@ -148,10 +125,6 @@ public class EditExpenseActivityTest {
 
     @Test
     public void testSubmitWhenNotesHasChangedThanShouldCallProperFunctionAndRefreshBalanceAndResultCodeShouldBeOK() {
-        EditStatementActivity activity = new EditStatementActivity();
-        ShadowFragmentActivity shadowFragmentActivity = Robolectric.shadowOf(activity);
-        activity.setIntent(setUpIntentData());
-        activity.onCreate(null);
         setViewsValues(activity, AMOUNT, CHANGED_NOTE, DATE);
 
         activity.submit(null);
@@ -163,10 +136,6 @@ public class EditExpenseActivityTest {
 
     @Test
     public void testSubmitWhenNothingHasChangedThanCallProperFunctionAndResultCodeShouldBeCanceled() {
-        EditStatementActivity activity = new EditStatementActivity();
-        ShadowFragmentActivity shadowFragmentActivity = Robolectric.shadowOf(activity);
-        activity.setIntent(setUpIntentData());
-        activity.onCreate(null);
         setViewsValues(activity, AMOUNT, NOTES, DATE);
 
         activity.submit(null);
@@ -191,5 +160,22 @@ public class EditExpenseActivityTest {
         intent.putExtra(DATE_EXTRA, DATE);
         intent.putExtra(STATEMENT_TYPE_EXTRA, EXPENSE_EXTRA);
         return intent;
+    }
+
+    private void addBindings(ActivityModule module) {
+        module.addBinding(StatementPersistentService.class, statementPersistentService);
+        balance = Balance.getInstance(statementPersistentService);
+        module.addBinding(Balance.class, balance);
+    }
+
+    private void setUpPersistentService() {
+        MatrixCursor cursor = new MatrixCursor(fromColumns);
+        cursor.addRow(values);
+
+        when(statementPersistentService.getStatement(StatementType.Expense)).thenReturn(cursor);
+        when(statementPersistentService.getStatement(StatementType.Income)).thenReturn(cursor);
+        when(statementPersistentService.saveStatement(anyString(), anyString(), anyString(), (StatementType) anyObject())).thenReturn(true);
+        when(statementPersistentService.updateStatement(anyString(), anyString(), anyString(), anyString(), (StatementType) anyObject())).thenReturn(
+                true);
     }
 }

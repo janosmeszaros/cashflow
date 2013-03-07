@@ -29,7 +29,18 @@ import com.cashflow.database.statement.StatementType;
 import com.google.inject.Inject;
 
 /**
- * Activity for editing incomes.
+ * Activity for editing statements. It gets the previous values through the intent. 
+ * 
+ * <p>
+ * Extras' names used to get original values: <br/>
+ *  <ul> 
+ *      <li>Amount:  <code>AMOUNT_EXTRA</code></li>
+ *      <li>ID:      <code>ID_EXTRA</code></li>
+ *      <li>NOTE:    <code>NOTE_EXTRA</code></li>
+ *      <li>DATE:    <code>DATE_EXTRA</code></li>
+ *  </ul>
+ * </p>
+ * 
  * @author Janos_Gyula_Meszaros
  */
 public class EditStatementActivity extends RoboFragmentActivity {
@@ -75,7 +86,8 @@ public class EditStatementActivity extends RoboFragmentActivity {
     }
 
     /**
-     * Add new income onClick method. Save the income to database. If the save was successful then refresh the balance.
+     * Submit onClick method. Save the statement to database. If the save was successful then refresh the balance 
+     * and set the result to <code>RESULT_OK</code> then close the activity.
      * @param view
      *            Required for onclick.
      */
@@ -96,7 +108,7 @@ public class EditStatementActivity extends RoboFragmentActivity {
     }
 
     /**
-     * Date button onClick method.
+     * Date button onClick method. Shows the date picker dialog.
      * @param view
      *            Required for onclick.
      */
