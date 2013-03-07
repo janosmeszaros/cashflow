@@ -78,7 +78,7 @@ public class StatementPersistentService {
         validateInput(type);
 
         Cursor result = null;
-        if (isIncome(type)) {
+        if (type.isIncome()) {
             result = dao.getIncomes();
         } else {
             result = dao.getExpenses();
@@ -113,10 +113,6 @@ public class StatementPersistentService {
         return result;
     }
 
-    private boolean isIncome(StatementType type) {
-        return type.equals(StatementType.Income);
-    }
-
     private boolean checkIfNotZero(BigDecimal amount) {
         boolean result = true;
         if (amount.compareTo(BigDecimal.ZERO) == 0) {
@@ -140,7 +136,7 @@ public class StatementPersistentService {
         ContentValues values = new ContentValues();
         values.put(COLUMN_NAME_AMOUNT, amount.toString());
         values.put(COLUMN_NAME_DATE, date);
-        values.put(COLUMN_NAME_IS_INCOME, isIncome(type) ? TRUE : FALSE);
+        values.put(COLUMN_NAME_IS_INCOME, type.isIncome() ? TRUE : FALSE);
         values.put(COLUMN_NAME_NOTE, note);
 
         LOG.debug("Content created: " + values);

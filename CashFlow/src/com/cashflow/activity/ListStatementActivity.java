@@ -106,7 +106,7 @@ public class ListStatementActivity extends RoboActivity {
     }
 
     private String statementType() {
-        return type.equals(StatementType.Income) ? INCOME_EXTRA : EXPENSE_EXTRA;
+        return type.isIncome() ? INCOME_EXTRA : EXPENSE_EXTRA;
     }
 
     private boolean isEditActivity(int requestCode, int resultCode) {
@@ -126,7 +126,7 @@ public class ListStatementActivity extends RoboActivity {
     }
 
     private void setTitle() {
-        if (type.equals(StatementType.Income)) {
+        if (type.isIncome()) {
             setTitle(R.string.title_activity_list_incomes);
         } else {
             setTitle(R.string.title_activity_list_expenses);
@@ -134,10 +134,15 @@ public class ListStatementActivity extends RoboActivity {
     }
 
     private void setStatementType() {
-        if (getIntent().getStringExtra(STATEMENT_TYPE_EXTRA).equals(INCOME_EXTRA)) {
+        String statementType = getIntent().getStringExtra(STATEMENT_TYPE_EXTRA);
+        if (isIncome(statementType)) {
             type = StatementType.Income;
         } else {
             type = StatementType.Expense;
         }
+    }
+
+    private boolean isIncome(String statementType) {
+        return statementType.equals(INCOME_EXTRA);
     }
 }

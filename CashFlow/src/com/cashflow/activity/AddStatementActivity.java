@@ -99,7 +99,7 @@ public class AddStatementActivity extends RoboFragmentActivity {
     private void refreshBalance(String amountStr) {
         BigDecimal amount = new BigDecimal(amountStr);
 
-        if (isIncome(type)) {
+        if (type.isIncome()) {
             balance.add(amount);
         } else {
 
@@ -121,12 +121,8 @@ public class AddStatementActivity extends RoboFragmentActivity {
         return type.equals(INCOME_EXTRA);
     }
 
-    private boolean isIncome(StatementType type) {
-        return type.equals(StatementType.Income);
-    }
-
     private void setTitle() {
-        if (type.equals(StatementType.Income)) {
+        if (type.isIncome()) {
             setTitle(R.string.title_activity_add_income);
         } else {
             setTitle(R.string.title_activity_add_expense);

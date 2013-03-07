@@ -136,7 +136,7 @@ public class EditStatementActivity extends RoboFragmentActivity {
     }
 
     private void setTitle() {
-        if (type.equals(StatementType.Income)) {
+        if (type.isIncome()) {
             setTitle(R.string.title_activity_edit_incomes);
         } else {
             setTitle(R.string.title_activity_edit_expenses);
@@ -150,10 +150,15 @@ public class EditStatementActivity extends RoboFragmentActivity {
     }
 
     private void setStatementType() {
-        if (getIntent().getStringExtra(STATEMENT_TYPE_EXTRA).equals(INCOME_EXTRA)) {
+        String statementType = getIntent().getStringExtra(STATEMENT_TYPE_EXTRA);
+        if (isIncome(statementType)) {
             type = StatementType.Income;
         } else {
             type = StatementType.Expense;
         }
+    }
+
+    private boolean isIncome(String statementType) {
+        return statementType.equals(INCOME_EXTRA);
     }
 }
