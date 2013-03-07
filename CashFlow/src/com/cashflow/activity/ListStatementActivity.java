@@ -34,8 +34,8 @@ import com.cashflow.database.statement.StatementType;
 import com.google.inject.Inject;
 
 /**
- * Basic class to list incomes.
- * @author Janos_Gyula_Meszaros
+ * Basic class to list statements. The type is setted from intent's <code>STATEMENT_TYPE_EXTRA</code> extra.
+ * @author Janos_Gyula_Meszaros 
  */
 public class ListStatementActivity extends RoboActivity {
     private static final Logger LOG = LoggerFactory.getLogger(ListStatementActivity.class);
@@ -70,7 +70,8 @@ public class ListStatementActivity extends RoboActivity {
     }
 
     /**
-     * Indicates the edit income interface
+     * Starts the edit statement interface. Add actual values to the {@link EditStatementActivity}'s 
+     * intent under the proper extra.
      * @param view
      *            Needed by onClick event.
      */
