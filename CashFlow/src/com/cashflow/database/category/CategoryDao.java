@@ -1,12 +1,15 @@
 package com.cashflow.database.category;
 
 import static android.provider.BaseColumns._ID;
+import static com.cashflow.database.DatabaseContracts.AbstractCategory.PROJECTION;
 import static com.cashflow.database.DatabaseContracts.AbstractCategory.TABLE_NAME;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.cashflow.database.DatabaseContracts;
 import com.cashflow.database.SQLiteDbProvider;
@@ -21,7 +24,7 @@ import com.google.inject.Singleton;
 public class CategoryDao {
     private static final Logger LOG = LoggerFactory.getLogger(CategoryDao.class);
 
-    private SQLiteDbProvider provider;
+    private final SQLiteDbProvider provider;
 
     /**
      * Default constructor which get an Provider.
@@ -63,14 +66,14 @@ public class CategoryDao {
         LOG.debug("Num of rows updated: " + update);
     }
 
-    //    /**
-    //     * Returns all of the categories.
-    //     * @return Cursor which contains the data.
-    //     */
-    //    public Cursor getCategories() {
-    //        SQLiteDatabase db = provider.getReadableDb();
-    //        Cursor cursor = db.query(TABLE_NAME, PROJECTION, EXPENSE_SELECTION, null, null, null, null);
-    //        return cursor;
-    //    }
+    /**
+     * Returns all of the categories.
+     * @return Cursor which contains the data.
+     */
+    public Cursor getCategories() {
+        SQLiteDatabase db = provider.getReadableDb();
+        Cursor cursor = db.query(TABLE_NAME, PROJECTION, null, null, null, null, null);
+        return cursor;
+    }
 
 }

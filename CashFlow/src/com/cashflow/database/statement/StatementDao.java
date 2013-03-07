@@ -1,6 +1,7 @@
 package com.cashflow.database.statement;
 
 import static android.provider.BaseColumns._ID;
+import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_NULLABLE;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.EXPENSE_SELECTION;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.INCOME_SELECTION;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.PROJECTION;
@@ -13,7 +14,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.cashflow.database.DatabaseContracts;
 import com.cashflow.database.SQLiteDbProvider;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -26,7 +26,7 @@ import com.google.inject.Singleton;
 public class StatementDao {
     private static final Logger LOG = LoggerFactory.getLogger(StatementDao.class);
 
-    private SQLiteDbProvider provider;
+    private final SQLiteDbProvider provider;
 
     /**
      * Default constructor which get an Provider.
@@ -51,8 +51,7 @@ public class StatementDao {
      *            Values to save.
      */
     public void save(ContentValues values) {
-        long newRowId = provider.getWritableDb().insert(DatabaseContracts.AbstractStatement.TABLE_NAME,
-                DatabaseContracts.AbstractStatement.COLUMN_NAME_NULLABLE, values);
+        long newRowId = provider.getWritableDb().insert(TABLE_NAME, COLUMN_NAME_NULLABLE, values);
         LOG.debug("New row created with row ID: " + newRowId);
     }
 

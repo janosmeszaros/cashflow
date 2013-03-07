@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -18,6 +19,7 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class CategoryPersistenceService {
+    private static final String EMPTY_STRING = "";
     private static final Logger LOG = LoggerFactory.getLogger(CategoryPersistenceService.class);
     private final CategoryDao dao;
 
@@ -52,7 +54,7 @@ public class CategoryPersistenceService {
 
     private boolean checkIfNotEmptyString(String name) {
         boolean result = true;
-        if ("".equals(name)) {
+        if (EMPTY_STRING.equals(name)) {
             result = false;
         }
         return result;
@@ -93,5 +95,13 @@ public class CategoryPersistenceService {
         dao.update(value, id);
 
         return result;
+    }
+
+    /**
+     * Get all categories.
+     * @return a cursor which contains the values.
+     */
+    public Cursor getCategories() {
+        return dao.getCategories();
     }
 }
