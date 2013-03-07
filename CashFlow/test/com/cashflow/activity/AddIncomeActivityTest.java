@@ -53,7 +53,7 @@ public class AddIncomeActivityTest {
     private String[] fromColumns = {AbstractStatement._ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE, COLUMN_NAME_NOTE};
     private Object[] values = new Object[]{1, 1234L, "2012", "note"};
     private Balance balance;
-    private AddStatementActivity activity;
+    private AddStatementActivity underTest;
     @Mock
     private StatementPersistentService statementPersistentService;
 
@@ -67,9 +67,9 @@ public class AddIncomeActivityTest {
 
         ActivityModule.setUp(this, module);
 
-        activity = new AddStatementActivity();
-        activity.setIntent(new Intent().putExtra(STATEMENT_TYPE_EXTRA, INCOME_EXTRA));
-        activity.onCreate(null);
+        underTest = new AddStatementActivity();
+        underTest.setIntent(new Intent().putExtra(STATEMENT_TYPE_EXTRA, INCOME_EXTRA));
+        underTest.onCreate(null);
     }
 
     @After
@@ -79,7 +79,7 @@ public class AddIncomeActivityTest {
 
     @Test
     public void testWhenIncomeActivityThanTitleShouldBeAddExpense() {
-        assertThat((String) activity.getTitle(), equalTo(activity.getString(R.string.title_activity_add_income)));
+        assertThat((String) underTest.getTitle(), equalTo(underTest.getString(R.string.title_activity_add_income)));
     }
 
     //    @Test
@@ -94,10 +94,10 @@ public class AddIncomeActivityTest {
 
     @Test
     public void testSubmitWhenOkThanCallProperFunctionRefreshBalanceSetResultToTrueAndClose() {
-        ShadowFragmentActivity shadowActivity = Robolectric.shadowOf(activity);
+        ShadowFragmentActivity shadowActivity = Robolectric.shadowOf(underTest);
         setViewsValues(AMOUNT);
 
-        activity.submit(null);
+        underTest.submit(null);
 
         verify(statementPersistentService).saveStatement(AMOUNT, DATE, NOTES, StatementType.Income);
         assertThat(shadowActivity.getResultCode(), equalTo(RESULT_OK));
@@ -106,21 +106,21 @@ public class AddIncomeActivityTest {
 
     @Test
     public void testSubmitWhenAmountIsTheSameThanSetResultToCanceledAndClose() {
-        ShadowFragmentActivity shadowActivity = Robolectric.shadowOf(activity);
+        ShadowFragmentActivity shadowActivity = Robolectric.shadowOf(underTest);
         setViewsValues(SAME_AMOUNT);
 
-        activity.submit(null);
+        underTest.submit(null);
 
         verify(statementPersistentService).saveStatement(SAME_AMOUNT, DATE, NOTES, StatementType.Income);
         assertThat(shadowActivity.getResultCode(), equalTo(RESULT_CANCELED));
     }
 
     private void setViewsValues(String amountStr) {
-        EditText notes = (EditText) activity.findViewById(R.id.notesText);
+        EditText notes = (EditText) underTest.findViewById(R.id.notesText);
         notes.setText(NOTES);
-        EditText amount = (EditText) activity.findViewById(R.id.amountText);
+        EditText amount = (EditText) underTest.findViewById(R.id.amountText);
         amount.setText(amountStr);
-        Button button = (Button) activity.findViewById(R.id.dateButton);
+        Button button = (Button) underTest.findViewById(R.id.dateButton);
         button.setText(DATE);
     }
 

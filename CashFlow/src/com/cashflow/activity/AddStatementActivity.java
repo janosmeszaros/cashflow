@@ -102,7 +102,6 @@ public class AddStatementActivity extends RoboFragmentActivity {
         if (type.isIncome()) {
             balance.add(amount);
         } else {
-
             balance.subtract(amount);
         }
 
