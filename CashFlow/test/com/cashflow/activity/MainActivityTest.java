@@ -13,7 +13,7 @@ import android.content.Intent;
 import android.view.View;
 
 import com.cashflow.R;
-import com.cashflow.activity.util.TestGuiceModule;
+import com.cashflow.activity.testutil.TestGuiceModule;
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 import com.xtremelabs.robolectric.shadows.ShadowActivity;

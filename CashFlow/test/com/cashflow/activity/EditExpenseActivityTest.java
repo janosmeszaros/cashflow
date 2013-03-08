@@ -33,8 +33,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.cashflow.R;
-import com.cashflow.activity.util.ActivityModule;
-import com.cashflow.activity.util.AddStatementActivityProvider;
+import com.cashflow.activity.testutil.ActivityModule;
+import com.cashflow.activity.testutil.AddStatementActivityProvider;
 import com.cashflow.database.DatabaseContracts.AbstractStatement;
 import com.cashflow.database.balance.Balance;
 import com.cashflow.database.statement.StatementPersistentService;

@@ -1,4 +1,4 @@
-package com.cashflow.activity.util;
+package com.cashflow.activity.testutil;
 
 import java.util.HashMap;
 import java.util.Map;

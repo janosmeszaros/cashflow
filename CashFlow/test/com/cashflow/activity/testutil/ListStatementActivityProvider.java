@@ -1,4 +1,4 @@
-package com.cashflow.activity.util;
+package com.cashflow.activity.testutil;
 
 import com.cashflow.activity.ListStatementActivity;
 import com.google.inject.Provider;

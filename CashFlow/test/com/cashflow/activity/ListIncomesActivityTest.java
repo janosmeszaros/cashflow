@@ -28,8 +28,8 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
 import com.cashflow.R;
-import com.cashflow.activity.util.ActivityModule;
-import com.cashflow.activity.util.ListStatementActivityProvider;
+import com.cashflow.activity.testutil.ActivityModule;
+import com.cashflow.activity.testutil.ListStatementActivityProvider;
 import com.cashflow.database.DatabaseContracts.AbstractStatement;
 import com.cashflow.database.statement.StatementPersistentService;
 import com.cashflow.database.statement.StatementType;
