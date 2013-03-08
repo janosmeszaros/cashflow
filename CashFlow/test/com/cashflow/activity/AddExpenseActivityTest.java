@@ -44,8 +44,8 @@ public class AddExpenseActivityTest {
     private static final String NOTES = "notes";
     private static final String DATE = "2013";
     private static final String AMOUNT = "1234";
-    private String[] fromColumns = {AbstractStatement._ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE, COLUMN_NAME_NOTE};
-    private Object[] values = new Object[]{1, 1234L, "2012", "note"};
+    private final String[] fromColumns = {AbstractStatement._ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE, COLUMN_NAME_NOTE};
+    private final Object[] values = new Object[]{1, 1234L, "2012", "note"};
     @Mock
     private StatementPersistenceService statementPersistenceService;
     private Balance balance;

@@ -19,6 +19,11 @@ import android.database.Cursor;
 
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
+/**
+ * {@link CategoryPersistenceService} test.
+ * @author Kornel_Refi
+ *
+ */
 @RunWith(RobolectricTestRunner.class)
 public class CategoryPersistenceServiceTest {
 

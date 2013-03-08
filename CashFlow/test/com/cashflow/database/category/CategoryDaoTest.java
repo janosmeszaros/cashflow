@@ -19,6 +19,11 @@ import android.database.sqlite.SQLiteDatabase;
 import com.cashflow.database.SQLiteDbProvider;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
+/**
+ * {@link CategoryDao} test.
+ * @author Kornel_Refi
+ *
+ */
 @RunWith(RobolectricTestRunner.class)
 public class CategoryDaoTest {
 
