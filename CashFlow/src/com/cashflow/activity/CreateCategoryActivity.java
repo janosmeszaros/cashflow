@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.cashflow.R;
 import com.cashflow.database.category.CategoryPersistenceService;
@@ -60,11 +61,14 @@ public class CreateCategoryActivity extends RoboActivity {
      * @param view Required for onClick.
      */
     public void createCategory(View view) {
-        LOG.debug(nameText.toString());
+        LOG.debug("Creating category: " + nameText.getText());
         String name = nameText.getText().toString();
 
         if (service.saveCategory(name)) {
             finish();
+        } else {
+            Toast.makeText(this, getString(R.string.empty_category), Toast.LENGTH_SHORT).show();
         }
+
     }
 }

@@ -125,7 +125,7 @@ public class AddIncomeActivityTest {
     }
 
     private void addBindings(ActivityModule module) {
-        module.addBinding(StatementPersistentService.class, statementPersistentService);
+        module.addBinding(StatementPersistenceService.class, statementPersistentService);
         balance = Balance.getInstance(statementPersistentService);
         module.addBinding(Balance.class, balance);
     }

@@ -157,7 +157,7 @@ public class ListExpensesActivityTest {
     }
 
     private void addBindings(ActivityModule module) {
-        module.addBinding(StatementPersistentService.class, statementPersistentService);
+        module.addBinding(StatementPersistenceService.class, statementPersistentService);
     }
 
     private void setUpPersistentService() {

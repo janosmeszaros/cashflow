@@ -66,7 +66,7 @@ public class ListIncomesActivityTest {
     }
 
     private void addBindings(ActivityModule module) {
-        module.addBinding(StatementPersistentService.class, statementPersistentService);
+        module.addBinding(StatementPersistenceService.class, statementPersistentService);
     }
 
     @After

@@ -57,7 +57,7 @@ public class AddExpenseActivityTest {
     private Balance balance;
     private AddStatementActivity underTest;
     @Mock
-    private StatementPersistenceService statementPersistenceService;
+    private StatementPersistenceService statementPersistentService;
 
     @Before
     public void setUp() {
@@ -100,7 +100,7 @@ public class AddExpenseActivityTest {
 
         underTest.submit(null);
 
-        verify(statementPersistenceService).saveStatement(AMOUNT, DATE, NOTES, StatementType.Expense);
+        verify(statementPersistentService).saveStatement(AMOUNT, DATE, NOTES, StatementType.Expense);
         assertThat(balance.getBalance(), equalTo(-1234D));
     }
 
@@ -142,7 +142,7 @@ public class AddExpenseActivityTest {
     private void addBindings(ActivityModule module) {
         balance = Balance.getInstance(statementPersistentService);
 
-        module.addBinding(StatementPersistentService.class, statementPersistentService);
+        module.addBinding(StatementPersistenceService.class, statementPersistentService);
         module.addBinding(Balance.class, balance);
     }
 

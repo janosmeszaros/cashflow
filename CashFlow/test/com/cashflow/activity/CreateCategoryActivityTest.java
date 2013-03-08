@@ -15,9 +15,9 @@ import org.mockito.MockitoAnnotations;
 import android.widget.EditText;
 
 import com.cashflow.R;
-import com.cashflow.activity.util.ActivityModule;
-import com.cashflow.activity.util.CreateCategoryActivityProvider;
-import com.cashflow.activity.util.TestGuiceModule;
+import com.cashflow.activity.testutil.ActivityModule;
+import com.cashflow.activity.testutil.CreateCategoryActivityProvider;
+import com.cashflow.activity.testutil.TestGuiceModule;
 import com.cashflow.database.category.CategoryPersistenceService;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 

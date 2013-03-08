@@ -37,7 +37,7 @@ import com.cashflow.activity.testutil.ActivityModule;
 import com.cashflow.activity.testutil.EditStatementActivityProvider;
 import com.cashflow.database.DatabaseContracts.AbstractStatement;
 import com.cashflow.database.balance.Balance;
-import com.cashflow.database.statement.StatementPersistentService;
+import com.cashflow.database.statement.StatementPersistenceService;
 import com.cashflow.database.statement.StatementType;
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
@@ -63,7 +63,7 @@ public class EditExpenseActivityTest {
     private ShadowFragmentActivity shadowFragmentActivity;
     private Balance balance;
     @Mock
-    private StatementPersistentService statementPersistentService;
+    private StatementPersistenceService statementPersistenceService;
 
     @Before
     public void setUp() {
@@ -107,7 +107,7 @@ public class EditExpenseActivityTest {
 
         underTest.submit(null);
 
-        verify(statementPersistentService, times(1)).updateStatement(ID, CHANGED_AMOUNT, DATE, NOTES, StatementType.Expense);
+        verify(statementPersistenceService, times(1)).updateStatement(ID, CHANGED_AMOUNT, DATE, NOTES, StatementType.Expense);
         assertThat(balance.getBalance(), equalTo(-1111D));
         assertThat(shadowFragmentActivity.getResultCode(), equalTo(RESULT_OK));
     }
@@ -118,7 +118,7 @@ public class EditExpenseActivityTest {
 
         underTest.submit(null);
 
-        verify(statementPersistentService, times(1)).updateStatement(ID, AMOUNT, CHANGED_DATE, NOTES, StatementType.Expense);
+        verify(statementPersistenceService, times(1)).updateStatement(ID, AMOUNT, CHANGED_DATE, NOTES, StatementType.Expense);
         assertThat(balance.getBalance(), equalTo(0D));
         assertThat(shadowFragmentActivity.getResultCode(), equalTo(RESULT_OK));
     }
@@ -129,7 +129,7 @@ public class EditExpenseActivityTest {
 
         underTest.submit(null);
 
-        verify(statementPersistentService, times(1)).updateStatement(ID, AMOUNT, DATE, CHANGED_NOTE, StatementType.Expense);
+        verify(statementPersistenceService, times(1)).updateStatement(ID, AMOUNT, DATE, CHANGED_NOTE, StatementType.Expense);
         assertThat(balance.getBalance(), equalTo(0D));
         assertThat(shadowFragmentActivity.getResultCode(), equalTo(RESULT_OK));
     }
@@ -163,8 +163,8 @@ public class EditExpenseActivityTest {
     }
 
     private void addBindings(ActivityModule module) {
-        module.addBinding(StatementPersistentService.class, statementPersistentService);
-        balance = Balance.getInstance(statementPersistentService);
+        module.addBinding(StatementPersistenceService.class, statementPersistenceService);
+        balance = Balance.getInstance(statementPersistenceService);
         module.addBinding(Balance.class, balance);
     }
 
@@ -172,10 +172,10 @@ public class EditExpenseActivityTest {
         MatrixCursor cursor = new MatrixCursor(fromColumns);
         cursor.addRow(values);
 
-        when(statementPersistentService.getStatement(StatementType.Expense)).thenReturn(cursor);
-        when(statementPersistentService.getStatement(StatementType.Income)).thenReturn(cursor);
-        when(statementPersistentService.saveStatement(anyString(), anyString(), anyString(), (StatementType) anyObject())).thenReturn(true);
-        when(statementPersistentService.updateStatement(anyString(), anyString(), anyString(), anyString(), (StatementType) anyObject())).thenReturn(
+        when(statementPersistenceService.getStatement(StatementType.Expense)).thenReturn(cursor);
+        when(statementPersistenceService.getStatement(StatementType.Income)).thenReturn(cursor);
+        when(statementPersistenceService.saveStatement(anyString(), anyString(), anyString(), (StatementType) anyObject())).thenReturn(true);
+        when(statementPersistenceService.updateStatement(anyString(), anyString(), anyString(), anyString(), (StatementType) anyObject())).thenReturn(
                 true);
     }
 }

@@ -37,7 +37,7 @@ import com.cashflow.activity.testutil.ActivityModule;
 import com.cashflow.activity.testutil.EditStatementActivityProvider;
 import com.cashflow.database.DatabaseContracts.AbstractStatement;
 import com.cashflow.database.balance.Balance;
-import com.cashflow.database.statement.StatementPersistentService;
+import com.cashflow.database.statement.StatementPersistenceService;
 import com.cashflow.database.statement.StatementType;
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
@@ -63,7 +63,7 @@ public class EditIncomeActivityTest {
     private ShadowFragmentActivity shadowFragmentActivity;
     private Balance balance;
     @Mock
-    private StatementPersistentService statementPersistentService;
+    private StatementPersistenceService statementPersistentService;
 
     @Before
     public void setUp() {
@@ -174,7 +174,7 @@ public class EditIncomeActivityTest {
     }
 
     private void addBindings(ActivityModule module) {
-        module.addBinding(StatementPersistentService.class, statementPersistentService);
+        module.addBinding(StatementPersistenceService.class, statementPersistentService);
         balance = Balance.getInstance(statementPersistentService);
         module.addBinding(Balance.class, balance);
     }
