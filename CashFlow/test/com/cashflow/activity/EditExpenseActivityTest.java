@@ -34,7 +34,7 @@ import android.widget.TextView;
 
 import com.cashflow.R;
 import com.cashflow.activity.testutil.ActivityModule;
-import com.cashflow.activity.testutil.AddStatementActivityProvider;
+import com.cashflow.activity.testutil.EditStatementActivityProvider;
 import com.cashflow.database.DatabaseContracts.AbstractStatement;
 import com.cashflow.database.balance.Balance;
 import com.cashflow.database.statement.StatementPersistentService;
@@ -68,7 +68,7 @@ public class EditExpenseActivityTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        ActivityModule module = new ActivityModule(new AddStatementActivityProvider());
+        ActivityModule module = new ActivityModule(new EditStatementActivityProvider());
 
         setUpPersistentService();
         addBindings(module);
