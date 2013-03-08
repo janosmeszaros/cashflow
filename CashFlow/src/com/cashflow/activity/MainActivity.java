@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.cashflow.R;
 import com.cashflow.database.balance.Balance;
-import com.cashflow.database.statement.StatementPersistentService;
+import com.cashflow.database.statement.StatementPersistenceService;
 import com.google.inject.Inject;
 
 /**
@@ -28,7 +28,7 @@ public class MainActivity extends RoboActivity {
     private static final Logger LOG = LoggerFactory.getLogger(MainActivity.class);
 
     @Inject
-    private StatementPersistentService statementPersistentService;
+    private StatementPersistenceService statementPersistentService;
 
     @InjectView(R.id.textViewBalanceAmount)
     private TextView balanceText;
@@ -100,6 +100,16 @@ public class MainActivity extends RoboActivity {
     public void listExpenses(View view) {
         Intent intent = new Intent(this, ListStatementActivity.class);
         intent.putExtra(STATEMENT_TYPE_EXTRA, EXPENSE_EXTRA);
+        startActivity(intent);
+    }
+
+    /**
+     * Create categories onClick method.
+     * @param view
+     *            Required for onclick.
+     */
+    public void createCategories(View view) {
+        Intent intent = new Intent(this, CreateCategoryActivity.class);
         startActivity(intent);
     }
 

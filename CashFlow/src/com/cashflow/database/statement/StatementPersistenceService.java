@@ -18,13 +18,13 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Class to create statement for dao.
+ * Class to create statement for DAO.
  * @author Kornel_Refi
  * @author Janos_Gyula_Meszaros
  */
 @Singleton
-public class StatementPersistentService {
-    private static final Logger LOG = LoggerFactory.getLogger(StatementPersistentService.class);
+public class StatementPersistenceService {
+    private static final Logger LOG = LoggerFactory.getLogger(StatementPersistenceService.class);
     private static final int TRUE = 1;
     private static final int FALSE = 0;
     private final StatementDao dao;
@@ -34,10 +34,10 @@ public class StatementPersistentService {
      * @param dao
      *            {@link StatementDao} to use to save data. Can't be null.
      * @throws IllegalArgumentException
-     *             when dao is null.
+     *             when DAO is null.
      */
     @Inject
-    public StatementPersistentService(StatementDao dao) {
+    public StatementPersistenceService(StatementDao dao) {
         validateInput(dao);
         this.dao = dao;
     }
@@ -52,7 +52,7 @@ public class StatementPersistentService {
      *            Note for the statement.
      * @param type
      *            Statement's type
-     * @return true if saving was successful and the amount wasn't zero, false otherwise.
+     * @return <code>true</code> if saving was successful and the amount wasn't zero, <code>false</code> otherwise.
      */
     public boolean saveStatement(String amountStr, String date, String note, StatementType type) {
         validateInput(type, amountStr, date);

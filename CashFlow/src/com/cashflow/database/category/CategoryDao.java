@@ -1,11 +1,8 @@
-package com.cashflow.database.statement;
+package com.cashflow.database.category;
 
 import static android.provider.BaseColumns._ID;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_NULLABLE;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.EXPENSE_SELECTION;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.INCOME_SELECTION;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.PROJECTION;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.TABLE_NAME;
+import static com.cashflow.database.DatabaseContracts.AbstractCategory.PROJECTION;
+import static com.cashflow.database.DatabaseContracts.AbstractCategory.TABLE_NAME;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,17 +11,18 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.cashflow.database.DatabaseContracts;
 import com.cashflow.database.SQLiteDbProvider;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Basic dao for the statements.
+ * Basic dao for the categories.
  * @author Kornel_Refi
  */
 @Singleton
-public class StatementDao {
-    private static final Logger LOG = LoggerFactory.getLogger(StatementDao.class);
+public class CategoryDao {
+    private static final Logger LOG = LoggerFactory.getLogger(CategoryDao.class);
 
     private final SQLiteDbProvider provider;
 
@@ -34,7 +32,7 @@ public class StatementDao {
      *            Provider to get database.
      */
     @Inject
-    public StatementDao(SQLiteDbProvider provider) {
+    public CategoryDao(SQLiteDbProvider provider) {
         nullCheck(provider);
         this.provider = provider;
     }
@@ -51,12 +49,13 @@ public class StatementDao {
      *            Values to save.
      */
     public void save(ContentValues values) {
-        long newRowId = provider.getWritableDb().insert(TABLE_NAME, COLUMN_NAME_NULLABLE, values);
+        long newRowId = provider.getWritableDb().insert(DatabaseContracts.AbstractCategory.TABLE_NAME,
+                DatabaseContracts.AbstractCategory.COLUMN_NAME_NULLABLE, values);
         LOG.debug("New row created with row ID: " + newRowId);
     }
 
     /**
-     * Updates a statement row with specified id.
+     * Updates a category row with specified id.
      * @param values
      *            data needs to be updated.
      * @param id
@@ -68,22 +67,13 @@ public class StatementDao {
     }
 
     /**
-     * Returns all of the expenses.
+     * Returns all of the categories.
      * @return Cursor which contains the data.
      */
-    public Cursor getExpenses() {
+    public Cursor getCategories() {
         SQLiteDatabase db = provider.getReadableDb();
-        Cursor cursor = db.query(TABLE_NAME, PROJECTION, EXPENSE_SELECTION, null, null, null, null);
+        Cursor cursor = db.query(TABLE_NAME, PROJECTION, null, null, null, null, null);
         return cursor;
     }
 
-    /**
-     * Returns all of the incomes.
-     * @return Cursor which contains the data.
-     */
-    public Cursor getIncomes() {
-        SQLiteDatabase db = provider.getReadableDb();
-        Cursor cursor = db.query(TABLE_NAME, PROJECTION, INCOME_SELECTION, null, null, null, null);
-        return cursor;
-    }
 }

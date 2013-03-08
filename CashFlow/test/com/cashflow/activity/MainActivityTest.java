@@ -26,9 +26,6 @@ import com.xtremelabs.robolectric.shadows.ShadowIntent;
 @RunWith(RobolectricTestRunner.class)
 public class MainActivityTest {
 
-    // @Mock
-    // ConvertFeetToMeterListener listener;
-
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
@@ -111,6 +108,24 @@ public class MainActivityTest {
         ShadowIntent shadowIntent = Robolectric.shadowOf(startedIntent);
 
         assertThat(shadowIntent.getComponent().getClassName(), equalTo(ListStatementActivity.class.getName()));
+
+    }
+
+    @Test
+    public void testCreateCategoriesButtonClickShouldCreateCreateCategoryActivity() {
+        MainActivity activity = new MainActivity();
+
+        activity.onCreate(null);
+
+        View createCategory = activity.findViewById(R.id.createCategoryButton);
+
+        createCategory.performClick();
+
+        ShadowActivity shadowActivity = Robolectric.shadowOf(activity);
+        Intent startedIntent = shadowActivity.getNextStartedActivity();
+        ShadowIntent shadowIntent = Robolectric.shadowOf(startedIntent);
+
+        assertThat(shadowIntent.getComponent().getClassName(), equalTo(CreateCategoryActivity.class.getName()));
 
     }
 }

@@ -1,11 +1,8 @@
-package com.cashflow.database.statement;
+package com.cashflow.database.category;
 
 import static android.provider.BaseColumns._ID;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_NULLABLE;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.EXPENSE_SELECTION;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.INCOME_SELECTION;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.PROJECTION;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.TABLE_NAME;
+import static com.cashflow.database.DatabaseContracts.AbstractCategory.COLUMN_NAME_NULLABLE;
+import static com.cashflow.database.DatabaseContracts.AbstractCategory.TABLE_NAME;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -23,12 +20,14 @@ import com.cashflow.database.SQLiteDbProvider;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 /**
- * {@link StatementDao} test class.
- * @author Janos_Gyula_Meszaros
+ * {@link CategoryDao} test.
+ * @author Kornel_Refi
+ *
  */
 @RunWith(RobolectricTestRunner.class)
-public class StatementDaoTest {
-    private StatementDao underTest;
+public class CategoryDaoTest {
+
+    private CategoryDao underTest;
     @Mock
     private SQLiteDbProvider provider;
     @Mock
@@ -44,12 +43,12 @@ public class StatementDaoTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testWhenConstructorGetsNullThenThrowsIllegalArgumentException() {
-        underTest = new StatementDao(null);
+        underTest = new CategoryDao(null);
     }
 
     @Test
     public void testSaveWhenEverythingIsOkThenCallProperFunction() {
-        underTest = new StatementDao(provider);
+        underTest = new CategoryDao(provider);
         ContentValues values = new ContentValues();
 
         underTest.save(values);
@@ -59,7 +58,7 @@ public class StatementDaoTest {
 
     @Test
     public void testUpdateWhenEverythingIsOkThenCallProperFunction() {
-        underTest = new StatementDao(provider);
+        underTest = new CategoryDao(provider);
         ContentValues values = new ContentValues();
         String id = "id";
 
@@ -68,23 +67,4 @@ public class StatementDaoTest {
         verify(db, times(1)).update(TABLE_NAME, values, _ID + " = " + id, null);
     }
 
-    @Test
-    public void testGetExpensesWhenEverythingIsOkThenCallProperFunction() {
-        underTest = new StatementDao(provider);
-
-        underTest.getExpenses();
-
-        verify(provider).getReadableDb();
-        verify(db).query(TABLE_NAME, PROJECTION, EXPENSE_SELECTION, null, null, null, null);
-    }
-
-    @Test
-    public void testGetIncomesWhenEverythingIsOkThenCallProperFunction() {
-        underTest = new StatementDao(provider);
-
-        underTest.getIncomes();
-
-        verify(provider).getReadableDb();
-        verify(db).query(TABLE_NAME, PROJECTION, INCOME_SELECTION, null, null, null, null);
-    }
 }

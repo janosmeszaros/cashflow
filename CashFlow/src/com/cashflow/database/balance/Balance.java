@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import android.database.Cursor;
 
-import com.cashflow.database.statement.StatementPersistentService;
+import com.cashflow.database.statement.StatementPersistenceService;
 import com.cashflow.database.statement.StatementType;
 
 /**
@@ -19,9 +19,9 @@ import com.cashflow.database.statement.StatementType;
 public final class Balance {
     private static final Logger LOG = LoggerFactory.getLogger(Balance.class);
     private volatile BigDecimal amountBalance = BigDecimal.ZERO;
-    private StatementPersistentService service;
+    private StatementPersistenceService service;
 
-    private Balance(StatementPersistentService service) {
+    private Balance(StatementPersistenceService service) {
         this.service = service;
     }
 
@@ -30,12 +30,12 @@ public final class Balance {
     }
 
     /**
-     * Static factory method which gets the {@link StatementPersistentService} to help count the balance.
+     * Static factory method which gets the {@link StatementPersistenceService} to help count the balance.
      * @param service
-     *            {@link StatementPersistentService}
+     *            {@link StatementPersistenceService}
      * @return the Balance instance.
      */
-    public static Balance getInstance(StatementPersistentService service) {
+    public static Balance getInstance(StatementPersistenceService service) {
         Balance balance = new Balance(service);
         balance.countBalance();
 

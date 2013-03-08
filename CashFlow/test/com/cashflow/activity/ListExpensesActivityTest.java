@@ -38,7 +38,7 @@ import com.cashflow.R;
 import com.cashflow.activity.testutil.ActivityModule;
 import com.cashflow.activity.testutil.ListStatementActivityProvider;
 import com.cashflow.database.DatabaseContracts.AbstractStatement;
-import com.cashflow.database.statement.StatementPersistentService;
+import com.cashflow.database.statement.StatementPersistenceService;
 import com.cashflow.database.statement.StatementType;
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
@@ -62,7 +62,7 @@ public class ListExpensesActivityTest {
     private Object[] values = new Object[]{1, 1234L, "2012", "note"};
     private ListStatementActivity underTest;
     @Mock
-    private StatementPersistentService statementPersistentService;
+    private StatementPersistenceService statementPersistentService;
 
     @Before
     public void setUp() {

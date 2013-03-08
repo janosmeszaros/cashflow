@@ -22,7 +22,7 @@ import android.widget.EditText;
 import com.cashflow.R;
 import com.cashflow.components.DatePickerFragment;
 import com.cashflow.database.balance.Balance;
-import com.cashflow.database.statement.StatementPersistentService;
+import com.cashflow.database.statement.StatementPersistenceService;
 import com.cashflow.database.statement.StatementType;
 import com.google.inject.Inject;
 
@@ -33,7 +33,7 @@ import com.google.inject.Inject;
 public class AddStatementActivity extends RoboFragmentActivity {
     private static final Logger LOG = LoggerFactory.getLogger(AddStatementActivity.class);
     @Inject
-    private StatementPersistentService service;
+    private StatementPersistenceService service;
 
     @InjectView(R.id.amountText)
     private EditText amountText;
@@ -69,7 +69,7 @@ public class AddStatementActivity extends RoboFragmentActivity {
      * Onclick event for add statement button on add statement screen. Save the expense to database. If the save was successful then refresh the
      * balance else sets the result to canceled and close the activity. 
      * @param view
-     *            Required for onclick.
+     *            Required for onClick.
      */
     public void submit(View view) {
         String amountStr = amountText.getText().toString();

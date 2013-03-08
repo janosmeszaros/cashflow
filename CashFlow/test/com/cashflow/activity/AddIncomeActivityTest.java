@@ -32,7 +32,7 @@ import com.cashflow.activity.testutil.ActivityModule;
 import com.cashflow.activity.testutil.AddStatementActivityProvider;
 import com.cashflow.database.DatabaseContracts.AbstractStatement;
 import com.cashflow.database.balance.Balance;
-import com.cashflow.database.statement.StatementPersistentService;
+import com.cashflow.database.statement.StatementPersistenceService;
 import com.cashflow.database.statement.StatementType;
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
@@ -55,7 +55,7 @@ public class AddIncomeActivityTest {
     private Balance balance;
     private AddStatementActivity underTest;
     @Mock
-    private StatementPersistentService statementPersistentService;
+    private StatementPersistenceService statementPersistentService;
 
     @Before
     public void setUp() {
