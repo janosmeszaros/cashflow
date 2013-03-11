@@ -32,6 +32,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.cashflow.R;
+import com.cashflow.activity.listeners.DateButtonOnClickListener;
 import com.cashflow.activity.testutil.ActivityModule;
 import com.cashflow.activity.testutil.EditStatementActivityProvider;
 import com.cashflow.database.DatabaseContracts.AbstractStatement;
@@ -42,6 +43,7 @@ import com.cashflow.domain.Statement;
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 import com.xtremelabs.robolectric.shadows.ShadowFragmentActivity;
+import com.xtremelabs.robolectric.shadows.ShadowTextView;
 
 /**
  * {@link EditStatementActivity} test, specially this class tests the income editing functionality.
@@ -64,6 +66,8 @@ public class EditIncomeActivityTest {
     private Balance balance;
     @Mock
     private StatementPersistenceService statementPersistentService;
+    @Mock
+    private DateButtonOnClickListener listener;
 
     @Before
     public void setUp() {
@@ -89,6 +93,14 @@ public class EditIncomeActivityTest {
     @Test
     public void testWhenEditIncomeActivityThanTitleShouldBeEditIncome() {
         assertThat((String) underTest.getTitle(), equalTo(underTest.getString(R.string.title_activity_edit_incomes)));
+    }
+
+    @Test
+    public void testOnCreateWhenCalledThenShouldSetTheListenerClassToTheDateButton() {
+        Button button = (Button) underTest.findViewById(R.id.dateButton);
+        ShadowTextView shadowButton = Robolectric.shadowOf(button);
+
+        assertThat((DateButtonOnClickListener) shadowButton.getOnClickListener(), equalTo(listener));
     }
 
     @Test
@@ -166,9 +178,10 @@ public class EditIncomeActivityTest {
     }
 
     private void addBindings(ActivityModule module) {
-        module.addBinding(StatementPersistenceService.class, statementPersistentService);
         balance = Balance.getInstance(statementPersistentService);
         module.addBinding(Balance.class, balance);
+        module.addBinding(DateButtonOnClickListener.class, listener);
+        module.addBinding(StatementPersistenceService.class, statementPersistentService);
     }
 
     private void setUpPersistentService() {

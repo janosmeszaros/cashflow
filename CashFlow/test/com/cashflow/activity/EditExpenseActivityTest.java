@@ -32,6 +32,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.cashflow.R;
+import com.cashflow.activity.listeners.DateButtonOnClickListener;
 import com.cashflow.activity.testutil.ActivityModule;
 import com.cashflow.activity.testutil.EditStatementActivityProvider;
 import com.cashflow.database.DatabaseContracts.AbstractStatement;
@@ -42,6 +43,7 @@ import com.cashflow.domain.Statement;
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 import com.xtremelabs.robolectric.shadows.ShadowFragmentActivity;
+import com.xtremelabs.robolectric.shadows.ShadowTextView;
 
 /**
  * {@link EditStatementActivity} test, specially this class tests the expense editing functionality.
@@ -64,6 +66,8 @@ public class EditExpenseActivityTest {
     private Balance balance;
     @Mock
     private StatementPersistenceService statementPersistenceService;
+    @Mock
+    private DateButtonOnClickListener listener;
 
     @Before
     public void setUp() {
@@ -89,6 +93,14 @@ public class EditExpenseActivityTest {
     @Test
     public void testWhenEditExpenseActivityThanTitleShouldBeEditExpense() {
         assertThat((String) underTest.getTitle(), equalTo(underTest.getString(R.string.title_activity_edit_expenses)));
+    }
+
+    @Test
+    public void testOnCreateWhenCalledThenShouldSetTheListenerClassToTheDateButton() {
+        Button button = (Button) underTest.findViewById(R.id.dateButton);
+        ShadowTextView shadowButton = Robolectric.shadowOf(button);
+
+        assertThat((DateButtonOnClickListener) shadowButton.getOnClickListener(), equalTo(listener));
     }
 
     @Test
@@ -166,9 +178,10 @@ public class EditExpenseActivityTest {
     }
 
     private void addBindings(ActivityModule module) {
-        module.addBinding(StatementPersistenceService.class, statementPersistenceService);
         balance = Balance.getInstance(statementPersistenceService);
         module.addBinding(Balance.class, balance);
+        module.addBinding(DateButtonOnClickListener.class, listener);
+        module.addBinding(StatementPersistenceService.class, statementPersistenceService);
     }
 
     private void setUpPersistentService() {

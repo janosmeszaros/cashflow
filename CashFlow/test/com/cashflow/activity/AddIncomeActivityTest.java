@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.cashflow.R;
+import com.cashflow.activity.listeners.DateButtonOnClickListener;
 import com.cashflow.activity.testutil.ActivityModule;
 import com.cashflow.activity.testutil.AddStatementActivityProvider;
 import com.cashflow.database.DatabaseContracts.AbstractStatement;
@@ -35,6 +36,7 @@ import com.cashflow.domain.Statement;
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 import com.xtremelabs.robolectric.shadows.ShadowFragmentActivity;
+import com.xtremelabs.robolectric.shadows.ShadowTextView;
 
 /**
  * {@link AddStatementActivity} test, specially this class tests the income adding functionality.
@@ -54,6 +56,8 @@ public class AddIncomeActivityTest {
     private AddStatementActivity underTest;
     @Mock
     private StatementPersistenceService statementPersistentService;
+    @Mock
+    private DateButtonOnClickListener listener;
 
     @Before
     public void setUp() {
@@ -89,6 +93,14 @@ public class AddIncomeActivityTest {
     //
     //        assertThat(shadowActivity.getContentView().getId(), equalTo(R.layout.activity_add_statement));
     //    }
+
+    @Test
+    public void testOnCreateWhenCalledThenShouldSetTheListenerClassToTheDateButton() {
+        Button button = (Button) underTest.findViewById(R.id.dateButton);
+        ShadowTextView shadowButton = Robolectric.shadowOf(button);
+
+        assertThat((DateButtonOnClickListener) shadowButton.getOnClickListener(), equalTo(listener));
+    }
 
     @Test
     public void testSubmitWhenOkThanCallProperFunctionRefreshBalanceSetResultToTrueAndClose() {
@@ -127,9 +139,10 @@ public class AddIncomeActivityTest {
     }
 
     private void addBindings(ActivityModule module) {
-        module.addBinding(StatementPersistenceService.class, statementPersistentService);
         balance = Balance.getInstance(statementPersistentService);
         module.addBinding(Balance.class, balance);
+        module.addBinding(DateButtonOnClickListener.class, listener);
+        module.addBinding(StatementPersistenceService.class, statementPersistentService);
     }
 
     private void setUpPersistentService() {

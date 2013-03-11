@@ -28,6 +28,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.cashflow.R;
+import com.cashflow.activity.listeners.DateButtonOnClickListener;
 import com.cashflow.activity.testutil.ActivityModule;
 import com.cashflow.activity.testutil.AddStatementActivityProvider;
 import com.cashflow.database.DatabaseContracts.AbstractStatement;
@@ -38,6 +39,7 @@ import com.cashflow.domain.Statement;
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 import com.xtremelabs.robolectric.shadows.ShadowFragmentActivity;
+import com.xtremelabs.robolectric.shadows.ShadowTextView;
 
 /**
  * {@link AddStatementActivity} test, specially this class tests the expense adding functionality.
@@ -57,6 +59,8 @@ public class AddExpenseActivityTest {
     private AddStatementActivity underTest;
     @Mock
     private StatementPersistenceService statementPersistentService;
+    @Mock
+    private DateButtonOnClickListener listener;
 
     @Before
     public void setUp() {
@@ -91,6 +95,14 @@ public class AddExpenseActivityTest {
         String date = fmtDateAndTime.format(calendar.getTime());
 
         assertThat((String) button.getText(), equalTo(date));
+    }
+
+    @Test
+    public void testOnCreateWhenCalledThenShouldSetTheListenerClassToTheDateButton() {
+        Button button = (Button) underTest.findViewById(R.id.dateButton);
+        ShadowTextView shadowButton = Robolectric.shadowOf(button);
+
+        assertThat((DateButtonOnClickListener) shadowButton.getOnClickListener(), equalTo(listener));
     }
 
     @Test
@@ -148,6 +160,7 @@ public class AddExpenseActivityTest {
         balance = Balance.getInstance(statementPersistentService);
 
         module.addBinding(StatementPersistenceService.class, statementPersistentService);
+        module.addBinding(DateButtonOnClickListener.class, listener);
         module.addBinding(Balance.class, balance);
     }
 
