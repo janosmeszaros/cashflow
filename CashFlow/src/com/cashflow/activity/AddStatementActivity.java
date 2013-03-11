@@ -17,7 +17,6 @@ import roboguice.activity.RoboFragmentActivity;
 import roboguice.inject.InjectView;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.view.Menu;
 import android.view.View;
 import android.view.animation.Animation;
@@ -29,7 +28,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.cashflow.R;
-import com.cashflow.components.DatePickerFragment;
+import com.cashflow.activity.listeners.DateButtonOnClickListener;
 import com.cashflow.database.balance.Balance;
 import com.cashflow.database.statement.StatementPersistenceService;
 import com.cashflow.database.statement.StatementType;
@@ -52,6 +51,8 @@ public class AddStatementActivity extends RoboFragmentActivity {
     private Button dateButton;
     @InjectView(R.id.notesText)
     private EditText notesText;
+    @InjectView(R.id.checkbox_area)
+    private LinearLayout recurringLayout;
     @Inject
     private Balance balance;
     private StatementType type;
@@ -62,7 +63,7 @@ public class AddStatementActivity extends RoboFragmentActivity {
         LOG.debug("AddStatementActivity is creating...");
 
         setContentView(R.layout.activity_add_statement);
-        setDateButtonText();
+        setUpDateButton();
         setStatementType();
         setTitle();
 
@@ -112,17 +113,6 @@ public class AddStatementActivity extends RoboFragmentActivity {
         }
     }
 
-    /**
-     * Show the date picker. DateButton on click method.
-     * @param view
-     *            Required for onclick.
-     */
-    public void showDatePickerDialog(View view) {
-        DialogFragment newFragment = new DatePickerFragment();
-        newFragment.show(getSupportFragmentManager(), "datePicker");
-
-    }
-
     private void refreshBalance(String amountStr) {
         BigDecimal amount = new BigDecimal(amountStr);
 
@@ -155,10 +145,12 @@ public class AddStatementActivity extends RoboFragmentActivity {
         }
     }
 
-    private void setDateButtonText() {
+    private void setUpDateButton() {
         final Calendar calendar = Calendar.getInstance();
         DateFormat fmtDateAndTime = DateFormat.getDateInstance(DateFormat.MEDIUM);
         dateButton.setText(fmtDateAndTime.format(calendar.getTime()));
+
+        dateButton.setOnClickListener(new DateButtonOnClickListener());
     }
 
     private Statement createStatement(String amountStr, String date, String note, StatementType type) {
@@ -166,23 +158,19 @@ public class AddStatementActivity extends RoboFragmentActivity {
 	}
 
     private void startOutAnimationForCheckboxArea() {
-        final LinearLayout layout = (LinearLayout) findViewById(R.id.checkbox_area);
-
         Animation out = AnimationUtils.makeOutAnimation(this, true);
         out.setDuration(DURATION_MILLIS);
-        out.setAnimationListener(new AnimationListenerImplementation(layout, GONE));
-        layout.setAnimation(out);
-        layout.startLayoutAnimation();
+        out.setAnimationListener(new AnimationListenerImplementation(recurringLayout, GONE));
+        recurringLayout.setAnimation(out);
+        recurringLayout.startLayoutAnimation();
     }
 
     private void startInAnimationForCheckboxArea() {
-        final LinearLayout layout = (LinearLayout) findViewById(R.id.checkbox_area);
-
         Animation in = AnimationUtils.makeInChildBottomAnimation(this);
         in.setDuration(DURATION_MILLIS);
-        in.setAnimationListener(new AnimationListenerImplementation(layout, VISIBLE));
-        layout.setAnimation(in);
-        layout.startLayoutAnimation();
+        in.setAnimationListener(new AnimationListenerImplementation(recurringLayout, VISIBLE));
+        recurringLayout.setAnimation(in);
+        recurringLayout.startLayoutAnimation();
 
     }
 
