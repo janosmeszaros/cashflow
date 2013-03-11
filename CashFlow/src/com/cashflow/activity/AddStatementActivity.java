@@ -1,5 +1,8 @@
 package com.cashflow.activity;
 
+import static android.view.View.GONE;
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
 import static com.cashflow.constants.Constants.INCOME_EXTRA;
 import static com.cashflow.constants.Constants.STATEMENT_TYPE_EXTRA;
 
@@ -12,12 +15,18 @@ import org.slf4j.LoggerFactory;
 
 import roboguice.activity.RoboFragmentActivity;
 import roboguice.inject.InjectView;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.Menu;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.cashflow.R;
 import com.cashflow.components.DatePickerFragment;
@@ -32,6 +41,7 @@ import com.google.inject.Inject;
  * @author Janos_Gyula_Meszaros
  */
 public class AddStatementActivity extends RoboFragmentActivity {
+    private static final int DURATION_MILLIS = 1000;
     private static final Logger LOG = LoggerFactory.getLogger(AddStatementActivity.class);
     @Inject
     private StatementPersistenceService service;
@@ -88,6 +98,21 @@ public class AddStatementActivity extends RoboFragmentActivity {
     }
 
     /**
+     * Checkbox clicked event handler.
+     * @param view 
+     *            needed by event handler.
+     */
+    @SuppressLint("NewApi")
+    public void checkBoxClicked(View view) {
+        boolean checked = ((CheckBox) view).isChecked();
+        if (checked) {
+            startInAnimationForCheckboxArea();
+        } else {
+            startOutAnimationForCheckboxArea();
+        }
+    }
+
+    /**
      * Show the date picker. DateButton on click method.
      * @param view
      *            Required for onclick.
@@ -137,6 +162,56 @@ public class AddStatementActivity extends RoboFragmentActivity {
     }
 
     private Statement createStatement(String amountStr, String date, String note, StatementType type) {
-        return new Statement.Builder(amountStr, date).setNote(note).setType(type).build();
+         return new Statement.Builder(amountStr, date).setNote(note).setType(type).build();
+	}
+
+    private void startOutAnimationForCheckboxArea() {
+        final LinearLayout layout = (LinearLayout) findViewById(R.id.checkbox_area);
+
+        Animation out = AnimationUtils.makeOutAnimation(this, true);
+        out.setDuration(DURATION_MILLIS);
+        out.setAnimationListener(new AnimationListenerImplementation(layout, GONE));
+        layout.setAnimation(out);
+        layout.startLayoutAnimation();
+    }
+
+    private void startInAnimationForCheckboxArea() {
+        final LinearLayout layout = (LinearLayout) findViewById(R.id.checkbox_area);
+
+        Animation in = AnimationUtils.makeInChildBottomAnimation(this);
+        in.setDuration(DURATION_MILLIS);
+        in.setAnimationListener(new AnimationListenerImplementation(layout, VISIBLE));
+        layout.setAnimation(in);
+        layout.startLayoutAnimation();
+
+    }
+
+    /**
+     * Animation listener to animate the fade in and out the recurring details.
+     * @author Janos_Gyula_Meszaros
+     *
+     */
+    private final class AnimationListenerImplementation implements AnimationListener {
+        private final LinearLayout layout;
+        private int onAnimationEnd;
+
+        private AnimationListenerImplementation(LinearLayout layout, int onAnimationEnd) {
+            this.layout = layout;
+            this.onAnimationEnd = onAnimationEnd;
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+            layout.setVisibility(onAnimationEnd);
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+        }
+
+        @Override
+        public void onAnimationStart(Animation animation) {
+            layout.setVisibility(INVISIBLE);
+        }
     }
 }
