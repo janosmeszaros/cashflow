@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.cashflow.R;
+import com.cashflow.activity.listeners.DateButtonOnClickListener;
 import com.cashflow.components.DatePickerFragment;
 import com.cashflow.database.balance.Balance;
 import com.cashflow.database.statement.StatementPersistenceService;
@@ -56,6 +57,8 @@ public class EditStatementActivity extends RoboFragmentActivity {
     private EditText notesText;
     @Inject
     private Balance balance;
+    @Inject
+    private DateButtonOnClickListener listener;
 
     private String originalAmount;
     private String originalNotes;
@@ -70,20 +73,13 @@ public class EditStatementActivity extends RoboFragmentActivity {
         LOG.debug("EditStatementActivity is creating...");
         setContentView(R.layout.activity_add_statement);
 
+        setListenerForDateButton();
         getOriginalDatas();
         fillFieldsWithData();
         setStatementType();
         setTitle();
 
         LOG.debug("EditStatementActivity has created with type: " + type);
-    }
-
-    private void getOriginalDatas() {
-        Intent intent = getIntent();
-        originalAmount = intent.getStringExtra(AMOUNT_EXTRA);
-        originalNotes = intent.getStringExtra(NOTE_EXTRA);
-        originalDate = intent.getStringExtra(DATE_EXTRA);
-        originalId = intent.getStringExtra(ID_EXTRA);
     }
 
     /**
@@ -166,5 +162,16 @@ public class EditStatementActivity extends RoboFragmentActivity {
 
     private Statement createStatement(String id, String amountStr, String date, String note, StatementType type) {
         return new Statement.Builder(amountStr, date).setNote(note).setType(type).setId(id).build();
+	}
+    private void setListenerForDateButton() {
+        dateButton.setOnClickListener(listener);
+    }
+
+    private void getOriginalDatas() {
+        Intent intent = getIntent();
+        originalAmount = intent.getStringExtra(AMOUNT_EXTRA);
+        originalNotes = intent.getStringExtra(NOTE_EXTRA);
+        originalDate = intent.getStringExtra(DATE_EXTRA);
+        originalId = intent.getStringExtra(ID_EXTRA);
     }
 }

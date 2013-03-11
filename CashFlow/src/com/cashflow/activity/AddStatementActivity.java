@@ -55,6 +55,8 @@ public class AddStatementActivity extends RoboFragmentActivity {
     private LinearLayout recurringLayout;
     @Inject
     private Balance balance;
+    @Inject
+    private DateButtonOnClickListener listener;
     private StatementType type;
 
     @Override
@@ -150,7 +152,7 @@ public class AddStatementActivity extends RoboFragmentActivity {
         DateFormat fmtDateAndTime = DateFormat.getDateInstance(DateFormat.MEDIUM);
         dateButton.setText(fmtDateAndTime.format(calendar.getTime()));
 
-        dateButton.setOnClickListener(new DateButtonOnClickListener());
+        dateButton.setOnClickListener(listener);
     }
 
     private Statement createStatement(String amountStr, String date, String note, StatementType type) {

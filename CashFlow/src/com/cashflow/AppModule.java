@@ -1,5 +1,6 @@
 package com.cashflow;
 
+import com.cashflow.activity.listeners.DateButtonOnClickListener;
 import com.cashflow.database.DbHelperSQLiteDbProvider;
 import com.cashflow.database.SQLiteDbProvider;
 import com.cashflow.database.balance.Balance;
@@ -25,6 +26,7 @@ public class AppModule implements Module {
         binder.bind(CategoryPersistenceService.class);
         binder.bind(StatementPersistenceService.class);
         binder.bind(SQLiteDbProvider.class).to(DbHelperSQLiteDbProvider.class);
+        binder.bind(DateButtonOnClickListener.class);
     }
 
     @Provides
