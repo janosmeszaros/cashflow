@@ -17,7 +17,6 @@ import roboguice.activity.RoboFragmentActivity;
 import roboguice.inject.InjectView;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
@@ -52,7 +51,9 @@ public class AddStatementActivity extends RoboFragmentActivity {
     @InjectView(R.id.notesText)
     private EditText notesText;
     @InjectView(R.id.checkbox_area)
-    private LinearLayout recurringLayout;
+    private LinearLayout checkBoxLayout;
+    @InjectView(R.id.recurring_income)
+    private LinearLayout recurringArea;
     @Inject
     private Balance balance;
     @Inject
@@ -70,13 +71,6 @@ public class AddStatementActivity extends RoboFragmentActivity {
         setTitle();
 
         LOG.debug("AddStatementActivity has created with type: " + type);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.activity_add_expense, menu);
-        return true;
     }
 
     /**
@@ -130,6 +124,7 @@ public class AddStatementActivity extends RoboFragmentActivity {
         String statementType = getIntent().getStringExtra(STATEMENT_TYPE_EXTRA);
         if (isIncome(statementType)) {
             type = StatementType.Income;
+            recurringArea.setVisibility(VISIBLE);
         } else {
             type = StatementType.Expense;
         }
@@ -162,17 +157,17 @@ public class AddStatementActivity extends RoboFragmentActivity {
     private void startOutAnimationForCheckboxArea() {
         Animation out = AnimationUtils.makeOutAnimation(this, true);
         out.setDuration(DURATION_MILLIS);
-        out.setAnimationListener(new AnimationListenerImplementation(recurringLayout, GONE));
-        recurringLayout.setAnimation(out);
-        recurringLayout.startLayoutAnimation();
+        out.setAnimationListener(new AnimationListenerImplementation(checkBoxLayout, GONE));
+        checkBoxLayout.setAnimation(out);
+        checkBoxLayout.startLayoutAnimation();
     }
 
     private void startInAnimationForCheckboxArea() {
         Animation in = AnimationUtils.makeInChildBottomAnimation(this);
         in.setDuration(DURATION_MILLIS);
-        in.setAnimationListener(new AnimationListenerImplementation(recurringLayout, VISIBLE));
-        recurringLayout.setAnimation(in);
-        recurringLayout.startLayoutAnimation();
+        in.setAnimationListener(new AnimationListenerImplementation(checkBoxLayout, VISIBLE));
+        checkBoxLayout.setAnimation(in);
+        checkBoxLayout.startLayoutAnimation();
 
     }
 

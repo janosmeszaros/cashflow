@@ -84,9 +84,11 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/recurring_income"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:visibility="gone" >
 
             <CheckBox
                 android:id="@+id/checkBox1"
