@@ -26,6 +26,7 @@ import com.cashflow.components.DatePickerFragment;
 import com.cashflow.database.balance.Balance;
 import com.cashflow.database.statement.StatementPersistenceService;
 import com.cashflow.database.statement.StatementType;
+import com.cashflow.domain.Statement;
 import com.google.inject.Inject;
 
 /**
@@ -96,8 +97,9 @@ public class EditStatementActivity extends RoboFragmentActivity {
         String date = dateButton.getText().toString();
         String note = notesText.getText().toString();
         String id = originalId;
+        Statement statement = createStatement(id, amountStr, date, note, type);
 
-        if (isValuesChanged(amountStr, date, note) && service.updateStatement(id, amountStr, date, note, type)) {
+        if (isValuesChanged(amountStr, date, note) && service.updateStatement(statement)) {
             refreshBalance(amountStr);
             setResult(RESULT_OK);
         } else {
@@ -160,5 +162,9 @@ public class EditStatementActivity extends RoboFragmentActivity {
 
     private boolean isIncome(String statementType) {
         return statementType.equals(INCOME_EXTRA);
+    }
+
+    private Statement createStatement(String id, String amountStr, String date, String note, StatementType type) {
+        return new Statement.Builder(amountStr, date).setNote(note).setType(type).setId(id).build();
     }
 }

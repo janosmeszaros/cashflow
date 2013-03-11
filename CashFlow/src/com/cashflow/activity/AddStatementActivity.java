@@ -24,6 +24,7 @@ import com.cashflow.components.DatePickerFragment;
 import com.cashflow.database.balance.Balance;
 import com.cashflow.database.statement.StatementPersistenceService;
 import com.cashflow.database.statement.StatementType;
+import com.cashflow.domain.Statement;
 import com.google.inject.Inject;
 
 /**
@@ -75,8 +76,9 @@ public class AddStatementActivity extends RoboFragmentActivity {
         String amountStr = amountText.getText().toString();
         String date = dateButton.getText().toString();
         String note = notesText.getText().toString();
+        Statement statement = createStatement(amountStr, date, note, type);
 
-        if (service.saveStatement(amountStr, date, note, type)) {
+        if (service.saveStatement(statement)) {
             refreshBalance(amountStr);
             setResult(RESULT_OK);
         } else {
@@ -134,4 +136,7 @@ public class AddStatementActivity extends RoboFragmentActivity {
         dateButton.setText(fmtDateAndTime.format(calendar.getTime()));
     }
 
+    private Statement createStatement(String amountStr, String date, String note, StatementType type) {
+        return new Statement.Builder(amountStr, date).setNote(note).setType(type).build();
+    }
 }

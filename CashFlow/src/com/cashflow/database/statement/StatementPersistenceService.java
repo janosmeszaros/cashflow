@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import com.cashflow.domain.Statement;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -44,24 +45,17 @@ public class StatementPersistenceService {
 
     /**
      * Creates the statement from data and then saves it to database.
-     * @param amountStr
-     *            amount of the statement.
-     * @param date
-     *            Date of the statement.
-     * @param note
-     *            Note for the statement.
-     * @param type
-     *            Statement's type
+     * @param statement statement's data.
      * @return <code>true</code> if saving was successful and the amount wasn't zero, <code>false</code> otherwise.
      */
-    public boolean saveStatement(String amountStr, String date, String note, StatementType type) {
-        validateInput(type, amountStr, date);
+    public boolean saveStatement(Statement statement) {
+        validateInput(statement.getType(), statement.getAmount(), statement.getDate());
 
         boolean result = false;
-        BigDecimal amount = parseAmount(amountStr);
+        BigDecimal amount = parseAmount(statement.getAmount());
 
         if (checkIfNotZero(amount)) {
-            ContentValues values = createContentValue(amount, date, note, type);
+            ContentValues values = createContentValue(amount, statement);
             dao.save(values);
             result = true;
         }
@@ -89,26 +83,17 @@ public class StatementPersistenceService {
 
     /**
      * Updates statement with the specified id.
-     * @param id
-     *            id.
-     * @param amountStr
-     *            new amount for the statement.
-     * @param date
-     *            new date for the statement.
-     * @param note
-     *            new note for the statement.
-     * @param type
-     *            type of the statement.
+     * @param statement statement which is hold the data.
      * @return true if successful.
      */
-    public boolean updateStatement(String id, String amountStr, String date, String note, StatementType type) {
-        validateInput(type, amountStr, date, id);
+    public boolean updateStatement(Statement statement) {
+        validateInput(statement.getType(), statement.getAmount(), statement.getDate(), statement.getId());
 
         boolean result = true;
-        BigDecimal amount = parseAmount(amountStr);
+        BigDecimal amount = parseAmount(statement.getAmount());
 
-        ContentValues value = createContentValue(amount, date, note, type);
-        dao.update(value, id);
+        ContentValues value = createContentValue(amount, statement);
+        dao.update(value, statement.getId());
 
         return result;
     }
@@ -132,12 +117,12 @@ public class StatementPersistenceService {
         return amount;
     }
 
-    private ContentValues createContentValue(BigDecimal amount, String date, String note, StatementType type) {
+    private ContentValues createContentValue(BigDecimal amount, Statement statement) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_NAME_AMOUNT, amount.toString());
-        values.put(COLUMN_NAME_DATE, date);
-        values.put(COLUMN_NAME_IS_INCOME, type.isIncome() ? TRUE : FALSE);
-        values.put(COLUMN_NAME_NOTE, note);
+        values.put(COLUMN_NAME_DATE, statement.getDate());
+        values.put(COLUMN_NAME_IS_INCOME, statement.getType().isIncome() ? TRUE : FALSE);
+        values.put(COLUMN_NAME_NOTE, statement.getNote());
 
         LOG.debug("Content created: " + values);
 

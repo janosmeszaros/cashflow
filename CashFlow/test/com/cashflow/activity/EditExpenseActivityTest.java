@@ -14,7 +14,6 @@ import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_N
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -39,6 +38,7 @@ import com.cashflow.database.DatabaseContracts.AbstractStatement;
 import com.cashflow.database.balance.Balance;
 import com.cashflow.database.statement.StatementPersistenceService;
 import com.cashflow.database.statement.StatementType;
+import com.cashflow.domain.Statement;
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 import com.xtremelabs.robolectric.shadows.ShadowFragmentActivity;
@@ -104,10 +104,11 @@ public class EditExpenseActivityTest {
     @Test
     public void testSubmitWhenAmountHasChangedThanShouldCallProperFunctionAndRefreshBalanceAndResultCodeShouldBeOK() {
         setViewsValues(CHANGED_AMOUNT, NOTES, DATE);
+        Statement statement = createStatement(ID, CHANGED_AMOUNT, DATE, NOTES, StatementType.Expense);
 
         underTest.submit(null);
 
-        verify(statementPersistenceService, times(1)).updateStatement(ID, CHANGED_AMOUNT, DATE, NOTES, StatementType.Expense);
+        verify(statementPersistenceService, times(1)).updateStatement(statement);
         assertThat(balance.getBalance(), equalTo(-1111D));
         assertThat(shadowFragmentActivity.getResultCode(), equalTo(RESULT_OK));
     }
@@ -115,10 +116,11 @@ public class EditExpenseActivityTest {
     @Test
     public void testSubmitWhenDateHasChangedThanShouldCallProperFunctionAndRefreshBalanceAndResultCodeShouldBeOK() {
         setViewsValues(AMOUNT, NOTES, CHANGED_DATE);
+        Statement statement = createStatement(ID, AMOUNT, CHANGED_DATE, NOTES, StatementType.Expense);
 
         underTest.submit(null);
 
-        verify(statementPersistenceService, times(1)).updateStatement(ID, AMOUNT, CHANGED_DATE, NOTES, StatementType.Expense);
+        verify(statementPersistenceService, times(1)).updateStatement(statement);
         assertThat(balance.getBalance(), equalTo(0D));
         assertThat(shadowFragmentActivity.getResultCode(), equalTo(RESULT_OK));
     }
@@ -126,10 +128,11 @@ public class EditExpenseActivityTest {
     @Test
     public void testSubmitWhenNotesHasChangedThanShouldCallProperFunctionAndRefreshBalanceAndResultCodeShouldBeOK() {
         setViewsValues(AMOUNT, CHANGED_NOTE, DATE);
+        Statement statement = createStatement(ID, AMOUNT, DATE, CHANGED_NOTE, StatementType.Expense);
 
         underTest.submit(null);
 
-        verify(statementPersistenceService, times(1)).updateStatement(ID, AMOUNT, DATE, CHANGED_NOTE, StatementType.Expense);
+        verify(statementPersistenceService, times(1)).updateStatement(statement);
         assertThat(balance.getBalance(), equalTo(0D));
         assertThat(shadowFragmentActivity.getResultCode(), equalTo(RESULT_OK));
     }
@@ -174,8 +177,12 @@ public class EditExpenseActivityTest {
 
         when(statementPersistenceService.getStatement(StatementType.Expense)).thenReturn(cursor);
         when(statementPersistenceService.getStatement(StatementType.Income)).thenReturn(cursor);
-        when(statementPersistenceService.saveStatement(anyString(), anyString(), anyString(), (StatementType) anyObject())).thenReturn(true);
-        when(statementPersistenceService.updateStatement(anyString(), anyString(), anyString(), anyString(), (StatementType) anyObject())).thenReturn(
-                true);
+        when(statementPersistenceService.saveStatement((Statement) anyObject())).thenReturn(true);
+        when(statementPersistenceService.updateStatement((Statement) anyObject())).thenReturn(true);
     }
+
+    private Statement createStatement(String id, String amountStr, String date, String note, StatementType type) {
+        return new Statement.Builder(amountStr, date).setNote(note).setType(type).setId(id).build();
+    }
+
 }

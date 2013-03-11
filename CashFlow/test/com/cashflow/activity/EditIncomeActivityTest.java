@@ -14,7 +14,6 @@ import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_N
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -39,6 +38,7 @@ import com.cashflow.database.DatabaseContracts.AbstractStatement;
 import com.cashflow.database.balance.Balance;
 import com.cashflow.database.statement.StatementPersistenceService;
 import com.cashflow.database.statement.StatementType;
+import com.cashflow.domain.Statement;
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 import com.xtremelabs.robolectric.shadows.ShadowFragmentActivity;
@@ -81,17 +81,6 @@ public class EditIncomeActivityTest {
         underTest.onCreate(null);
     }
 
-    private void setUpPersistentService() {
-        MatrixCursor cursor = new MatrixCursor(fromColumns);
-        cursor.addRow(values);
-
-        when(statementPersistentService.getStatement(StatementType.Expense)).thenReturn(cursor);
-        when(statementPersistentService.getStatement(StatementType.Income)).thenReturn(cursor);
-        when(statementPersistentService.saveStatement(anyString(), anyString(), anyString(), (StatementType) anyObject())).thenReturn(true);
-        when(statementPersistentService.updateStatement(anyString(), anyString(), anyString(), anyString(), (StatementType) anyObject())).thenReturn(
-                true);
-    }
-
     @After
     public void tearDown() {
         ActivityModule.tearDown();
@@ -115,10 +104,11 @@ public class EditIncomeActivityTest {
     @Test
     public void testSubmitWhenAmountHasChangedThanShouldCallProperFunctionAndRefreshBalanceAndResultCodeShouldBeOK() {
         setViewsValues(CHANGED_AMOUNT, NOTES, DATE);
+        Statement statement = createStatement(ID, CHANGED_AMOUNT, DATE, NOTES, StatementType.Income);
 
         underTest.submit(null);
 
-        verify(statementPersistentService, times(1)).updateStatement(ID, CHANGED_AMOUNT, DATE, NOTES, StatementType.Income);
+        verify(statementPersistentService, times(1)).updateStatement(statement);
         assertThat(balance.getBalance(), equalTo(-1111D));
         assertThat(shadowFragmentActivity.getResultCode(), equalTo(RESULT_OK));
     }
@@ -126,10 +116,11 @@ public class EditIncomeActivityTest {
     @Test
     public void testSubmitWhenDateHasChangedThanShouldCallProperFunctionAndRefreshBalanceAndResultCodeShouldBeOK() {
         setViewsValues(AMOUNT, NOTES, CHANGED_DATE);
+        Statement statement = createStatement(ID, AMOUNT, CHANGED_DATE, NOTES, StatementType.Income);
 
         underTest.submit(null);
 
-        verify(statementPersistentService, times(1)).updateStatement(ID, AMOUNT, CHANGED_DATE, NOTES, StatementType.Income);
+        verify(statementPersistentService, times(1)).updateStatement(statement);
         assertThat(balance.getBalance(), equalTo(0D));
         assertThat(shadowFragmentActivity.getResultCode(), equalTo(RESULT_OK));
     }
@@ -137,10 +128,11 @@ public class EditIncomeActivityTest {
     @Test
     public void testSubmitWhenNotesHasChangedThanShouldCallProperFunctionAndRefreshBalanceAndResultCodeShouldBeOK() {
         setViewsValues(AMOUNT, CHANGED_NOTE, DATE);
+        Statement statement = createStatement(ID, AMOUNT, DATE, CHANGED_NOTE, StatementType.Income);
 
         underTest.submit(null);
 
-        verify(statementPersistentService, times(1)).updateStatement(ID, AMOUNT, DATE, CHANGED_NOTE, StatementType.Income);
+        verify(statementPersistentService, times(1)).updateStatement(statement);
         assertThat(balance.getBalance(), equalTo(0D));
         assertThat(shadowFragmentActivity.getResultCode(), equalTo(RESULT_OK));
     }
@@ -177,6 +169,20 @@ public class EditIncomeActivityTest {
         module.addBinding(StatementPersistenceService.class, statementPersistentService);
         balance = Balance.getInstance(statementPersistentService);
         module.addBinding(Balance.class, balance);
+    }
+
+    private void setUpPersistentService() {
+        MatrixCursor cursor = new MatrixCursor(fromColumns);
+        cursor.addRow(values);
+
+        when(statementPersistentService.getStatement(StatementType.Expense)).thenReturn(cursor);
+        when(statementPersistentService.getStatement(StatementType.Income)).thenReturn(cursor);
+        when(statementPersistentService.saveStatement((Statement) anyObject())).thenReturn(true);
+        when(statementPersistentService.updateStatement((Statement) anyObject())).thenReturn(true);
+    }
+
+    private Statement createStatement(String id, String amountStr, String date, String note, StatementType type) {
+        return new Statement.Builder(amountStr, date).setNote(note).setType(type).setId(id).build();
     }
 
 }

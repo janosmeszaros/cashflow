@@ -1,6 +1,7 @@
 package com.cashflow.activity;
 
 import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
 import static com.cashflow.constants.Constants.EXPENSE_EXTRA;
 import static com.cashflow.constants.Constants.STATEMENT_TYPE_EXTRA;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
@@ -8,9 +9,6 @@ import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_N
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_NOTE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -36,6 +34,7 @@ import com.cashflow.database.DatabaseContracts.AbstractStatement;
 import com.cashflow.database.balance.Balance;
 import com.cashflow.database.statement.StatementPersistenceService;
 import com.cashflow.database.statement.StatementType;
+import com.cashflow.domain.Statement;
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 import com.xtremelabs.robolectric.shadows.ShadowFragmentActivity;
@@ -96,23 +95,29 @@ public class AddExpenseActivityTest {
 
     @Test
     public void testSubmitWhenOkThanCallProperFunctionAndRefreshBalanceAndClosing() {
+        ShadowFragmentActivity shadowActivity = Robolectric.shadowOf(underTest);
         setViewsValues(AMOUNT);
+        Statement statement = createStatement(AMOUNT, DATE, NOTES, StatementType.Expense);
 
         underTest.submit(null);
 
-        verify(statementPersistentService).saveStatement(AMOUNT, DATE, NOTES, StatementType.Expense);
+        verify(statementPersistentService).saveStatement(statement);
+        assertThat(shadowActivity.getResultCode(), equalTo(RESULT_OK));
         assertThat(balance.getBalance(), equalTo(-1234D));
+        assertThat(shadowActivity.isFinishing(), equalTo(true));
     }
 
     @Test
     public void testSubmitWhenAmountIsTheSameThanSetResultToCanceledAndClose() {
         ShadowFragmentActivity shadowActivity = Robolectric.shadowOf(underTest);
         setViewsValues(SAME_AMOUNT);
+        Statement statement = createStatement(SAME_AMOUNT, DATE, NOTES, StatementType.Expense);
 
         underTest.submit(null);
 
-        verify(statementPersistentService).saveStatement(SAME_AMOUNT, DATE, NOTES, StatementType.Expense);
+        verify(statementPersistentService).saveStatement(statement);
         assertThat(shadowActivity.getResultCode(), equalTo(RESULT_CANCELED));
+        assertThat(shadowActivity.isFinishing(), equalTo(true));
     }
 
     //    @Test
@@ -152,7 +157,11 @@ public class AddExpenseActivityTest {
 
         when(statementPersistentService.getStatement(StatementType.Expense)).thenReturn(cursor);
         when(statementPersistentService.getStatement(StatementType.Income)).thenReturn(cursor);
-        when(statementPersistentService.saveStatement(eq(AMOUNT), anyString(), anyString(), (StatementType) anyObject())).thenReturn(true);
-        when(statementPersistentService.saveStatement(eq(SAME_AMOUNT), anyString(), anyString(), (StatementType) anyObject())).thenReturn(false);
+        when(statementPersistentService.saveStatement(createStatement(AMOUNT, DATE, NOTES, StatementType.Expense))).thenReturn(true);
+        when(statementPersistentService.saveStatement(createStatement(SAME_AMOUNT, DATE, NOTES, StatementType.Expense))).thenReturn(false);
+    }
+
+    private Statement createStatement(String amount, String date, String note, StatementType type) {
+        return new Statement.Builder(amount, date).setNote(note).setType(type).build();
     }
 }
