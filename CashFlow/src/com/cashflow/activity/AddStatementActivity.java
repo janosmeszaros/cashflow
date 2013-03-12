@@ -2,6 +2,7 @@ package com.cashflow.activity;
 
 import static com.cashflow.constants.Constants.INCOME_EXTRA;
 import static com.cashflow.constants.Constants.STATEMENT_TYPE_EXTRA;
+import static com.cashflow.database.DatabaseContracts.AbstractCategory.COLUMN_NAME_CATEGORY_NAME;
 
 import java.math.BigDecimal;
 import java.text.DateFormat;
@@ -12,16 +13,20 @@ import org.slf4j.LoggerFactory;
 
 import roboguice.activity.RoboFragmentActivity;
 import roboguice.inject.InjectView;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SimpleCursorAdapter;
+import android.widget.Spinner;
 
 import com.cashflow.R;
 import com.cashflow.components.DatePickerFragment;
 import com.cashflow.database.balance.Balance;
+import com.cashflow.database.category.CategoryPersistenceService;
 import com.cashflow.database.statement.StatementPersistenceService;
 import com.cashflow.database.statement.StatementType;
 import com.cashflow.domain.Statement;
@@ -33,8 +38,14 @@ import com.google.inject.Inject;
  */
 public class AddStatementActivity extends RoboFragmentActivity {
     private static final Logger LOG = LoggerFactory.getLogger(AddStatementActivity.class);
+
+    private final String[] fromColumns = {COLUMN_NAME_CATEGORY_NAME};
+    private final int[] toViews = {android.R.id.text1};
+
     @Inject
-    private StatementPersistenceService service;
+    private StatementPersistenceService statementService;
+    @Inject
+    private CategoryPersistenceService categoryService;
 
     @InjectView(R.id.amountText)
     private EditText amountText;
@@ -42,6 +53,8 @@ public class AddStatementActivity extends RoboFragmentActivity {
     private Button dateButton;
     @InjectView(R.id.notesText)
     private EditText notesText;
+    @InjectView(R.id.categorySpinner)
+    private Spinner categorySpinner;
     @Inject
     private Balance balance;
     private StatementType type;
@@ -55,6 +68,11 @@ public class AddStatementActivity extends RoboFragmentActivity {
         setDateButtonText();
         setStatementType();
         setTitle();
+
+        Cursor cursor = categoryService.getCategories();
+        SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, android.R.layout.simple_spinner_dropdown_item, cursor, fromColumns, toViews);
+        categorySpinner.setAdapter(adapter);
+        categorySpinner.setSelected(false);
 
         LOG.debug("AddStatementActivity has created with type: " + type);
     }
@@ -78,7 +96,7 @@ public class AddStatementActivity extends RoboFragmentActivity {
         String note = notesText.getText().toString();
         Statement statement = createStatement(amountStr, date, note, type);
 
-        if (service.saveStatement(statement)) {
+        if (statementService.saveStatement(statement)) {
             refreshBalance(amountStr);
             setResult(RESULT_OK);
         } else {

@@ -29,5 +29,6 @@
     <string name="button_create_categories">Create Categories</string>
     <string name="hint_category_name">Category name</string>
     <string name="empty_category">You should write in something.</string>
+    <string name="label_category">Category:</string>
 
 </resources>
