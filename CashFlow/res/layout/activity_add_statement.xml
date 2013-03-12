@@ -111,11 +111,10 @@
                         android:textAppearance="?android:attr/textAppearanceMedium" />
 
                     <Spinner
-                        android:id="@+id/spinner1"
+                        android:id="@+id/recurring_spinner"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:prompt="@string/repeat_prompt"
-                        android:entries="@array/repeat_incomes"/>
+                        android:prompt="@string/repeat_prompt"/>
             </LinearLayout>
         </LinearLayout>
 

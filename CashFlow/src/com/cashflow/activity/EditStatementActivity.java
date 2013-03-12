@@ -162,7 +162,8 @@ public class EditStatementActivity extends RoboFragmentActivity {
 
     private Statement createStatement(String id, String amountStr, String date, String note, StatementType type) {
         return new Statement.Builder(amountStr, date).setNote(note).setType(type).setId(id).build();
-	}
+    }
+
     private void setListenerForDateButton() {
         dateButton.setOnClickListener(listener);
     }

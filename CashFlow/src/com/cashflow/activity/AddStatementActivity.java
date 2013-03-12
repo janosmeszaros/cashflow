@@ -21,13 +21,16 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 
 import com.cashflow.R;
 import com.cashflow.activity.listeners.DateButtonOnClickListener;
+import com.cashflow.constants.RecurringInterval;
 import com.cashflow.database.balance.Balance;
 import com.cashflow.database.statement.StatementPersistenceService;
 import com.cashflow.database.statement.StatementType;
@@ -35,7 +38,7 @@ import com.cashflow.domain.Statement;
 import com.google.inject.Inject;
 
 /**
- * Statement adding. It gets it's type in the intent in extra named by <code>STATEMENT_TYPE_EXTRA</code>
+ * Statement adding. It gets it's type in the intent in extra named by <code>STATEMENT_TYPE_EXTRA</code>.
  * @author Janos_Gyula_Meszaros
  */
 public class AddStatementActivity extends RoboFragmentActivity {
@@ -54,6 +57,8 @@ public class AddStatementActivity extends RoboFragmentActivity {
     private LinearLayout checkBoxLayout;
     @InjectView(R.id.recurring_income)
     private LinearLayout recurringArea;
+    @InjectView(R.id.recurring_spinner)
+    private Spinner spinner;
     @Inject
     private Balance balance;
     @Inject
@@ -124,10 +129,15 @@ public class AddStatementActivity extends RoboFragmentActivity {
         String statementType = getIntent().getStringExtra(STATEMENT_TYPE_EXTRA);
         if (isIncome(statementType)) {
             type = StatementType.Income;
-            recurringArea.setVisibility(VISIBLE);
+            activateSpinner();
         } else {
             type = StatementType.Expense;
         }
+    }
+
+    private void activateSpinner() {
+        recurringArea.setVisibility(VISIBLE);
+        spinner.setAdapter(new ArrayAdapter<RecurringInterval>(this, android.R.layout.simple_spinner_dropdown_item, RecurringInterval.values()));
     }
 
     private boolean isIncome(String type) {
@@ -151,8 +161,8 @@ public class AddStatementActivity extends RoboFragmentActivity {
     }
 
     private Statement createStatement(String amountStr, String date, String note, StatementType type) {
-         return new Statement.Builder(amountStr, date).setNote(note).setType(type).build();
-	}
+        return new Statement.Builder(amountStr, date).setNote(note).setType(type).build();
+    }
 
     private void startOutAnimationForCheckboxArea() {
         Animation out = AnimationUtils.makeOutAnimation(this, true);

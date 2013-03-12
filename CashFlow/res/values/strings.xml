@@ -35,12 +35,4 @@
     <string name="recurring_interval">Repeat income:</string>
     <string name="repeat_prompt">Choose an interval</string>
 
-    <string-array name="repeat_incomes">
-        <item>daily</item>
-        <item>weekly</item>
-        <item>bi-weekly</item>
-        <item>monthly</item>
-        <item>annually</item>
-    </string-array>
-
 </resources>
