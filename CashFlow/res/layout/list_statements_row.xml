@@ -19,11 +19,11 @@
 
         <TextView
             android:id="@+id/row_id"
-            android:visibility="gone"
             android:layout_width="fill_parent"
             android:layout_height="0dip"
             android:layout_weight="1"
-            android:gravity="center_vertical" />
+            android:gravity="center_vertical"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/row_amount"
@@ -48,6 +48,13 @@
             android:ellipsize="marquee"
             android:singleLine="true" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/row_interval"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center_vertical" />
 
     <ImageButton
         android:id="@+id/edit"

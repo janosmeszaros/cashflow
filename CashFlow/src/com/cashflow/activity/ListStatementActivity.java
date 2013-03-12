@@ -8,9 +8,8 @@ import static com.cashflow.constants.Constants.ID_EXTRA;
 import static com.cashflow.constants.Constants.INCOME_EXTRA;
 import static com.cashflow.constants.Constants.NOTE_EXTRA;
 import static com.cashflow.constants.Constants.STATEMENT_TYPE_EXTRA;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_DATE;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_NOTE;
+import static com.cashflow.database.DatabaseContracts.AbstractStatement.PROJECTION;
+import static com.cashflow.database.DatabaseContracts.AbstractStatement.TO_VIEWS;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +27,6 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import com.cashflow.R;
-import com.cashflow.database.DatabaseContracts.AbstractStatement;
 import com.cashflow.database.statement.StatementPersistenceService;
 import com.cashflow.database.statement.StatementType;
 import com.google.inject.Inject;
@@ -39,8 +37,6 @@ import com.google.inject.Inject;
  */
 public class ListStatementActivity extends RoboActivity {
     private static final Logger LOG = LoggerFactory.getLogger(ListStatementActivity.class);
-    private String[] fromColumns = {AbstractStatement._ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE, COLUMN_NAME_NOTE};
-    private int[] toViews = {R.id.row_id, R.id.row_amount, R.id.row_date, R.id.row_note};
 
     private StatementType type;
     private SimpleCursorAdapter mAdapter;
@@ -119,7 +115,7 @@ public class ListStatementActivity extends RoboActivity {
 
         Cursor cursor = service.getStatement(type);
 
-        mAdapter = new SimpleCursorAdapter(this, R.layout.list_statements_row, cursor, fromColumns, toViews);
+        mAdapter = new SimpleCursorAdapter(this, R.layout.list_statements_row, cursor, PROJECTION, TO_VIEWS);
         list.setAdapter(mAdapter);
 
         LOG.debug("Query has done.");

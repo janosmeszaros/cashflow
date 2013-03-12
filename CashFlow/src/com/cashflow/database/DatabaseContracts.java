@@ -2,6 +2,8 @@ package com.cashflow.database;
 
 import android.provider.BaseColumns;
 
+import com.cashflow.R;
+
 /**
  * Database tables.
  * @author Kornel_Refi
@@ -32,7 +34,8 @@ public abstract class DatabaseContracts {
         public static final String COLUMN_NAME_DATE = "date";
         public static final String COLUMN_NAME_NOTE = "note";
         public static final String COLUMN_NAME_INTERVAL = "interval";
-        public static final String[] PROJECTION = new String[]{_ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE, COLUMN_NAME_NOTE};
+        public static final String[] PROJECTION = new String[]{_ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE, COLUMN_NAME_NOTE, COLUMN_NAME_INTERVAL};
+        public static final int[] TO_VIEWS = {R.id.row_id, R.id.row_amount, R.id.row_date, R.id.row_note, R.id.row_interval};
 
         public static final String EXPENSE_SELECTION = OPENNING_BRACKET + COLUMN_NAME_IS_INCOME + " == 0)";
         public static final String INCOME_SELECTION = OPENNING_BRACKET + COLUMN_NAME_IS_INCOME + " == 1)";
