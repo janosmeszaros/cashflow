@@ -1,9 +1,6 @@
 package com.cashflow.activity;
 
-import static android.view.View.GONE;
-import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
-import static com.cashflow.constants.Constants.INCOME_EXTRA;
 import static com.cashflow.constants.Constants.STATEMENT_TYPE_EXTRA;
 
 import java.math.BigDecimal;
@@ -15,12 +12,9 @@ import org.slf4j.LoggerFactory;
 
 import roboguice.activity.RoboFragmentActivity;
 import roboguice.inject.InjectView;
-import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
-import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -30,6 +24,7 @@ import android.widget.Spinner;
 
 import com.cashflow.R;
 import com.cashflow.activity.listeners.DateButtonOnClickListener;
+import com.cashflow.activity.listeners.RecurringCheckBoxOnClickListener;
 import com.cashflow.constants.RecurringInterval;
 import com.cashflow.database.balance.Balance;
 import com.cashflow.database.statement.StatementPersistenceService;
@@ -43,7 +38,7 @@ import com.google.inject.Inject;
  * @author Janos_Gyula_Meszaros
  */
 public class AddStatementActivity extends RoboFragmentActivity {
-    private static final int DURATION_MILLIS = 1000;
+
     private static final Logger LOG = LoggerFactory.getLogger(AddStatementActivity.class);
     @Inject
     private StatementPersistenceService service;
@@ -54,16 +49,18 @@ public class AddStatementActivity extends RoboFragmentActivity {
     private Button dateButton;
     @InjectView(R.id.notesText)
     private EditText notesText;
-    @InjectView(R.id.checkbox_area)
-    private LinearLayout checkBoxLayout;
     @InjectView(R.id.recurring_income)
     private LinearLayout recurringArea;
     @InjectView(R.id.recurring_spinner)
-    private Spinner spinner;
+    private Spinner recurringSpinner;
+    @InjectView(R.id.recurring_checkbox)
+    private CheckBox recurringCheckBox;
     @Inject
     private Balance balance;
     @Inject
     private DateButtonOnClickListener listener;
+    @Inject
+    private RecurringCheckBoxOnClickListener checkBoxListener;
     private StatementType type;
 
     @Override
@@ -98,21 +95,6 @@ public class AddStatementActivity extends RoboFragmentActivity {
         finish();
     }
 
-    /**
-     * Checkbox clicked event handler.
-     * @param view 
-     *            needed by event handler.
-     */
-    @SuppressLint("NewApi")
-    public void checkBoxClicked(View view) {
-        boolean checked = ((CheckBox) view).isChecked();
-        if (checked) {
-            startInAnimationForCheckboxArea();
-        } else {
-            startOutAnimationForCheckboxArea();
-        }
-    }
-
     private void refreshBalance(String amountStr) {
         BigDecimal amount = new BigDecimal(amountStr);
 
@@ -125,22 +107,18 @@ public class AddStatementActivity extends RoboFragmentActivity {
     }
 
     private void setStatementType() {
-        String statementType = getIntent().getStringExtra(STATEMENT_TYPE_EXTRA);
-        if (isIncome(statementType)) {
-            type = StatementType.Income;
-            activateSpinner();
-        } else {
-            type = StatementType.Expense;
+        Intent intent = getIntent();
+        type = StatementType.valueOf(intent.getStringExtra(STATEMENT_TYPE_EXTRA));
+        if (type.isIncome()) {
+            activateRecurringArea();
         }
     }
 
-    private void activateSpinner() {
+    private void activateRecurringArea() {
+        recurringCheckBox.setOnClickListener(checkBoxListener);
         recurringArea.setVisibility(VISIBLE);
-        spinner.setAdapter(new ArrayAdapter<RecurringInterval>(this, android.R.layout.simple_spinner_dropdown_item, RecurringInterval.values()));
-    }
-
-    private boolean isIncome(String type) {
-        return type.equals(INCOME_EXTRA);
+        recurringSpinner.setAdapter(new ArrayAdapter<RecurringInterval>(this, android.R.layout.simple_spinner_dropdown_item, RecurringInterval
+                .values()));
     }
 
     private void setTitle() {
@@ -167,55 +145,10 @@ public class AddStatementActivity extends RoboFragmentActivity {
         Builder builder = new Statement.Builder(amountStr, date);
         builder.setNote(note).setType(type);
         if (type.isIncome()) {
-            builder.setRecurringInterval((RecurringInterval) spinner.getSelectedItem());
+            builder.setRecurringInterval((RecurringInterval) recurringSpinner.getSelectedItem());
         }
 
         return builder.build();
     }
 
-    private void startOutAnimationForCheckboxArea() {
-        Animation out = AnimationUtils.makeOutAnimation(this, true);
-        out.setDuration(DURATION_MILLIS);
-        out.setAnimationListener(new AnimationListenerImplementation(checkBoxLayout, GONE));
-        checkBoxLayout.setAnimation(out);
-        checkBoxLayout.startLayoutAnimation();
-    }
-
-    private void startInAnimationForCheckboxArea() {
-        Animation in = AnimationUtils.makeInChildBottomAnimation(this);
-        in.setDuration(DURATION_MILLIS);
-        in.setAnimationListener(new AnimationListenerImplementation(checkBoxLayout, VISIBLE));
-        checkBoxLayout.setAnimation(in);
-        checkBoxLayout.startLayoutAnimation();
-
-    }
-
-    /**
-     * Animation listener to animate the fade in and out the recurring details.
-     * @author Janos_Gyula_Meszaros
-     *
-     */
-    private final class AnimationListenerImplementation implements AnimationListener {
-        private final LinearLayout layout;
-        private int onAnimationEnd;
-
-        private AnimationListenerImplementation(LinearLayout layout, int onAnimationEnd) {
-            this.layout = layout;
-            this.onAnimationEnd = onAnimationEnd;
-        }
-
-        @Override
-        public void onAnimationEnd(Animation animation) {
-            layout.setVisibility(onAnimationEnd);
-        }
-
-        @Override
-        public void onAnimationRepeat(Animation animation) {
-        }
-
-        @Override
-        public void onAnimationStart(Animation animation) {
-            layout.setVisibility(INVISIBLE);
-        }
-    }
 }

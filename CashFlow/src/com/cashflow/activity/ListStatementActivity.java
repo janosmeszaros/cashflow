@@ -6,6 +6,7 @@ import static com.cashflow.constants.Constants.EDIT_ACTIVITY_CODE;
 import static com.cashflow.constants.Constants.EXPENSE_EXTRA;
 import static com.cashflow.constants.Constants.ID_EXTRA;
 import static com.cashflow.constants.Constants.INCOME_EXTRA;
+import static com.cashflow.constants.Constants.INTERVAL_EXTRA;
 import static com.cashflow.constants.Constants.NOTE_EXTRA;
 import static com.cashflow.constants.Constants.STATEMENT_TYPE_EXTRA;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.PROJECTION;
@@ -93,11 +94,13 @@ public class ListStatementActivity extends RoboActivity {
         TextView amount = (TextView) view.findViewById(R.id.row_amount);
         TextView note = (TextView) view.findViewById(R.id.row_note);
         TextView date = (TextView) view.findViewById(R.id.row_date);
+        TextView interval = (TextView) view.findViewById(R.id.row_interval);
 
         intent.putExtra(ID_EXTRA, id.getText());
         intent.putExtra(AMOUNT_EXTRA, amount.getText());
         intent.putExtra(NOTE_EXTRA, note.getText());
         intent.putExtra(DATE_EXTRA, date.getText());
+        intent.putExtra(INTERVAL_EXTRA, interval.getText());
         intent.putExtra(STATEMENT_TYPE_EXTRA, statementType());
     }
 
@@ -130,15 +133,7 @@ public class ListStatementActivity extends RoboActivity {
     }
 
     private void setStatementType() {
-        String statementType = getIntent().getStringExtra(STATEMENT_TYPE_EXTRA);
-        if (isIncome(statementType)) {
-            type = StatementType.Income;
-        } else {
-            type = StatementType.Expense;
-        }
-    }
-
-    private boolean isIncome(String statementType) {
-        return statementType.equals(INCOME_EXTRA);
+        Intent intent = getIntent();
+        type = StatementType.valueOf(intent.getStringExtra(STATEMENT_TYPE_EXTRA));
     }
 }

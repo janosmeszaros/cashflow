@@ -9,12 +9,13 @@ public final class Constants {
     public static final String AMOUNT_EXTRA = "amount";
     public static final String NOTE_EXTRA = "note";
     public static final String DATE_EXTRA = "date";
+    public static final String INTERVAL_EXTRA = "interval";
     public static final String ID_EXTRA = "id";
     public static final int EDIT_ACTIVITY_CODE = 0;
 
     public static final String STATEMENT_TYPE_EXTRA = "type";
-    public static final String INCOME_EXTRA = "income";
-    public static final String EXPENSE_EXTRA = "expense";
+    public static final String INCOME_EXTRA = "Income";
+    public static final String EXPENSE_EXTRA = "Expense";
 
     private Constants() {
     }

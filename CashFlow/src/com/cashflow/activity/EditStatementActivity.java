@@ -1,9 +1,10 @@
 package com.cashflow.activity;
 
+import static android.view.View.VISIBLE;
 import static com.cashflow.constants.Constants.AMOUNT_EXTRA;
 import static com.cashflow.constants.Constants.DATE_EXTRA;
 import static com.cashflow.constants.Constants.ID_EXTRA;
-import static com.cashflow.constants.Constants.INCOME_EXTRA;
+import static com.cashflow.constants.Constants.INTERVAL_EXTRA;
 import static com.cashflow.constants.Constants.NOTE_EXTRA;
 import static com.cashflow.constants.Constants.STATEMENT_TYPE_EXTRA;
 
@@ -18,12 +19,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 
 import com.cashflow.R;
 import com.cashflow.activity.listeners.DateButtonOnClickListener;
+import com.cashflow.activity.listeners.RecurringCheckBoxOnClickListener;
 import com.cashflow.components.DatePickerFragment;
+import com.cashflow.constants.RecurringInterval;
 import com.cashflow.database.balance.Balance;
 import com.cashflow.database.statement.StatementPersistenceService;
 import com.cashflow.database.statement.StatementType;
@@ -40,6 +47,7 @@ import com.google.inject.Inject;
  *      <li>ID:      <code>ID_EXTRA</code></li>
  *      <li>NOTE:    <code>NOTE_EXTRA</code></li>
  *      <li>DATE:    <code>DATE_EXTRA</code></li>
+ *      <li>INTERVAL:<code>INTERVAL_EXTRA</code></li>
  *  </ul>
  * </p>
  * 
@@ -55,15 +63,26 @@ public class EditStatementActivity extends RoboFragmentActivity {
     private Button dateButton;
     @InjectView(R.id.notesText)
     private EditText notesText;
+    @InjectView(R.id.recurring_spinner)
+    private Spinner recurringSpinner;
+    @InjectView(R.id.recurring_income)
+    private LinearLayout recurringArea;
+    @InjectView(R.id.recurring_checkbox)
+    private CheckBox recurringCheckBox;
+    @InjectView(R.id.recurring_checkbox_area)
+    private LinearLayout recurringCheckBoxArea;
     @Inject
     private Balance balance;
     @Inject
     private DateButtonOnClickListener listener;
+    @Inject
+    private RecurringCheckBoxOnClickListener checkBoxListener;
 
     private String originalAmount;
     private String originalNotes;
     private String originalDate;
     private String originalId;
+    private RecurringInterval originalInterval;
 
     private StatementType type;
 
@@ -145,19 +164,33 @@ public class EditStatementActivity extends RoboFragmentActivity {
         amountText.setText(originalAmount);
         notesText.setText(originalNotes);
         dateButton.setText(originalDate);
+
+        setSpinnerSelectedItem();
     }
 
-    private void setStatementType() {
-        String statementType = getIntent().getStringExtra(STATEMENT_TYPE_EXTRA);
-        if (isIncome(statementType)) {
-            type = StatementType.Income;
-        } else {
-            type = StatementType.Expense;
+    private void setSpinnerSelectedItem() {
+        if (!originalInterval.equals(RecurringInterval.none)) {
+            ArrayAdapter<RecurringInterval> adapter = new ArrayAdapter<RecurringInterval>(this, android.R.layout.simple_spinner_dropdown_item,
+                    RecurringInterval.values());
+            recurringCheckBox.setChecked(true);
+            recurringCheckBoxArea.setVisibility(VISIBLE);
+            recurringSpinner.setAdapter(adapter);
+            recurringSpinner.setSelection(adapter.getPosition(originalInterval));
         }
     }
 
-    private boolean isIncome(String statementType) {
-        return statementType.equals(INCOME_EXTRA);
+    private void setStatementType() {
+        Intent intent = getIntent();
+        type = StatementType.valueOf(intent.getStringExtra(STATEMENT_TYPE_EXTRA));
+
+        if (type.isIncome()) {
+            setUpSpinner();
+        }
+    }
+
+    private void setUpSpinner() {
+        recurringCheckBox.setOnClickListener(checkBoxListener);
+        recurringArea.setVisibility(VISIBLE);
     }
 
     private Statement createStatement(String id, String amountStr, String date, String note, StatementType type) {
@@ -174,5 +207,6 @@ public class EditStatementActivity extends RoboFragmentActivity {
         originalNotes = intent.getStringExtra(NOTE_EXTRA);
         originalDate = intent.getStringExtra(DATE_EXTRA);
         originalId = intent.getStringExtra(ID_EXTRA);
+        originalInterval = RecurringInterval.valueOf(intent.getStringExtra(INTERVAL_EXTRA));
     }
 }
