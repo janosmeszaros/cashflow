@@ -83,11 +83,10 @@ public class AddStatementActivity extends RoboFragmentActivity {
      *            Required for onClick.
      */
     public void submit(View view) {
-        String amountStr = amountText.getText().toString();
         Statement statement = createStatement();
 
         if (service.saveStatement(statement)) {
-            refreshBalance(amountStr);
+            refreshBalance();
             setResult(RESULT_OK);
         } else {
             setResult(RESULT_CANCELED);
@@ -95,7 +94,8 @@ public class AddStatementActivity extends RoboFragmentActivity {
         finish();
     }
 
-    private void refreshBalance(String amountStr) {
+    private void refreshBalance() {
+        String amountStr = amountText.getText().toString();
         BigDecimal amount = new BigDecimal(amountStr);
 
         if (type.isIncome()) {
