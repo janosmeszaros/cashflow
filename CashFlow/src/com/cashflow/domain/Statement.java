@@ -1,5 +1,6 @@
 package com.cashflow.domain;
 
+import com.cashflow.constants.RecurringInterval;
 import com.cashflow.database.statement.StatementType;
 
 /**
@@ -13,7 +14,7 @@ public final class Statement {
     private String note;
     private String date;
     private StatementType type;
-    private String recurringInterval;
+    private RecurringInterval recurringInterval;
 
     private Statement(Builder builder) {
         this.id = builder.id;
@@ -44,7 +45,7 @@ public final class Statement {
         return type;
     }
 
-    public String getRecurringInterval() {
+    public RecurringInterval getRecurringInterval() {
         return recurringInterval;
     }
 
@@ -117,6 +118,7 @@ public final class Statement {
     /**
      * Builder for statement class. Required parameters are <code>amount</code> and <code>date</code>.
      * Default statement type is {@link StatementType.Income}.
+     * Default {@link RecurringInterval} is none.
      * @author Janos_Gyula_Meszaros
      *
      */
@@ -127,7 +129,7 @@ public final class Statement {
         private String id = "";
         private String note = "";
         private StatementType type = StatementType.Income;
-        private String recurringInterval = "";
+        private RecurringInterval recurringInterval = RecurringInterval.none;
 
         /**
          * Create builder for statement with required values <code>amount</code> and <code>date</code>.
@@ -164,7 +166,7 @@ public final class Statement {
          * @param interval interval for the statement.
          * @return builder.
          */
-        public Builder setRecurringInterval(String interval) {
+        public Builder setRecurringInterval(RecurringInterval interval) {
             recurringInterval = interval;
             return this;
         }

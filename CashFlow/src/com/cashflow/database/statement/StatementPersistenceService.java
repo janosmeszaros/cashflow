@@ -2,6 +2,7 @@ package com.cashflow.database.statement;
 
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_DATE;
+import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_INTERVAL;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_IS_INCOME;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_NOTE;
 
@@ -123,6 +124,7 @@ public class StatementPersistenceService {
         values.put(COLUMN_NAME_DATE, statement.getDate());
         values.put(COLUMN_NAME_IS_INCOME, statement.getType().isIncome() ? TRUE : FALSE);
         values.put(COLUMN_NAME_NOTE, statement.getNote());
+        values.put(COLUMN_NAME_INTERVAL, statement.getRecurringInterval().toString());
 
         LOG.debug("Content created: " + values);
 

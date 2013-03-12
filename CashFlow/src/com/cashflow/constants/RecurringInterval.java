@@ -6,5 +6,5 @@ package com.cashflow.constants;
  *
  */
 public enum RecurringInterval {
-    daily, weekly, biweekly, monthly, annually;
+    none, daily, weekly, biweekly, monthly, annually;
 }

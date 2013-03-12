@@ -35,6 +35,7 @@ import com.cashflow.database.balance.Balance;
 import com.cashflow.database.statement.StatementPersistenceService;
 import com.cashflow.database.statement.StatementType;
 import com.cashflow.domain.Statement;
+import com.cashflow.domain.Statement.Builder;
 import com.google.inject.Inject;
 
 /**
@@ -86,9 +87,7 @@ public class AddStatementActivity extends RoboFragmentActivity {
      */
     public void submit(View view) {
         String amountStr = amountText.getText().toString();
-        String date = dateButton.getText().toString();
-        String note = notesText.getText().toString();
-        Statement statement = createStatement(amountStr, date, note, type);
+        Statement statement = createStatement();
 
         if (service.saveStatement(statement)) {
             refreshBalance(amountStr);
@@ -160,8 +159,18 @@ public class AddStatementActivity extends RoboFragmentActivity {
         dateButton.setOnClickListener(listener);
     }
 
-    private Statement createStatement(String amountStr, String date, String note, StatementType type) {
-        return new Statement.Builder(amountStr, date).setNote(note).setType(type).build();
+    private Statement createStatement() {
+        String amountStr = amountText.getText().toString();
+        String date = dateButton.getText().toString();
+        String note = notesText.getText().toString();
+
+        Builder builder = new Statement.Builder(amountStr, date);
+        builder.setNote(note).setType(type);
+        if (type.isIncome()) {
+            builder.setRecurringInterval((RecurringInterval) spinner.getSelectedItem());
+        }
+
+        return builder.build();
     }
 
     private void startOutAnimationForCheckboxArea() {
