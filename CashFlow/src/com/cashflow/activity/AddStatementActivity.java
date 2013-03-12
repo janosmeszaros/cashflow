@@ -68,13 +68,15 @@ public class AddStatementActivity extends RoboFragmentActivity {
         setDateButtonText();
         setStatementType();
         setTitle();
+        setCategorySpinner();
 
+        LOG.debug("AddStatementActivity has created with type: " + type);
+    }
+
+    private void setCategorySpinner() {
         Cursor cursor = categoryService.getCategories();
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, android.R.layout.simple_spinner_dropdown_item, cursor, fromColumns, toViews);
         categorySpinner.setAdapter(adapter);
-        categorySpinner.setSelected(false);
-
-        LOG.debug("AddStatementActivity has created with type: " + type);
     }
 
     @Override
@@ -94,7 +96,8 @@ public class AddStatementActivity extends RoboFragmentActivity {
         String amountStr = amountText.getText().toString();
         String date = dateButton.getText().toString();
         String note = notesText.getText().toString();
-        Statement statement = createStatement(amountStr, date, note, type);
+        String category = String.valueOf(categorySpinner.getSelectedItemId());
+        Statement statement = createStatement(amountStr, category, date, note, type);
 
         if (statementService.saveStatement(statement)) {
             refreshBalance(amountStr);
@@ -154,7 +157,7 @@ public class AddStatementActivity extends RoboFragmentActivity {
         dateButton.setText(fmtDateAndTime.format(calendar.getTime()));
     }
 
-    private Statement createStatement(String amountStr, String date, String note, StatementType type) {
-        return new Statement.Builder(amountStr, date).setNote(note).setType(type).build();
+    private Statement createStatement(String amountStr, String category, String date, String note, StatementType type) {
+        return new Statement.Builder(amountStr, date).setNote(note).setType(type).setCategory(category).build();
     }
 }

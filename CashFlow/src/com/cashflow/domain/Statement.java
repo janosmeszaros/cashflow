@@ -8,16 +8,18 @@ import com.cashflow.database.statement.StatementType;
  *
  */
 public final class Statement {
-    private String id;
-    private String amount;
-    private String note;
-    private String date;
-    private StatementType type;
-    private String recurringInterval;
+    private final String id;
+    private final String amount;
+    private final String categoryId;
+    private final String note;
+    private final String date;
+    private final StatementType type;
+    private final String recurringInterval;
 
     private Statement(Builder builder) {
         this.id = builder.id;
         this.amount = builder.amount;
+        this.categoryId = builder.categoryId;
         this.date = builder.date;
         this.note = builder.note;
         this.recurringInterval = builder.recurringInterval;
@@ -46,6 +48,10 @@ public final class Statement {
 
     public String getRecurringInterval() {
         return recurringInterval;
+    }
+
+    public String getCategoryId() {
+        return categoryId;
     }
 
     @Override
@@ -121,18 +127,19 @@ public final class Statement {
      *
      */
     public static class Builder {
-        private String amount;
-        private String date;
+        private final String amount;
+        private final String date;
 
         private String id = "";
         private String note = "";
         private StatementType type = StatementType.Income;
         private String recurringInterval = "";
+        private String categoryId = "";
 
         /**
-         * Create builder for statement with required values <code>amount</code> and <code>date</code>.
-         * @param amount the amount of statement.
-         * @param date the date of statement.
+         * Create builder for {@link Statement} with required values <code>amount</code> and <code>date</code>.
+         * @param amount the amount of {@link Statement}
+         * @param date the date of {@link Statement}
          */
         public Builder(String amount, String date) {
             this.amount = amount;
@@ -140,9 +147,9 @@ public final class Statement {
         }
 
         /**
-         * Set the note for the statement.
-         * @param note note for the statement.
-         * @return builder.
+         * Set the note for the {@link Statement}.
+         * @param note note for the {@link Statement}
+         * @return {@link Builder}
          */
         public Builder setNote(String note) {
             this.note = note;
@@ -150,9 +157,9 @@ public final class Statement {
         }
 
         /**
-         * Set type for the statement.
-         * @param type type for the statement.
-         * @return builder.
+         * Set type for the {@link Statement}.
+         * @param type type for the {@link Statement}
+         * @return {@link Builder}
          */
         public Builder setType(StatementType type) {
             this.type = type;
@@ -160,9 +167,9 @@ public final class Statement {
         }
 
         /**
-         * Set interval for the statement. 
-         * @param interval interval for the statement.
-         * @return builder.
+         * Set interval for the {@link Statement}. 
+         * @param interval interval for the {@link Statement}
+         * @return {@link Builder}
          */
         public Builder setRecurringInterval(String interval) {
             recurringInterval = interval;
@@ -170,9 +177,9 @@ public final class Statement {
         }
 
         /**
-         * Set id for the statement.
-         * @param id id for the statement.
-         * @return builder
+         * Set id for the {@link Statement}.
+         * @param id id for the {@link Statement}
+         * @return {@link Builder}
          */
         public Builder setId(String id) {
             this.id = id;
@@ -180,12 +187,23 @@ public final class Statement {
         }
 
         /**
-         * Build the statement.
-         * @return the statement.
+         * Set category for the {@link Statement}.
+         * @param category 
+         * @return {@link Builder}
+         */
+        public Builder setCategory(String category) {
+            this.categoryId = category;
+            return this;
+        }
+
+        /**
+         * Build the {@link Statement}.
+         * @return the {@link Statement} with the obligatory fields set
          */
         public Statement build() {
             return new Statement(this);
         }
+
     }
 
 }

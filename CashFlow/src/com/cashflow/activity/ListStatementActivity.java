@@ -9,6 +9,7 @@ import static com.cashflow.constants.Constants.INCOME_EXTRA;
 import static com.cashflow.constants.Constants.NOTE_EXTRA;
 import static com.cashflow.constants.Constants.STATEMENT_TYPE_EXTRA;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
+import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_CATEGORY;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_DATE;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_NOTE;
 
@@ -39,8 +40,8 @@ import com.google.inject.Inject;
  */
 public class ListStatementActivity extends RoboActivity {
     private static final Logger LOG = LoggerFactory.getLogger(ListStatementActivity.class);
-    private String[] fromColumns = {AbstractStatement._ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE, COLUMN_NAME_NOTE};
-    private int[] toViews = {R.id.row_id, R.id.row_amount, R.id.row_date, R.id.row_note};
+    private final String[] fromColumns = {AbstractStatement._ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_CATEGORY, COLUMN_NAME_DATE, COLUMN_NAME_NOTE};
+    private final int[] toViews = {R.id.row_id, R.id.row_amount, R.id.row_category, R.id.row_date, R.id.row_note};
 
     private StatementType type;
     private SimpleCursorAdapter mAdapter;

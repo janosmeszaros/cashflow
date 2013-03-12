@@ -1,6 +1,7 @@
 package com.cashflow.database.statement;
 
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
+import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_CATEGORY;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_DATE;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_IS_INCOME;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_NOTE;
@@ -49,7 +50,7 @@ public class StatementPersistenceService {
      * @return <code>true</code> if saving was successful and the amount wasn't zero, <code>false</code> otherwise.
      */
     public boolean saveStatement(Statement statement) {
-        validateInput(statement.getType(), statement.getAmount(), statement.getDate());
+        validateInput(statement.getType(), statement.getAmount(), statement.getDate(), statement.getCategoryId());
 
         boolean result = false;
         BigDecimal amount = parseAmount(statement.getAmount());
@@ -120,6 +121,7 @@ public class StatementPersistenceService {
     private ContentValues createContentValue(BigDecimal amount, Statement statement) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_NAME_AMOUNT, amount.toString());
+        values.put(COLUMN_NAME_CATEGORY, statement.getCategoryId());
         values.put(COLUMN_NAME_DATE, statement.getDate());
         values.put(COLUMN_NAME_IS_INCOME, statement.getType().isIncome() ? TRUE : FALSE);
         values.put(COLUMN_NAME_NOTE, statement.getNote());
