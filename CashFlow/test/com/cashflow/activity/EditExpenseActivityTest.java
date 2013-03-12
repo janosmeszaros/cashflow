@@ -6,6 +6,7 @@ import static com.cashflow.constants.Constants.AMOUNT_EXTRA;
 import static com.cashflow.constants.Constants.DATE_EXTRA;
 import static com.cashflow.constants.Constants.EXPENSE_EXTRA;
 import static com.cashflow.constants.Constants.ID_EXTRA;
+import static com.cashflow.constants.Constants.INTERVAL_EXTRA;
 import static com.cashflow.constants.Constants.NOTE_EXTRA;
 import static com.cashflow.constants.Constants.STATEMENT_TYPE_EXTRA;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
@@ -174,6 +175,7 @@ public class EditExpenseActivityTest {
         intent.putExtra(NOTE_EXTRA, NOTES);
         intent.putExtra(DATE_EXTRA, DATE);
         intent.putExtra(STATEMENT_TYPE_EXTRA, EXPENSE_EXTRA);
+        intent.putExtra(INTERVAL_EXTRA, "none");
         return intent;
     }
 

@@ -9,9 +9,7 @@ import static com.cashflow.constants.Constants.EXPENSE_EXTRA;
 import static com.cashflow.constants.Constants.ID_EXTRA;
 import static com.cashflow.constants.Constants.NOTE_EXTRA;
 import static com.cashflow.constants.Constants.STATEMENT_TYPE_EXTRA;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_DATE;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_NOTE;
+import static com.cashflow.database.DatabaseContracts.AbstractStatement.PROJECTION;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.times;
@@ -37,7 +35,6 @@ import android.widget.TextView;
 import com.cashflow.R;
 import com.cashflow.activity.testutil.ActivityModule;
 import com.cashflow.activity.testutil.ListStatementActivityProvider;
-import com.cashflow.database.DatabaseContracts.AbstractStatement;
 import com.cashflow.database.statement.StatementPersistenceService;
 import com.cashflow.database.statement.StatementType;
 import com.xtremelabs.robolectric.Robolectric;
@@ -58,8 +55,7 @@ public class ListExpensesActivityTest {
     private static final String NOTES = "notes2";
     private static final String DATE = "2013";
     private static final String AMOUNT = "12345678";
-    private String[] fromColumns = {AbstractStatement._ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE, COLUMN_NAME_NOTE};
-    private Object[] values = new Object[]{1, 1234L, "2012", "note"};
+    private Object[] values = new Object[]{1, 1234L, "2012", "note", "none"};
     private ListStatementActivity underTest;
     @Mock
     private StatementPersistenceService statementPersistentService;
@@ -149,7 +145,7 @@ public class ListExpensesActivityTest {
 
         // Needed 2 times because it gets invoked on test start when app counting the Balance.
         verify(statementPersistentService, times(2)).getStatement(StatementType.Expense);
-        assertThat(cursor.getColumnCount(), equalTo(fromColumns.length));
+        assertThat(cursor.getColumnCount(), equalTo(PROJECTION.length));
         assertThat(cursor.getInt(0), equalTo(values[0]));
         assertThat(cursor.getLong(1), equalTo(values[1]));
         assertThat(cursor.getString(2), equalTo(values[2]));
@@ -161,7 +157,7 @@ public class ListExpensesActivityTest {
     }
 
     private void setUpPersistentService() {
-        MatrixCursor matrixCursor = new MatrixCursor(fromColumns);
+        MatrixCursor matrixCursor = new MatrixCursor(PROJECTION);
         matrixCursor.addRow(values);
         when(statementPersistentService.getStatement(StatementType.Expense)).thenReturn(matrixCursor);
         when(statementPersistentService.getStatement(StatementType.Income)).thenReturn(matrixCursor);
