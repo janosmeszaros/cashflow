@@ -127,7 +127,6 @@ public class AddStatementActivity extends RoboFragmentActivity {
         } else {
             balance.subtract(amount);
         }
-
     }
 
     private void setStatementType() {
@@ -137,6 +136,7 @@ public class AddStatementActivity extends RoboFragmentActivity {
         } else {
             type = StatementType.Expense;
         }
+        StatementType.values();
     }
 
     private boolean isIncome(String type) {

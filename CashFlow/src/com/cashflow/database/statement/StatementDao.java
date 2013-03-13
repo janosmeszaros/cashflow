@@ -5,6 +5,7 @@ import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_N
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.EXPENSE_SELECTION;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.INCOME_SELECTION;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.PROJECTION;
+import static com.cashflow.database.DatabaseContracts.AbstractStatement.STATEMENT_INNER_JOINED_CATEGORY;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.TABLE_NAME;
 
 import org.slf4j.Logger;
@@ -73,7 +74,7 @@ public class StatementDao {
      */
     public Cursor getExpenses() {
         SQLiteDatabase db = provider.getReadableDb();
-        Cursor cursor = db.query(TABLE_NAME, PROJECTION, EXPENSE_SELECTION, null, null, null, null);
+        Cursor cursor = db.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION, EXPENSE_SELECTION, null, null, null, null);
         return cursor;
     }
 
@@ -83,7 +84,7 @@ public class StatementDao {
      */
     public Cursor getIncomes() {
         SQLiteDatabase db = provider.getReadableDb();
-        Cursor cursor = db.query(TABLE_NAME, PROJECTION, INCOME_SELECTION, null, null, null, null);
+        Cursor cursor = db.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION, INCOME_SELECTION, null, null, null, null);
         return cursor;
     }
 }

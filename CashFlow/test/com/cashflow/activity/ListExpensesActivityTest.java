@@ -37,6 +37,7 @@ import android.widget.TextView;
 import com.cashflow.R;
 import com.cashflow.activity.testutil.ActivityModule;
 import com.cashflow.activity.testutil.ListStatementActivityProvider;
+import com.cashflow.database.DatabaseContracts.AbstractCategory;
 import com.cashflow.database.DatabaseContracts.AbstractStatement;
 import com.cashflow.database.statement.StatementPersistenceService;
 import com.cashflow.database.statement.StatementType;
@@ -56,10 +57,13 @@ public class ListExpensesActivityTest {
     private static final int BAD_REQUEST_CODE = 1;
     private static final String ID = "2";
     private static final String NOTES = "notes2";
+    private static final String CATEGORY = "category2";
     private static final String DATE = "2013";
     private static final String AMOUNT = "12345678";
-    private String[] fromColumns = {AbstractStatement._ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE, COLUMN_NAME_NOTE};
-    private Object[] values = new Object[]{1, 1234L, "2012", "note"};
+    private final String[] fromColumns = {AbstractStatement.TABLE_NAME + "." + AbstractStatement._ID, AbstractStatement._ID, COLUMN_NAME_AMOUNT,
+        AbstractCategory.COLUMN_NAME_CATEGORY_NAME, COLUMN_NAME_DATE, COLUMN_NAME_NOTE};
+    //    private final String[] fromColumns = PROJECTION;
+    private final Object[] values = new Object[]{1, 1, 1234L, "category", "2012", "note"};
     private ListStatementActivity underTest;
     @Mock
     private StatementPersistenceService statementPersistentService;
@@ -93,7 +97,7 @@ public class ListExpensesActivityTest {
     @Test
     public void testOnClickWhenStatementTypeIsExpenseThenCreateIntentAndStartsItWithExtrasSetted() {
         ShadowActivity shadowActivity = Robolectric.shadowOf(underTest);
-        setViewsValues(AMOUNT, NOTES, DATE, ID);
+        setViewsValues(AMOUNT, CATEGORY, NOTES, DATE, ID);
 
         underTest.onClick(underTest.findViewById(R.id.list_statement));
 
@@ -151,9 +155,10 @@ public class ListExpensesActivityTest {
         verify(statementPersistentService, times(2)).getStatement(StatementType.Expense);
         assertThat(cursor.getColumnCount(), equalTo(fromColumns.length));
         assertThat(cursor.getInt(0), equalTo(values[0]));
-        assertThat(cursor.getLong(1), equalTo(values[1]));
-        assertThat(cursor.getString(2), equalTo(values[2]));
+        assertThat(cursor.getInt(1), equalTo(values[1]));
+        assertThat(cursor.getLong(2), equalTo(values[2]));
         assertThat(cursor.getString(3), equalTo(values[3]));
+        assertThat(cursor.getString(4), equalTo(values[4]));
     }
 
     private void addBindings(ActivityModule module) {
@@ -167,13 +172,15 @@ public class ListExpensesActivityTest {
         when(statementPersistentService.getStatement(StatementType.Income)).thenReturn(matrixCursor);
     }
 
-    private void setViewsValues(String amountValue, String notesValue, String dateValue, String idValue) {
+    private void setViewsValues(String amountValue, String categoryName, String notesValue, String dateValue, String idValue) {
         TextView notes = (TextView) underTest.findViewById(R.id.row_note);
         notes.setText(notesValue);
         TextView id = (TextView) underTest.findViewById(R.id.row_id);
         id.setText(idValue);
         TextView amount = (TextView) underTest.findViewById(R.id.row_amount);
         amount.setText(amountValue);
+        TextView category = (TextView) underTest.findViewById(R.id.row_category);
+        category.setText(categoryName);
         TextView button = (TextView) underTest.findViewById(R.id.row_date);
         button.setText(dateValue);
     }
