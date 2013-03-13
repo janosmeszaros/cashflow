@@ -25,6 +25,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 
 import com.cashflow.R;
 import com.cashflow.activity.listeners.DateButtonOnClickListener;
@@ -78,6 +79,8 @@ public class EditStatementActivity extends RoboFragmentActivity {
     private DateButtonOnClickListener listener;
     @Inject
     private RecurringCheckBoxOnClickListener checkBoxListener;
+    @Inject
+    private SpinnerAdapter spinnerAdapter;
 
     private String originalAmount;
     private String originalNotes;
@@ -171,24 +174,22 @@ public class EditStatementActivity extends RoboFragmentActivity {
     }
 
     private void setUpIntervalSpinner() {
-        ArrayAdapter<RecurringInterval> adapter = bindValuesToSpinner();
+        bindValuesToSpinner();
 
-        setSelectedItem(adapter);
+        setSelectedItem();
     }
 
-    private void setSelectedItem(ArrayAdapter<RecurringInterval> adapter) {
+    @SuppressWarnings("unchecked")
+    private void setSelectedItem() {
         if (!originalInterval.equals(RecurringInterval.none)) {
             recurringCheckBox.setChecked(true);
             recurringCheckBoxArea.setVisibility(VISIBLE);
-            recurringSpinner.setSelection(adapter.getPosition(originalInterval));
+            recurringSpinner.setSelection(((ArrayAdapter<RecurringInterval>) spinnerAdapter).getPosition(originalInterval));
         }
     }
 
-    private ArrayAdapter<RecurringInterval> bindValuesToSpinner() {
-        ArrayAdapter<RecurringInterval> adapter = new ArrayAdapter<RecurringInterval>(this, android.R.layout.simple_spinner_dropdown_item,
-                RecurringInterval.values());
-        recurringSpinner.setAdapter(adapter);
-        return adapter;
+    private void bindValuesToSpinner() {
+        recurringSpinner.setAdapter(spinnerAdapter);
     }
 
     private void setStatementType() {

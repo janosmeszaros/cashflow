@@ -1,5 +1,7 @@
 package com.cashflow;
 
+import android.widget.SpinnerAdapter;
+
 import com.cashflow.activity.listeners.DateButtonOnClickListener;
 import com.cashflow.activity.listeners.RecurringCheckBoxOnClickListener;
 import com.cashflow.database.DbHelperSQLiteDbProvider;
@@ -29,6 +31,7 @@ public class AppModule implements Module {
         binder.bind(SQLiteDbProvider.class).to(DbHelperSQLiteDbProvider.class);
         binder.bind(DateButtonOnClickListener.class);
         binder.bind(RecurringCheckBoxOnClickListener.class);
+        binder.bind(SpinnerAdapter.class).toProvider(RecurringIntervalArrayAdapterProvider.class);
     }
 
     @Provides

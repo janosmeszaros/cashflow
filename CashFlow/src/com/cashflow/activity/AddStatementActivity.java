@@ -15,12 +15,12 @@ import roboguice.inject.InjectView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 
 import com.cashflow.R;
 import com.cashflow.activity.listeners.DateButtonOnClickListener;
@@ -61,6 +61,8 @@ public class AddStatementActivity extends RoboFragmentActivity {
     private DateButtonOnClickListener listener;
     @Inject
     private RecurringCheckBoxOnClickListener checkBoxListener;
+    @Inject
+    private SpinnerAdapter spinnerAdapter;
     private StatementType type;
 
     @Override
@@ -117,8 +119,7 @@ public class AddStatementActivity extends RoboFragmentActivity {
     private void activateRecurringArea() {
         recurringCheckBox.setOnClickListener(checkBoxListener);
         recurringArea.setVisibility(VISIBLE);
-        recurringSpinner.setAdapter(new ArrayAdapter<RecurringInterval>(this, android.R.layout.simple_spinner_dropdown_item, RecurringInterval
-                .values()));
+        recurringSpinner.setAdapter(spinnerAdapter);
     }
 
     private void setTitle() {
