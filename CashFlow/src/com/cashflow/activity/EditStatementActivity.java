@@ -17,7 +17,6 @@ import roboguice.activity.RoboFragmentActivity;
 import roboguice.inject.InjectView;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -30,7 +29,6 @@ import android.widget.SpinnerAdapter;
 import com.cashflow.R;
 import com.cashflow.activity.listeners.DateButtonOnClickListener;
 import com.cashflow.activity.listeners.RecurringCheckBoxOnClickListener;
-import com.cashflow.components.DatePickerFragment;
 import com.cashflow.constants.RecurringInterval;
 import com.cashflow.database.balance.Balance;
 import com.cashflow.database.statement.StatementPersistenceService;
@@ -57,8 +55,6 @@ import com.google.inject.Inject;
  */
 public class EditStatementActivity extends RoboFragmentActivity {
     private static final Logger LOG = LoggerFactory.getLogger(EditStatementActivity.class);
-    @Inject
-    private StatementPersistenceService service;
     @InjectView(R.id.amountText)
     private EditText amountText;
     @InjectView(R.id.dateButton)
@@ -73,6 +69,8 @@ public class EditStatementActivity extends RoboFragmentActivity {
     private CheckBox recurringCheckBox;
     @InjectView(R.id.recurring_checkbox_area)
     private LinearLayout recurringCheckBoxArea;
+    @Inject
+    private StatementPersistenceService service;
     @Inject
     private Balance balance;
     @Inject
@@ -99,7 +97,6 @@ public class EditStatementActivity extends RoboFragmentActivity {
         setListenerForDateButton();
         getOriginalDatas();
         fillFieldsWithData();
-        setUpIntervalSpinner();
         setStatementType();
         setTitle();
 
@@ -123,16 +120,6 @@ public class EditStatementActivity extends RoboFragmentActivity {
         }
 
         finish();
-    }
-
-    /**
-     * Date button onClick method. Shows the date picker dialog.
-     * @param view
-     *            Required for onclick.
-     */
-    public void showDatePickerDialog(View view) {
-        DialogFragment newFragment = new DatePickerFragment();
-        newFragment.show(getSupportFragmentManager(), "datePicker");
     }
 
     private boolean isValuesChanged() {
@@ -173,9 +160,19 @@ public class EditStatementActivity extends RoboFragmentActivity {
         dateButton.setText(originalDate);
     }
 
-    private void setUpIntervalSpinner() {
-        bindValuesToSpinner();
+    private void setStatementType() {
+        Intent intent = getIntent();
+        type = StatementType.valueOf(intent.getStringExtra(STATEMENT_TYPE_EXTRA));
 
+        if (type.isIncome()) {
+            setUpSpinner();
+        }
+    }
+
+    private void setUpSpinner() {
+        recurringCheckBox.setOnClickListener(checkBoxListener);
+        recurringArea.setVisibility(VISIBLE);
+        bindValuesToSpinner();
         setSelectedItem();
     }
 
@@ -190,20 +187,6 @@ public class EditStatementActivity extends RoboFragmentActivity {
 
     private void bindValuesToSpinner() {
         recurringSpinner.setAdapter(spinnerAdapter);
-    }
-
-    private void setStatementType() {
-        Intent intent = getIntent();
-        type = StatementType.valueOf(intent.getStringExtra(STATEMENT_TYPE_EXTRA));
-
-        if (type.isIncome()) {
-            setUpSpinner();
-        }
-    }
-
-    private void setUpSpinner() {
-        recurringCheckBox.setOnClickListener(checkBoxListener);
-        recurringArea.setVisibility(VISIBLE);
     }
 
     private Statement createStatement() {

@@ -15,7 +15,6 @@ import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_N
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Matchers.anyObject;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -28,14 +27,19 @@ import org.mockito.MockitoAnnotations;
 
 import android.content.Intent;
 import android.database.MatrixCursor;
+import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.cashflow.R;
 import com.cashflow.activity.listeners.DateButtonOnClickListener;
 import com.cashflow.activity.testutil.ActivityModule;
 import com.cashflow.activity.testutil.EditStatementActivityProvider;
+import com.cashflow.constants.RecurringInterval;
 import com.cashflow.database.DatabaseContracts.AbstractStatement;
 import com.cashflow.database.balance.Balance;
 import com.cashflow.database.statement.StatementPersistenceService;
@@ -65,6 +69,8 @@ public class EditExpenseActivityTest {
     private EditStatementActivity underTest;
     private ShadowFragmentActivity shadowFragmentActivity;
     private Balance balance;
+    private ArrayAdapter<RecurringInterval> arrayAdapter = new ArrayAdapter<RecurringInterval>(underTest,
+            android.R.layout.simple_spinner_dropdown_item, RecurringInterval.values());
     @Mock
     private StatementPersistenceService statementPersistenceService;
     @Mock
@@ -92,7 +98,7 @@ public class EditExpenseActivityTest {
     }
 
     @Test
-    public void testWhenEditExpenseActivityThanTitleShouldBeEditExpense() {
+    public void testOnCreateWhenEditExpenseActivityThanTitleShouldBeEditExpense() {
         assertThat((String) underTest.getTitle(), equalTo(underTest.getString(R.string.title_activity_edit_expenses)));
     }
 
@@ -105,13 +111,21 @@ public class EditExpenseActivityTest {
     }
 
     @Test
-    public void testWhenEditExpenseActivityCreatedThanShouldFillUpViewsWithDataFromIntent() {
+    public void testOnCreateWhenEditExpenseActivityCreatedThanShouldFillUpViewsWithDataFromIntent() {
         TextView amount = (TextView) underTest.findViewById(R.id.amountText);
         TextView note = (TextView) underTest.findViewById(R.id.notesText);
         Button date = (Button) underTest.findViewById(R.id.dateButton);
+
         assertThat(amount.getText().toString(), equalTo(AMOUNT));
         assertThat(note.getText().toString(), equalTo(NOTES));
         assertThat(date.getText().toString(), equalTo(DATE));
+    }
+
+    @Test
+    public void testOnCreateWhenExpenseThenRecurringSpinnerShouldNotBeShown() {
+        LinearLayout recurring = (LinearLayout) underTest.findViewById(R.id.recurring_income);
+
+        assertThat(recurring.getVisibility(), equalTo(View.GONE));
     }
 
     @Test
@@ -121,9 +135,10 @@ public class EditExpenseActivityTest {
 
         underTest.submit(null);
 
-        verify(statementPersistenceService, times(1)).updateStatement(statement);
+        verify(statementPersistenceService).updateStatement(statement);
         assertThat(balance.getBalance(), equalTo(-1111D));
         assertThat(shadowFragmentActivity.getResultCode(), equalTo(RESULT_OK));
+        assertThat(shadowFragmentActivity.isFinishing(), equalTo(true));
     }
 
     @Test
@@ -133,9 +148,10 @@ public class EditExpenseActivityTest {
 
         underTest.submit(null);
 
-        verify(statementPersistenceService, times(1)).updateStatement(statement);
+        verify(statementPersistenceService).updateStatement(statement);
         assertThat(balance.getBalance(), equalTo(0D));
         assertThat(shadowFragmentActivity.getResultCode(), equalTo(RESULT_OK));
+        assertThat(shadowFragmentActivity.isFinishing(), equalTo(true));
     }
 
     @Test
@@ -145,9 +161,10 @@ public class EditExpenseActivityTest {
 
         underTest.submit(null);
 
-        verify(statementPersistenceService, times(1)).updateStatement(statement);
+        verify(statementPersistenceService).updateStatement(statement);
         assertThat(balance.getBalance(), equalTo(0D));
         assertThat(shadowFragmentActivity.getResultCode(), equalTo(RESULT_OK));
+        assertThat(shadowFragmentActivity.isFinishing(), equalTo(true));
     }
 
     @Test
@@ -157,6 +174,7 @@ public class EditExpenseActivityTest {
         underTest.submit(null);
 
         assertThat(shadowFragmentActivity.getResultCode(), equalTo(RESULT_CANCELED));
+        assertThat(shadowFragmentActivity.isFinishing(), equalTo(true));
     }
 
     private void setViewsValues(String amountValue, String notesValue, String dateValue) {
@@ -166,6 +184,9 @@ public class EditExpenseActivityTest {
         amount.setText(amountValue);
         Button button = (Button) underTest.findViewById(R.id.dateButton);
         button.setText(dateValue);
+        Spinner spinner = (Spinner) underTest.findViewById(R.id.recurring_spinner);
+        spinner.setAdapter(arrayAdapter);
+        spinner.setSelection(0);
     }
 
     private Intent setUpIntentData() {
