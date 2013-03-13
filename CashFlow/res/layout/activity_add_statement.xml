@@ -83,6 +83,7 @@
                 android:inputType="textMultiLine" />
         </LinearLayout>
 
+        <!-- Recurring area -->
         <LinearLayout
             android:id="@+id/recurring_income"
             android:layout_width="match_parent"

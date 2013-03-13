@@ -1,7 +1,5 @@
 package com.cashflow.activity;
 
-import static android.app.Activity.RESULT_CANCELED;
-import static android.app.Activity.RESULT_OK;
 import static com.cashflow.constants.Constants.EXPENSE_EXTRA;
 import static com.cashflow.constants.Constants.STATEMENT_TYPE_EXTRA;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
@@ -9,7 +7,6 @@ import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_N
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_NOTE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.text.DateFormat;
@@ -22,10 +19,12 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.MatrixCursor;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.cashflow.R;
 import com.cashflow.activity.listeners.DateButtonOnClickListener;
@@ -52,7 +51,7 @@ public class AddExpenseActivityTest {
     private static final String NOTES = "notes";
     private static final String DATE = "2013";
     private static final String AMOUNT = "1234";
-    private static final String SAME_AMOUNT = "12";
+    private static final String INVALID_AMOUNT = "12";
     private String[] fromColumns = {AbstractStatement._ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE, COLUMN_NAME_NOTE};
     private Object[] values = new Object[]{1, 1234L, "2012", "note"};
     private Balance balance;
@@ -83,7 +82,7 @@ public class AddExpenseActivityTest {
     }
 
     @Test
-    public void testOnCreateWhenTypeIsExpenseThanTitleShouldBeAddExpense() {
+    public void testOnCreateWhenTypeIsExpenseThenTitleShouldBeAddExpense() {
         assertThat((String) underTest.getTitle(), equalTo(underTest.getString(R.string.title_activity_add_expense)));
     }
 
@@ -106,29 +105,49 @@ public class AddExpenseActivityTest {
     }
 
     @Test
-    public void testSubmitWhenOkThanCallProperFunctionAndRefreshBalanceAndClosing() {
-        ShadowFragmentActivity shadowActivity = Robolectric.shadowOf(underTest);
+    public void testOnCreateWhenCalledThenRecurringAreaShouldBeGone() {
+        LinearLayout recurringArea = (LinearLayout) underTest.findViewById(R.id.recurring_income);
+
+        assertThat(recurringArea.getVisibility(), equalTo(LinearLayout.GONE));
+    }
+
+    @Test
+    public void testSubmitWhenOkThenShouldRefreshBalance() {
         setViewsValues(AMOUNT);
-        Statement statement = createStatement(AMOUNT, DATE, NOTES, StatementType.Expense);
 
         underTest.submit(null);
 
-        verify(statementPersistentService).saveStatement(statement);
-        assertThat(shadowActivity.getResultCode(), equalTo(RESULT_OK));
         assertThat(balance.getBalance(), equalTo(-1234D));
+    }
+
+    @Test
+    public void testSubmitWhenSomethingWentWrongThenShouldntRefreshBalance() {
+        setViewsValues(INVALID_AMOUNT);
+
+        underTest.submit(null);
+
+        assertThat(balance.getBalance(), equalTo(0D));
+    }
+
+    @Test
+    public void testSubmitWhenOkThenShouldSetTheResultToOkAndCloseTheActivity() {
+        ShadowFragmentActivity shadowActivity = Robolectric.shadowOf(underTest);
+        setViewsValues(AMOUNT);
+
+        underTest.submit(null);
+
+        assertThat(shadowActivity.getResultCode(), equalTo(Activity.RESULT_OK));
         assertThat(shadowActivity.isFinishing(), equalTo(true));
     }
 
     @Test
-    public void testSubmitWhenAmountIsTheSameThanSetResultToCanceledAndClose() {
+    public void testSubmitWhenSomethingWentWrongThenShouldSetTheResultToCanceledAndCloseTheActivity() {
         ShadowFragmentActivity shadowActivity = Robolectric.shadowOf(underTest);
-        setViewsValues(SAME_AMOUNT);
-        Statement statement = createStatement(SAME_AMOUNT, DATE, NOTES, StatementType.Expense);
+        setViewsValues(INVALID_AMOUNT);
 
         underTest.submit(null);
 
-        verify(statementPersistentService).saveStatement(statement);
-        assertThat(shadowActivity.getResultCode(), equalTo(RESULT_CANCELED));
+        assertThat(shadowActivity.getResultCode(), equalTo(Activity.RESULT_CANCELED));
         assertThat(shadowActivity.isFinishing(), equalTo(true));
     }
 
@@ -171,7 +190,7 @@ public class AddExpenseActivityTest {
         when(statementPersistentService.getStatement(StatementType.Expense)).thenReturn(cursor);
         when(statementPersistentService.getStatement(StatementType.Income)).thenReturn(cursor);
         when(statementPersistentService.saveStatement(createStatement(AMOUNT, DATE, NOTES, StatementType.Expense))).thenReturn(true);
-        when(statementPersistentService.saveStatement(createStatement(SAME_AMOUNT, DATE, NOTES, StatementType.Expense))).thenReturn(false);
+        when(statementPersistentService.saveStatement(createStatement(INVALID_AMOUNT, DATE, NOTES, StatementType.Expense))).thenReturn(false);
     }
 
     private Statement createStatement(String amount, String date, String note, StatementType type) {
