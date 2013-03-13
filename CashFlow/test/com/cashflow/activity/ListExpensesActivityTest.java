@@ -7,6 +7,7 @@ import static com.cashflow.constants.Constants.DATE_EXTRA;
 import static com.cashflow.constants.Constants.EDIT_ACTIVITY_CODE;
 import static com.cashflow.constants.Constants.EXPENSE_EXTRA;
 import static com.cashflow.constants.Constants.ID_EXTRA;
+import static com.cashflow.constants.Constants.INTERVAL_EXTRA;
 import static com.cashflow.constants.Constants.NOTE_EXTRA;
 import static com.cashflow.constants.Constants.STATEMENT_TYPE_EXTRA;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.PROJECTION;
@@ -55,6 +56,7 @@ public class ListExpensesActivityTest {
     private static final String NOTES = "notes2";
     private static final String DATE = "2013";
     private static final String AMOUNT = "12345678";
+    private static final String INTERVAL = "biweekly";
     private Object[] values = new Object[]{1, 1234L, "2012", "note", "none"};
     private ListStatementActivity underTest;
     @Mock
@@ -89,7 +91,7 @@ public class ListExpensesActivityTest {
     @Test
     public void testOnClickWhenStatementTypeIsExpenseThenCreateIntentAndStartsItWithExtrasSetted() {
         ShadowActivity shadowActivity = Robolectric.shadowOf(underTest);
-        setViewsValues(AMOUNT, NOTES, DATE, ID);
+        setViewsValues(AMOUNT, NOTES, DATE, ID, INTERVAL);
 
         underTest.onClick(underTest.findViewById(R.id.list_statement));
 
@@ -99,12 +101,14 @@ public class ListExpensesActivityTest {
         String noteExtra = startedActivityForResult.intent.getStringExtra(NOTE_EXTRA);
         String dateExtra = startedActivityForResult.intent.getStringExtra(DATE_EXTRA);
         String typeExtra = startedActivityForResult.intent.getStringExtra(STATEMENT_TYPE_EXTRA);
+        String intervalExtra = startedActivityForResult.intent.getStringExtra(INTERVAL_EXTRA);
         int requestCode = startedActivityForResult.requestCode;
         assertThat(idExtra, equalTo(ID));
         assertThat(amountExtra, equalTo(AMOUNT));
         assertThat(noteExtra, equalTo(NOTES));
         assertThat(dateExtra, equalTo(DATE));
         assertThat(typeExtra, equalTo(EXPENSE_EXTRA));
+        assertThat(intervalExtra, equalTo(INTERVAL));
         assertThat(requestCode, equalTo(EDIT_ACTIVITY_CODE));
     }
 
@@ -150,6 +154,7 @@ public class ListExpensesActivityTest {
         assertThat(cursor.getLong(1), equalTo(values[1]));
         assertThat(cursor.getString(2), equalTo(values[2]));
         assertThat(cursor.getString(3), equalTo(values[3]));
+        assertThat(cursor.getString(4), equalTo(values[4]));
     }
 
     private void addBindings(ActivityModule module) {
@@ -163,7 +168,7 @@ public class ListExpensesActivityTest {
         when(statementPersistentService.getStatement(StatementType.Income)).thenReturn(matrixCursor);
     }
 
-    private void setViewsValues(String amountValue, String notesValue, String dateValue, String idValue) {
+    private void setViewsValues(String amountValue, String notesValue, String dateValue, String idValue, String intervalValue) {
         TextView notes = (TextView) underTest.findViewById(R.id.row_note);
         notes.setText(notesValue);
         TextView id = (TextView) underTest.findViewById(R.id.row_id);
@@ -172,5 +177,7 @@ public class ListExpensesActivityTest {
         amount.setText(amountValue);
         TextView button = (TextView) underTest.findViewById(R.id.row_date);
         button.setText(dateValue);
+        TextView interval = (TextView) underTest.findViewById(R.id.row_interval);
+        interval.setText(intervalValue);
     }
 }
