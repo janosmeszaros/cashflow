@@ -67,7 +67,7 @@ public class StatementPersistenceService {
      * Get all statement from a statement type.
      * @param type
      *            specify the statement type which has to be returned.
-     * @return a cursor which contains the values.
+     * @return a {@link Cursor} which contains the values.
      */
     public Cursor getStatement(StatementType type) {
         validateInput(type);

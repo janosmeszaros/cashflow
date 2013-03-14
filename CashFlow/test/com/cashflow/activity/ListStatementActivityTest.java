@@ -7,6 +7,7 @@ import static com.cashflow.constants.Constants.DATE_EXTRA;
 import static com.cashflow.constants.Constants.EDIT_ACTIVITY_CODE;
 import static com.cashflow.constants.Constants.EXPENSE_EXTRA;
 import static com.cashflow.constants.Constants.ID_EXTRA;
+import static com.cashflow.constants.Constants.INCOME_EXTRA;
 import static com.cashflow.constants.Constants.NOTE_EXTRA;
 import static com.cashflow.constants.Constants.STATEMENT_TYPE_EXTRA;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
@@ -52,8 +53,8 @@ import com.xtremelabs.robolectric.shadows.ShadowActivity.IntentForResult;
  * @author Janos_Gyula_Meszaros
  */
 @RunWith(RobolectricTestRunner.class)
-public class ListExpensesActivityTest {
-    private static final Logger LOG = LoggerFactory.getLogger(ListExpensesActivityTest.class);
+public class ListStatementActivityTest {
+    private static final Logger LOG = LoggerFactory.getLogger(ListStatementActivityTest.class);
     private static final int BAD_REQUEST_CODE = 1;
     private static final String ID = "2";
     private static final String NOTES = "notes2";
@@ -62,7 +63,6 @@ public class ListExpensesActivityTest {
     private static final String AMOUNT = "12345678";
     private final String[] fromColumns = {AbstractStatement.TABLE_NAME + "." + AbstractStatement._ID, AbstractStatement._ID, COLUMN_NAME_AMOUNT,
         AbstractCategory.COLUMN_NAME_CATEGORY_NAME, COLUMN_NAME_DATE, COLUMN_NAME_NOTE};
-    //    private final String[] fromColumns = PROJECTION;
     private final Object[] values = new Object[]{1, 1, 1234L, "category", "2012", "note"};
     private ListStatementActivity underTest;
     @Mock
@@ -80,7 +80,15 @@ public class ListExpensesActivityTest {
         ActivityModule.setUp(this, module);
 
         underTest = new ListStatementActivity();
+    }
+
+    private void setExpenseIntent() {
         underTest.setIntent(new Intent().putExtra(STATEMENT_TYPE_EXTRA, EXPENSE_EXTRA));
+        underTest.onCreate(null);
+    }
+
+    private void setIncomeIntent() {
+        underTest.setIntent(new Intent().putExtra(STATEMENT_TYPE_EXTRA, INCOME_EXTRA));
         underTest.onCreate(null);
     }
 
@@ -91,11 +99,13 @@ public class ListExpensesActivityTest {
 
     @Test
     public void testWhenListStatementIsExpenseThenTitleShouldBeListExpenseTitle() {
+        setExpenseIntent();
         assertThat((String) underTest.getTitle(), equalTo(underTest.getString(R.string.title_activity_list_expenses)));
     }
 
     @Test
     public void testOnClickWhenStatementTypeIsExpenseThenCreateIntentAndStartsItWithExtrasSetted() {
+        setExpenseIntent();
         ShadowActivity shadowActivity = Robolectric.shadowOf(underTest);
         setViewsValues(AMOUNT, CATEGORY, NOTES, DATE, ID);
 
@@ -118,6 +128,7 @@ public class ListExpensesActivityTest {
 
     @Test
     public void testOnActivityResultWhenRequestCodeAndResultCodeIsOkThenItShouldRefreshList() {
+        setExpenseIntent();
         underTest.onActivityResult(EDIT_ACTIVITY_CODE, RESULT_OK, null);
 
         // Needed 3 times because it gets invoked on test start when app 
@@ -127,6 +138,7 @@ public class ListExpensesActivityTest {
 
     @Test
     public void testOnActivityResultWhenRequestCodeIsNotOkThenItShouldntRefreshList() {
+        setExpenseIntent();
         underTest.onActivityResult(BAD_REQUEST_CODE, RESULT_OK, null);
 
         // Needed 2 times because it gets invoked on test start when app 
@@ -137,6 +149,7 @@ public class ListExpensesActivityTest {
 
     @Test
     public void testOnActivityResultWhenResultCodeIsNotOkThenItShouldntRefreshList() {
+        setExpenseIntent();
         underTest.onActivityResult(EDIT_ACTIVITY_CODE, RESULT_CANCELED, null);
 
         // Needed 2 times because it gets invoked on test start when app 
@@ -147,6 +160,7 @@ public class ListExpensesActivityTest {
 
     @Test
     public void shouldContainList() {
+        setExpenseIntent();
         ListView listView = (ListView) underTest.findViewById(R.id.list_statement);
         SimpleCursorAdapter adapter = (SimpleCursorAdapter) listView.getAdapter();
         Cursor cursor = adapter.getCursor();
@@ -184,4 +198,17 @@ public class ListExpensesActivityTest {
         TextView button = (TextView) underTest.findViewById(R.id.row_date);
         button.setText(dateValue);
     }
+
+    //*********** Income test ************************************//
+
+    @Test
+    public void testWhenListStatementIsIncomeThenTitleShouldBeListIncomeTitle() {
+        setIncomeIntent();
+        ListStatementActivity underTest = new ListStatementActivity();
+        underTest.setIntent(new Intent().putExtra(STATEMENT_TYPE_EXTRA, INCOME_EXTRA));
+        underTest.onCreate(null);
+
+        assertThat((String) underTest.getTitle(), equalTo(underTest.getString(R.string.title_activity_list_incomes)));
+    }
+
 }
