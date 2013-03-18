@@ -23,17 +23,6 @@ public enum RecurringInterval {
         this.period = period;
     }
 
-    private int countPassedPeriods(DateTime date) {
-        DateTime time = date.plus(getPeriod());
-        int result = 0;
-
-        while (time.isBeforeNow()) {
-            result++;
-            time = time.plus(getPeriod());
-        }
-        return result;
-    }
-
     /**
      * Returns the number of passed periods between the given date and now.
      * @param date checkable date.
@@ -47,4 +36,14 @@ public enum RecurringInterval {
         return period;
     }
 
+    private int countPassedPeriods(DateTime date) {
+        DateTime time = date.plus(getPeriod());
+        int result = 0;
+
+        while (time.isBeforeNow()) {
+            result++;
+            time = time.plus(getPeriod());
+        }
+        return result;
+    }
 }
