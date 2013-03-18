@@ -21,6 +21,9 @@ public abstract class DatabaseContracts {
     private static final String OPENNING_BRACKET = " (";
     private static final String CLOSSING_BRACKET = " )";
     private static final String DROP_TABLE = "DROP TABLE IF EXISTS ";
+    private static final String EQUALS_INCOME = " == 1";
+    private static final String EQUALS_EXPENSE = " == 0";
+    private static final String AND = " AND ";
 
     /**
      * Statement table.
@@ -37,8 +40,10 @@ public abstract class DatabaseContracts {
         public static final String[] PROJECTION = new String[]{_ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE, COLUMN_NAME_NOTE, COLUMN_NAME_INTERVAL};
         public static final int[] TO_VIEWS = {R.id.row_id, R.id.row_amount, R.id.row_date, R.id.row_note, R.id.row_interval};
 
-        public static final String EXPENSE_SELECTION = OPENNING_BRACKET + COLUMN_NAME_IS_INCOME + " == 0)";
-        public static final String INCOME_SELECTION = OPENNING_BRACKET + COLUMN_NAME_IS_INCOME + " == 1)";
+        public static final String EXPENSE_SELECTION = OPENNING_BRACKET + COLUMN_NAME_IS_INCOME + EQUALS_EXPENSE + CLOSSING_BRACKET;
+        public static final String INCOME_SELECTION = OPENNING_BRACKET + COLUMN_NAME_IS_INCOME + EQUALS_INCOME + CLOSSING_BRACKET;
+        public static final String RECURRING_INCOME_SELECTION = OPENNING_BRACKET + COLUMN_NAME_IS_INCOME + EQUALS_INCOME + AND + COLUMN_NAME_INTERVAL
+                + " != 'none'" + CLOSSING_BRACKET;
 
         static final String SQL_CREATE_ENTRIES = CREATE_TABLE + TABLE_NAME + OPENNING_BRACKET + _ID + " INTEGER PRIMARY KEY" + COMMA_SEP
                 + COLUMN_NAME_AMOUNT + REAL_TYPE + COMMA_SEP + COLUMN_NAME_IS_INCOME + INTEGER_TYPE + COMMA_SEP + COLUMN_NAME_DATE + TEXT_TYPE

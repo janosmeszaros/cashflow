@@ -5,6 +5,7 @@ import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_N
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.EXPENSE_SELECTION;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.INCOME_SELECTION;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.PROJECTION;
+import static com.cashflow.database.DatabaseContracts.AbstractStatement.RECURRING_INCOME_SELECTION;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.TABLE_NAME;
 
 import org.slf4j.Logger;
@@ -37,12 +38,6 @@ public class StatementDao {
     public StatementDao(SQLiteDbProvider provider) {
         nullCheck(provider);
         this.provider = provider;
-    }
-
-    private void nullCheck(SQLiteDbProvider provider) {
-        if (provider == null) {
-            throw new IllegalArgumentException();
-        }
     }
 
     /**
@@ -85,5 +80,21 @@ public class StatementDao {
         SQLiteDatabase db = provider.getReadableDb();
         Cursor cursor = db.query(TABLE_NAME, PROJECTION, INCOME_SELECTION, null, null, null, null);
         return cursor;
+    }
+
+    /**
+     * Returns recurring incomes.
+     * @return Cursor which contains the data.
+     */
+    public Cursor getRecurringIncomes() {
+        SQLiteDatabase db = provider.getReadableDb();
+        Cursor cursor = db.query(TABLE_NAME, PROJECTION, RECURRING_INCOME_SELECTION, null, null, null, null);
+        return cursor;
+    }
+
+    private void nullCheck(SQLiteDbProvider provider) {
+        if (provider == null) {
+            throw new IllegalArgumentException();
+        }
     }
 }

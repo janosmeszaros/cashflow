@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.cashflow.R;
 import com.cashflow.database.balance.Balance;
-import com.cashflow.database.statement.StatementPersistenceService;
+import com.cashflow.database.statement.RecurringIncomeScheduler;
 import com.google.inject.Inject;
 
 /**
@@ -27,19 +27,20 @@ import com.google.inject.Inject;
 public class MainActivity extends RoboActivity {
     private static final Logger LOG = LoggerFactory.getLogger(MainActivity.class);
 
-    @Inject
-    private StatementPersistenceService statementPersistentService;
-
     @InjectView(R.id.textViewBalanceAmount)
     private TextView balanceText;
 
     @Inject
     private Balance balance;
+    @Inject
+    private RecurringIncomeScheduler scheduler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        scheduler.schedule();
     }
 
     @Override

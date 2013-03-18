@@ -9,6 +9,7 @@ import com.cashflow.database.SQLiteDbProvider;
 import com.cashflow.database.balance.Balance;
 import com.cashflow.database.category.CategoryDao;
 import com.cashflow.database.category.CategoryPersistenceService;
+import com.cashflow.database.statement.RecurringIncomeScheduler;
 import com.cashflow.database.statement.StatementDao;
 import com.cashflow.database.statement.StatementPersistenceService;
 import com.google.inject.Binder;
@@ -32,6 +33,7 @@ public class AppModule implements Module {
         binder.bind(DateButtonOnClickListener.class);
         binder.bind(RecurringCheckBoxOnClickListener.class);
         binder.bind(SpinnerAdapter.class).toProvider(RecurringIntervalArrayAdapterProvider.class);
+        binder.bind(RecurringIncomeScheduler.class).in(Singleton.class);
     }
 
     @Provides

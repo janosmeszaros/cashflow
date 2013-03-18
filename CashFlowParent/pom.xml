@@ -34,6 +34,7 @@
 		<org.slf4j.slf4j-android.version>1.6.1-RC1</org.slf4j.slf4j-android.version>
 		<org.slf4j.slf4j-api.version>1.7.2</org.slf4j.slf4j-api.version>
 		<roboguice.version>2.0</roboguice.version>
+		<joda-time.version>2.1</joda-time.version>
 	</properties>
 
 	<build>
@@ -57,8 +58,8 @@
 								<exclude>com/cashflow/**/R.class</exclude>
 								<exclude>com/cashflow/**/R$*.class</exclude>
 								<exclude>com/cashflow/**/*Test*.class</exclude>
-								<exclude>com/cashflow/constants/Constants.class</exclude>		
-								<exclude>com/cashflow/activity/testutil/**</exclude>						
+								<exclude>com/cashflow/constants/Constants.class</exclude>
+								<exclude>com/cashflow/activity/testutil/**</exclude>
 							</excludes>
 						</instrumentation>
 					</configuration>
@@ -121,6 +122,12 @@
 				<artifactId>commons-lang</artifactId>
 				<version>${apache.commons.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>joda-time</groupId>
+				<artifactId>joda-time</artifactId>
+				<version>${joda-time.version}</version>
+			</dependency>
+
 
 			<!-- Tests -->
 

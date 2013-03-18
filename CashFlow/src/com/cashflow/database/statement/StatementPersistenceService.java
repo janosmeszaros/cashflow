@@ -74,7 +74,11 @@ public class StatementPersistenceService {
 
         Cursor result = null;
         if (type.isIncome()) {
-            result = dao.getIncomes();
+            if (type.equals(StatementType.RecurringIncome)) {
+                result = dao.getRecurringIncomes();
+            } else {
+                result = dao.getIncomes();
+            }
         } else {
             result = dao.getExpenses();
         }
