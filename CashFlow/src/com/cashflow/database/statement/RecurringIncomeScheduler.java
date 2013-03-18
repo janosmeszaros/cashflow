@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.commons.lang.Validate;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -29,9 +30,9 @@ import com.google.inject.Inject;
  */
 public final class RecurringIncomeScheduler {
     private static final Logger LOG = LoggerFactory.getLogger(RecurringIncomeScheduler.class);
-    private StatementPersistenceService statementPersistenceService;
+    private final StatementPersistenceService statementPersistenceService;
+    private final DateTimeFormatter formatter = DateTimeFormat.mediumDate().withLocale(Locale.getDefault());
     private Map<String, Integer> columnNumbers = new HashMap<String, Integer>();
-    private DateTimeFormatter formatter = DateTimeFormat.mediumDate().withLocale(Locale.getDefault());
 
     /**
      * Constructor.
@@ -39,42 +40,63 @@ public final class RecurringIncomeScheduler {
      */
     @Inject
     public RecurringIncomeScheduler(StatementPersistenceService statementPersistenceService) {
+        nullChecK(statementPersistenceService);
         this.statementPersistenceService = statementPersistenceService;
     }
 
     /**
-     * anyád
+     * Add actual statements to database if needed. It also update the recurring statement entry to the 
+     * last occurred statement date to not get multiple statement on one date.  
      */
     public void schedule() {
-        Cursor cursor = statementPersistenceService.getStatement(StatementType.RecurringIncome);
+        Cursor cursor = getCursor();
+
         getColumnNumbers(cursor);
 
-        cursor.moveToFirst();
+        interateThrough(cursor);
+    }
+
+    private void interateThrough(Cursor cursor) {
         while (!cursor.isAfterLast()) {
             Map<String, String> columnValues = getColumnValues(cursor);
             RecurringInterval interval = RecurringInterval.valueOf(columnValues.get(COLUMN_NAME_INTERVAL));
 
             int periods = countPeriods(columnValues, interval);
-            LOG.debug("Number of periods: " + periods + " for " + columnValues.get(COLUMN_NAME_NOTE));
 
             String newDate = saveNewStatements(columnValues, interval, periods);
-
             updateRecurringStatement(columnValues, newDate, interval);
 
             cursor.moveToNext();
         }
     }
 
+    private Cursor getCursor() {
+        Cursor cursor = statementPersistenceService.getStatement(StatementType.RecurringIncome);
+        cursor.moveToFirst();
+        return cursor;
+    }
+
+    private void nullChecK(StatementPersistenceService statementPersistenceService) {
+        Validate.notNull(statementPersistenceService, "Constructor argument can't be null.");
+    }
+
     private void updateRecurringStatement(Map<String, String> columnValues, String newDate, RecurringInterval interval) {
         if (!columnValues.get(COLUMN_NAME_DATE).equals(newDate)) {
+
             Statement statement = new Statement.Builder(columnValues.get(COLUMN_NAME_AMOUNT), newDate).setId(columnValues.get(_ID))
                     .setNote(columnValues.get(COLUMN_NAME_NOTE)).setRecurringInterval(interval).setType(StatementType.RecurringIncome).build();
+
+            LOG.debug("Update recurring statement's date to " + newDate);
             statementPersistenceService.updateStatement(statement);
         }
     }
 
     private int countPeriods(Map<String, String> columnValues, RecurringInterval interval) {
-        return interval.numOfPassedPeriods(formatter.parseDateTime(columnValues.get(COLUMN_NAME_DATE)));
+        int periods = interval.numOfPassedPeriods(formatter.parseDateTime(columnValues.get(COLUMN_NAME_DATE)));
+        LOG.debug("Number of periods: " + periods + " for " + columnValues.get(COLUMN_NAME_NOTE) + " on " + columnValues.get(COLUMN_NAME_DATE)
+                + " with " + interval.toString() + " interval");
+
+        return periods;
     }
 
     private String saveNewStatements(Map<String, String> columnValues, RecurringInterval interval, int periods) {
