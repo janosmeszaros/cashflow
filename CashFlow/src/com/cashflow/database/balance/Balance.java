@@ -19,7 +19,7 @@ import com.cashflow.database.statement.StatementType;
 public final class Balance {
     private static final Logger LOG = LoggerFactory.getLogger(Balance.class);
     private volatile BigDecimal amountBalance = BigDecimal.ZERO;
-    private StatementPersistenceService service;
+    private final StatementPersistenceService service;
 
     private Balance(StatementPersistenceService service) {
         this.service = service;
@@ -43,33 +43,14 @@ public final class Balance {
     }
 
     /**
-     * Subtract the amount from the current stored balance.
-     * @param amount
-     *            amount to subtract.
+     * Calculates the current balance.
      */
-    public void subtract(BigDecimal amount) {
-        LOG.debug("Subtracting " + amount.doubleValue() + " from " + amountBalance.doubleValue());
-        amountBalance = amountBalance.subtract(amount);
-        LOG.debug("The new balance is after subtracting: " + amountBalance.doubleValue());
-    }
-
-    /**
-     * Add the amount from the current stored balance.
-     * @param amount
-     *            amount to add.
-     */
-    public void add(BigDecimal amount) {
-        LOG.debug("Adding " + amount.doubleValue() + " to " + amountBalance.doubleValue());
-        amountBalance = amountBalance.add(amount);
-        LOG.debug("The new balance is after adding: " + amountBalance.doubleValue());
-    }
-
-    private void countBalance() {
+    public void countBalance() {
         double expenses = countSumOfStatement(service.getStatement(StatementType.Expense));
         double incomes = countSumOfStatement(service.getStatement(StatementType.Income));
 
         amountBalance = BigDecimal.valueOf(incomes - expenses);
-        LOG.debug("Starting balance is: " + amountBalance.doubleValue());
+        LOG.debug("Balance is: " + amountBalance.doubleValue());
     }
 
     private double countSumOfStatement(Cursor cursor) {

@@ -1,13 +1,7 @@
 package com.cashflow.activity;
 
-import static com.cashflow.constants.Constants.AMOUNT_EXTRA;
-import static com.cashflow.constants.Constants.DATE_EXTRA;
 import static com.cashflow.constants.Constants.EDIT_ACTIVITY_CODE;
-import static com.cashflow.constants.Constants.EXPENSE_EXTRA;
 import static com.cashflow.constants.Constants.ID_EXTRA;
-import static com.cashflow.constants.Constants.INCOME_EXTRA;
-import static com.cashflow.constants.Constants.INTERVAL_EXTRA;
-import static com.cashflow.constants.Constants.NOTE_EXTRA;
 import static com.cashflow.constants.Constants.STATEMENT_TYPE_EXTRA;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.PROJECTION;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.TO_VIEWS;
@@ -92,21 +86,9 @@ public class ListStatementActivity extends RoboActivity {
 
     private void addExtras(View view, Intent intent) {
         TextView id = (TextView) view.findViewById(R.id.row_id);
-        TextView amount = (TextView) view.findViewById(R.id.row_amount);
-        TextView note = (TextView) view.findViewById(R.id.row_note);
-        TextView date = (TextView) view.findViewById(R.id.row_date);
-        TextView interval = (TextView) view.findViewById(R.id.row_interval);
 
         intent.putExtra(ID_EXTRA, id.getText());
-        intent.putExtra(AMOUNT_EXTRA, amount.getText());
-        intent.putExtra(NOTE_EXTRA, note.getText());
-        intent.putExtra(DATE_EXTRA, date.getText());
-        intent.putExtra(INTERVAL_EXTRA, interval.getText());
-        intent.putExtra(STATEMENT_TYPE_EXTRA, statementType());
-    }
-
-    private String statementType() {
-        return type.isIncome() ? INCOME_EXTRA : EXPENSE_EXTRA;
+        intent.putExtra(STATEMENT_TYPE_EXTRA, type.toString());
     }
 
     private boolean isEditActivity(int requestCode, int resultCode) {

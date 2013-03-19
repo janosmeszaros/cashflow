@@ -11,7 +11,7 @@ import com.cashflow.database.statement.StatementType;
 public final class Statement {
     private final String id;
     private final String amount;
-    private final String categoryId;
+    private final Category category;
     private final String note;
     private final String date;
     private final StatementType type;
@@ -20,7 +20,7 @@ public final class Statement {
     private Statement(Builder builder) {
         this.id = builder.id;
         this.amount = builder.amount;
-        this.categoryId = builder.categoryId;
+        this.category = builder.category;
         this.date = builder.date;
         this.note = builder.note;
         this.recurringInterval = builder.recurringInterval;
@@ -51,8 +51,8 @@ public final class Statement {
         return recurringInterval;
     }
 
-    public String getCategoryId() {
-        return categoryId;
+    public Category getCategory() {
+        return category;
     }
 
     @Override
@@ -60,7 +60,7 @@ public final class Statement {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((amount == null) ? 0 : amount.hashCode());
-        result = prime * result + ((categoryId == null) ? 0 : categoryId.hashCode());
+        result = prime * result + ((category == null) ? 0 : category.hashCode());
         result = prime * result + ((date == null) ? 0 : date.hashCode());
         result = prime * result + ((id == null) ? 0 : id.hashCode());
         result = prime * result + ((note == null) ? 0 : note.hashCode());
@@ -88,11 +88,11 @@ public final class Statement {
         } else if (!amount.equals(other.amount)) {
             return false;
         }
-        if (categoryId == null) {
-            if (other.categoryId != null) {
+        if (category == null) {
+            if (other.category != null) {
                 return false;
             }
-        } else if (!categoryId.equals(other.categoryId)) {
+        } else if (!category.equals(other.category)) {
             return false;
         }
         if (date == null) {
@@ -140,7 +140,7 @@ public final class Statement {
         private String note = "";
         private StatementType type = StatementType.Income;
         private RecurringInterval recurringInterval = RecurringInterval.none;
-        private String categoryId = "";
+        private Category category;
 
         /**
          * Create builder for {@link Statement} with required values <code>amount</code> and <code>date</code>.
@@ -197,8 +197,8 @@ public final class Statement {
          * @param category 
          * @return {@link Builder}
          */
-        public Builder setCategory(String category) {
-            this.categoryId = category;
+        public Builder setCategory(Category category) {
+            this.category = category;
             return this;
         }
 

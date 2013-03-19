@@ -54,6 +54,7 @@ public class MainActivity extends RoboActivity {
     public void onWindowFocusChanged(boolean hasFocus) {
         LOG.debug("MainActivity's focus changed to: " + hasFocus);
         if (hasFocus) {
+            balance.countBalance();
             String value = String.valueOf(balance.getBalance());
             balanceText.setText(value);
         }

@@ -16,6 +16,9 @@ import org.slf4j.LoggerFactory;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import com.cashflow.constants.RecurringInterval;
+import com.cashflow.database.DatabaseContracts.AbstractCategory;
+import com.cashflow.domain.Category;
 import com.cashflow.domain.Statement;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -27,21 +30,22 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class StatementPersistenceService {
+    private static final int INCOME_TYPE = 1;
     private static final Logger LOG = LoggerFactory.getLogger(StatementPersistenceService.class);
     private static final int TRUE = 1;
     private static final int FALSE = 0;
     private final StatementDao dao;
 
     /**
-     * Default constructor which gets a context for DbHelper.
+     * Default constructor which gets a DAO.
      * @param dao
-     *            {@link StatementDao} to use to save data. Can't be null.
+     *            {@link StatementDao} to use to save data. Can't be <code>null</code>.
      * @throws IllegalArgumentException
-     *             when DAO is null.
+     *             when DAO is <code>null</code>.
      */
     @Inject
     public StatementPersistenceService(StatementDao dao) {
-        validateInput(dao);
+        validateObjectsNotNull(dao);
         this.dao = dao;
     }
 
@@ -51,7 +55,7 @@ public class StatementPersistenceService {
      * @return <code>true</code> if saving was successful and the amount wasn't zero, <code>false</code> otherwise.
      */
     public boolean saveStatement(Statement statement) {
-        validateInput(statement.getType(), statement.getAmount(), statement.getDate(), statement.getCategoryId());
+        validateInput(statement.getType(), statement.getAmount(), statement.getDate(), statement.getCategory().getId());
 
         boolean result = false;
         BigDecimal amount = parseAmount(statement.getAmount());
@@ -75,11 +79,7 @@ public class StatementPersistenceService {
 
         Cursor result = null;
         if (type.isIncome()) {
-            if (type.equals(StatementType.RecurringIncome)) {
-                result = dao.getRecurringIncomes();
-            } else {
-                result = dao.getIncomes();
-            }
+            result = dao.getIncomes();
         } else {
             result = dao.getExpenses();
         }
@@ -88,18 +88,29 @@ public class StatementPersistenceService {
     }
 
     /**
+     * Returns recurring incomes.
+     * @return cursor for the recurring incomes.
+     */
+    public Cursor getRecurringIncomes() {
+        return dao.getRecurringIncomes();
+
+    }
+
+    /**
      * Updates statement with the specified id.
      * @param statement statement which is hold the data.
-     * @return true if successful.
+     * @return <code>true</code> if successful, otherwise <code>false</code>.
      */
     public boolean updateStatement(Statement statement) {
         validateInput(statement.getType(), statement.getAmount(), statement.getDate(), statement.getId());
 
-        boolean result = true;
+        boolean result = false;
         BigDecimal amount = parseAmount(statement.getAmount());
 
         ContentValues value = createContentValue(amount, statement);
-        dao.update(value, statement.getId());
+        if (dao.update(value, statement.getId())) {
+            result = true;
+        }
 
         return result;
     }
@@ -126,7 +137,7 @@ public class StatementPersistenceService {
     private ContentValues createContentValue(BigDecimal amount, Statement statement) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_NAME_AMOUNT, amount.toString());
-        values.put(COLUMN_NAME_CATEGORY, statement.getCategoryId());
+        values.put(COLUMN_NAME_CATEGORY, statement.getCategory().getId());
         values.put(COLUMN_NAME_DATE, statement.getDate());
         values.put(COLUMN_NAME_IS_INCOME, statement.getType().isIncome() ? TRUE : FALSE);
         values.put(COLUMN_NAME_NOTE, statement.getNote());
@@ -138,9 +149,61 @@ public class StatementPersistenceService {
     }
 
     private void validateInput(Object obj, String... params) {
+        validateStringsNotEmpty(params);
+        validateObjectsNotNull(obj);
+    }
+
+    private void validateObjectsNotNull(Object... objects) {
+        for (Object object : objects) {
+            Validate.notNull(object);
+        }
+    }
+
+    private void validateStringsNotEmpty(String... params) {
         for (String string : params) {
             Validate.notEmpty(string);
         }
-        Validate.notNull(obj);
+    }
+
+    /**
+     * Get {@link Statement} by id.
+     * @param id of {@link Statement}
+     * @return {@link Statement} or <code>null</code> when the specified id doesn't exist
+     */
+    public Statement getStatementById(String id) {
+        validateStringsNotEmpty(id);
+        Cursor cursor = dao.getStatementById(id);
+        Statement statement = null;
+
+        if (cursor.moveToNext()) {
+            statement = buildStatement(id, cursor);
+        }
+
+        return statement;
+    }
+
+    private Statement buildStatement(String id, Cursor cursor) {
+        Statement statement;
+        int categoryIdIndex = cursor.getColumnIndexOrThrow("categoryId");
+        int categoryNameIndex = cursor.getColumnIndex(AbstractCategory.COLUMN_NAME_CATEGORY_NAME);
+        int dateIndex = cursor.getColumnIndex(COLUMN_NAME_DATE);
+        int amountIndex = cursor.getColumnIndex(COLUMN_NAME_AMOUNT);
+        int intervalIndex = cursor.getColumnIndex(COLUMN_NAME_INTERVAL);
+        int noteIndex = cursor.getColumnIndex(COLUMN_NAME_NOTE);
+        int typeIndex = cursor.getColumnIndex(COLUMN_NAME_IS_INCOME);
+
+        String amount = cursor.getString(amountIndex);
+        String date = cursor.getString(dateIndex);
+        String note = cursor.getString(noteIndex);
+        RecurringInterval interval = RecurringInterval.valueOf(cursor.getString(intervalIndex));
+        StatementType type = INCOME_TYPE == cursor.getInt(typeIndex) ? StatementType.Income : StatementType.Expense;
+
+        String categoryId = cursor.getString(categoryIdIndex);
+        String categoryName = cursor.getString(categoryNameIndex);
+
+        Category category = new Category(categoryId, categoryName);
+        statement = new Statement.Builder(amount, date).setId(id).setNote(note).setRecurringInterval(interval).setType(type).setCategory(category)
+                .build();
+        return statement;
     }
 }

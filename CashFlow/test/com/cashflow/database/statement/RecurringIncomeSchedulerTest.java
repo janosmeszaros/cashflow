@@ -173,7 +173,7 @@ public class RecurringIncomeSchedulerTest {
     }
 
     private void setUpMocks() {
-        when(service.getStatement(StatementType.RecurringIncome)).thenReturn(cursor);
+        when(service.getRecurringIncomes()).thenReturn(cursor);
 
         when(cursor.getColumnIndex(COLUMN_NAME_DATE)).thenReturn(DATE_NUMBER);
         when(cursor.getColumnIndex(COLUMN_NAME_AMOUNT)).thenReturn(AMOUNT_NUMBER);

@@ -4,9 +4,9 @@ import static android.view.View.VISIBLE;
 import static com.cashflow.constants.Constants.STATEMENT_TYPE_EXTRA;
 import static com.cashflow.database.DatabaseContracts.AbstractCategory.COLUMN_NAME_CATEGORY_NAME;
 
-import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,15 +14,14 @@ import org.slf4j.LoggerFactory;
 import roboguice.activity.RoboFragmentActivity;
 import roboguice.inject.InjectView;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 
@@ -34,6 +33,7 @@ import com.cashflow.database.balance.Balance;
 import com.cashflow.database.category.CategoryPersistenceService;
 import com.cashflow.database.statement.StatementPersistenceService;
 import com.cashflow.database.statement.StatementType;
+import com.cashflow.domain.Category;
 import com.cashflow.domain.Statement;
 import com.cashflow.domain.Statement.Builder;
 import com.google.inject.Inject;
@@ -93,8 +93,10 @@ public class AddStatementActivity extends RoboFragmentActivity {
     }
 
     private void setCategorySpinner() {
-        Cursor cursor = categoryService.getCategories();
-        SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, android.R.layout.simple_spinner_dropdown_item, cursor, fromColumns, toViews);
+        List<Category> list = categoryService.getCategories();
+
+        //        SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, android.R.layout.simple_spinner_dropdown_item, cursor, fromColumns, toViews);
+        ArrayAdapter<Category> adapter = new ArrayAdapter<Category>(this, android.R.layout.simple_spinner_dropdown_item, list);
         categorySpinner.setAdapter(adapter);
     }
 
@@ -115,23 +117,11 @@ public class AddStatementActivity extends RoboFragmentActivity {
         Statement statement = createStatement();
 
         if (statementService.saveStatement(statement)) {
-            refreshBalance();
             setResult(RESULT_OK);
         } else {
             setResult(RESULT_CANCELED);
         }
         finish();
-    }
-
-    private void refreshBalance() {
-        String amountStr = amountText.getText().toString();
-        BigDecimal amount = new BigDecimal(amountStr);
-
-        if (type.isIncome()) {
-            balance.add(amount);
-        } else {
-            balance.subtract(amount);
-        }
     }
 
     private void setStatementType() {
@@ -168,9 +158,10 @@ public class AddStatementActivity extends RoboFragmentActivity {
         String amountStr = amountText.getText().toString();
         String date = dateButton.getText().toString();
         String note = notesText.getText().toString();
+        Category category = (Category) categorySpinner.getSelectedItem();
 
         Builder builder = new Statement.Builder(amountStr, date);
-        builder.setNote(note).setType(type);
+        builder.setNote(note).setType(type).setCategory(category);
         if (type.isIncome()) {
             builder.setRecurringInterval((RecurringInterval) recurringSpinner.getSelectedItem());
         }

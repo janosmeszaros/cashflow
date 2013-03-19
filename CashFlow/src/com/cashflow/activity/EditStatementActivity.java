@@ -1,14 +1,10 @@
 package com.cashflow.activity;
 
 import static android.view.View.VISIBLE;
-import static com.cashflow.constants.Constants.AMOUNT_EXTRA;
-import static com.cashflow.constants.Constants.DATE_EXTRA;
 import static com.cashflow.constants.Constants.ID_EXTRA;
-import static com.cashflow.constants.Constants.INTERVAL_EXTRA;
-import static com.cashflow.constants.Constants.NOTE_EXTRA;
 import static com.cashflow.constants.Constants.STATEMENT_TYPE_EXTRA;
 
-import java.math.BigDecimal;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,8 +27,10 @@ import com.cashflow.activity.listeners.DateButtonOnClickListener;
 import com.cashflow.activity.listeners.RecurringCheckBoxOnClickListener;
 import com.cashflow.constants.RecurringInterval;
 import com.cashflow.database.balance.Balance;
+import com.cashflow.database.category.CategoryPersistenceService;
 import com.cashflow.database.statement.StatementPersistenceService;
 import com.cashflow.database.statement.StatementType;
+import com.cashflow.domain.Category;
 import com.cashflow.domain.Statement;
 import com.cashflow.domain.Statement.Builder;
 import com.google.inject.Inject;
@@ -43,11 +41,7 @@ import com.google.inject.Inject;
  * <p>
  * Extras' names used to get original values: <br/>
  *  <ul> 
- *      <li>Amount:  <code>AMOUNT_EXTRA</code></li>
  *      <li>ID:      <code>ID_EXTRA</code></li>
- *      <li>NOTE:    <code>NOTE_EXTRA</code></li>
- *      <li>DATE:    <code>DATE_EXTRA</code></li>
- *      <li>INTERVAL:<code>INTERVAL_EXTRA</code></li>
  *  </ul>
  * </p>
  * 
@@ -63,6 +57,8 @@ public class EditStatementActivity extends RoboFragmentActivity {
     private EditText notesText;
     @InjectView(R.id.recurring_spinner)
     private Spinner recurringSpinner;
+    @InjectView(R.id.categorySpinner)
+    private Spinner categorySpinner;
     @InjectView(R.id.recurring_income)
     private LinearLayout recurringArea;
     @InjectView(R.id.recurring_checkbox)
@@ -70,7 +66,9 @@ public class EditStatementActivity extends RoboFragmentActivity {
     @InjectView(R.id.recurring_checkbox_area)
     private LinearLayout recurringCheckBoxArea;
     @Inject
-    private StatementPersistenceService service;
+    private StatementPersistenceService statementService;
+    @Inject
+    private CategoryPersistenceService categoryService;
     @Inject
     private Balance balance;
     @Inject
@@ -80,11 +78,8 @@ public class EditStatementActivity extends RoboFragmentActivity {
     @Inject
     private SpinnerAdapter spinnerAdapter;
 
-    private String originalAmount;
-    private String originalNotes;
-    private String originalDate;
+    private Statement originalStatement;
     private String originalId;
-    private RecurringInterval originalInterval;
 
     private StatementType type;
 
@@ -95,7 +90,7 @@ public class EditStatementActivity extends RoboFragmentActivity {
         setContentView(R.layout.activity_add_statement);
 
         setListenerForDateButton();
-        getOriginalDatas();
+        getOriginalData();
         fillFieldsWithData();
         setStatementType();
         setTitle();
@@ -112,8 +107,7 @@ public class EditStatementActivity extends RoboFragmentActivity {
     public void submit(View view) {
         Statement statement = createStatement();
 
-        if (isValuesChanged() && service.updateStatement(statement)) {
-            refreshBalance();
+        if (isValuesChanged() && statementService.updateStatement(statement)) {
             setResult(RESULT_OK);
         } else {
             setResult(RESULT_CANCELED);
@@ -127,23 +121,14 @@ public class EditStatementActivity extends RoboFragmentActivity {
         String amountStr = amountText.getText().toString();
         String date = dateButton.getText().toString();
         String note = notesText.getText().toString();
+        Category category = (Category) categorySpinner.getSelectedItem();
         RecurringInterval interval = (RecurringInterval) recurringSpinner.getSelectedItem();
 
-        if (amountStr.equals(originalAmount) && date.equals(originalDate) && note.equals(originalNotes) && interval.equals(originalInterval)) {
+        if (amountStr.equals(originalStatement.getAmount()) && date.equals(originalStatement.getDate()) && note.equals(originalStatement.getNote())
+                && interval.equals(originalStatement.getRecurringInterval()) && category.equals(originalStatement.getCategory())) {
             result = false;
         }
         return result;
-    }
-
-    private void refreshBalance() {
-        String amountStr = amountText.getText().toString();
-        BigDecimal originalAmount = new BigDecimal(this.originalAmount);
-        BigDecimal currentAmount = new BigDecimal(amountStr);
-        BigDecimal sum = originalAmount.subtract(currentAmount);
-
-        LOG.debug("Original amount " + originalAmount.doubleValue() + " changed to " + currentAmount.doubleValue());
-
-        balance.subtract(sum);
     }
 
     private void setTitle() {
@@ -155,9 +140,16 @@ public class EditStatementActivity extends RoboFragmentActivity {
     }
 
     private void fillFieldsWithData() {
-        amountText.setText(originalAmount);
-        notesText.setText(originalNotes);
-        dateButton.setText(originalDate);
+        amountText.setText(originalStatement.getAmount());
+        notesText.setText(originalStatement.getNote());
+        dateButton.setText(originalStatement.getDate());
+
+        List<Category> list = categoryService.getCategories();
+        ArrayAdapter<Category> adapter = new ArrayAdapter<Category>(this, android.R.layout.simple_spinner_dropdown_item, list);
+        int position = adapter.getPosition(originalStatement.getCategory());
+
+        categorySpinner.setAdapter(adapter);
+        categorySpinner.setSelection(position);
     }
 
     private void setStatementType() {
@@ -165,11 +157,11 @@ public class EditStatementActivity extends RoboFragmentActivity {
         type = StatementType.valueOf(intent.getStringExtra(STATEMENT_TYPE_EXTRA));
 
         if (type.isIncome()) {
-            setUpSpinner();
+            setUpRecurringSpinner();
         }
     }
 
-    private void setUpSpinner() {
+    private void setUpRecurringSpinner() {
         recurringCheckBox.setOnClickListener(checkBoxListener);
         recurringArea.setVisibility(VISIBLE);
         bindValuesToSpinner();
@@ -178,10 +170,11 @@ public class EditStatementActivity extends RoboFragmentActivity {
 
     @SuppressWarnings("unchecked")
     private void setSelectedItem() {
-        if (!originalInterval.equals(RecurringInterval.none)) {
+        RecurringInterval interval = originalStatement.getRecurringInterval();
+        if (!RecurringInterval.none.equals(interval)) {
             recurringCheckBox.setChecked(true);
             recurringCheckBoxArea.setVisibility(VISIBLE);
-            recurringSpinner.setSelection(((ArrayAdapter<RecurringInterval>) spinnerAdapter).getPosition(originalInterval));
+            recurringSpinner.setSelection(((ArrayAdapter<RecurringInterval>) spinnerAdapter).getPosition(interval));
         }
     }
 
@@ -210,12 +203,10 @@ public class EditStatementActivity extends RoboFragmentActivity {
         dateButton.setOnClickListener(listener);
     }
 
-    private void getOriginalDatas() {
+    private void getOriginalData() {
         Intent intent = getIntent();
-        originalAmount = intent.getStringExtra(AMOUNT_EXTRA);
-        originalNotes = intent.getStringExtra(NOTE_EXTRA);
-        originalDate = intent.getStringExtra(DATE_EXTRA);
         originalId = intent.getStringExtra(ID_EXTRA);
-        originalInterval = RecurringInterval.valueOf(intent.getStringExtra(INTERVAL_EXTRA));
+
+        originalStatement = statementService.getStatementById(originalId);
     }
 }

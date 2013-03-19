@@ -71,7 +71,7 @@ public class RecurringIncomeScheduler {
     }
 
     private Cursor getCursor() {
-        Cursor cursor = statementPersistenceService.getStatement(StatementType.RecurringIncome);
+        Cursor cursor = statementPersistenceService.getRecurringIncomes();
         cursor.moveToFirst();
         return cursor;
     }
@@ -84,7 +84,7 @@ public class RecurringIncomeScheduler {
         if (!columnValues.get(COLUMN_NAME_DATE).equals(newDate)) {
 
             Statement statement = new Statement.Builder(columnValues.get(COLUMN_NAME_AMOUNT), newDate).setId(columnValues.get(_ID))
-                    .setNote(columnValues.get(COLUMN_NAME_NOTE)).setRecurringInterval(interval).setType(StatementType.RecurringIncome).build();
+                    .setNote(columnValues.get(COLUMN_NAME_NOTE)).setRecurringInterval(interval).setType(StatementType.Income).build();
 
             LOG.debug("Update recurring statement's date to " + newDate);
             statementPersistenceService.updateStatement(statement);

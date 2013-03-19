@@ -5,14 +5,14 @@ package com.cashflow.database.statement;
  * @author Janos_Gyula_Meszaros
  */
 public enum StatementType {
-    Expense, Income, RecurringIncome;
+    Expense, Income;
 
     /**
      * Decides that this {@link StatementType} is income.
      * @return true if in this {@link StatementType} is <code>Income</code> or <code>RecurringIncome</code>. False otherwise.
      */
     public boolean isIncome() {
-        return equals(Income) || equals(RecurringIncome);
+        return equals(Income);
     }
 
 }

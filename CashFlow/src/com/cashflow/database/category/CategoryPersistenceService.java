@@ -1,6 +1,10 @@
 package com.cashflow.database.category;
 
+import static android.provider.BaseColumns._ID;
 import static com.cashflow.database.DatabaseContracts.AbstractCategory.COLUMN_NAME_CATEGORY_NAME;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang.Validate;
 import org.slf4j.Logger;
@@ -9,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import com.cashflow.domain.Category;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -99,9 +104,23 @@ public class CategoryPersistenceService {
 
     /**
      * Get all categories.
-     * @return a cursor which contains the values.
+     * @return List of categories.
      */
-    public Cursor getCategories() {
-        return dao.getCategories();
+    public List<Category> getCategories() {
+        List<Category> list = new ArrayList<Category>();
+        Cursor cursor = dao.getCategories();
+
+        while (cursor.moveToNext()) {
+            addNextCategoryToList(list, cursor);
+        }
+
+        return list;
+    }
+
+    private void addNextCategoryToList(List<Category> list, Cursor cursor) {
+        String id = cursor.getString(cursor.getColumnIndex(_ID));
+        String name = cursor.getString(cursor.getColumnIndex(COLUMN_NAME_CATEGORY_NAME));
+
+        list.add(new Category(id, name));
     }
 }
