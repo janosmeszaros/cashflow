@@ -1,19 +1,29 @@
 package com.cashflow.activity;
 
+import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.when;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import android.content.Intent;
+import android.database.MatrixCursor;
 import android.view.View;
 
 import com.cashflow.R;
+import com.cashflow.activity.testutil.ActivityModule;
+import com.cashflow.activity.testutil.ListStatementActivityProvider;
 import com.cashflow.activity.testutil.TestGuiceModule;
+import com.cashflow.database.balance.Balance;
+import com.cashflow.database.statement.RecurringIncomeScheduler;
+import com.cashflow.database.statement.StatementPersistenceService;
+import com.cashflow.database.statement.StatementType;
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 import com.xtremelabs.robolectric.shadows.ShadowActivity;
@@ -26,12 +36,32 @@ import com.xtremelabs.robolectric.shadows.ShadowIntent;
 @RunWith(RobolectricTestRunner.class)
 public class MainActivityTest {
 
+    @Mock
+    private StatementPersistenceService service;
+    @Mock
+    private MatrixCursor matrixCursorMock;
+    @Mock
+    private RecurringIncomeScheduler scheduler;
+
+    private Balance balance;
+
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        TestGuiceModule module = new TestGuiceModule();
-        // module.addBinding(ConvertFeetToMeterListener.class, listener);
-        TestGuiceModule.setUp(this, module);
+        ActivityModule module = new ActivityModule(new ListStatementActivityProvider());
+
+        when(service.getStatement(StatementType.Expense)).thenReturn(matrixCursorMock);
+        when(service.getStatement(StatementType.Income)).thenReturn(matrixCursorMock);
+        when(service.getStatement(StatementType.RecurringIncome)).thenReturn(matrixCursorMock);
+
+        when(matrixCursorMock.getColumnIndex(COLUMN_NAME_AMOUNT)).thenReturn(0);
+        when(matrixCursorMock.isAfterLast()).thenReturn(false, true, false, true);
+        when(matrixCursorMock.getLong(0)).thenReturn(1L, 2L);
+
+        module.addBinding(StatementPersistenceService.class, service);
+        balance = Balance.getInstance(service);
+        module.addBinding(Balance.class, balance);
+        ActivityModule.setUp(this, module);
     }
 
     @After

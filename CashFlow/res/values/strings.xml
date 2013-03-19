@@ -29,7 +29,8 @@
     <string name="button_create_categories">Create Categories</string>
     <string name="hint_category_name">Category name</string>
     <string name="empty_category">You should write in something.</string>
-    <string name="recurring_label">Is recurring</string>
+
+    <string name="label_category">Category:</string>    <string name="recurring_label">Is recurring</string>
     <string name="recurring_hint">If this income is recurring than check the checkbox.</string>
     <string name="recurring_start">Start date:</string>
     <string name="recurring_interval">Repeat income:</string>

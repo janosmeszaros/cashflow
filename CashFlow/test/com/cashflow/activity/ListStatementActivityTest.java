@@ -2,15 +2,21 @@ package com.cashflow.activity;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
+import static android.provider.BaseColumns._ID;
 import static com.cashflow.constants.Constants.AMOUNT_EXTRA;
 import static com.cashflow.constants.Constants.DATE_EXTRA;
 import static com.cashflow.constants.Constants.EDIT_ACTIVITY_CODE;
 import static com.cashflow.constants.Constants.EXPENSE_EXTRA;
 import static com.cashflow.constants.Constants.ID_EXTRA;
+import static com.cashflow.constants.Constants.INCOME_EXTRA;
 import static com.cashflow.constants.Constants.INTERVAL_EXTRA;
 import static com.cashflow.constants.Constants.NOTE_EXTRA;
 import static com.cashflow.constants.Constants.STATEMENT_TYPE_EXTRA;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.PROJECTION;
+import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
+import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_DATE;
+import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_INTERVAL;
+import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_NOTE;
+import static com.cashflow.database.DatabaseContracts.AbstractStatement.TABLE_NAME;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.times;
@@ -36,6 +42,7 @@ import android.widget.TextView;
 import com.cashflow.R;
 import com.cashflow.activity.testutil.ActivityModule;
 import com.cashflow.activity.testutil.ListStatementActivityProvider;
+import com.cashflow.database.DatabaseContracts.AbstractCategory;
 import com.cashflow.database.statement.StatementPersistenceService;
 import com.cashflow.database.statement.StatementType;
 import com.xtremelabs.robolectric.Robolectric;
@@ -49,15 +56,20 @@ import com.xtremelabs.robolectric.shadows.ShadowActivity.IntentForResult;
  * @author Janos_Gyula_Meszaros
  */
 @RunWith(RobolectricTestRunner.class)
-public class ListExpensesActivityTest {
-    private static final Logger LOG = LoggerFactory.getLogger(ListExpensesActivityTest.class);
+public class ListStatementActivityTest {
+    public static final String[] PROJECTION = new String[]{TABLE_NAME + "." + _ID, _ID, COLUMN_NAME_AMOUNT,
+        AbstractCategory.COLUMN_NAME_CATEGORY_NAME, COLUMN_NAME_DATE, COLUMN_NAME_NOTE, COLUMN_NAME_INTERVAL};
+    public static final int[] TO_VIEWS = {R.id.row_id, R.id.row_amount, R.id.row_category, R.id.row_date, R.id.row_note, R.id.row_interval};
+    private static final Logger LOG = LoggerFactory.getLogger(ListStatementActivityTest.class);
     private static final int BAD_REQUEST_CODE = 1;
     private static final String ID = "2";
     private static final String NOTES = "notes2";
+    private static final String CATEGORY = "category2";
     private static final String DATE = "2013";
     private static final String AMOUNT = "12345678";
     private static final String INTERVAL = "biweekly";
-    private Object[] values = new Object[]{1, 1234L, "2012", "note", "none"};
+
+    private final Object[] values = new Object[]{1, 1, 1234L, "category", "2012", "note", "none"};
     private ListStatementActivity underTest;
     @Mock
     private StatementPersistenceService statementPersistentService;
@@ -74,7 +86,15 @@ public class ListExpensesActivityTest {
         ActivityModule.setUp(this, module);
 
         underTest = new ListStatementActivity();
+    }
+
+    private void setExpenseIntent() {
         underTest.setIntent(new Intent().putExtra(STATEMENT_TYPE_EXTRA, EXPENSE_EXTRA));
+        underTest.onCreate(null);
+    }
+
+    private void setIncomeIntent() {
+        underTest.setIntent(new Intent().putExtra(STATEMENT_TYPE_EXTRA, INCOME_EXTRA));
         underTest.onCreate(null);
     }
 
@@ -85,13 +105,15 @@ public class ListExpensesActivityTest {
 
     @Test
     public void testWhenListStatementIsExpenseThenTitleShouldBeListExpenseTitle() {
+        setExpenseIntent();
         assertThat((String) underTest.getTitle(), equalTo(underTest.getString(R.string.title_activity_list_expenses)));
     }
 
     @Test
     public void testOnClickWhenStatementTypeIsExpenseThenCreateIntentAndStartsItWithExtrasSetted() {
+        setExpenseIntent();
         ShadowActivity shadowActivity = Robolectric.shadowOf(underTest);
-        setViewsValues(AMOUNT, NOTES, DATE, ID, INTERVAL);
+        setViewsValues(AMOUNT, CATEGORY, NOTES, DATE, ID, INTERVAL);
 
         underTest.onClick(underTest.findViewById(R.id.list_statement));
 
@@ -114,6 +136,7 @@ public class ListExpensesActivityTest {
 
     @Test
     public void testOnActivityResultWhenRequestCodeAndResultCodeIsOkThenItShouldRefreshList() {
+        setExpenseIntent();
         underTest.onActivityResult(EDIT_ACTIVITY_CODE, RESULT_OK, null);
 
         // Needed 3 times because it gets invoked on test start when app 
@@ -123,6 +146,7 @@ public class ListExpensesActivityTest {
 
     @Test
     public void testOnActivityResultWhenRequestCodeIsNotOkThenItShouldntRefreshList() {
+        setExpenseIntent();
         underTest.onActivityResult(BAD_REQUEST_CODE, RESULT_OK, null);
 
         // Needed 2 times because it gets invoked on test start when app 
@@ -133,6 +157,7 @@ public class ListExpensesActivityTest {
 
     @Test
     public void testOnActivityResultWhenResultCodeIsNotOkThenItShouldntRefreshList() {
+        setExpenseIntent();
         underTest.onActivityResult(EDIT_ACTIVITY_CODE, RESULT_CANCELED, null);
 
         // Needed 2 times because it gets invoked on test start when app 
@@ -143,6 +168,7 @@ public class ListExpensesActivityTest {
 
     @Test
     public void shouldContainList() {
+        setExpenseIntent();
         ListView listView = (ListView) underTest.findViewById(R.id.list_statement);
         SimpleCursorAdapter adapter = (SimpleCursorAdapter) listView.getAdapter();
         Cursor cursor = adapter.getCursor();
@@ -151,8 +177,8 @@ public class ListExpensesActivityTest {
         verify(statementPersistentService, times(2)).getStatement(StatementType.Expense);
         assertThat(cursor.getColumnCount(), equalTo(PROJECTION.length));
         assertThat(cursor.getInt(0), equalTo(values[0]));
-        assertThat(cursor.getLong(1), equalTo(values[1]));
-        assertThat(cursor.getString(2), equalTo(values[2]));
+        assertThat(cursor.getInt(1), equalTo(values[1]));
+        assertThat(cursor.getLong(2), equalTo(values[2]));
         assertThat(cursor.getString(3), equalTo(values[3]));
         assertThat(cursor.getString(4), equalTo(values[4]));
     }
@@ -168,16 +194,31 @@ public class ListExpensesActivityTest {
         when(statementPersistentService.getStatement(StatementType.Income)).thenReturn(matrixCursor);
     }
 
-    private void setViewsValues(String amountValue, String notesValue, String dateValue, String idValue, String intervalValue) {
+    private void setViewsValues(String amountValue, String categoryName, String notesValue, String dateValue, String idValue, String intervalValue) {
         TextView notes = (TextView) underTest.findViewById(R.id.row_note);
         notes.setText(notesValue);
         TextView id = (TextView) underTest.findViewById(R.id.row_id);
         id.setText(idValue);
         TextView amount = (TextView) underTest.findViewById(R.id.row_amount);
         amount.setText(amountValue);
+        TextView category = (TextView) underTest.findViewById(R.id.row_category);
+        category.setText(categoryName);
         TextView button = (TextView) underTest.findViewById(R.id.row_date);
         button.setText(dateValue);
         TextView interval = (TextView) underTest.findViewById(R.id.row_interval);
         interval.setText(intervalValue);
     }
+
+    //*********** Income test ************************************//
+
+    @Test
+    public void testWhenListStatementIsIncomeThenTitleShouldBeListIncomeTitle() {
+        setIncomeIntent();
+        ListStatementActivity underTest = new ListStatementActivity();
+        underTest.setIntent(new Intent().putExtra(STATEMENT_TYPE_EXTRA, INCOME_EXTRA));
+        underTest.onCreate(null);
+
+        assertThat((String) underTest.getTitle(), equalTo(underTest.getString(R.string.title_activity_list_incomes)));
+    }
+
 }

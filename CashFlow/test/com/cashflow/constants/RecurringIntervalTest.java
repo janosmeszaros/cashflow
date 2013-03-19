@@ -42,7 +42,7 @@ public class RecurringIntervalTest {
 
     @Test
     public void testNumOfPassedPeriodsWhenIntervalIsDailyAndDateIsTwoDayBeforeThenShouldReturnTwo() {
-        DateTime date = DateTime.now().minusDays(2);
+        DateTime date = DateTime.now().minusDays(3);
         underTest = RecurringInterval.daily;
 
         int periods = underTest.numOfPassedPeriods(date);

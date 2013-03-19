@@ -28,11 +28,11 @@ import com.google.inject.Inject;
  * @author Janos_Gyula_Meszaros
  *
  */
-public final class RecurringIncomeScheduler {
+public class RecurringIncomeScheduler {
     private static final Logger LOG = LoggerFactory.getLogger(RecurringIncomeScheduler.class);
     private final StatementPersistenceService statementPersistenceService;
     private final DateTimeFormatter formatter = DateTimeFormat.mediumDate().withLocale(Locale.getDefault());
-    private Map<String, Integer> columnNumbers = new HashMap<String, Integer>();
+    private final Map<String, Integer> columnNumbers = new HashMap<String, Integer>();
 
     /**
      * Constructor.

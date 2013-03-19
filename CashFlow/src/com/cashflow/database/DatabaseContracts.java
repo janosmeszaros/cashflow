@@ -18,42 +18,12 @@ public abstract class DatabaseContracts {
     private static final String REAL_TYPE = " REAL";
     private static final String COMMA_SEP = ",";
     private static final String CREATE_TABLE = "CREATE TABLE ";
-    private static final String OPENNING_BRACKET = " (";
-    private static final String CLOSSING_BRACKET = " )";
+    private static final String OPEN_PARENTHESIS = " (";
+    private static final String CLOSE_PARENTHESIS = " )";
     private static final String DROP_TABLE = "DROP TABLE IF EXISTS ";
     private static final String EQUALS_INCOME = " == 1";
     private static final String EQUALS_EXPENSE = " == 0";
     private static final String AND = " AND ";
-
-    /**
-     * Statement table.
-     * @author Kornel_Refi
-     */
-    public abstract static class AbstractStatement implements BaseColumns {
-        public static final String COLUMN_NAME_NULLABLE = null;
-        public static final String TABLE_NAME = "statement";
-        public static final String COLUMN_NAME_AMOUNT = "amount";
-        public static final String COLUMN_NAME_IS_INCOME = "is_income";
-        public static final String COLUMN_NAME_DATE = "date";
-        public static final String COLUMN_NAME_NOTE = "note";
-        public static final String COLUMN_NAME_INTERVAL = "interval";
-        public static final String[] PROJECTION = new String[]{_ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE, COLUMN_NAME_NOTE, COLUMN_NAME_INTERVAL};
-        public static final int[] TO_VIEWS = {R.id.row_id, R.id.row_amount, R.id.row_date, R.id.row_note, R.id.row_interval};
-
-        public static final String EXPENSE_SELECTION = OPENNING_BRACKET + COLUMN_NAME_IS_INCOME + EQUALS_EXPENSE + CLOSSING_BRACKET;
-        public static final String INCOME_SELECTION = OPENNING_BRACKET + COLUMN_NAME_IS_INCOME + EQUALS_INCOME + CLOSSING_BRACKET;
-        public static final String RECURRING_INCOME_SELECTION = OPENNING_BRACKET + COLUMN_NAME_IS_INCOME + EQUALS_INCOME + AND + COLUMN_NAME_INTERVAL
-                + " != 'none'" + CLOSSING_BRACKET;
-
-        static final String SQL_CREATE_ENTRIES = CREATE_TABLE + TABLE_NAME + OPENNING_BRACKET + _ID + " INTEGER PRIMARY KEY" + COMMA_SEP
-                + COLUMN_NAME_AMOUNT + REAL_TYPE + COMMA_SEP + COLUMN_NAME_IS_INCOME + INTEGER_TYPE + COMMA_SEP + COLUMN_NAME_DATE + TEXT_TYPE
-                + COMMA_SEP + COLUMN_NAME_NOTE + TEXT_TYPE + COMMA_SEP + COLUMN_NAME_INTERVAL + TEXT_TYPE + CLOSSING_BRACKET;
-
-        static final String SQL_DELETE_ENTRIES = DROP_TABLE + TABLE_NAME;
-
-        private AbstractStatement() {
-        }
-    }
 
     /**
      * Category table.
@@ -65,12 +35,49 @@ public abstract class DatabaseContracts {
         public static final String COLUMN_NAME_CATEGORY_NAME = "name";
         public static final String[] PROJECTION = new String[]{_ID, COLUMN_NAME_CATEGORY_NAME};
 
-        static final String SQL_CREATE_ENTRIES = CREATE_TABLE + TABLE_NAME + OPENNING_BRACKET + _ID + " INTEGER PRIMARY KEY,"
-                + COLUMN_NAME_CATEGORY_NAME + REAL_TYPE + CLOSSING_BRACKET;
+        static final String SQL_CREATE_ENTRIES = "CREATE TABLE " + DatabaseContracts.AbstractCategory.TABLE_NAME + OPEN_PARENTHESIS
+                + DatabaseContracts.AbstractCategory._ID + " INTEGER PRIMARY KEY" + COMMA_SEP
+                + DatabaseContracts.AbstractCategory.COLUMN_NAME_CATEGORY_NAME + REAL_TYPE + CLOSE_PARENTHESIS;
 
         static final String SQL_DELETE_ENTRIES = DROP_TABLE + TABLE_NAME;
 
         private AbstractCategory() {
+        }
+    }
+
+    /**
+      * Statement table.
+      * @author Kornel_Refi
+      */
+    public abstract static class AbstractStatement implements BaseColumns {
+        public static final String COLUMN_NAME_NULLABLE = null;
+        public static final String TABLE_NAME = "statement";
+        public static final String COLUMN_NAME_AMOUNT = "amount";
+        public static final String COLUMN_NAME_CATEGORY = "category_id";
+        public static final String COLUMN_NAME_IS_INCOME = "is_income";
+        public static final String COLUMN_NAME_DATE = "date";
+        public static final String COLUMN_NAME_NOTE = "note";
+        public static final String COLUMN_NAME_INTERVAL = "interval";
+        public static final String[] PROJECTION = new String[]{TABLE_NAME + "." + _ID, COLUMN_NAME_AMOUNT,
+            AbstractCategory.COLUMN_NAME_CATEGORY_NAME, COLUMN_NAME_DATE, COLUMN_NAME_NOTE, COLUMN_NAME_INTERVAL};
+        public static final int[] TO_VIEWS = {R.id.row_id, R.id.row_amount, R.id.row_category, R.id.row_date, R.id.row_note, R.id.row_interval};
+
+        public static final String STATEMENT_INNER_JOINED_CATEGORY = TABLE_NAME + " LEFT JOIN " + AbstractCategory.TABLE_NAME + " ON " + TABLE_NAME
+                + "." + COLUMN_NAME_CATEGORY + "=" + AbstractCategory.TABLE_NAME + "." + AbstractCategory._ID;
+        public static final String EXPENSE_SELECTION = OPEN_PARENTHESIS + COLUMN_NAME_IS_INCOME + EQUALS_EXPENSE + CLOSE_PARENTHESIS;
+        public static final String INCOME_SELECTION = OPEN_PARENTHESIS + COLUMN_NAME_IS_INCOME + EQUALS_INCOME + CLOSE_PARENTHESIS;
+        public static final String RECURRING_INCOME_SELECTION = OPEN_PARENTHESIS + COLUMN_NAME_IS_INCOME + EQUALS_INCOME + AND + COLUMN_NAME_INTERVAL
+                + " != 'none'" + CLOSE_PARENTHESIS;
+
+        static final String SQL_CREATE_ENTRIES = CREATE_TABLE + TABLE_NAME + OPEN_PARENTHESIS + _ID + " INTEGER PRIMARY KEY" + COMMA_SEP
+                + COLUMN_NAME_CATEGORY + INTEGER_TYPE + COMMA_SEP + COLUMN_NAME_AMOUNT + REAL_TYPE + COMMA_SEP + COLUMN_NAME_IS_INCOME + INTEGER_TYPE
+                + COMMA_SEP + COLUMN_NAME_DATE + TEXT_TYPE + COMMA_SEP + COLUMN_NAME_INTERVAL + TEXT_TYPE + COMMA_SEP + COLUMN_NAME_NOTE + TEXT_TYPE
+                + COMMA_SEP + "FOREIGN KEY" + OPEN_PARENTHESIS + COLUMN_NAME_CATEGORY + CLOSE_PARENTHESIS + "REFERENCES "
+                + AbstractCategory.TABLE_NAME + OPEN_PARENTHESIS + AbstractCategory._ID + CLOSE_PARENTHESIS + CLOSE_PARENTHESIS;
+
+        static final String SQL_DELETE_ENTRIES = DROP_TABLE + TABLE_NAME;
+
+        private AbstractStatement() {
         }
     }
 

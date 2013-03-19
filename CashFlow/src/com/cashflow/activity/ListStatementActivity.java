@@ -42,7 +42,8 @@ public class ListStatementActivity extends RoboActivity {
     private StatementType type;
     private SimpleCursorAdapter mAdapter;
     @Inject
-    private StatementPersistenceService service;
+    private StatementPersistenceService statementService;
+
     @InjectView(R.id.list_statement)
     private ListView list;
 
@@ -116,7 +117,7 @@ public class ListStatementActivity extends RoboActivity {
     private void getDataFromDatabase() {
         LOG.debug("Starting query for type: " + type);
 
-        Cursor cursor = service.getStatement(type);
+        Cursor cursor = statementService.getStatement(type);
 
         mAdapter = new SimpleCursorAdapter(this, R.layout.list_statements_row, cursor, PROJECTION, TO_VIEWS);
         list.setAdapter(mAdapter);

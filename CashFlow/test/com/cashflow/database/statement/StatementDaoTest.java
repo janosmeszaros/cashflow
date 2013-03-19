@@ -5,6 +5,7 @@ import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_N
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.EXPENSE_SELECTION;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.INCOME_SELECTION;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.PROJECTION;
+import static com.cashflow.database.DatabaseContracts.AbstractStatement.STATEMENT_INNER_JOINED_CATEGORY;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.TABLE_NAME;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -75,7 +76,7 @@ public class StatementDaoTest {
         underTest.getExpenses();
 
         verify(provider).getReadableDb();
-        verify(db).query(TABLE_NAME, PROJECTION, EXPENSE_SELECTION, null, null, null, null);
+        verify(db).query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION, EXPENSE_SELECTION, null, null, null, null);
     }
 
     @Test
@@ -85,6 +86,6 @@ public class StatementDaoTest {
         underTest.getIncomes();
 
         verify(provider).getReadableDb();
-        verify(db).query(TABLE_NAME, PROJECTION, INCOME_SELECTION, null, null, null, null);
+        verify(db).query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION, INCOME_SELECTION, null, null, null, null);
     }
 }

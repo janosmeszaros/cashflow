@@ -57,11 +57,11 @@ public class AddIncomeActivityTest {
     private static final String DATE = "2013";
     private static final String AMOUNT = "1234";
     private static final String INVALID_AMOUNT = "12";
-    private String[] fromColumns = {AbstractStatement._ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE, COLUMN_NAME_NOTE};
-    private Object[] values = new Object[]{1, 1234L, "2012", "note"};
+    private final String[] fromColumns = {AbstractStatement._ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE, COLUMN_NAME_NOTE};
+    private final Object[] values = new Object[]{1, 1234L, "2012", "note"};
     private Balance balance;
     private AddStatementActivity underTest;
-    private ArrayAdapter<RecurringInterval> arrayAdapter = new ArrayAdapter<RecurringInterval>(underTest,
+    private final ArrayAdapter<RecurringInterval> arrayAdapter = new ArrayAdapter<RecurringInterval>(underTest,
             android.R.layout.simple_spinner_dropdown_item, RecurringInterval.values());
     @Mock
     private StatementPersistenceService statementPersistentService;

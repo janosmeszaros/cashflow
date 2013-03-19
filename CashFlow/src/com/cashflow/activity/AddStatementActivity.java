@@ -2,6 +2,7 @@ package com.cashflow.activity;
 
 import static android.view.View.VISIBLE;
 import static com.cashflow.constants.Constants.STATEMENT_TYPE_EXTRA;
+import static com.cashflow.database.DatabaseContracts.AbstractCategory.COLUMN_NAME_CATEGORY_NAME;
 
 import java.math.BigDecimal;
 import java.text.DateFormat;
@@ -13,12 +14,15 @@ import org.slf4j.LoggerFactory;
 import roboguice.activity.RoboFragmentActivity;
 import roboguice.inject.InjectView;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 
@@ -27,6 +31,7 @@ import com.cashflow.activity.listeners.DateButtonOnClickListener;
 import com.cashflow.activity.listeners.RecurringCheckBoxOnClickListener;
 import com.cashflow.constants.RecurringInterval;
 import com.cashflow.database.balance.Balance;
+import com.cashflow.database.category.CategoryPersistenceService;
 import com.cashflow.database.statement.StatementPersistenceService;
 import com.cashflow.database.statement.StatementType;
 import com.cashflow.domain.Statement;
@@ -40,8 +45,14 @@ import com.google.inject.Inject;
 public class AddStatementActivity extends RoboFragmentActivity {
 
     private static final Logger LOG = LoggerFactory.getLogger(AddStatementActivity.class);
+
+    private final String[] fromColumns = {COLUMN_NAME_CATEGORY_NAME};
+    private final int[] toViews = {android.R.id.text1};
+
     @Inject
-    private StatementPersistenceService service;
+    private StatementPersistenceService statementService;
+    @Inject
+    private CategoryPersistenceService categoryService;
 
     @InjectView(R.id.amountText)
     private EditText amountText;
@@ -49,6 +60,8 @@ public class AddStatementActivity extends RoboFragmentActivity {
     private Button dateButton;
     @InjectView(R.id.notesText)
     private EditText notesText;
+    @InjectView(R.id.categorySpinner)
+    private Spinner categorySpinner;
     @InjectView(R.id.recurring_income)
     private LinearLayout recurringArea;
     @InjectView(R.id.recurring_spinner)
@@ -74,8 +87,22 @@ public class AddStatementActivity extends RoboFragmentActivity {
         setUpDateButton();
         setStatementType();
         setTitle();
+        setCategorySpinner();
 
         LOG.debug("AddStatementActivity has created with type: " + type);
+    }
+
+    private void setCategorySpinner() {
+        Cursor cursor = categoryService.getCategories();
+        SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, android.R.layout.simple_spinner_dropdown_item, cursor, fromColumns, toViews);
+        categorySpinner.setAdapter(adapter);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.activity_add_expense, menu);
+        return true;
     }
 
     /**
@@ -87,7 +114,7 @@ public class AddStatementActivity extends RoboFragmentActivity {
     public void submit(View view) {
         Statement statement = createStatement();
 
-        if (service.saveStatement(statement)) {
+        if (statementService.saveStatement(statement)) {
             refreshBalance();
             setResult(RESULT_OK);
         } else {
@@ -105,7 +132,6 @@ public class AddStatementActivity extends RoboFragmentActivity {
         } else {
             balance.subtract(amount);
         }
-
     }
 
     private void setStatementType() {
