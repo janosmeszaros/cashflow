@@ -52,7 +52,6 @@ public class MainActivityTest {
 
         when(service.getStatement(StatementType.Expense)).thenReturn(matrixCursorMock);
         when(service.getStatement(StatementType.Income)).thenReturn(matrixCursorMock);
-        when(service.getStatement(StatementType.RecurringIncome)).thenReturn(matrixCursorMock);
 
         when(matrixCursorMock.getColumnIndex(COLUMN_NAME_AMOUNT)).thenReturn(0);
         when(matrixCursorMock.isAfterLast()).thenReturn(false, true, false, true);

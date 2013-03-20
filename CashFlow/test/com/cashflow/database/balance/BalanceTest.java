@@ -5,8 +5,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.when;
 
-import java.math.BigDecimal;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,15 +49,15 @@ public class BalanceTest {
         assertThat(underTest.getBalance(), equalTo(1D));
     }
 
-    @Test
-    public void testSubtractResultShouldBeZero() {
-        underTest.subtract(BigDecimal.ONE);
-        assertThat(underTest.getBalance(), equalTo(0D));
-    }
-
-    @Test
-    public void testAddResultShouldBeTwo() {
-        underTest.add(BigDecimal.ONE);
-        assertThat(underTest.getBalance(), equalTo(2D));
-    }
+    //    @Test
+    //    public void testSubtractResultShouldBeZero() {
+    //        underTest.subtract(BigDecimal.ONE);
+    //        assertThat(underTest.getBalance(), equalTo(0D));
+    //    }
+    //
+    //    @Test
+    //    public void testAddResultShouldBeTwo() {
+    //        underTest.add(BigDecimal.ONE);
+    //        assertThat(underTest.getBalance(), equalTo(2D));
+    //    }
 }

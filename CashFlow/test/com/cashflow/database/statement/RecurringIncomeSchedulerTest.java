@@ -128,7 +128,7 @@ public class RecurringIncomeSchedulerTest {
 
         verify(service).updateStatement(
                 new Statement.Builder(AMOUNT, formatter.print(DateTime.now())).setId(ID).setNote(NOTE)
-                        .setRecurringInterval(RecurringInterval.biweekly).setType(StatementType.RecurringIncome).build());
+                        .setRecurringInterval(RecurringInterval.biweekly).setType(StatementType.Income).build());
 
     }
 

@@ -55,7 +55,7 @@ public class StatementPersistenceService {
      * @return <code>true</code> if saving was successful and the amount wasn't zero, <code>false</code> otherwise.
      */
     public boolean saveStatement(Statement statement) {
-        validateInput(statement.getType(), statement.getAmount(), statement.getDate(), statement.getCategory().getId());
+        validateStatement(statement);
 
         boolean result = false;
         BigDecimal amount = parseAmount(statement.getAmount());
@@ -68,6 +68,11 @@ public class StatementPersistenceService {
         return result;
     }
 
+    private void validateStatement(Statement statement) {
+        validateObjectsNotNull(statement.getType(), statement.getCategory());
+        validateStringsNotEmpty(statement.getAmount(), statement.getDate(), statement.getId());
+    }
+
     /**
      * Get all statement from a statement type.
      * @param type
@@ -75,7 +80,7 @@ public class StatementPersistenceService {
      * @return a {@link Cursor} which contains the values.
      */
     public Cursor getStatement(StatementType type) {
-        validateInput(type);
+        validateObjectsNotNull(type);
 
         Cursor result = null;
         if (type.isIncome()) {
@@ -102,7 +107,7 @@ public class StatementPersistenceService {
      * @return <code>true</code> if successful, otherwise <code>false</code>.
      */
     public boolean updateStatement(Statement statement) {
-        validateInput(statement.getType(), statement.getAmount(), statement.getDate(), statement.getId());
+        validateStatement(statement);
 
         boolean result = false;
         BigDecimal amount = parseAmount(statement.getAmount());
@@ -146,11 +151,6 @@ public class StatementPersistenceService {
         LOG.debug("Content created: " + values);
 
         return values;
-    }
-
-    private void validateInput(Object obj, String... params) {
-        validateStringsNotEmpty(params);
-        validateObjectsNotNull(obj);
     }
 
     private void validateObjectsNotNull(Object... objects) {

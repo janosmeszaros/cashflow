@@ -7,6 +7,8 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +19,7 @@ import org.mockito.MockitoAnnotations;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import com.cashflow.domain.Category;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 /**
@@ -82,10 +85,9 @@ public class CategoryPersistenceServiceTest {
     public void testGetCategoriesShouldReturnCursor() {
         underTest = new CategoryPersistenceService(dao);
 
-        Cursor categoriesCursor = underTest.getCategories();
+        List<Category> categories = underTest.getCategories();
 
         verify(dao).getCategories();
-        assertThat(categoriesCursor, equalTo(cursor));
     }
 
     @Test(expected = IllegalArgumentException.class)
