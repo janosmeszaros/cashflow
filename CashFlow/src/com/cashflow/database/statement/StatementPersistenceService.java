@@ -26,6 +26,7 @@ import com.cashflow.constants.RecurringInterval;
 import com.cashflow.database.DatabaseContracts.AbstractCategory;
 import com.cashflow.domain.Category;
 import com.cashflow.domain.Statement;
+import com.cashflow.exceptions.IllegalStatementIdException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -44,10 +45,8 @@ public class StatementPersistenceService {
 
     /**
      * Default constructor which gets a DAO.
-     * @param dao
-     *            {@link StatementDao} to use to save data. Can't be <code>null</code>.
-     * @throws IllegalArgumentException
-     *             when DAO is <code>null</code>.
+     * @param dao {@link StatementDao} to use to save data. Can't be <code>null</code>.
+     * @throws IllegalArgumentException when DAO is <code>null</code>.
      */
     @Inject
     public StatementPersistenceService(StatementDao dao) {
@@ -57,7 +56,8 @@ public class StatementPersistenceService {
 
     /**
      * Creates the statement from data and then saves it to database.
-     * @param statement statement's data.
+     * @param statement statement's data.  It's amount, date, type, and recurring interval have to be setted.
+     * @throws IllegalArgumentException when one of the above is empty or null.
      * @return <code>true</code> if saving was successful and the amount wasn't zero, <code>false</code> otherwise.
      */
     public boolean saveStatement(Statement statement) {
@@ -74,15 +74,10 @@ public class StatementPersistenceService {
         return result;
     }
 
-    private void validateStatement(Statement statement) {
-        validateObjectsNotNull(statement.getType(), statement.getCategory());
-        validateStringsNotEmpty(statement.getAmount(), statement.getDate());
-    }
-
     /**
      * Get all statement from a statement type.
-     * @param type
-     *            specify the statement type which has to be returned.
+     * @param type specify the statement type which has to be returned. Can not be null
+     * @throws IllegalArgumentException when parameter is null.
      * @return a {@link Cursor} which contains the values.
      */
     public Cursor getStatement(StatementType type) {
@@ -115,11 +110,12 @@ public class StatementPersistenceService {
 
     /**
      * Updates statement with the specified id.
-     * @param statement statement which is hold the data.
+     * @param statement statement which is hold the data. It's id, amount, date, type, and recurring interval have to be setted.
+     * @throws IllegalArgumentException when one of them above is not setted.
      * @return <code>true</code> if successful, otherwise <code>false</code>.
      */
     public boolean updateStatement(Statement statement) {
-        validateStatement(statement);
+        validateUpdateStatement(statement);
 
         boolean result = false;
         BigDecimal amount = parseAmount(statement.getAmount());
@@ -133,17 +129,21 @@ public class StatementPersistenceService {
     }
 
     /**
-     * Get {@link Statement} by id.
-     * @param id of {@link Statement}
-     * @return {@link Statement} or <code>null</code> when the specified id doesn't exist
+     * Get {@link Statement} by id. 
+     * @param id of {@link Statement} can't be empty or null.
+     * @throws IllegalArgumentException when id is empty or null.
+     * @throws IllegalStatementIdException when statement does not exist for the id.
+     * @return {@link Statement} for the specified id.
      */
     public Statement getStatementById(String id) {
         validateStringsNotEmpty(id);
+        Statement statement;
         Cursor cursor = dao.getStatementById(id);
-        Statement statement = null;
 
         if (cursor.moveToNext()) {
             statement = buildStatement(cursor);
+        } else {
+            throw new IllegalStatementIdException(id);
         }
 
         return statement;
@@ -180,18 +180,6 @@ public class StatementPersistenceService {
         LOG.debug("Content created: " + values);
 
         return values;
-    }
-
-    private void validateObjectsNotNull(Object... objects) {
-        for (Object object : objects) {
-            Validate.notNull(object);
-        }
-    }
-
-    private void validateStringsNotEmpty(String... params) {
-        for (String string : params) {
-            Validate.notEmpty(string);
-        }
     }
 
     private Map<String, String> getColumnValues(Cursor cursor) {
@@ -234,5 +222,27 @@ public class StatementPersistenceService {
         return new Statement.Builder(values.get(COLUMN_NAME_AMOUNT), values.get(COLUMN_NAME_DATE)).setId(values.get(STATEMENT_ID_ALIAS))
                 .setNote(values.get(COLUMN_NAME_NOTE)).setRecurringInterval(RecurringInterval.valueOf(values.get(COLUMN_NAME_INTERVAL)))
                 .setType(type).setCategory(category).build();
+    }
+
+    private void validateStatement(Statement statement) {
+        validateObjectsNotNull(statement.getType(), statement.getCategory());
+        validateStringsNotEmpty(statement.getAmount(), statement.getDate());
+    }
+
+    private void validateUpdateStatement(Statement statement) {
+        validateObjectsNotNull(statement.getType(), statement.getCategory());
+        validateStringsNotEmpty(statement.getAmount(), statement.getDate(), statement.getId());
+    }
+
+    private void validateObjectsNotNull(Object... objects) {
+        for (Object object : objects) {
+            Validate.notNull(object);
+        }
+    }
+
+    private void validateStringsNotEmpty(String... params) {
+        for (String string : params) {
+            Validate.notEmpty(string);
+        }
     }
 }
