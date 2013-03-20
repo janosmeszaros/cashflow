@@ -1,14 +1,7 @@
 package com.cashflow.database.statement;
 
-import static android.provider.BaseColumns._ID;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_DATE;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_NOTE;
-
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import org.apache.commons.lang.Validate;
 import org.joda.time.DateTime;
@@ -30,7 +23,6 @@ public class RecurringIncomeScheduler {
     private static final Logger LOG = LoggerFactory.getLogger(RecurringIncomeScheduler.class);
     private final StatementPersistenceService statementPersistenceService;
     private final DateTimeFormatter formatter = DateTimeFormat.mediumDate().withLocale(Locale.getDefault());
-    private final Map<String, String> columnValues = new HashMap<String, String>();
 
     /**
      * Constructor.
@@ -54,7 +46,7 @@ public class RecurringIncomeScheduler {
 
     private void interateThrough(List<Statement> list) {
         for (Statement statement : list) {
-            int periods = countPeriods(statement.getRecurringInterval());
+            int periods = countPeriods(statement);
 
             String newDate = saveNewStatements(statement, periods);
             updateRecurringStatement(statement, newDate);
@@ -69,17 +61,17 @@ public class RecurringIncomeScheduler {
     private void updateRecurringStatement(Statement recurringStatement, String newDate) {
         if (!recurringStatement.getDate().equals(newDate)) {
 
-            Statement statement = new Statement.Builder(columnValues.get(COLUMN_NAME_AMOUNT), newDate).setId(columnValues.get(_ID))
-                    .setNote(columnValues.get(COLUMN_NAME_NOTE)).setRecurringInterval(recurringStatement.getRecurringInterval())
-                    .setType(StatementType.Income).build();
+            Statement statement = new Statement.Builder(recurringStatement.getAmount(), newDate).setId(recurringStatement.getId())
+                    .setNote(recurringStatement.getNote()).setCategory(recurringStatement.getCategory())
+                    .setRecurringInterval(recurringStatement.getRecurringInterval()).setType(StatementType.Income).build();
 
             LOG.debug("Update recurring statement's date to " + newDate);
             statementPersistenceService.updateStatement(statement);
         }
     }
 
-    private int countPeriods(RecurringInterval interval) {
-        int periods = interval.numOfPassedPeriods(formatter.parseDateTime(columnValues.get(COLUMN_NAME_DATE)));
+    private int countPeriods(Statement statement) {
+        int periods = statement.getRecurringInterval().numOfPassedPeriods(formatter.parseDateTime(statement.getDate()));
 
         LOG.debug("Number of periods: " + periods);
 
