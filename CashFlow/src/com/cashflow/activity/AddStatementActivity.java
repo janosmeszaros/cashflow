@@ -2,7 +2,6 @@ package com.cashflow.activity;
 
 import static android.view.View.VISIBLE;
 import static com.cashflow.constants.Constants.STATEMENT_TYPE_EXTRA;
-import static com.cashflow.database.DatabaseContracts.AbstractCategory.COLUMN_NAME_CATEGORY_NAME;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -45,9 +44,6 @@ import com.google.inject.Inject;
 public class AddStatementActivity extends RoboFragmentActivity {
 
     private static final Logger LOG = LoggerFactory.getLogger(AddStatementActivity.class);
-
-    private final String[] fromColumns = {COLUMN_NAME_CATEGORY_NAME};
-    private final int[] toViews = {android.R.id.text1};
 
     @Inject
     private StatementPersistenceService statementService;

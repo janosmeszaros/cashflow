@@ -1,13 +1,19 @@
 package com.cashflow.database.statement;
 
+import static com.cashflow.database.DatabaseContracts.AbstractStatement.CATEGORY_ID_ALIAS;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_CATEGORY;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_DATE;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_INTERVAL;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_IS_INCOME;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_NOTE;
+import static com.cashflow.database.DatabaseContracts.AbstractStatement.STATEMENT_ID_ALIAS;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.Validate;
 import org.slf4j.Logger;
@@ -30,7 +36,7 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class StatementPersistenceService {
-    private static final int INCOME_TYPE = 1;
+    private static final String INCOME_TYPE = "1";
     private static final Logger LOG = LoggerFactory.getLogger(StatementPersistenceService.class);
     private static final int TRUE = 1;
     private static final int FALSE = 0;
@@ -70,7 +76,7 @@ public class StatementPersistenceService {
 
     private void validateStatement(Statement statement) {
         validateObjectsNotNull(statement.getType(), statement.getCategory());
-        validateStringsNotEmpty(statement.getAmount(), statement.getDate(), statement.getId());
+        validateStringsNotEmpty(statement.getAmount(), statement.getDate());
     }
 
     /**
@@ -94,11 +100,17 @@ public class StatementPersistenceService {
 
     /**
      * Returns recurring incomes.
-     * @return cursor for the recurring incomes.
+     * @return list of statements which are recurring incomes.
      */
-    public Cursor getRecurringIncomes() {
-        return dao.getRecurringIncomes();
+    public List<Statement> getRecurringIncomes() {
+        List<Statement> list = new ArrayList<Statement>();
+        Cursor cursor = dao.getRecurringIncomes();
 
+        while (cursor.moveToNext()) {
+            list.add(buildStatement(cursor));
+        }
+
+        return list;
     }
 
     /**
@@ -118,6 +130,23 @@ public class StatementPersistenceService {
         }
 
         return result;
+    }
+
+    /**
+     * Get {@link Statement} by id.
+     * @param id of {@link Statement}
+     * @return {@link Statement} or <code>null</code> when the specified id doesn't exist
+     */
+    public Statement getStatementById(String id) {
+        validateStringsNotEmpty(id);
+        Cursor cursor = dao.getStatementById(id);
+        Statement statement = null;
+
+        if (cursor.moveToNext()) {
+            statement = buildStatement(cursor);
+        }
+
+        return statement;
     }
 
     private boolean checkIfNotZero(BigDecimal amount) {
@@ -165,45 +194,45 @@ public class StatementPersistenceService {
         }
     }
 
-    /**
-     * Get {@link Statement} by id.
-     * @param id of {@link Statement}
-     * @return {@link Statement} or <code>null</code> when the specified id doesn't exist
-     */
-    public Statement getStatementById(String id) {
-        validateStringsNotEmpty(id);
-        Cursor cursor = dao.getStatementById(id);
-        Statement statement = null;
+    private Map<String, String> getColumnValues(Cursor cursor) {
+        Map<String, Integer> columnNumbers = getColumnNumbers(cursor);
+        Map<String, String> columnValues = new HashMap<String, String>();
 
-        if (cursor.moveToNext()) {
-            statement = buildStatement(id, cursor);
-        }
+        columnValues.put(COLUMN_NAME_INTERVAL, cursor.getString(columnNumbers.get(COLUMN_NAME_INTERVAL)));
+        columnValues.put(COLUMN_NAME_AMOUNT, cursor.getString(columnNumbers.get(COLUMN_NAME_AMOUNT)));
+        columnValues.put(COLUMN_NAME_DATE, cursor.getString(columnNumbers.get(COLUMN_NAME_DATE)));
+        columnValues.put(COLUMN_NAME_NOTE, cursor.getString(columnNumbers.get(COLUMN_NAME_NOTE)));
+        columnValues.put(STATEMENT_ID_ALIAS, cursor.getString(columnNumbers.get(STATEMENT_ID_ALIAS)));
+        columnValues.put(CATEGORY_ID_ALIAS, cursor.getString(columnNumbers.get(CATEGORY_ID_ALIAS)));
+        columnValues.put(AbstractCategory.COLUMN_NAME_CATEGORY_NAME, cursor.getString(columnNumbers.get(AbstractCategory.COLUMN_NAME_CATEGORY_NAME)));
+        columnValues.put(COLUMN_NAME_IS_INCOME, ((Integer) cursor.getInt(columnNumbers.get(COLUMN_NAME_IS_INCOME))).toString());
 
-        return statement;
+        return columnValues;
     }
 
-    private Statement buildStatement(String id, Cursor cursor) {
-        Statement statement;
-        int categoryIdIndex = cursor.getColumnIndexOrThrow("categoryId");
-        int categoryNameIndex = cursor.getColumnIndex(AbstractCategory.COLUMN_NAME_CATEGORY_NAME);
-        int dateIndex = cursor.getColumnIndex(COLUMN_NAME_DATE);
-        int amountIndex = cursor.getColumnIndex(COLUMN_NAME_AMOUNT);
-        int intervalIndex = cursor.getColumnIndex(COLUMN_NAME_INTERVAL);
-        int noteIndex = cursor.getColumnIndex(COLUMN_NAME_NOTE);
-        int typeIndex = cursor.getColumnIndex(COLUMN_NAME_IS_INCOME);
+    private Map<String, Integer> getColumnNumbers(Cursor cursor) {
+        Map<String, Integer> columnNumbers = new HashMap<String, Integer>();
 
-        String amount = cursor.getString(amountIndex);
-        String date = cursor.getString(dateIndex);
-        String note = cursor.getString(noteIndex);
-        RecurringInterval interval = RecurringInterval.valueOf(cursor.getString(intervalIndex));
-        StatementType type = INCOME_TYPE == cursor.getInt(typeIndex) ? StatementType.Income : StatementType.Expense;
+        columnNumbers.put(COLUMN_NAME_DATE, cursor.getColumnIndexOrThrow(COLUMN_NAME_DATE));
+        columnNumbers.put(COLUMN_NAME_AMOUNT, cursor.getColumnIndexOrThrow(COLUMN_NAME_AMOUNT));
+        columnNumbers.put(COLUMN_NAME_INTERVAL, cursor.getColumnIndexOrThrow(COLUMN_NAME_INTERVAL));
+        columnNumbers.put(COLUMN_NAME_NOTE, cursor.getColumnIndexOrThrow(COLUMN_NAME_NOTE));
+        columnNumbers.put(STATEMENT_ID_ALIAS, cursor.getColumnIndexOrThrow(STATEMENT_ID_ALIAS));
+        columnNumbers.put(CATEGORY_ID_ALIAS, cursor.getColumnIndexOrThrow(CATEGORY_ID_ALIAS));
+        columnNumbers.put(AbstractCategory.COLUMN_NAME_CATEGORY_NAME, cursor.getColumnIndexOrThrow(AbstractCategory.COLUMN_NAME_CATEGORY_NAME));
+        columnNumbers.put(COLUMN_NAME_IS_INCOME, cursor.getColumnIndexOrThrow(COLUMN_NAME_IS_INCOME));
 
-        String categoryId = cursor.getString(categoryIdIndex);
-        String categoryName = cursor.getString(categoryNameIndex);
+        return columnNumbers;
+    }
 
-        Category category = new Category(categoryId, categoryName);
-        statement = new Statement.Builder(amount, date).setId(id).setNote(note).setRecurringInterval(interval).setType(type).setCategory(category)
-                .build();
-        return statement;
+    private Statement buildStatement(Cursor cursor) {
+        Map<String, String> values = getColumnValues(cursor);
+
+        Category category = new Category(values.get(CATEGORY_ID_ALIAS), values.get(AbstractCategory.COLUMN_NAME_CATEGORY_NAME));
+        StatementType type = INCOME_TYPE.equals(values.get(COLUMN_NAME_IS_INCOME)) ? StatementType.Income : StatementType.Expense;
+
+        return new Statement.Builder(values.get(COLUMN_NAME_AMOUNT), values.get(COLUMN_NAME_DATE)).setId(values.get(STATEMENT_ID_ALIAS))
+                .setNote(values.get(COLUMN_NAME_NOTE)).setRecurringInterval(RecurringInterval.valueOf(values.get(COLUMN_NAME_INTERVAL)))
+                .setType(type).setCategory(category).build();
     }
 }

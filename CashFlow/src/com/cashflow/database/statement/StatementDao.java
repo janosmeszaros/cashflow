@@ -1,6 +1,7 @@
 package com.cashflow.database.statement;
 
 import static android.provider.BaseColumns._ID;
+import static com.cashflow.database.DatabaseContracts.AbstractStatement.CATEGORY_ID_ALIAS;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_DATE;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_INTERVAL;
@@ -9,9 +10,11 @@ import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_N
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_NULLABLE;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.EXPENSE_SELECTION;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.INCOME_SELECTION;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.PROJECTION_WITH_CATEGORY_ID;
+import static com.cashflow.database.DatabaseContracts.AbstractStatement.PROJECTION;
+import static com.cashflow.database.DatabaseContracts.AbstractStatement.PROJECTION_WITH_ALIAS;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.RECURRING_INCOME_SELECTION;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.SELECTION_BY_ID;
+import static com.cashflow.database.DatabaseContracts.AbstractStatement.STATEMENT_ID_ALIAS;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.STATEMENT_INNER_JOINED_CATEGORY;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.TABLE_NAME;
 
@@ -85,7 +88,7 @@ public class StatementDao {
      */
     public Cursor getExpenses() {
         SQLiteDatabase db = provider.getReadableDb();
-        Cursor cursor = db.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION_WITH_CATEGORY_ID, EXPENSE_SELECTION, null, null, null, null);
+        Cursor cursor = db.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION, EXPENSE_SELECTION, null, null, null, null);
         return cursor;
     }
 
@@ -95,7 +98,7 @@ public class StatementDao {
      */
     public Cursor getIncomes() {
         SQLiteDatabase db = provider.getReadableDb();
-        Cursor cursor = db.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION_WITH_CATEGORY_ID, INCOME_SELECTION, null, null, null, null);
+        Cursor cursor = db.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION, INCOME_SELECTION, null, null, null, null);
         return cursor;
     }
 
@@ -105,14 +108,8 @@ public class StatementDao {
      */
     public Cursor getRecurringIncomes() {
         SQLiteDatabase db = provider.getReadableDb();
-        Cursor cursor = db.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION_WITH_CATEGORY_ID, RECURRING_INCOME_SELECTION, null, null, null, null);
+        Cursor cursor = db.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION_WITH_ALIAS, RECURRING_INCOME_SELECTION, null, null, null, null);
         return cursor;
-    }
-
-    private void nullCheck(SQLiteDbProvider provider) {
-        if (provider == null) {
-            throw new IllegalArgumentException();
-        }
     }
 
     /**
@@ -122,10 +119,16 @@ public class StatementDao {
      */
     public Cursor getStatementById(String id) {
         SQLiteDatabase db = provider.getReadableDb();
-        Cursor cursor = db.rawQuery("SELECT " + TABLE_NAME + "." + _ID + " AS statementId " + "," + AbstractCategory.TABLE_NAME + "." + _ID
-                + " AS categoryId " + "," + COLUMN_NAME_AMOUNT + "," + AbstractCategory.COLUMN_NAME_CATEGORY_NAME + "," + COLUMN_NAME_DATE + ","
-                + COLUMN_NAME_NOTE + "," + COLUMN_NAME_INTERVAL + "," + COLUMN_NAME_IS_INCOME + " FROM " + AbstractCategory.TABLE_NAME + ","
+        Cursor cursor = db.rawQuery("SELECT " + TABLE_NAME + "." + _ID + " AS " + STATEMENT_ID_ALIAS + "," + AbstractCategory.TABLE_NAME + "." + _ID
+                + " AS " + CATEGORY_ID_ALIAS + "," + COLUMN_NAME_AMOUNT + "," + AbstractCategory.COLUMN_NAME_CATEGORY_NAME + "," + COLUMN_NAME_DATE
+                + "," + COLUMN_NAME_NOTE + "," + COLUMN_NAME_INTERVAL + "," + COLUMN_NAME_IS_INCOME + " FROM " + AbstractCategory.TABLE_NAME + ","
                 + AbstractStatement.TABLE_NAME + " WHERE " + SELECTION_BY_ID, new String[]{id});
         return cursor;
+    }
+
+    private void nullCheck(SQLiteDbProvider provider) {
+        if (provider == null) {
+            throw new IllegalArgumentException();
+        }
     }
 }

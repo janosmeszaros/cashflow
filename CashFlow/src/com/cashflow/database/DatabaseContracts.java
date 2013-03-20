@@ -24,6 +24,7 @@ public abstract class DatabaseContracts {
     private static final String EQUALS_INCOME = " = 1";
     private static final String EQUALS_EXPENSE = " = 0";
     private static final String AND = " AND ";
+    private static final String AS = " AS ";
     private static final String DOT = ".";
     private static final String PRIMARY_KEY = " PRIMARY KEY";
 
@@ -52,6 +53,8 @@ public abstract class DatabaseContracts {
       */
     public abstract static class AbstractStatement implements BaseColumns {
         public static final String COLUMN_NAME_NULLABLE = null;
+        public static final String STATEMENT_ID_ALIAS = "statementId";
+        public static final String CATEGORY_ID_ALIAS = "categoryId";
         public static final String TABLE_NAME = "statement";
         public static final String COLUMN_NAME_AMOUNT = "amount";
         public static final String COLUMN_NAME_CATEGORY = "category_id";
@@ -60,11 +63,12 @@ public abstract class DatabaseContracts {
         public static final String COLUMN_NAME_NOTE = "note";
         public static final String COLUMN_NAME_INTERVAL = "interval";
 
-        public static final String[] PROJECTION = new String[]{_ID, COLUMN_NAME_AMOUNT, AbstractCategory.COLUMN_NAME_CATEGORY_NAME, COLUMN_NAME_DATE,
-            COLUMN_NAME_NOTE, COLUMN_NAME_INTERVAL};
+        public static final String[] PROJECTION = new String[]{TABLE_NAME + DOT + _ID, COLUMN_NAME_AMOUNT,
+            AbstractCategory.COLUMN_NAME_CATEGORY_NAME, COLUMN_NAME_DATE, COLUMN_NAME_NOTE, COLUMN_NAME_INTERVAL};
 
-        public static final String[] PROJECTION_WITH_CATEGORY_ID = new String[]{TABLE_NAME + DOT + _ID, AbstractCategory.TABLE_NAME + DOT + _ID,
-            COLUMN_NAME_AMOUNT, AbstractCategory.COLUMN_NAME_CATEGORY_NAME, COLUMN_NAME_DATE, COLUMN_NAME_NOTE, COLUMN_NAME_INTERVAL};
+        public static final String[] PROJECTION_WITH_ALIAS = new String[]{TABLE_NAME + DOT + _ID + AS + STATEMENT_ID_ALIAS,
+            AbstractCategory.TABLE_NAME + DOT + _ID + AS + CATEGORY_ID_ALIAS, COLUMN_NAME_AMOUNT, AbstractCategory.COLUMN_NAME_CATEGORY_NAME,
+            COLUMN_NAME_DATE, COLUMN_NAME_NOTE, COLUMN_NAME_INTERVAL, COLUMN_NAME_IS_INCOME};
 
         public static final int[] TO_VIEWS = {R.id.row_id, R.id.row_amount, R.id.row_category, R.id.row_date, R.id.row_note, R.id.row_interval};
 

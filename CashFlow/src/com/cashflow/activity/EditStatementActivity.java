@@ -186,10 +186,11 @@ public class EditStatementActivity extends RoboFragmentActivity {
         String amountStr = amountText.getText().toString();
         String date = dateButton.getText().toString();
         String note = notesText.getText().toString();
+        Category category = (Category) categorySpinner.getSelectedItem();
         String id = originalId;
 
         Builder builder = new Statement.Builder(amountStr, date);
-        builder.setNote(note).setType(type).setId(id);
+        builder.setNote(note).setType(type).setId(id).setCategory(category);
 
         if (type.isIncome()) {
             RecurringInterval interval = (RecurringInterval) recurringSpinner.getSelectedItem();
