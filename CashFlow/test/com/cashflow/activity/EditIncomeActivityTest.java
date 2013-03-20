@@ -12,6 +12,8 @@ import static com.cashflow.constants.Constants.STATEMENT_TYPE_EXTRA;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_DATE;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_NOTE;
+import static com.cashflow.database.statement.StatementType.Expense;
+import static com.cashflow.database.statement.StatementType.Income;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Matchers.anyObject;
@@ -43,7 +45,6 @@ import com.cashflow.constants.RecurringInterval;
 import com.cashflow.database.DatabaseContracts.AbstractStatement;
 import com.cashflow.database.balance.Balance;
 import com.cashflow.database.statement.StatementPersistenceService;
-import com.cashflow.database.statement.StatementType;
 import com.cashflow.domain.Statement;
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
@@ -68,10 +69,10 @@ public class EditIncomeActivityTest {
     private static final String INTERVAL_EXTRA_VALUE = "biweekly";
     private static final RecurringInterval INTERVAL = RecurringInterval.biweekly;
     private static final RecurringInterval NONE_INTERVAL = RecurringInterval.none;
-    private String[] fromColumns = {AbstractStatement._ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE, COLUMN_NAME_NOTE};
-    private Object[] values = new Object[]{1, 1234L, CHANGED_DATE, "note"};
+    private final String[] fromColumns = {AbstractStatement._ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE, COLUMN_NAME_NOTE};
+    private final Object[] values = new Object[]{1, 1234L, CHANGED_DATE, "note"};
     private EditStatementActivity underTest;
-    private ArrayAdapter<RecurringInterval> arrayAdapter = new ArrayAdapter<RecurringInterval>(underTest,
+    private final ArrayAdapter<RecurringInterval> arrayAdapter = new ArrayAdapter<RecurringInterval>(underTest,
             android.R.layout.simple_spinner_dropdown_item, RecurringInterval.values());
     private Balance balance;
     @Mock
@@ -161,7 +162,8 @@ public class EditIncomeActivityTest {
         underTest.onCreate(null);
 
         setViewsValues(CHANGED_AMOUNT, NOTES, DATE);
-        Statement statement = createStatement(ID, CHANGED_AMOUNT, DATE, NOTES, StatementType.Income, NONE_INTERVAL);
+        Statement statement = new Statement.Builder(CHANGED_AMOUNT, DATE).setNote(NOTES).setType(Income).setId(ID)
+                .setRecurringInterval(NONE_INTERVAL).build();
 
         underTest.submit(null);
 
@@ -179,7 +181,7 @@ public class EditIncomeActivityTest {
 
         setViewsValues(AMOUNT, NOTES, DATE);
         setRecurringInterval(INTERVAL, true);
-        Statement statement = createStatement(ID, AMOUNT, DATE, NOTES, StatementType.Income, INTERVAL);
+        Statement statement = new Statement.Builder(AMOUNT, DATE).setNote(NOTES).setType(Income).setId(ID).setRecurringInterval(INTERVAL).build();
 
         underTest.submit(null);
 
@@ -196,7 +198,8 @@ public class EditIncomeActivityTest {
         underTest.onCreate(null);
 
         setViewsValues(AMOUNT, NOTES, CHANGED_DATE);
-        Statement statement = createStatement(ID, AMOUNT, CHANGED_DATE, NOTES, StatementType.Income, NONE_INTERVAL);
+        Statement statement = new Statement.Builder(AMOUNT, CHANGED_DATE).setNote(NOTES).setType(Income).setId(ID)
+                .setRecurringInterval(NONE_INTERVAL).build();
 
         underTest.submit(null);
 
@@ -213,7 +216,8 @@ public class EditIncomeActivityTest {
         underTest.onCreate(null);
 
         setViewsValues(AMOUNT, CHANGED_NOTE, DATE);
-        Statement statement = createStatement(ID, AMOUNT, DATE, CHANGED_NOTE, StatementType.Income, NONE_INTERVAL);
+        Statement statement = new Statement.Builder(AMOUNT, DATE).setNote(CHANGED_NOTE).setType(Income).setId(ID).setRecurringInterval(NONE_INTERVAL)
+                .build();
 
         underTest.submit(null);
 
@@ -269,8 +273,8 @@ public class EditIncomeActivityTest {
         MatrixCursor cursor = new MatrixCursor(fromColumns);
         cursor.addRow(values);
 
-        when(statementPersistentService.getStatement(StatementType.Expense)).thenReturn(cursor);
-        when(statementPersistentService.getStatement(StatementType.Income)).thenReturn(cursor);
+        when(statementPersistentService.getStatement(Expense)).thenReturn(cursor);
+        when(statementPersistentService.getStatement(Income)).thenReturn(cursor);
         when(statementPersistentService.saveStatement((Statement) anyObject())).thenReturn(true);
         when(statementPersistentService.updateStatement((Statement) anyObject())).thenReturn(true);
     }
@@ -284,7 +288,4 @@ public class EditIncomeActivityTest {
         recurringCheckBox.setChecked(true);
     }
 
-    private Statement createStatement(String id, String amountStr, String date, String note, StatementType type, RecurringInterval interval) {
-        return new Statement.Builder(amountStr, date).setNote(note).setType(type).setId(id).setRecurringInterval(interval).build();
-    }
 }

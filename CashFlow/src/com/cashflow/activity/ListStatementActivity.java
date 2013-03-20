@@ -67,7 +67,7 @@ public class ListStatementActivity extends RoboActivity {
      * @param view
      *            Needed by onClick event.
      */
-    public void onClick(View view) {
+    public void editButtonOnClick(View view) {
         LOG.debug("Edit button clicked");
         Intent intent = new Intent(this, EditStatementActivity.class);
         addExtras((View) view.getParent(), intent);

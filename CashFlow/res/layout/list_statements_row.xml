@@ -20,7 +20,6 @@
         <TextView
             android:id="@+id/row_id"
             android:layout_width="wrap_content"
-            android:layout_height="0dip"
             android:gravity="center_vertical"
             android:textIsSelectable="false"
             android:visibility="gone" />
@@ -62,7 +61,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:gravity="center_vertical" />
+        android:gravity="center_vertical"
+        android:textIsSelectable="false" />
 
     <ImageButton
         android:id="@+id/edit"
@@ -71,7 +71,7 @@
         android:layout_marginRight="6dip"
         android:background="@drawable/edit_background"
         android:contentDescription="@string/edit_button"
-        android:onClick="onClick"
+        android:onClick="editButtonOnClick"
         android:src="@drawable/edit_query" />
 
 </LinearLayout>

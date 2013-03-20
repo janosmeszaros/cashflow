@@ -12,6 +12,8 @@ import static com.cashflow.constants.Constants.STATEMENT_TYPE_EXTRA;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_DATE;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_NOTE;
+import static com.cashflow.database.statement.StatementType.Expense;
+import static com.cashflow.database.statement.StatementType.Income;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Matchers.anyObject;
@@ -43,7 +45,6 @@ import com.cashflow.constants.RecurringInterval;
 import com.cashflow.database.DatabaseContracts.AbstractStatement;
 import com.cashflow.database.balance.Balance;
 import com.cashflow.database.statement.StatementPersistenceService;
-import com.cashflow.database.statement.StatementType;
 import com.cashflow.domain.Statement;
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
@@ -64,12 +65,12 @@ public class EditExpenseActivityTest {
     private static final String NOTES = "notes";
     private static final String DATE = "2013";
     private static final String AMOUNT = "1234";
-    private String[] fromColumns = {AbstractStatement._ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE, COLUMN_NAME_NOTE};
-    private Object[] values = new Object[]{1, 1234L, CHANGED_DATE, "note"};
+    private final String[] fromColumns = {AbstractStatement._ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE, COLUMN_NAME_NOTE};
+    private final Object[] values = new Object[]{1, 1234L, CHANGED_DATE, "note"};
     private EditStatementActivity underTest;
     private ShadowFragmentActivity shadowFragmentActivity;
     private Balance balance;
-    private ArrayAdapter<RecurringInterval> arrayAdapter = new ArrayAdapter<RecurringInterval>(underTest,
+    private final ArrayAdapter<RecurringInterval> arrayAdapter = new ArrayAdapter<RecurringInterval>(underTest,
             android.R.layout.simple_spinner_dropdown_item, RecurringInterval.values());
     @Mock
     private StatementPersistenceService statementPersistenceService;
@@ -131,7 +132,7 @@ public class EditExpenseActivityTest {
     @Test
     public void testSubmitWhenAmountHasChangedThanShouldCallProperFunctionAndRefreshBalanceAndResultCodeShouldBeOK() {
         setViewsValues(CHANGED_AMOUNT, NOTES, DATE);
-        Statement statement = createStatement(ID, CHANGED_AMOUNT, DATE, NOTES, StatementType.Expense);
+        Statement statement = new Statement.Builder(CHANGED_AMOUNT, DATE).setNote(NOTES).setType(Expense).setId(ID).build();
 
         underTest.submit(null);
 
@@ -144,7 +145,7 @@ public class EditExpenseActivityTest {
     @Test
     public void testSubmitWhenDateHasChangedThanShouldCallProperFunctionAndRefreshBalanceAndResultCodeShouldBeOK() {
         setViewsValues(AMOUNT, NOTES, CHANGED_DATE);
-        Statement statement = createStatement(ID, AMOUNT, CHANGED_DATE, NOTES, StatementType.Expense);
+        Statement statement = new Statement.Builder(AMOUNT, CHANGED_DATE).setNote(NOTES).setType(Expense).setId(ID).build();
 
         underTest.submit(null);
 
@@ -157,7 +158,7 @@ public class EditExpenseActivityTest {
     @Test
     public void testSubmitWhenNotesHasChangedThanShouldCallProperFunctionAndRefreshBalanceAndResultCodeShouldBeOK() {
         setViewsValues(AMOUNT, CHANGED_NOTE, DATE);
-        Statement statement = createStatement(ID, AMOUNT, DATE, CHANGED_NOTE, StatementType.Expense);
+        Statement statement = new Statement.Builder(AMOUNT, DATE).setNote(CHANGED_NOTE).setType(Expense).setId(ID).build();
 
         underTest.submit(null);
 
@@ -211,14 +212,10 @@ public class EditExpenseActivityTest {
         MatrixCursor cursor = new MatrixCursor(fromColumns);
         cursor.addRow(values);
 
-        when(statementPersistenceService.getStatement(StatementType.Expense)).thenReturn(cursor);
-        when(statementPersistenceService.getStatement(StatementType.Income)).thenReturn(cursor);
+        when(statementPersistenceService.getStatement(Expense)).thenReturn(cursor);
+        when(statementPersistenceService.getStatement(Income)).thenReturn(cursor);
         when(statementPersistenceService.saveStatement((Statement) anyObject())).thenReturn(true);
         when(statementPersistenceService.updateStatement((Statement) anyObject())).thenReturn(true);
-    }
-
-    private Statement createStatement(String id, String amountStr, String date, String note, StatementType type) {
-        return new Statement.Builder(amountStr, date).setNote(note).setType(type).setId(id).build();
     }
 
 }

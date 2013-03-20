@@ -3,20 +3,18 @@ package com.cashflow.activity;
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 import static android.provider.BaseColumns._ID;
-import static com.cashflow.constants.Constants.AMOUNT_EXTRA;
-import static com.cashflow.constants.Constants.DATE_EXTRA;
 import static com.cashflow.constants.Constants.EDIT_ACTIVITY_CODE;
 import static com.cashflow.constants.Constants.EXPENSE_EXTRA;
 import static com.cashflow.constants.Constants.ID_EXTRA;
 import static com.cashflow.constants.Constants.INCOME_EXTRA;
-import static com.cashflow.constants.Constants.INTERVAL_EXTRA;
-import static com.cashflow.constants.Constants.NOTE_EXTRA;
 import static com.cashflow.constants.Constants.STATEMENT_TYPE_EXTRA;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_DATE;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_INTERVAL;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_NOTE;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.TABLE_NAME;
+import static com.cashflow.database.statement.StatementType.Expense;
+import static com.cashflow.database.statement.StatementType.Income;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.times;
@@ -42,9 +40,11 @@ import android.widget.TextView;
 import com.cashflow.R;
 import com.cashflow.activity.testutil.ActivityModule;
 import com.cashflow.activity.testutil.ListStatementActivityProvider;
+import com.cashflow.constants.RecurringInterval;
 import com.cashflow.database.DatabaseContracts.AbstractCategory;
 import com.cashflow.database.statement.StatementPersistenceService;
-import com.cashflow.database.statement.StatementType;
+import com.cashflow.domain.Category;
+import com.cashflow.domain.Statement;
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 import com.xtremelabs.robolectric.shadows.ShadowActivity;
@@ -64,10 +64,10 @@ public class ListStatementActivityTest {
     private static final int BAD_REQUEST_CODE = 1;
     private static final String ID = "2";
     private static final String NOTES = "notes2";
-    private static final String CATEGORY = "category2";
+    private static final Category CATEGORY = new Category("1", "category2");
     private static final String DATE = "2013";
     private static final String AMOUNT = "12345678";
-    private static final String INTERVAL = "biweekly";
+    private static final RecurringInterval INTERVAL = RecurringInterval.biweekly;
 
     private final Object[] values = new Object[]{1, 1, 1234L, "category", "2012", "note", "none"};
     private ListStatementActivity underTest;
@@ -110,27 +110,20 @@ public class ListStatementActivityTest {
     }
 
     @Test
-    public void testOnClickWhenStatementTypeIsExpenseThenCreateIntentAndStartsItWithExtrasSetted() {
+    public void testEditButtonOnClickWhenStatementTypeIsExpenseThenCreateIntentAndStartsItWithExtrasSetted() {
         setExpenseIntent();
         ShadowActivity shadowActivity = Robolectric.shadowOf(underTest);
-        setViewsValues(AMOUNT, CATEGORY, NOTES, DATE, ID, INTERVAL);
+        setViewsValues(new Statement.Builder(AMOUNT, DATE).setNote(NOTES).setCategory(CATEGORY).setId(ID).setRecurringInterval(INTERVAL).build());
 
-        underTest.onClick(underTest.findViewById(R.id.list_statement));
+        underTest.editButtonOnClick(underTest.findViewById(R.id.list_statement));
 
         IntentForResult startedActivityForResult = shadowActivity.getNextStartedActivityForResult();
         String idExtra = startedActivityForResult.intent.getStringExtra(ID_EXTRA);
-        String amountExtra = startedActivityForResult.intent.getStringExtra(AMOUNT_EXTRA);
-        String noteExtra = startedActivityForResult.intent.getStringExtra(NOTE_EXTRA);
-        String dateExtra = startedActivityForResult.intent.getStringExtra(DATE_EXTRA);
         String typeExtra = startedActivityForResult.intent.getStringExtra(STATEMENT_TYPE_EXTRA);
-        String intervalExtra = startedActivityForResult.intent.getStringExtra(INTERVAL_EXTRA);
         int requestCode = startedActivityForResult.requestCode;
+
         assertThat(idExtra, equalTo(ID));
-        assertThat(amountExtra, equalTo(AMOUNT));
-        assertThat(noteExtra, equalTo(NOTES));
-        assertThat(dateExtra, equalTo(DATE));
         assertThat(typeExtra, equalTo(EXPENSE_EXTRA));
-        assertThat(intervalExtra, equalTo(INTERVAL));
         assertThat(requestCode, equalTo(EDIT_ACTIVITY_CODE));
     }
 
@@ -139,9 +132,9 @@ public class ListStatementActivityTest {
         setExpenseIntent();
         underTest.onActivityResult(EDIT_ACTIVITY_CODE, RESULT_OK, null);
 
-        // Needed 3 times because it gets invoked on test start when app 
+        // Needed 3 times because it gets invoked on test start when the application 
         // counting the Balance and when fills up the list at first time. The third one is the tested one.
-        verify(statementPersistentService, times(3)).getStatement(StatementType.Expense);
+        verify(statementPersistentService, times(3)).getStatement(Expense);
     }
 
     @Test
@@ -149,10 +142,10 @@ public class ListStatementActivityTest {
         setExpenseIntent();
         underTest.onActivityResult(BAD_REQUEST_CODE, RESULT_OK, null);
 
-        // Needed 2 times because it gets invoked on test start when app 
+        // Needed 2 times because it gets invoked on test start when the application 
         // counting the Balance and when fills up the list at first time. 
         // It should'nt invoked in third time.
-        verify(statementPersistentService, times(2)).getStatement(StatementType.Expense);
+        verify(statementPersistentService, times(2)).getStatement(Expense);
     }
 
     @Test
@@ -160,10 +153,10 @@ public class ListStatementActivityTest {
         setExpenseIntent();
         underTest.onActivityResult(EDIT_ACTIVITY_CODE, RESULT_CANCELED, null);
 
-        // Needed 2 times because it gets invoked on test start when app 
+        // Needed 2 times because it gets invoked on test start when the application 
         // counting the Balance and when fills up the list at first time. 
         // It should'nt invoked in third time.
-        verify(statementPersistentService, times(2)).getStatement(StatementType.Expense);
+        verify(statementPersistentService, times(2)).getStatement(Expense);
     }
 
     @Test
@@ -173,8 +166,8 @@ public class ListStatementActivityTest {
         SimpleCursorAdapter adapter = (SimpleCursorAdapter) listView.getAdapter();
         Cursor cursor = adapter.getCursor();
 
-        // Needed 2 times because it gets invoked on test start when app counting the Balance.
-        verify(statementPersistentService, times(2)).getStatement(StatementType.Expense);
+        // Needed 2 times because it gets invoked on test start when the application counting the Balance.
+        verify(statementPersistentService, times(2)).getStatement(Expense);
         assertThat(cursor.getColumnCount(), equalTo(PROJECTION.length));
         assertThat(cursor.getInt(0), equalTo(values[0]));
         assertThat(cursor.getInt(1), equalTo(values[1]));
@@ -190,23 +183,23 @@ public class ListStatementActivityTest {
     private void setUpPersistentService() {
         MatrixCursor matrixCursor = new MatrixCursor(PROJECTION);
         matrixCursor.addRow(values);
-        when(statementPersistentService.getStatement(StatementType.Expense)).thenReturn(matrixCursor);
-        when(statementPersistentService.getStatement(StatementType.Income)).thenReturn(matrixCursor);
+        when(statementPersistentService.getStatement(Expense)).thenReturn(matrixCursor);
+        when(statementPersistentService.getStatement(Income)).thenReturn(matrixCursor);
     }
 
-    private void setViewsValues(String amountValue, String categoryName, String notesValue, String dateValue, String idValue, String intervalValue) {
+    private void setViewsValues(Statement statement) {
         TextView notes = (TextView) underTest.findViewById(R.id.row_note);
-        notes.setText(notesValue);
+        notes.setText(statement.getNote());
         TextView id = (TextView) underTest.findViewById(R.id.row_id);
-        id.setText(idValue);
+        id.setText(statement.getId());
         TextView amount = (TextView) underTest.findViewById(R.id.row_amount);
-        amount.setText(amountValue);
+        amount.setText(statement.getAmount());
         TextView category = (TextView) underTest.findViewById(R.id.row_category);
-        category.setText(categoryName);
+        category.setText(statement.getCategory().getName());
         TextView button = (TextView) underTest.findViewById(R.id.row_date);
-        button.setText(dateValue);
+        button.setText(statement.getDate());
         TextView interval = (TextView) underTest.findViewById(R.id.row_interval);
-        interval.setText(intervalValue);
+        interval.setText(statement.getRecurringInterval().toString());
     }
 
     //*********** Income test ************************************//
