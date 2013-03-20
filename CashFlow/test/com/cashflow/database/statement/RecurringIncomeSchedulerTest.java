@@ -1,14 +1,11 @@
 package com.cashflow.database.statement;
 
-import static android.provider.BaseColumns._ID;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_DATE;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_INTERVAL;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_NOTE;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import org.joda.time.DateTime;
@@ -19,8 +16,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import android.database.Cursor;
-
 import com.cashflow.constants.RecurringInterval;
 import com.cashflow.domain.Statement;
 
@@ -29,11 +24,6 @@ public class RecurringIncomeSchedulerTest {
     private static final String ID = "1";
     private static final String NOTE = "fizu";
     private static final String AMOUNT = "1234";
-    private static final Integer DATE_NUMBER = 0;
-    private static final Integer AMOUNT_NUMBER = 1;
-    private static final Integer ID_NUMBER = 2;
-    private static final Integer INTERVAL_NUMBER = 3;
-    private static final Integer NOTE_NUMBER = 4;
     private static final DateTime ONE_MONTH_BEFORE = DateTime.now().minusMonths(1);
     private static final DateTime THREE_MONTH_BEFORE = DateTime.now().minusMonths(3);
     private static final DateTime ONE_YEAR_BEFORE = DateTime.now().minusYears(1);
@@ -42,15 +32,16 @@ public class RecurringIncomeSchedulerTest {
 
     @Mock
     private StatementPersistenceService service;
-    @Mock
-    private Cursor cursor;
+    private List<Statement> statements;
+
     private RecurringIncomeScheduler underTest;
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        setUpMocks();
+        statements = new ArrayList<Statement>();
+        when(service.getRecurringIncomes()).thenReturn(statements);
 
         underTest = new RecurringIncomeScheduler(service);
     }
@@ -61,14 +52,10 @@ public class RecurringIncomeSchedulerTest {
     }
 
     @Test
-    public void testScheduleWhenOneMonthAndTheIntervalIsBeWeeklyThenShouldSaveTwoStatement() {
+    public void testScheduleWhenOneMonthAndTheIntervalIsBeWeeklyThenShouldSaveTwoNewStatement() {
         RecurringInterval interval = RecurringInterval.biweekly;
-
-        when(cursor.getString(DATE_NUMBER)).thenReturn(formatter.print(ONE_MONTH_BEFORE));
-        when(cursor.getString(AMOUNT_NUMBER)).thenReturn(AMOUNT);
-        when(cursor.getString(INTERVAL_NUMBER)).thenReturn(interval.toString());
-        when(cursor.getString(ID_NUMBER)).thenReturn(ID);
-        when(cursor.getString(NOTE_NUMBER)).thenReturn(NOTE);
+        Statement statement = createStatement(ONE_MONTH_BEFORE, interval);
+        statements.add(statement);
 
         underTest.schedule();
 
@@ -83,12 +70,8 @@ public class RecurringIncomeSchedulerTest {
     @Test
     public void testScheduleWhenOneMonthAndTheIntervalIsMonthlyThenShouldSaveOneStatement() {
         RecurringInterval interval = RecurringInterval.monthly;
-
-        when(cursor.getString(DATE_NUMBER)).thenReturn(formatter.print(ONE_MONTH_BEFORE));
-        when(cursor.getString(AMOUNT_NUMBER)).thenReturn(AMOUNT);
-        when(cursor.getString(INTERVAL_NUMBER)).thenReturn(interval.toString());
-        when(cursor.getString(ID_NUMBER)).thenReturn(ID);
-        when(cursor.getString(NOTE_NUMBER)).thenReturn(NOTE);
+        Statement statement = createStatement(ONE_MONTH_BEFORE, interval);
+        statements.add(statement);
 
         underTest.schedule();
 
@@ -100,12 +83,8 @@ public class RecurringIncomeSchedulerTest {
     @Test
     public void testScheduleWhenOneMonthAndTheIntervalIsAnnuallyThenShouldSaveNoneStatement() {
         RecurringInterval interval = RecurringInterval.annually;
-
-        when(cursor.getString(DATE_NUMBER)).thenReturn(formatter.print(ONE_MONTH_BEFORE));
-        when(cursor.getString(AMOUNT_NUMBER)).thenReturn(AMOUNT);
-        when(cursor.getString(INTERVAL_NUMBER)).thenReturn(interval.toString());
-        when(cursor.getString(ID_NUMBER)).thenReturn(ID);
-        when(cursor.getString(NOTE_NUMBER)).thenReturn(NOTE);
+        Statement statement = createStatement(ONE_MONTH_BEFORE, interval);
+        statements.add(statement);
 
         underTest.schedule();
 
@@ -117,12 +96,8 @@ public class RecurringIncomeSchedulerTest {
     @Test
     public void testScheduleWhenOneMonthAndTheIntervalIsBeWeeklyThenShouldUpdateCurrentStatement() {
         RecurringInterval interval = RecurringInterval.biweekly;
-
-        when(cursor.getString(DATE_NUMBER)).thenReturn(formatter.print(ONE_MONTH_BEFORE));
-        when(cursor.getString(AMOUNT_NUMBER)).thenReturn(AMOUNT);
-        when(cursor.getString(INTERVAL_NUMBER)).thenReturn(interval.toString());
-        when(cursor.getString(ID_NUMBER)).thenReturn(ID);
-        when(cursor.getString(NOTE_NUMBER)).thenReturn(NOTE);
+        Statement statement = createStatement(ONE_MONTH_BEFORE, interval);
+        statements.add(statement);
 
         underTest.schedule();
 
@@ -135,12 +110,8 @@ public class RecurringIncomeSchedulerTest {
     @Test
     public void testScheduleWhenOneYearAndTheIntervalIsannuallyThenShouldSaveOneStatement() {
         RecurringInterval interval = RecurringInterval.annually;
-
-        when(cursor.getString(DATE_NUMBER)).thenReturn(formatter.print(ONE_YEAR_BEFORE));
-        when(cursor.getString(AMOUNT_NUMBER)).thenReturn(AMOUNT);
-        when(cursor.getString(INTERVAL_NUMBER)).thenReturn(interval.toString());
-        when(cursor.getString(ID_NUMBER)).thenReturn(ID);
-        when(cursor.getString(NOTE_NUMBER)).thenReturn(NOTE);
+        Statement statement = createStatement(ONE_YEAR_BEFORE, interval);
+        statements.add(statement);
 
         underTest.schedule();
 
@@ -152,12 +123,8 @@ public class RecurringIncomeSchedulerTest {
     @Test
     public void testScheduleWhenThreeMonthAndTheIntervalIsMonthlyThenShouldSaveThreeStatement() {
         RecurringInterval interval = RecurringInterval.monthly;
-
-        when(cursor.getString(DATE_NUMBER)).thenReturn(formatter.print(THREE_MONTH_BEFORE));
-        when(cursor.getString(AMOUNT_NUMBER)).thenReturn(AMOUNT);
-        when(cursor.getString(INTERVAL_NUMBER)).thenReturn(interval.toString());
-        when(cursor.getString(ID_NUMBER)).thenReturn(ID);
-        when(cursor.getString(NOTE_NUMBER)).thenReturn(NOTE);
+        Statement statement = createStatement(THREE_MONTH_BEFORE, interval);
+        statements.add(statement);
 
         underTest.schedule();
 
@@ -172,15 +139,9 @@ public class RecurringIncomeSchedulerTest {
                         .setRecurringInterval(RecurringInterval.none).setType(StatementType.Income).build());
     }
 
-    private void setUpMocks() {
-        when(service.getRecurringIncomes()).thenReturn(cursor);
-
-        when(cursor.getColumnIndex(COLUMN_NAME_DATE)).thenReturn(DATE_NUMBER);
-        when(cursor.getColumnIndex(COLUMN_NAME_AMOUNT)).thenReturn(AMOUNT_NUMBER);
-        when(cursor.getColumnIndex(COLUMN_NAME_INTERVAL)).thenReturn(INTERVAL_NUMBER);
-        when(cursor.getColumnIndex(_ID)).thenReturn(ID_NUMBER);
-        when(cursor.getColumnIndex(COLUMN_NAME_NOTE)).thenReturn(NOTE_NUMBER);
-        when(cursor.isAfterLast()).thenReturn(false, true);
-
+    private Statement createStatement(DateTime time, RecurringInterval interval) {
+        Statement statement = new Statement.Builder(AMOUNT, formatter.print(time)).setRecurringInterval(interval).setType(StatementType.Income)
+                .setNote(NOTE).setId(ID).build();
+        return statement;
     }
 }
