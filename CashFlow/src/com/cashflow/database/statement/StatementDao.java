@@ -37,6 +37,10 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class StatementDao {
+    private static final String COMMA = ",";
+
+    private static final String DOT = ".";
+
     private static final Logger LOG = LoggerFactory.getLogger(StatementDao.class);
 
     private final SQLiteDbProvider provider;
@@ -119,9 +123,9 @@ public class StatementDao {
      */
     public Cursor getStatementById(String id) {
         SQLiteDatabase db = provider.getReadableDb();
-        Cursor cursor = db.rawQuery("SELECT " + TABLE_NAME + "." + _ID + " AS " + STATEMENT_ID_ALIAS + "," + AbstractCategory.TABLE_NAME + "." + _ID
-                + " AS " + CATEGORY_ID_ALIAS + "," + COLUMN_NAME_AMOUNT + "," + AbstractCategory.COLUMN_NAME_CATEGORY_NAME + "," + COLUMN_NAME_DATE
-                + "," + COLUMN_NAME_NOTE + "," + COLUMN_NAME_INTERVAL + "," + COLUMN_NAME_IS_INCOME + " FROM " + AbstractCategory.TABLE_NAME + ","
+        Cursor cursor = db.rawQuery("SELECT " + TABLE_NAME + DOT + _ID + " AS " + STATEMENT_ID_ALIAS + COMMA + AbstractCategory.TABLE_NAME + DOT + _ID
+                + " AS " + CATEGORY_ID_ALIAS + COMMA + COLUMN_NAME_AMOUNT + COMMA + AbstractCategory.COLUMN_NAME_CATEGORY_NAME + COMMA + COLUMN_NAME_DATE
+                + COMMA + COLUMN_NAME_NOTE + COMMA + COLUMN_NAME_INTERVAL + COMMA + COLUMN_NAME_IS_INCOME + " FROM " + AbstractCategory.TABLE_NAME + COMMA
                 + AbstractStatement.TABLE_NAME + " WHERE " + SELECTION_BY_ID, new String[]{id});
         return cursor;
     }

@@ -5,6 +5,7 @@ import static com.cashflow.constants.Constants.STATEMENT_TYPE_EXTRA;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_DATE;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_NOTE;
+import static com.cashflow.database.statement.StatementType.Income;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.verify;
@@ -39,7 +40,6 @@ import com.cashflow.database.balance.Balance;
 import com.cashflow.database.statement.StatementPersistenceService;
 import com.cashflow.database.statement.StatementType;
 import com.cashflow.domain.Statement;
-import com.cashflow.domain.Statement.Builder;
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 import com.xtremelabs.robolectric.shadows.ShadowFragmentActivity;
@@ -149,7 +149,7 @@ public class AddIncomeActivityTest {
     @Test
     public void testSubmitWhenIncomeIsNotRecurringThenShouldCallSaveStatementWithCorrectStatement() {
         setViewsValues(AMOUNT, 0);
-        Statement statement = createStatement(AMOUNT, DATE, NOTES, StatementType.Income, 0);
+        Statement statement = new Statement.Builder(AMOUNT, DATE).setNote(NOTES).setType(Income).build();
 
         underTest.submit(null);
 
@@ -170,7 +170,15 @@ public class AddIncomeActivityTest {
     @Test
     public void testSubmitWhenIncomeIsRecurringThenShouldCallSaveStatementWithCorrectStatement() {
         setViewsValues(AMOUNT, 3);
-        Statement statement = createStatement(AMOUNT, DATE, NOTES, StatementType.Income, 3);
+        int recurringPos = 3;
+        //        Statement statement = createStatement(AMOUNT, DATE, NOTES, Income, 3);
+        //
+        //        if (recurringPos != 0) {
+        RecurringInterval recurringInterval = arrayAdapter.getItem(recurringPos);
+        //            builder.setRecurringInterval(item);
+        //        }
+
+        Statement statement = new Statement.Builder(AMOUNT, DATE).setNote(NOTES).setType(Income).setRecurringInterval(recurringInterval).build();
 
         underTest.submit(null);
 
@@ -221,17 +229,9 @@ public class AddIncomeActivityTest {
 
         when(statementPersistentService.getStatement(StatementType.Expense)).thenReturn(cursor);
         when(statementPersistentService.getStatement(StatementType.Income)).thenReturn(cursor);
-        when(statementPersistentService.saveStatement(createStatement(AMOUNT, DATE, NOTES, StatementType.Income, 0))).thenReturn(true);
-        when(statementPersistentService.saveStatement(createStatement(INVALID_AMOUNT, DATE, NOTES, StatementType.Income, 0))).thenReturn(false);
-    }
 
-    private Statement createStatement(String amount, String date, String note, StatementType type, int recurringPos) {
-        Builder builder = new Statement.Builder(amount, date);
-        builder.setNote(note).setType(type);
-        if (recurringPos != 0) {
-            RecurringInterval item = arrayAdapter.getItem(recurringPos);
-            builder.setRecurringInterval(item);
-        }
-        return builder.build();
+        Statement statement = new Statement.Builder(AMOUNT, DATE).setNote(NOTES).setType(Income).build();
+        when(statementPersistentService.saveStatement(statement)).thenReturn(true);
+        when(statementPersistentService.saveStatement(statement)).thenReturn(false);
     }
 }
