@@ -81,7 +81,7 @@ public abstract class DatabaseContracts {
         public static final String EXPENSE_SELECTION = OPEN_PARENTHESIS + COLUMN_NAME_IS_INCOME + EQUALS_EXPENSE + CLOSE_PARENTHESIS;
         public static final String SELECTION_BY_ID = OPEN_PARENTHESIS + TABLE_NAME + DOT + COLUMN_NAME_CATEGORY + " = " + AbstractCategory.TABLE_NAME
                 + DOT + AbstractCategory._ID + AND + TABLE_NAME + DOT + _ID + " = ?" + CLOSE_PARENTHESIS;
-        public static final String INCOME_SELECTION = OPEN_PARENTHESIS + COLUMN_NAME_IS_INCOME + EQUALS_INCOME + CLOSE_PARENTHESIS;
+        public static final String INCOME_SELECTION = COLUMN_NAME_IS_INCOME + EQUALS_INCOME + AND + COLUMN_NAME_INTERVAL + " = 'none'";
         public static final String RECURRING_INCOME_SELECTION = OPEN_PARENTHESIS + COLUMN_NAME_IS_INCOME + EQUALS_INCOME + AND + COLUMN_NAME_INTERVAL
                 + " != 'none'" + CLOSE_PARENTHESIS;
 
