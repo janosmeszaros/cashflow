@@ -1,7 +1,6 @@
 package com.cashflow.database.statement;
 
 import static android.provider.BaseColumns._ID;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_NULLABLE;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.EXPENSE_SELECTION;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.INCOME_SELECTION;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.PROJECTION;
@@ -19,6 +18,8 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.cashflow.database.DatabaseContracts.AbstractStatement;
+import com.cashflow.database.ParentDao;
 import com.cashflow.database.SQLiteDbProvider;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -29,7 +30,7 @@ import com.google.inject.Singleton;
  * @author Janos_Gyula_Meszaros
  */
 @Singleton
-public class StatementDao {
+public class StatementDao extends ParentDao<AbstractStatement> {
     private static final String EQUALS = " = ?";
 
     private static final Logger LOG = LoggerFactory.getLogger(StatementDao.class);
@@ -44,28 +45,9 @@ public class StatementDao {
      */
     @Inject
     public StatementDao(SQLiteDbProvider provider) {
+        super(provider);
         nullCheck(provider);
         this.provider = provider;
-    }
-
-    /**
-     * Persists values to the database.
-     * @param values Values to save. Can not be null.
-     * @throws IllegalArgumentException when <code>values</code> is null.
-     * @return true if save was successful, false otherwise.
-     */
-    public boolean save(ContentValues values) {
-        nullCheck(values);
-        boolean result = false;
-
-        long newRowId = provider.getWritableDb().insert(TABLE_NAME, COLUMN_NAME_NULLABLE, values);
-
-        if (newRowId >= 0) {
-            result = true;
-            LOG.debug("New row created with row ID: " + newRowId);
-        }
-
-        return result;
     }
 
     /**

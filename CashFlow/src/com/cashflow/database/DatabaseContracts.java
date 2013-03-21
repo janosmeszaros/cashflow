@@ -54,7 +54,7 @@ public abstract class DatabaseContracts {
       * Statement table.
       * @author Kornel_Refi
       */
-    public abstract static class AbstractStatement implements BaseColumns {
+    public static final class AbstractStatement implements BaseColumns, Tables {
         public static final String COLUMN_NAME_NULLABLE = null;
         public static final String STATEMENT_ID_ALIAS = "statementId";
         public static final String CATEGORY_ID_ALIAS = "categoryId";
@@ -102,6 +102,15 @@ public abstract class DatabaseContracts {
         private AbstractStatement() {
         }
 
+        @Override
+        public String getName() {
+            return TABLE_NAME;
+        }
+
+        @Override
+        public String getNullableColumnName() {
+            return COLUMN_NAME_NULLABLE;
+        }
     }
 
     /**
