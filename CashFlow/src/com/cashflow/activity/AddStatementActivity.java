@@ -28,7 +28,6 @@ import com.cashflow.R;
 import com.cashflow.activity.listeners.DateButtonOnClickListener;
 import com.cashflow.activity.listeners.RecurringCheckBoxOnClickListener;
 import com.cashflow.constants.RecurringInterval;
-import com.cashflow.database.balance.Balance;
 import com.cashflow.database.category.CategoryPersistenceService;
 import com.cashflow.database.statement.StatementPersistenceService;
 import com.cashflow.database.statement.StatementType;
@@ -64,8 +63,6 @@ public class AddStatementActivity extends RoboFragmentActivity {
     private Spinner recurringSpinner;
     @InjectView(R.id.recurring_checkbox)
     private CheckBox recurringCheckBox;
-    @Inject
-    private Balance balance;
     @Inject
     private DateButtonOnClickListener listener;
     @Inject
