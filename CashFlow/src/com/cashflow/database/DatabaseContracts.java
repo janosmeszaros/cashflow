@@ -12,7 +12,7 @@ public abstract class DatabaseContracts {
     public static final String DATABASE_NAME = "CashFlow.db";
 
     // If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 4;
+    public static final int DATABASE_VERSION = 5;
     private static final String TEXT_TYPE = " TEXT";
     private static final String INTEGER_TYPE = " INTEGER";
     private static final String REAL_TYPE = " REAL";
@@ -60,7 +60,7 @@ public abstract class DatabaseContracts {
         public static final String CATEGORY_ID_ALIAS = "categoryId";
         public static final String TABLE_NAME = "statement";
         public static final String COLUMN_NAME_AMOUNT = "amount";
-        public static final String COLUMN_NAME_CATEGORY = "category_id";
+        public static final String COLUMN_NAME_CATEGORY = "category";
         public static final String COLUMN_NAME_IS_INCOME = "is_income";
         public static final String COLUMN_NAME_DATE = "date";
         public static final String COLUMN_NAME_NOTE = "note";
@@ -117,6 +117,7 @@ public abstract class DatabaseContracts {
         public static final String COLUMN_NAME_DATE_PAYED = "payedDate";
         public static final String COLUMN_NAME_DATE_DEADLINE = "deadlineDate";
         public static final String COLUMN_NAME_NOTE = "note";
+        public static final String COLUMN_NAME_CATEGORY = "category";
         public static final String COLUMN_NAME_IS_PAYED = "payed";
         public static final String COLUMN_NAME_INTERVAL = "interval";
 
@@ -125,8 +126,8 @@ public abstract class DatabaseContracts {
 
         static final String SQL_CREATE_ENTRIES = CREATE_TABLE + TABLE_NAME + OPEN_PARENTHESIS + _ID + " INTEGER PRIMARY KEY," + COLUMN_NAME_AMOUNT
                 + INTEGER_TYPE + COMMA_SEP + COLUMN_NAME_DATE_ADDED + TEXT_TYPE + COMMA_SEP + COLUMN_NAME_DATE_DEADLINE + TEXT_TYPE + COMMA_SEP
-                + COLUMN_NAME_DATE_PAYED + TEXT_TYPE + COMMA_SEP + COLUMN_NAME_IS_PAYED + INTEGER_TYPE + COMMA_SEP + COLUMN_NAME_NOTE + TEXT_TYPE
-                + COMMA_SEP + COLUMN_NAME_INTERVAL + TEXT_TYPE + CLOSE_PARENTHESIS;
+                + COLUMN_NAME_DATE_PAYED + TEXT_TYPE + COMMA_SEP + COLUMN_NAME_CATEGORY + TEXT_TYPE + COMMA_SEP + COLUMN_NAME_IS_PAYED + INTEGER_TYPE
+                + COMMA_SEP + COLUMN_NAME_NOTE + TEXT_TYPE + COMMA_SEP + COLUMN_NAME_INTERVAL + TEXT_TYPE + CLOSE_PARENTHESIS;
 
         static final String SQL_DELETE_ENTRIES = DROP_TABLE + TABLE_NAME;
 
