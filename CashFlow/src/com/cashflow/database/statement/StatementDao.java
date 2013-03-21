@@ -1,23 +1,17 @@
 package com.cashflow.database.statement;
 
 import static android.provider.BaseColumns._ID;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.CATEGORY_ID_ALIAS;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_DATE;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_INTERVAL;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_IS_INCOME;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_NOTE;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_NULLABLE;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.EXPENSE_SELECTION;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.INCOME_SELECTION;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.PROJECTION;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.PROJECTION_WITH_ALIAS;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.RECURRING_INCOME_SELECTION;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.SELECTION_BY_ID;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.STATEMENT_ID_ALIAS;
+import static com.cashflow.database.DatabaseContracts.AbstractStatement.SELECT_STATEMENT_BY_ID;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.STATEMENT_INNER_JOINED_CATEGORY;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.TABLE_NAME;
 
+import org.apache.commons.lang.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,8 +19,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.cashflow.database.DatabaseContracts.AbstractCategory;
-import com.cashflow.database.DatabaseContracts.AbstractStatement;
 import com.cashflow.database.SQLiteDbProvider;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -34,21 +26,19 @@ import com.google.inject.Singleton;
 /**
  * Basic dao for the statements.
  * @author Kornel_Refi
+ * @author Janos_Gyula_Meszaros
  */
 @Singleton
 public class StatementDao {
-    private static final String AS = " AS ";
-
-    private static final String COMMA = ",";
-
-    private static final String DOT = ".";
+    private static final String EQUALS = " = ?";
 
     private static final Logger LOG = LoggerFactory.getLogger(StatementDao.class);
 
     private final SQLiteDbProvider provider;
 
     /**
-     * Default constructor which get an Provider.
+     * Default constructor which gets a Provider. Can't be null.
+     * @throws IllegalArgumentException when provider is null.
      * @param provider
      *            Provider to get database.
      */
@@ -60,12 +50,22 @@ public class StatementDao {
 
     /**
      * Persists values to the database.
-     * @param values
-     *            Values to save.
+     * @param values Values to save. Can not be null.
+     * @throws IllegalArgumentException when <code>values</code> is null.
+     * @return true if save was successful, false otherwise.
      */
-    public void save(ContentValues values) {
+    public boolean save(ContentValues values) {
+        nullCheck(values);
+        boolean result = false;
+
         long newRowId = provider.getWritableDb().insert(TABLE_NAME, COLUMN_NAME_NULLABLE, values);
-        LOG.debug("New row created with row ID: " + newRowId);
+
+        if (newRowId >= 0) {
+            result = true;
+            LOG.debug("New row created with row ID: " + newRowId);
+        }
+
+        return result;
     }
 
     /**
@@ -77,8 +77,10 @@ public class StatementDao {
      * @return <code>true</code> if 1 or more records updated, otherwise <code>false</code>
      */
     public boolean update(ContentValues values, String id) {
+        validateUpdateParams(values, id);
+
         boolean result = false;
-        int update = provider.getWritableDb().update(TABLE_NAME, values, _ID + " = " + id, null);
+        int update = provider.getWritableDb().update(TABLE_NAME, values, _ID + EQUALS, new String[]{id});
 
         if (update > 0) {
             result = true;
@@ -124,17 +126,24 @@ public class StatementDao {
      * @return statement
      */
     public Cursor getStatementById(String id) {
+        idCheck(id);
+
         SQLiteDatabase db = provider.getReadableDb();
-        Cursor cursor = db.rawQuery("SELECT " + TABLE_NAME + DOT + _ID + AS + STATEMENT_ID_ALIAS + COMMA + AbstractCategory.TABLE_NAME + DOT + _ID
-                + AS + CATEGORY_ID_ALIAS + COMMA + COLUMN_NAME_AMOUNT + COMMA + AbstractCategory.COLUMN_NAME_CATEGORY_NAME + COMMA + COLUMN_NAME_DATE
-                + COMMA + COLUMN_NAME_NOTE + COMMA + COLUMN_NAME_INTERVAL + COMMA + COLUMN_NAME_IS_INCOME + " FROM " + AbstractCategory.TABLE_NAME + COMMA
-                + AbstractStatement.TABLE_NAME + " WHERE " + SELECTION_BY_ID, new String[]{id});
+        Cursor cursor = db.rawQuery(SELECT_STATEMENT_BY_ID, new String[]{id});
         return cursor;
     }
 
-    private void nullCheck(SQLiteDbProvider provider) {
-        if (provider == null) {
-            throw new IllegalArgumentException();
-        }
+    private void validateUpdateParams(ContentValues values, String id) {
+        nullCheck(values);
+        idCheck(id);
     }
+
+    private void idCheck(String id) {
+        Validate.notEmpty(id);
+    }
+
+    private void nullCheck(Object object) {
+        Validate.notNull(object);
+    }
+
 }

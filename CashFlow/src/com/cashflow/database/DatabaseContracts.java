@@ -26,6 +26,9 @@ public abstract class DatabaseContracts {
     private static final String AND = " AND ";
     private static final String AS = " AS ";
     private static final String DOT = ".";
+    private static final String SELECT = "SELECT ";
+    private static final String FROM = " FROM ";
+    private static final String WHERE = " WHERE ";
     private static final String PRIMARY_KEY = " PRIMARY KEY";
 
     /**
@@ -81,6 +84,12 @@ public abstract class DatabaseContracts {
         public static final String INCOME_SELECTION = OPEN_PARENTHESIS + COLUMN_NAME_IS_INCOME + EQUALS_INCOME + CLOSE_PARENTHESIS;
         public static final String RECURRING_INCOME_SELECTION = OPEN_PARENTHESIS + COLUMN_NAME_IS_INCOME + EQUALS_INCOME + AND + COLUMN_NAME_INTERVAL
                 + " != 'none'" + CLOSE_PARENTHESIS;
+
+        public static final String SELECT_STATEMENT_BY_ID = SELECT + TABLE_NAME + DOT + _ID + AS + STATEMENT_ID_ALIAS + COMMA_SEP
+                + AbstractCategory.TABLE_NAME + DOT + _ID + AS + CATEGORY_ID_ALIAS + COMMA_SEP + COLUMN_NAME_AMOUNT + COMMA_SEP
+                + AbstractCategory.COLUMN_NAME_CATEGORY_NAME + COMMA_SEP + COLUMN_NAME_DATE + COMMA_SEP + COLUMN_NAME_NOTE + COMMA_SEP
+                + COLUMN_NAME_INTERVAL + COMMA_SEP + COLUMN_NAME_IS_INCOME + FROM + AbstractCategory.TABLE_NAME + COMMA_SEP
+                + AbstractStatement.TABLE_NAME + WHERE + SELECTION_BY_ID;
 
         static final String SQL_CREATE_ENTRIES = CREATE_TABLE + TABLE_NAME + OPEN_PARENTHESIS + _ID + " INTEGER PRIMARY KEY" + COMMA_SEP
                 + COLUMN_NAME_CATEGORY + INTEGER_TYPE + COMMA_SEP + COLUMN_NAME_AMOUNT + REAL_TYPE + COMMA_SEP + COLUMN_NAME_IS_INCOME + INTEGER_TYPE
