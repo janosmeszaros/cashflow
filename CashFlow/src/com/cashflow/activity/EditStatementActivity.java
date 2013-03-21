@@ -2,7 +2,6 @@ package com.cashflow.activity;
 
 import static android.view.View.VISIBLE;
 import static com.cashflow.constants.Constants.ID_EXTRA;
-import static com.cashflow.constants.Constants.STATEMENT_TYPE_EXTRA;
 
 import java.util.List;
 
@@ -92,7 +91,6 @@ public class EditStatementActivity extends RoboFragmentActivity {
         setListenerForDateButton();
         getOriginalData();
         fillFieldsWithData();
-        setStatementType();
         setTitle();
 
         LOG.debug("EditStatementActivity has created with type: " + type);
@@ -102,7 +100,7 @@ public class EditStatementActivity extends RoboFragmentActivity {
      * Submit onClick method. Save the statement to database. If the save was successful then refresh the balance 
      * and set the result to <code>RESULT_OK</code> then close the activity.
      * @param view
-     *            Required for onclick.
+     *            Required for onClick.
      */
     public void submit(View view) {
         Statement statement = createStatement();
@@ -143,6 +141,11 @@ public class EditStatementActivity extends RoboFragmentActivity {
         amountText.setText(originalStatement.getAmount());
         notesText.setText(originalStatement.getNote());
         dateButton.setText(originalStatement.getDate());
+        type = originalStatement.getType();
+
+        if (type.isIncome()) {
+            setUpRecurringSpinner();
+        }
 
         List<Category> list = categoryService.getCategories();
         ArrayAdapter<Category> adapter = new ArrayAdapter<Category>(this, android.R.layout.simple_spinner_dropdown_item, list);
@@ -150,15 +153,6 @@ public class EditStatementActivity extends RoboFragmentActivity {
 
         categorySpinner.setAdapter(adapter);
         categorySpinner.setSelection(position);
-    }
-
-    private void setStatementType() {
-        Intent intent = getIntent();
-        type = StatementType.valueOf(intent.getStringExtra(STATEMENT_TYPE_EXTRA));
-
-        if (type.isIncome()) {
-            setUpRecurringSpinner();
-        }
     }
 
     private void setUpRecurringSpinner() {

@@ -88,7 +88,6 @@ public class ListStatementActivity extends RoboActivity {
         TextView id = (TextView) view.findViewById(R.id.row_id);
 
         intent.putExtra(ID_EXTRA, id.getText());
-        intent.putExtra(STATEMENT_TYPE_EXTRA, type.toString());
     }
 
     private boolean isEditActivity(int requestCode, int resultCode) {

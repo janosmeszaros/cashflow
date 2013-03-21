@@ -2,13 +2,7 @@ package com.cashflow.activity;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
-import static com.cashflow.constants.Constants.AMOUNT_EXTRA;
-import static com.cashflow.constants.Constants.DATE_EXTRA;
 import static com.cashflow.constants.Constants.ID_EXTRA;
-import static com.cashflow.constants.Constants.INCOME_EXTRA;
-import static com.cashflow.constants.Constants.INTERVAL_EXTRA;
-import static com.cashflow.constants.Constants.NOTE_EXTRA;
-import static com.cashflow.constants.Constants.STATEMENT_TYPE_EXTRA;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_DATE;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_NOTE;
@@ -21,6 +15,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,10 +27,12 @@ import org.mockito.MockitoAnnotations;
 
 import android.content.Intent;
 import android.database.MatrixCursor;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -44,7 +43,9 @@ import com.cashflow.activity.testutil.EditStatementActivityProvider;
 import com.cashflow.constants.RecurringInterval;
 import com.cashflow.database.DatabaseContracts.AbstractStatement;
 import com.cashflow.database.balance.Balance;
+import com.cashflow.database.category.CategoryPersistenceService;
 import com.cashflow.database.statement.StatementPersistenceService;
+import com.cashflow.domain.Category;
 import com.cashflow.domain.Statement;
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
@@ -61,22 +62,31 @@ public class EditIncomeActivityTest {
     private static final String CHANGED_NOTE = "changedNote";
     private static final String CHANGED_DATE = "2012";
     private static final String CHANGED_AMOUNT = "123";
-    private static final String ID = "1";
+    private static final String CATEGORY_ID = "3";
+    private static final String INCOME_ID = "1";
+    private static final String EXPENSE_ID = "2";
     private static final String NOTES = "notes";
     private static final String DATE = "2013";
     private static final String AMOUNT = "1234";
-    private static final String NONE_INTERVAL_EXTRA_VALUE = "none";
-    private static final String INTERVAL_EXTRA_VALUE = "biweekly";
     private static final RecurringInterval INTERVAL = RecurringInterval.biweekly;
     private static final RecurringInterval NONE_INTERVAL = RecurringInterval.none;
+    private static final Category CATEGORY = new Category(CATEGORY_ID, "category");
+    private static final Statement INCOME_STATEMENT = new Statement.Builder(AMOUNT, DATE).setNote(NOTES).setType(Income).setId(INCOME_ID)
+            .setCategory(CATEGORY).setRecurringInterval(NONE_INTERVAL).build();
+    private static final Statement EXPENSE_STATEMENT = new Statement.Builder(AMOUNT, DATE).setNote(NOTES).setType(Expense).setId(EXPENSE_ID)
+            .setCategory(CATEGORY).setRecurringInterval(NONE_INTERVAL).build();
+
     private final String[] fromColumns = {AbstractStatement._ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE, COLUMN_NAME_NOTE};
     private final Object[] values = new Object[]{1, 1234L, CHANGED_DATE, "note"};
     private EditStatementActivity underTest;
-    private final ArrayAdapter<RecurringInterval> arrayAdapter = new ArrayAdapter<RecurringInterval>(underTest,
+    private final ArrayAdapter<RecurringInterval> intervalArrayAdapter = new ArrayAdapter<RecurringInterval>(underTest,
             android.R.layout.simple_spinner_dropdown_item, RecurringInterval.values());
+
     private Balance balance;
     @Mock
     private StatementPersistenceService statementPersistentService;
+    @Mock
+    private CategoryPersistenceService categoryPersistenceService;
     @Mock
     private DateButtonOnClickListener listener;
 
@@ -99,16 +109,34 @@ public class EditIncomeActivityTest {
     }
 
     @Test
-    public void testWhenEditIncomeActivityThanTitleShouldBeEditIncome() {
-        underTest.setIntent(setUpIntentData(NONE_INTERVAL_EXTRA_VALUE));
+    public void testOnCreateWhenEditIncomeActivityThenTitleShouldBeEditIncome() {
+        underTest.setIntent(setUpIntentData(INCOME_STATEMENT));
         underTest.onCreate(null);
 
         assertThat((String) underTest.getTitle(), equalTo(underTest.getString(R.string.title_activity_edit_incomes)));
     }
 
     @Test
+    public void testOnCreateWhenEditExpenseActivityThenTitleShouldBeEditExpense() {
+        underTest.setIntent(setUpIntentData(EXPENSE_STATEMENT));
+        underTest.onCreate(null);
+
+        assertThat((String) underTest.getTitle(), equalTo(underTest.getString(R.string.title_activity_edit_expenses)));
+    }
+
+    @Test
+    public void testOnCreateWhenExpenseThenRecurringSpinnerShouldNotBeShown() {
+        underTest.setIntent(setUpIntentData(EXPENSE_STATEMENT));
+        underTest.onCreate(null);
+
+        LinearLayout recurring = (LinearLayout) underTest.findViewById(R.id.recurring_income);
+
+        assertThat(recurring.getVisibility(), equalTo(View.GONE));
+    }
+
+    @Test
     public void testOnCreateWhenCalledThenShouldSetTheListenerClassToTheDateButton() {
-        underTest.setIntent(setUpIntentData(NONE_INTERVAL_EXTRA_VALUE));
+        underTest.setIntent(setUpIntentData(INCOME_STATEMENT));
         underTest.onCreate(null);
 
         Button button = (Button) underTest.findViewById(R.id.dateButton);
@@ -118,8 +146,10 @@ public class EditIncomeActivityTest {
     }
 
     @Test
-    public void testWhenEditIncomeActivityCreatedThanShouldFillUpViewsWithDataFromIntent() {
-        underTest.setIntent(setUpIntentData(NONE_INTERVAL_EXTRA_VALUE));
+    public void testWhenEditIncomeActivityCreatedThenShouldFillUpViewsWithDataFromIntent() {
+        Statement statement = new Statement.Builder(AMOUNT, DATE).setId(INCOME_ID).setCategory(CATEGORY).setNote(NOTES)
+                .setRecurringInterval(NONE_INTERVAL).setType(Income).build();
+        underTest.setIntent(setUpIntentData(statement));
         underTest.onCreate(null);
 
         TextView amount = (TextView) underTest.findViewById(R.id.amountText);
@@ -132,8 +162,10 @@ public class EditIncomeActivityTest {
     }
 
     @Test
-    public void testWhenRecurringIsNoneThenRecurringCheckBoxShouldBeUnchekedAndSpinnerValueIsNone() {
-        underTest.setIntent(setUpIntentData(NONE_INTERVAL_EXTRA_VALUE));
+    public void testOnCreateWhenRecurringIsNoneThenRecurringCheckBoxShouldBeUnchekedAndSpinnerValueIsNone() {
+        Statement statement = new Statement.Builder(AMOUNT, DATE).setId(INCOME_ID).setCategory(CATEGORY).setNote(NOTES)
+                .setRecurringInterval(NONE_INTERVAL).setType(Income).build();
+        underTest.setIntent(setUpIntentData(statement));
         underTest.onCreate(null);
 
         Spinner interval = (Spinner) underTest.findViewById(R.id.recurring_spinner);
@@ -144,8 +176,11 @@ public class EditIncomeActivityTest {
     }
 
     @Test
-    public void testWhenRecurringIsOtherThanNoneThenRecurringCheckBoxShouldBeCheckedAndSpinnerValueIsSettedToCorrectValue() {
-        underTest.setIntent(setUpIntentData(INTERVAL_EXTRA_VALUE));
+    public void testOnCreateWhenRecurringIsOtherThenNoneThenRecurringCheckBoxShouldBeCheckedAndSpinnerValueIsSettedToCorrectValue() {
+        Statement statement = new Statement.Builder(AMOUNT, DATE).setId("12").setCategory(CATEGORY).setNote(NOTES).setRecurringInterval(INTERVAL)
+                .setType(Income).build();
+        underTest.setIntent(setUpIntentData(statement));
+        when(statementPersistentService.getStatementById("12")).thenReturn(statement);
         underTest.onCreate(null);
 
         Spinner interval = (Spinner) underTest.findViewById(R.id.recurring_spinner);
@@ -156,84 +191,80 @@ public class EditIncomeActivityTest {
     }
 
     @Test
-    public void testSubmitWhenAmountHasChangedThanShouldCallProperFunctionAndRefreshBalanceAndResultCodeShouldBeOK() {
+    public void testSubmitWhenAmountHasChangedThenShouldCallProperFunctionAndResultCodeShouldBeOK() {
         ShadowFragmentActivity shadowFragmentActivity = Robolectric.shadowOf(underTest);
-        underTest.setIntent(setUpIntentData(NONE_INTERVAL_EXTRA_VALUE));
+        underTest.setIntent(setUpIntentData(INCOME_STATEMENT));
         underTest.onCreate(null);
 
-        setViewsValues(CHANGED_AMOUNT, NOTES, DATE);
-        Statement statement = new Statement.Builder(CHANGED_AMOUNT, DATE).setNote(NOTES).setType(Income).setId(ID)
+        Statement incomeStatement = new Statement.Builder(CHANGED_AMOUNT, DATE).setNote(NOTES).setType(Income).setId(INCOME_ID)
+                .setRecurringInterval(INTERVAL).setCategory(CATEGORY).build();
+        setViewsValues(incomeStatement);
+
+        underTest.submit(null);
+
+        verify(statementPersistentService, times(1)).updateStatement(incomeStatement);
+        assertThat(shadowFragmentActivity.getResultCode(), equalTo(RESULT_OK));
+        assertThat(shadowFragmentActivity.isFinishing(), equalTo(true));
+    }
+
+    @Test
+    public void testSubmitWhenRecurringIntervalHasChangedThenShouldCallProperFunctionAndRefreshBalanceAndResultCodeShouldBeOK() {
+        ShadowFragmentActivity shadowFragmentActivity = Robolectric.shadowOf(underTest);
+        underTest.setIntent(setUpIntentData(INCOME_STATEMENT));
+        underTest.onCreate(null);
+
+        setViewsValues(INCOME_STATEMENT);
+        //        setRecurringInterval(INTERVAL, true);
+        Statement changedStatement = new Statement.Builder(AMOUNT, DATE).setNote(NOTES).setType(Income).setId(INCOME_ID)
+                .setRecurringInterval(INTERVAL).setCategory(CATEGORY).build();
+        setViewsValues(changedStatement);
+
+        underTest.submit(null);
+
+        verify(statementPersistentService, times(1)).updateStatement(changedStatement);
+        assertThat(shadowFragmentActivity.getResultCode(), equalTo(RESULT_OK));
+        assertThat(shadowFragmentActivity.isFinishing(), equalTo(true));
+    }
+
+    @Test
+    public void testSubmitWhenDateHasChangedThenShouldCallProperFunctionAAndResultCodeShouldBeOK() {
+        ShadowFragmentActivity shadowFragmentActivity = Robolectric.shadowOf(underTest);
+        underTest.setIntent(setUpIntentData(INCOME_STATEMENT));
+        underTest.onCreate(null);
+
+        Statement changedDateStatement = new Statement.Builder(AMOUNT, CHANGED_DATE).setNote(NOTES).setType(Income).setId(INCOME_ID)
                 .setRecurringInterval(NONE_INTERVAL).build();
-
+        setViewsValues(changedDateStatement);
         underTest.submit(null);
 
-        verify(statementPersistentService, times(1)).updateStatement(statement);
-        assertThat(balance.getBalance(), equalTo(-1111D));
+        verify(statementPersistentService, times(1)).updateStatement(changedDateStatement);
         assertThat(shadowFragmentActivity.getResultCode(), equalTo(RESULT_OK));
         assertThat(shadowFragmentActivity.isFinishing(), equalTo(true));
     }
 
     @Test
-    public void testSubmitWhenRecurringIntervalHasChangedThanShouldCallProperFunctionAndRefreshBalanceAndResultCodeShouldBeOK() {
+    public void testSubmitWhenNotesHasChangedThenShouldCallProperFunctionAndResultCodeShouldBeOK() {
         ShadowFragmentActivity shadowFragmentActivity = Robolectric.shadowOf(underTest);
-        underTest.setIntent(setUpIntentData(NONE_INTERVAL_EXTRA_VALUE));
+        underTest.setIntent(setUpIntentData(INCOME_STATEMENT));
         underTest.onCreate(null);
 
-        setViewsValues(AMOUNT, NOTES, DATE);
-        setRecurringInterval(INTERVAL, true);
-        Statement statement = new Statement.Builder(AMOUNT, DATE).setNote(NOTES).setType(Income).setId(ID).setRecurringInterval(INTERVAL).build();
-
-        underTest.submit(null);
-
-        verify(statementPersistentService, times(1)).updateStatement(statement);
-        assertThat(balance.getBalance(), equalTo(0D));
-        assertThat(shadowFragmentActivity.getResultCode(), equalTo(RESULT_OK));
-        assertThat(shadowFragmentActivity.isFinishing(), equalTo(true));
-    }
-
-    @Test
-    public void testSubmitWhenDateHasChangedThanShouldCallProperFunctionAndRefreshBalanceAndResultCodeShouldBeOK() {
-        ShadowFragmentActivity shadowFragmentActivity = Robolectric.shadowOf(underTest);
-        underTest.setIntent(setUpIntentData(NONE_INTERVAL_EXTRA_VALUE));
-        underTest.onCreate(null);
-
-        setViewsValues(AMOUNT, NOTES, CHANGED_DATE);
-        Statement statement = new Statement.Builder(AMOUNT, CHANGED_DATE).setNote(NOTES).setType(Income).setId(ID)
+        Statement changedNoteStatement = new Statement.Builder(AMOUNT, DATE).setNote(CHANGED_NOTE).setType(Income).setId(INCOME_ID)
                 .setRecurringInterval(NONE_INTERVAL).build();
-
+        setViewsValues(changedNoteStatement);
         underTest.submit(null);
 
-        verify(statementPersistentService, times(1)).updateStatement(statement);
-        assertThat(balance.getBalance(), equalTo(0D));
+        verify(statementPersistentService, times(1)).updateStatement(changedNoteStatement);
         assertThat(shadowFragmentActivity.getResultCode(), equalTo(RESULT_OK));
         assertThat(shadowFragmentActivity.isFinishing(), equalTo(true));
     }
 
     @Test
-    public void testSubmitWhenNotesHasChangedThanShouldCallProperFunctionAndRefreshBalanceAndResultCodeShouldBeOK() {
+    public void testSubmitWhenNothingHasChangedThenCallProperFunctionAndResultCodeShouldBeCanceled() {
         ShadowFragmentActivity shadowFragmentActivity = Robolectric.shadowOf(underTest);
-        underTest.setIntent(setUpIntentData(NONE_INTERVAL_EXTRA_VALUE));
+        underTest.setIntent(setUpIntentData(INCOME_STATEMENT));
         underTest.onCreate(null);
 
-        setViewsValues(AMOUNT, CHANGED_NOTE, DATE);
-        Statement statement = new Statement.Builder(AMOUNT, DATE).setNote(CHANGED_NOTE).setType(Income).setId(ID).setRecurringInterval(NONE_INTERVAL)
-                .build();
-
-        underTest.submit(null);
-
-        verify(statementPersistentService, times(1)).updateStatement(statement);
-        assertThat(balance.getBalance(), equalTo(0D));
-        assertThat(shadowFragmentActivity.getResultCode(), equalTo(RESULT_OK));
-        assertThat(shadowFragmentActivity.isFinishing(), equalTo(true));
-    }
-
-    @Test
-    public void testSubmitWhenNothingHasChangedThanCallProperFunctionAndResultCodeShouldBeCanceled() {
-        ShadowFragmentActivity shadowFragmentActivity = Robolectric.shadowOf(underTest);
-        underTest.setIntent(setUpIntentData(NONE_INTERVAL_EXTRA_VALUE));
-        underTest.onCreate(null);
-
-        setViewsValues(AMOUNT, NOTES, DATE);
+        setViewsValues(INCOME_STATEMENT);
 
         underTest.submit(null);
 
@@ -241,24 +272,40 @@ public class EditIncomeActivityTest {
         assertThat(shadowFragmentActivity.isFinishing(), equalTo(true));
     }
 
-    private void setViewsValues(String amountValue, String notesValue, String dateValue) {
+    private void setViewsValues(Statement statement) {
         EditText notes = (EditText) underTest.findViewById(R.id.notesText);
-        notes.setText(notesValue);
+        notes.setText(statement.getNote());
+
         EditText amount = (EditText) underTest.findViewById(R.id.amountText);
-        amount.setText(amountValue);
-        Button button = (Button) underTest.findViewById(R.id.dateButton);
-        button.setText(dateValue);
+        amount.setText(statement.getAmount());
+
+        Button dateButton = (Button) underTest.findViewById(R.id.dateButton);
+        dateButton.setText(statement.getDate());
+
+        Spinner categorySpinner = (Spinner) underTest.findViewById(R.id.categorySpinner);
+        List<Category> categories = new ArrayList<Category>();
+        categories.add(statement.getCategory());
+        ArrayAdapter<Category> categoryArrayAdapter = new ArrayAdapter<Category>(underTest, android.R.layout.simple_spinner_dropdown_item, categories);
+        categorySpinner.setAdapter(categoryArrayAdapter);
+        int categoryPos = categoryArrayAdapter.getPosition(statement.getCategory());
+        categorySpinner.setSelection(categoryPos);
+
+        Spinner recurringSpinner = (Spinner) underTest.findViewById(R.id.recurring_spinner);
+        recurringSpinner.setAdapter(intervalArrayAdapter);
+        int intervalPos = intervalArrayAdapter.getPosition(statement.getRecurringInterval());
+        recurringSpinner.setSelection(intervalPos);
+
+        CheckBox checkBox = (CheckBox) underTest.findViewById(R.id.recurring_checkbox);
+        checkBox.setSelected(false);
+        if (intervalPos != intervalArrayAdapter.getPosition(RecurringInterval.none)) {
+            checkBox.setChecked(true);
+        }
 
     }
 
-    private Intent setUpIntentData(String interval) {
+    private Intent setUpIntentData(Statement statement) {
         Intent intent = new Intent();
-        intent.putExtra(ID_EXTRA, ID);
-        intent.putExtra(AMOUNT_EXTRA, AMOUNT);
-        intent.putExtra(NOTE_EXTRA, NOTES);
-        intent.putExtra(DATE_EXTRA, DATE);
-        intent.putExtra(STATEMENT_TYPE_EXTRA, INCOME_EXTRA);
-        intent.putExtra(INTERVAL_EXTRA, interval);
+        intent.putExtra(ID_EXTRA, statement.getId());
         return intent;
     }
 
@@ -273,19 +320,18 @@ public class EditIncomeActivityTest {
         MatrixCursor cursor = new MatrixCursor(fromColumns);
         cursor.addRow(values);
 
+        when(statementPersistentService.getStatementById(INCOME_ID)).thenReturn(INCOME_STATEMENT);
+        when(statementPersistentService.getStatementById(EXPENSE_ID)).thenReturn(EXPENSE_STATEMENT);
+
         when(statementPersistentService.getStatement(Expense)).thenReturn(cursor);
         when(statementPersistentService.getStatement(Income)).thenReturn(cursor);
         when(statementPersistentService.saveStatement((Statement) anyObject())).thenReturn(true);
         when(statementPersistentService.updateStatement((Statement) anyObject())).thenReturn(true);
-    }
 
-    private void setRecurringInterval(RecurringInterval interval, boolean chechbox) {
-        Spinner spinner = (Spinner) underTest.findViewById(R.id.recurring_spinner);
-        spinner.setAdapter(arrayAdapter);
-        spinner.setSelection(arrayAdapter.getPosition(interval));
+        List<Category> categories = new ArrayList<Category>();
+        categories.add(CATEGORY);
 
-        CheckBox recurringCheckBox = (CheckBox) underTest.findViewById(R.id.recurring_checkbox);
-        recurringCheckBox.setChecked(true);
+        when(categoryPersistenceService.getCategories()).thenReturn(categories);
     }
 
 }
