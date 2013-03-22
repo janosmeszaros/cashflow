@@ -1,6 +1,7 @@
 package com.cashflow.database.category;
 
 import static android.provider.BaseColumns._ID;
+import static com.cashflow.database.DatabaseContracts.AbstractCategory.COLUMN_NAME_NULLABLE;
 import static com.cashflow.database.DatabaseContracts.AbstractCategory.PROJECTION;
 import static com.cashflow.database.DatabaseContracts.AbstractCategory.TABLE_NAME;
 
@@ -11,7 +12,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.cashflow.database.DatabaseContracts;
 import com.cashflow.database.SQLiteDbProvider;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -49,8 +49,7 @@ public class CategoryDao {
      *            Values to save.
      */
     public void save(ContentValues values) {
-        long newRowId = provider.getWritableDb().insert(DatabaseContracts.AbstractCategory.TABLE_NAME,
-                DatabaseContracts.AbstractCategory.COLUMN_NAME_NULLABLE, values);
+        long newRowId = provider.getWritableDb().insert(TABLE_NAME, COLUMN_NAME_NULLABLE, values);
         LOG.debug("New row created with row ID: " + newRowId);
     }
 

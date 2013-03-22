@@ -1,5 +1,8 @@
 package com.cashflow.domain;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import com.cashflow.constants.RecurringInterval;
 import com.cashflow.database.statement.StatementType;
 
@@ -57,72 +60,12 @@ public final class Statement {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((amount == null) ? 0 : amount.hashCode());
-        result = prime * result + ((category == null) ? 0 : category.hashCode());
-        result = prime * result + ((date == null) ? 0 : date.hashCode());
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime * result + ((note == null) ? 0 : note.hashCode());
-        result = prime * result + ((recurringInterval == null) ? 0 : recurringInterval.hashCode());
-        result = prime * result + ((type == null) ? 0 : type.hashCode());
-        return result;
+        return HashCodeBuilder.reflectionHashCode(this);
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        Statement other = (Statement) obj;
-        if (amount == null) {
-            if (other.amount != null) {
-                return false;
-            }
-        } else if (!amount.equals(other.amount)) {
-            return false;
-        }
-        if (category == null) {
-            if (other.category != null) {
-                return false;
-            }
-        } else if (!category.equals(other.category)) {
-            return false;
-        }
-        if (date == null) {
-            if (other.date != null) {
-                return false;
-            }
-        } else if (!date.equals(other.date)) {
-            return false;
-        }
-        if (id == null) {
-            if (other.id != null) {
-                return false;
-            }
-        } else if (!id.equals(other.id)) {
-            return false;
-        }
-        if (note == null) {
-            if (other.note != null) {
-                return false;
-            }
-        } else if (!note.equals(other.note)) {
-            return false;
-        }
-        if (recurringInterval != other.recurringInterval) {
-            return false;
-        }
-        if (type != other.type) {
-            return false;
-        }
-        return true;
+        return EqualsBuilder.reflectionEquals(this, obj);
     }
 
     /**
