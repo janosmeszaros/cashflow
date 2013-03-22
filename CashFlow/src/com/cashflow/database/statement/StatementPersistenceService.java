@@ -230,8 +230,8 @@ public class StatementPersistenceService {
     }
 
     private void validateUpdateStatement(Statement statement) {
-        validateObjectsNotNull(statement.getType(), statement.getCategory());
-        validateStringsNotEmpty(statement.getAmount(), statement.getDate(), statement.getId());
+        validateStringsNotEmpty(statement.getId());
+        validateStatement(statement);
     }
 
     private void validateObjectsNotNull(Object... objects) {

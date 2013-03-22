@@ -63,7 +63,7 @@ public class MainActivity extends RoboActivity {
     /**
      * Add new income onClick method.
      * @param view
-     *            Required for onclick.
+     *            Required for onClick.
      */
     public void addIncome(View view) {
         Intent intent = new Intent(this, AddStatementActivity.class);
@@ -75,7 +75,7 @@ public class MainActivity extends RoboActivity {
     /**
      * Add new Expense onClick method.
      * @param view
-     *            Required for onclick.
+     *            Required for onClick.
      */
     public void addExpense(View view) {
         Intent intent = new Intent(this, AddStatementActivity.class);
@@ -86,7 +86,7 @@ public class MainActivity extends RoboActivity {
     /**
      * List incomes onClick method.
      * @param view
-     *            Required for onclick.
+     *            Required for onClick.
      */
     public void listIncomes(View view) {
         Intent intent = new Intent(this, ListStatementActivity.class);
@@ -97,7 +97,7 @@ public class MainActivity extends RoboActivity {
     /**
      * List expenses onClick method.
      * @param view
-     *            Required for onclick.
+     *            Required for onClick.
      */
     public void listExpenses(View view) {
         Intent intent = new Intent(this, ListStatementActivity.class);
@@ -108,7 +108,7 @@ public class MainActivity extends RoboActivity {
     /**
      * Create categories onClick method.
      * @param view
-     *            Required for onclick.
+     *            Required for onClick.
      */
     public void createCategories(View view) {
         Intent intent = new Intent(this, CreateCategoryActivity.class);

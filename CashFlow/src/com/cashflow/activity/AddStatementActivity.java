@@ -101,7 +101,7 @@ public class AddStatementActivity extends RoboFragmentActivity {
     }
 
     /**
-     * Onclick event for add statement button on add statement screen. Save the expense to database. If the save was successful then refresh the
+     * OnClick event for add statement button on add statement screen. Save the expense to database. If the save was successful then refresh the
      * balance else sets the result to canceled and close the activity. 
      * @param view
      *            Required for onClick.

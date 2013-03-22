@@ -214,7 +214,6 @@ public class EditStatementActivityTest {
         underTest.onCreate(null);
 
         setViewsValues(INCOME_STATEMENT);
-        //        setRecurringInterval(INTERVAL, true);
         Statement changedStatement = new Statement.Builder(AMOUNT, DATE).setNote(NOTES).setType(Income).setId(INCOME_ID)
                 .setRecurringInterval(INTERVAL).setCategory(CATEGORY).build();
         setViewsValues(changedStatement);
