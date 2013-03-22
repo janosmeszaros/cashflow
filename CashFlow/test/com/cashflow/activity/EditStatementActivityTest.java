@@ -71,6 +71,7 @@ public class EditStatementActivityTest {
     private static final RecurringInterval INTERVAL = RecurringInterval.biweekly;
     private static final RecurringInterval NONE_INTERVAL = RecurringInterval.none;
     private static final Category CATEGORY = new Category(CATEGORY_ID, "category");
+    private static final Category CHANGED_CATEGORY = new Category("4", "changed_category");
     private static final Statement INCOME_STATEMENT = new Statement.Builder(AMOUNT, DATE).setNote(NOTES).setType(Income).setId(INCOME_ID)
             .setCategory(CATEGORY).setRecurringInterval(NONE_INTERVAL).build();
     private static final Statement EXPENSE_STATEMENT = new Statement.Builder(AMOUNT, DATE).setNote(NOTES).setType(Expense).setId(EXPENSE_ID)
@@ -242,7 +243,7 @@ public class EditStatementActivityTest {
     }
 
     @Test
-    public void testSubmitWhenNotesHasChangedThenShouldCallProperFunctionAndResultCodeShouldBeOK() {
+    public void testSubmitWhenNoteHasChangedThenShouldCallProperFunctionAndResultCodeShouldBeOK() {
         ShadowFragmentActivity shadowFragmentActivity = Robolectric.shadowOf(underTest);
         underTest.setIntent(setUpIntentData(INCOME_STATEMENT));
         underTest.onCreate(null);
@@ -254,6 +255,23 @@ public class EditStatementActivityTest {
 
         verify(statementPersistentService, times(1)).updateStatement(changedNoteStatement);
         assertThat(shadowFragmentActivity.getResultCode(), equalTo(RESULT_OK));
+        assertThat(shadowFragmentActivity.isFinishing(), equalTo(true));
+    }
+
+    @Test
+    public void testSubmitWhenCategoryHasChangedButTheSaveFailedThenResultCodeShouldBeCanceled() {
+        ShadowFragmentActivity shadowFragmentActivity = Robolectric.shadowOf(underTest);
+        underTest.setIntent(setUpIntentData(INCOME_STATEMENT));
+        underTest.onCreate(null);
+        when(statementPersistentService.updateStatement((Statement) anyObject())).thenReturn(false);
+
+        Statement changedNoteStatement = new Statement.Builder(AMOUNT, DATE).setNote(CHANGED_NOTE).setType(Income).setId(INCOME_ID)
+                .setRecurringInterval(NONE_INTERVAL).setCategory(CHANGED_CATEGORY).build();
+        setViewsValues(changedNoteStatement);
+        underTest.submit(null);
+
+        verify(statementPersistentService, times(1)).updateStatement(changedNoteStatement);
+        assertThat(shadowFragmentActivity.getResultCode(), equalTo(RESULT_CANCELED));
         assertThat(shadowFragmentActivity.isFinishing(), equalTo(true));
     }
 

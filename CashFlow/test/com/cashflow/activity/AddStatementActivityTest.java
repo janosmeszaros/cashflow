@@ -186,10 +186,25 @@ public class AddStatementActivityTest {
     }
 
     @Test
-    public void testSubmitWhenOkThenShouldSetTheResultToOkAndCloseTheActivity() {
+    public void testSubmitValidIncomeThenShouldSetTheResultToOkAndCloseTheActivity() {
         createAddIncome();
         ShadowFragmentActivity shadowActivity = Robolectric.shadowOf(underTest);
         Statement statement = new Statement.Builder(AMOUNT, DATE).setCategory(CATEGORY).setNote(NOTES).setType(Income)
+                .setRecurringInterval(RecurringInterval.none).build();
+        setViewsValues(statement);
+        when(statementPersistentService.saveStatement(statement)).thenReturn(true);
+
+        underTest.submit(null);
+
+        assertThat(shadowActivity.getResultCode(), equalTo(Activity.RESULT_OK));
+        assertThat(shadowActivity.isFinishing(), equalTo(true));
+    }
+
+    @Test
+    public void testSubmitValidExpenseThenShouldSetTheResultToOkAndCloseTheActivity() {
+        createAddExpense();
+        ShadowFragmentActivity shadowActivity = Robolectric.shadowOf(underTest);
+        Statement statement = new Statement.Builder(AMOUNT, DATE).setCategory(CATEGORY).setNote(NOTES).setType(Expense)
                 .setRecurringInterval(RecurringInterval.none).build();
         setViewsValues(statement);
         when(statementPersistentService.saveStatement(statement)).thenReturn(true);
