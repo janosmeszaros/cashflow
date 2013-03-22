@@ -58,7 +58,7 @@ import com.xtremelabs.robolectric.shadows.ShadowTextView;
  *
  */
 @RunWith(RobolectricTestRunner.class)
-public class EditIncomeActivityTest {
+public class EditStatementActivityTest {
     private static final String CHANGED_NOTE = "changedNote";
     private static final String CHANGED_DATE = "2012";
     private static final String CHANGED_AMOUNT = "123";
@@ -233,7 +233,7 @@ public class EditIncomeActivityTest {
         underTest.onCreate(null);
 
         Statement changedDateStatement = new Statement.Builder(AMOUNT, CHANGED_DATE).setNote(NOTES).setType(Income).setId(INCOME_ID)
-                .setRecurringInterval(NONE_INTERVAL).build();
+                .setRecurringInterval(NONE_INTERVAL).setCategory(CATEGORY).build();
         setViewsValues(changedDateStatement);
         underTest.submit(null);
 
@@ -249,7 +249,7 @@ public class EditIncomeActivityTest {
         underTest.onCreate(null);
 
         Statement changedNoteStatement = new Statement.Builder(AMOUNT, DATE).setNote(CHANGED_NOTE).setType(Income).setId(INCOME_ID)
-                .setRecurringInterval(NONE_INTERVAL).build();
+                .setRecurringInterval(NONE_INTERVAL).setCategory(CATEGORY).build();
         setViewsValues(changedNoteStatement);
         underTest.submit(null);
 

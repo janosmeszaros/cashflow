@@ -25,7 +25,6 @@ import com.cashflow.R;
 import com.cashflow.activity.listeners.DateButtonOnClickListener;
 import com.cashflow.activity.listeners.RecurringCheckBoxOnClickListener;
 import com.cashflow.constants.RecurringInterval;
-import com.cashflow.database.balance.Balance;
 import com.cashflow.database.category.CategoryPersistenceService;
 import com.cashflow.database.statement.StatementPersistenceService;
 import com.cashflow.database.statement.StatementType;
@@ -69,8 +68,6 @@ public class EditStatementActivity extends RoboFragmentActivity {
     @Inject
     private CategoryPersistenceService categoryService;
     @Inject
-    private Balance balance;
-    @Inject
     private DateButtonOnClickListener listener;
     @Inject
     private RecurringCheckBoxOnClickListener checkBoxListener;
@@ -78,7 +75,6 @@ public class EditStatementActivity extends RoboFragmentActivity {
     private SpinnerAdapter spinnerAdapter;
 
     private Statement originalStatement;
-    private String originalId;
 
     private StatementType type;
 
@@ -181,7 +177,7 @@ public class EditStatementActivity extends RoboFragmentActivity {
         String date = dateButton.getText().toString();
         String note = notesText.getText().toString();
         Category category = (Category) categorySpinner.getSelectedItem();
-        String id = originalId;
+        String id = originalStatement.getId();
 
         Builder builder = new Statement.Builder(amountStr, date);
         builder.setNote(note).setType(type).setId(id).setCategory(category);
@@ -200,8 +196,7 @@ public class EditStatementActivity extends RoboFragmentActivity {
 
     private void getOriginalData() {
         Intent intent = getIntent();
-        originalId = intent.getStringExtra(ID_EXTRA);
-
-        originalStatement = statementService.getStatementById(originalId);
+        String id = intent.getStringExtra(ID_EXTRA);
+        originalStatement = statementService.getStatementById(id);
     }
 }
