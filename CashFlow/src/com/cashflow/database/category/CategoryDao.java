@@ -1,7 +1,7 @@
 package com.cashflow.database.category;
 
 import com.cashflow.database.DatabaseContracts.AbstractCategory;
-import com.cashflow.database.ParentDao;
+import com.cashflow.database.parentdao.ParentDao;
 import com.cashflow.database.SQLiteDbProvider;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -22,4 +22,4 @@ public class CategoryDao extends ParentDao {
         super(provider, AbstractCategory.class);
     }
 
-        }
+}

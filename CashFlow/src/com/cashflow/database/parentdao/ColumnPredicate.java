@@ -1,4 +1,4 @@
-package com.cashflow.database;
+package com.cashflow.database.parentdao;
 
 import java.lang.reflect.Field;
 

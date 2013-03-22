@@ -14,7 +14,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.cashflow.database.DatabaseContracts.AbstractStatement;
-import com.cashflow.database.ParentDao;
+import com.cashflow.database.parentdao.ParentDao;
 import com.cashflow.database.SQLiteDbProvider;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;

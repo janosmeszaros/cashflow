@@ -3,6 +3,7 @@ package com.cashflow.database;
 import android.provider.BaseColumns;
 
 import com.cashflow.R;
+import com.cashflow.database.parentdao.Tables;
 
 /**
  * Database tables.

@@ -1,4 +1,4 @@
-package com.cashflow.database;
+package com.cashflow.database.parentdao;
 
 import static android.provider.BaseColumns._ID;
 
@@ -19,6 +19,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.cashflow.database.SQLiteDbProvider;
 import com.cashflow.exceptions.IllegalTableException;
 
 /**

@@ -1,4 +1,4 @@
-package com.cashflow.database;
+package com.cashflow.database.parentdao;
 
 /**
  * Marker interface for tables in database.
