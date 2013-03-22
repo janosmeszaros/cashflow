@@ -5,17 +5,17 @@ package com.cashflow.database;
  * @author Janos_Gyula_Meszaros
  *
  */
-public interface Tables {
+public abstract class Tables {
     /**
      * Return table name.
      * @return table name.
      */
-    String getName();
+    abstract String getName();
 
     /**
      * Return nullable column name.
      * @return column name.
      */
-    String getNullableColumnName();
+    abstract String getNullableColumnName();
 
 }

@@ -54,7 +54,7 @@ public abstract class DatabaseContracts {
       * Statement table.
       * @author Kornel_Refi
       */
-    public static final class AbstractStatement implements BaseColumns, Tables {
+    public static final class AbstractStatement extends Tables implements BaseColumns {
         public static final String COLUMN_NAME_NULLABLE = null;
         public static final String STATEMENT_ID_ALIAS = "statementId";
         public static final String CATEGORY_ID_ALIAS = "categoryId";
@@ -99,7 +99,10 @@ public abstract class DatabaseContracts {
 
         static final String SQL_DELETE_ENTRIES = DROP_TABLE + TABLE_NAME;
 
-        private AbstractStatement() {
+        /**
+         * e
+         */
+        public AbstractStatement() {
         }
 
         @Override

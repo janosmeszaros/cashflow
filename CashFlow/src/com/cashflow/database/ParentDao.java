@@ -6,29 +6,25 @@ import org.slf4j.LoggerFactory;
 
 import android.content.ContentValues;
 
-import com.google.inject.Inject;
-
 /**
  * a
  * @author Janos_Gyula_Meszaros
- *
- * @param <E>
  */
-public class ParentDao<E extends Tables> {
+public class ParentDao {
     private static final Logger LOG = LoggerFactory.getLogger(ParentDao.class);
     private final SQLiteDbProvider provider;
-    private E table;
+    private String table;
 
     /**
      * Default constructor which gets a Provider. Can't be null.
      * @throws IllegalArgumentException when provider is null.
-     * @param provider
-     *            Provider to get database.
+     * @param provider Provider to get database.
+     * @param tableName table
      */
-    @Inject
-    public ParentDao(SQLiteDbProvider provider) {
+    public ParentDao(SQLiteDbProvider provider, String tableName) {
         nullCheck(provider);
         this.provider = provider;
+        this.table = tableName;
     }
 
     /**
@@ -41,7 +37,7 @@ public class ParentDao<E extends Tables> {
         nullCheck(values);
         boolean result = false;
 
-        long newRowId = provider.getWritableDb().insert(table.getName(), table.getNullableColumnName(), values);
+        long newRowId = provider.getWritableDb().insert(table, null, values);
 
         if (newRowId >= 0) {
             result = true;

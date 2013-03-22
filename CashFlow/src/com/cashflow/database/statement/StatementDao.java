@@ -30,7 +30,7 @@ import com.google.inject.Singleton;
  * @author Janos_Gyula_Meszaros
  */
 @Singleton
-public class StatementDao extends ParentDao<AbstractStatement> {
+public class StatementDao extends ParentDao {
     private static final String EQUALS = " = ?";
 
     private static final Logger LOG = LoggerFactory.getLogger(StatementDao.class);
@@ -45,7 +45,7 @@ public class StatementDao extends ParentDao<AbstractStatement> {
      */
     @Inject
     public StatementDao(SQLiteDbProvider provider) {
-        super(provider);
+        super(provider, AbstractStatement.TABLE_NAME);
         nullCheck(provider);
         this.provider = provider;
     }
