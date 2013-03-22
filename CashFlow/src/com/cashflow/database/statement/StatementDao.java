@@ -1,6 +1,5 @@
 package com.cashflow.database.statement;
 
-import static android.provider.BaseColumns._ID;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.EXPENSE_SELECTION;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.INCOME_SELECTION;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.PROJECTION;
@@ -8,13 +7,9 @@ import static com.cashflow.database.DatabaseContracts.AbstractStatement.PROJECTI
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.RECURRING_INCOME_SELECTION;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.SELECT_STATEMENT_BY_ID;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.STATEMENT_INNER_JOINED_CATEGORY;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.TABLE_NAME;
 
 import org.apache.commons.lang.Validate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -31,10 +26,6 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class StatementDao extends ParentDao {
-    private static final String EQUALS = " = ?";
-
-    private static final Logger LOG = LoggerFactory.getLogger(StatementDao.class);
-
     private final SQLiteDbProvider provider;
 
     /**
@@ -45,31 +36,9 @@ public class StatementDao extends ParentDao {
      */
     @Inject
     public StatementDao(SQLiteDbProvider provider) {
-        super(provider, AbstractStatement.TABLE_NAME);
+        super(provider, AbstractStatement.class);
         nullCheck(provider);
         this.provider = provider;
-    }
-
-    /**
-     * Updates a statement row with specified id.
-     * @param values
-     *            data needs to be updated.
-     * @param id
-     *            row id.
-     * @return <code>true</code> if 1 or more records updated, otherwise <code>false</code>
-     */
-    public boolean update(ContentValues values, String id) {
-        validateUpdateParams(values, id);
-
-        boolean result = false;
-        int update = provider.getWritableDb().update(TABLE_NAME, values, _ID + EQUALS, new String[]{id});
-
-        if (update > 0) {
-            result = true;
-        }
-
-        LOG.debug("Num of rows updated: " + update);
-        return result;
     }
 
     /**
@@ -113,11 +82,6 @@ public class StatementDao extends ParentDao {
         SQLiteDatabase db = provider.getReadableDb();
         Cursor cursor = db.rawQuery(SELECT_STATEMENT_BY_ID, new String[]{id});
         return cursor;
-    }
-
-    private void validateUpdateParams(ContentValues values, String id) {
-        nullCheck(values);
-        idCheck(id);
     }
 
     private void idCheck(String id) {

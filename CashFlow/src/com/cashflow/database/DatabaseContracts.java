@@ -35,8 +35,8 @@ public abstract class DatabaseContracts {
      * Category table.
      * @author Kornel_Refi
      */
-    public abstract static class AbstractCategory implements BaseColumns {
-        public static final String COLUMN_NAME_NULLABLE = null;
+    public abstract static class AbstractCategory implements BaseColumns, Tables {
+        public static final String NULLABLE = null;
         public static final String TABLE_NAME = "category";
         public static final String COLUMN_NAME_CATEGORY_NAME = "name";
         public static final String[] PROJECTION = new String[]{_ID, COLUMN_NAME_CATEGORY_NAME};
@@ -54,8 +54,8 @@ public abstract class DatabaseContracts {
       * Statement table.
       * @author Kornel_Refi
       */
-    public static final class AbstractStatement extends Tables implements BaseColumns {
-        public static final String COLUMN_NAME_NULLABLE = null;
+    public static final class AbstractStatement implements BaseColumns, Tables {
+        public static final String NULLABLE = null;
         public static final String STATEMENT_ID_ALIAS = "statementId";
         public static final String CATEGORY_ID_ALIAS = "categoryId";
         public static final String TABLE_NAME = "statement";
@@ -99,20 +99,7 @@ public abstract class DatabaseContracts {
 
         static final String SQL_DELETE_ENTRIES = DROP_TABLE + TABLE_NAME;
 
-        /**
-         * e
-         */
-        public AbstractStatement() {
-        }
-
-        @Override
-        public String getName() {
-            return TABLE_NAME;
-        }
-
-        @Override
-        public String getNullableColumnName() {
-            return COLUMN_NAME_NULLABLE;
+        private AbstractStatement() {
         }
     }
 

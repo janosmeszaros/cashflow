@@ -1,11 +1,16 @@
 package com.cashflow.database.category;
 
 import static android.provider.BaseColumns._ID;
-import static com.cashflow.database.DatabaseContracts.AbstractCategory.COLUMN_NAME_NULLABLE;
+import static com.cashflow.database.DatabaseContracts.AbstractCategory.COLUMN_NAME_CATEGORY_NAME;
+import static com.cashflow.database.DatabaseContracts.AbstractCategory.NULLABLE;
 import static com.cashflow.database.DatabaseContracts.AbstractCategory.TABLE_NAME;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import java.util.Arrays;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -32,6 +37,10 @@ public class CategoryDaoTest {
     private SQLiteDbProvider provider;
     @Mock
     private SQLiteDatabase db;
+    @Mock
+    private ContentValues values;
+
+    private Set<String> columnNames = new TreeSet<String>(Arrays.asList(COLUMN_NAME_CATEGORY_NAME));
 
     @Before
     public void setUp() {
@@ -39,6 +48,7 @@ public class CategoryDaoTest {
 
         when(provider.getWritableDb()).thenReturn(db);
         when(provider.getReadableDb()).thenReturn(db);
+        when(values.keySet()).thenReturn(columnNames);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -49,22 +59,20 @@ public class CategoryDaoTest {
     @Test
     public void testSaveWhenEverythingIsOkThenCallProperFunction() {
         underTest = new CategoryDao(provider);
-        ContentValues values = new ContentValues();
 
         underTest.save(values);
 
-        verify(db, times(1)).insert(TABLE_NAME, COLUMN_NAME_NULLABLE, values);
+        verify(db, times(1)).insert(TABLE_NAME, NULLABLE, values);
     }
 
     @Test
     public void testUpdateWhenEverythingIsOkThenCallProperFunction() {
         underTest = new CategoryDao(provider);
-        ContentValues values = new ContentValues();
         String id = "id";
 
         underTest.update(values, id);
 
-        verify(db, times(1)).update(TABLE_NAME, values, _ID + " = " + id, null);
+        verify(db, times(1)).update(TABLE_NAME, values, _ID + " = ?", new String[]{id});
     }
 
 }
