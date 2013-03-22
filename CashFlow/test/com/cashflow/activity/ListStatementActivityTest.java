@@ -113,17 +113,16 @@ public class ListStatementActivityTest {
     public void testEditButtonOnClickWhenStatementTypeIsExpenseThenCreateIntentAndStartsItWithExtrasSetted() {
         setExpenseIntent();
         ShadowActivity shadowActivity = Robolectric.shadowOf(underTest);
-        setViewsValues(new Statement.Builder(AMOUNT, DATE).setNote(NOTES).setCategory(CATEGORY).setId(ID).setRecurringInterval(INTERVAL).build());
+        setViewsValues(new Statement.Builder(AMOUNT, DATE).setNote(NOTES).setCategory(CATEGORY).setId(ID).setRecurringInterval(INTERVAL)
+                .setType(Expense).build());
 
         underTest.editButtonOnClick(underTest.findViewById(R.id.list_statement));
 
         IntentForResult startedActivityForResult = shadowActivity.getNextStartedActivityForResult();
         String idExtra = startedActivityForResult.intent.getStringExtra(ID_EXTRA);
-        String typeExtra = startedActivityForResult.intent.getStringExtra(STATEMENT_TYPE_EXTRA);
         int requestCode = startedActivityForResult.requestCode;
 
         assertThat(idExtra, equalTo(ID));
-        assertThat(typeExtra, equalTo(EXPENSE_EXTRA));
         assertThat(requestCode, equalTo(EDIT_ACTIVITY_CODE));
     }
 
