@@ -1,15 +1,18 @@
 package com.cashflow.activity;
 
-import static com.cashflow.constants.Constants.INCOME_EXTRA;
 import static com.cashflow.constants.Constants.STATEMENT_TYPE_EXTRA;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_DATE;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_NOTE;
+import static com.cashflow.database.statement.StatementType.Expense;
 import static com.cashflow.database.statement.StatementType.Income;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import java.text.DateFormat;
+import java.util.Calendar;
 
 import org.junit.After;
 import org.junit.Before;
@@ -51,7 +54,7 @@ import com.xtremelabs.robolectric.shadows.ShadowTextView;
  *
  */
 @RunWith(RobolectricTestRunner.class)
-public class AddIncomeActivityTest {
+public class AddStatementActivityTest {
 
     private static final String NOTES = "notes";
     private static final String DATE = "2013";
@@ -81,9 +84,16 @@ public class AddIncomeActivityTest {
         ActivityModule.setUp(this, module);
 
         underTest = new AddStatementActivity();
-        underTest.setIntent(new Intent().putExtra(STATEMENT_TYPE_EXTRA, INCOME_EXTRA));
-        underTest.onCreate(null);
+    }
 
+    private void createAddIncome() {
+        underTest.setIntent(new Intent().putExtra(STATEMENT_TYPE_EXTRA, Income.toString()));
+        underTest.onCreate(null);
+    }
+
+    private void createAddExpense() {
+        underTest.setIntent(new Intent().putExtra(STATEMENT_TYPE_EXTRA, Expense.toString()));
+        underTest.onCreate(null);
     }
 
     @After
@@ -92,8 +102,25 @@ public class AddIncomeActivityTest {
     }
 
     @Test
-    public void testWhenIncomeActivityThenTitleShouldBeAddExpense() {
+    public void testOnCreateWhenTypeIsIncomeThenTitleShouldBeAddIncome() {
+        createAddIncome();
         assertThat((String) underTest.getTitle(), equalTo(underTest.getString(R.string.title_activity_add_income)));
+    }
+
+    @Test
+    public void testOnCreateWhenTypeIsExpenseThenTitleShouldBeAddExpense() {
+        createAddExpense();
+        assertThat((String) underTest.getTitle(), equalTo(underTest.getString(R.string.title_activity_add_expense)));
+    }
+
+    @Test
+    public void testOnCreateWhenCalledThenShouldSetTheDateButtonToTheCurrentDate() {
+        final Calendar calendar = Calendar.getInstance();
+        DateFormat fmtDateAndTime = DateFormat.getDateInstance(DateFormat.MEDIUM);
+        Button button = (Button) underTest.findViewById(R.id.dateButton);
+        String date = fmtDateAndTime.format(calendar.getTime());
+
+        assertThat((String) button.getText(), equalTo(date));
     }
 
     //    @Test
@@ -108,6 +135,7 @@ public class AddIncomeActivityTest {
 
     @Test
     public void testOnCreateWhenCalledThenRercurringAreaShouldBeVisible() {
+        createAddIncome();
         LinearLayout recurringArea = (LinearLayout) underTest.findViewById(R.id.recurring_income);
 
         assertThat(recurringArea.getVisibility(), equalTo(LinearLayout.VISIBLE));
@@ -115,6 +143,7 @@ public class AddIncomeActivityTest {
 
     @Test
     public void testOnCreateWhenCalledThenRecurringCheckBoxOnClickListenerShouldBeRecurringCheckBoxOnClickListener() {
+        createAddIncome();
         CheckBox recurringCheckBox = (CheckBox) underTest.findViewById(R.id.recurring_checkbox);
         ShadowTextView shadowTextView = Robolectric.shadowOf(recurringCheckBox);
 
@@ -124,6 +153,7 @@ public class AddIncomeActivityTest {
     @SuppressWarnings("unchecked")
     @Test
     public void testOnCreateWhenCalledThenRecurringSpinnersAdapterShouldBeSettedToArrayAdapterWithValuesFromRecurringInterval() {
+        createAddIncome();
         Spinner recurringSpinner = (Spinner) underTest.findViewById(R.id.recurring_spinner);
 
         assertThat((ArrayAdapter<RecurringInterval>) recurringSpinner.getAdapter(), equalTo(arrayAdapter));
@@ -131,6 +161,7 @@ public class AddIncomeActivityTest {
 
     @Test
     public void testOnCreateWhenCalledThenShouldSetTheListenerClassToTheDateButton() {
+        createAddIncome();
         Button button = (Button) underTest.findViewById(R.id.dateButton);
         ShadowTextView shadowButton = Robolectric.shadowOf(button);
 
@@ -138,16 +169,8 @@ public class AddIncomeActivityTest {
     }
 
     @Test
-    public void testSubmitWhenOkThenShouldRefreshBalance() {
-        setViewsValues(AMOUNT, 0);
-
-        underTest.submit(null);
-
-        assertThat(balance.getBalance(), equalTo(1234D));
-    }
-
-    @Test
     public void testSubmitWhenIncomeIsNotRecurringThenShouldCallSaveStatementWithCorrectStatement() {
+        createAddIncome();
         setViewsValues(AMOUNT, 0);
         Statement statement = new Statement.Builder(AMOUNT, DATE).setNote(NOTES).setType(Income).build();
 
@@ -158,6 +181,7 @@ public class AddIncomeActivityTest {
 
     @Test
     public void testSubmitWhenOkThenShouldSetTheResultToOkAndCloseTheActivity() {
+        createAddIncome();
         ShadowFragmentActivity shadowActivity = Robolectric.shadowOf(underTest);
         setViewsValues(AMOUNT, 0);
 
@@ -168,7 +192,16 @@ public class AddIncomeActivityTest {
     }
 
     @Test
+    public void testOnCreateWhenCalledThenRecurringAreaShouldBeGone() {
+        createAddExpense();
+        LinearLayout recurringArea = (LinearLayout) underTest.findViewById(R.id.recurring_income);
+
+        assertThat(recurringArea.getVisibility(), equalTo(LinearLayout.GONE));
+    }
+
+    @Test
     public void testSubmitWhenIncomeIsRecurringThenShouldCallSaveStatementWithCorrectStatement() {
+        createAddIncome();
         setViewsValues(AMOUNT, 3);
         int recurringPos = 3;
         //        Statement statement = createStatement(AMOUNT, DATE, NOTES, Income, 3);
@@ -187,6 +220,7 @@ public class AddIncomeActivityTest {
 
     @Test
     public void testSubmitWhenSomethingWentWrongThenShouldSetTheResultToCanceledAndCloseTheActivity() {
+        createAddIncome();
         ShadowFragmentActivity shadowActivity = Robolectric.shadowOf(underTest);
         setViewsValues(INVALID_AMOUNT, 0);
 
