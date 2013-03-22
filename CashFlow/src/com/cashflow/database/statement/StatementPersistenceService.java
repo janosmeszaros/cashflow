@@ -235,9 +235,7 @@ public class StatementPersistenceService {
     }
 
     private void validateObjectsNotNull(Object... objects) {
-        for (Object object : objects) {
-            Validate.notNull(object);
-        }
+        Validate.noNullElements(objects);
     }
 
     private void validateStringsNotEmpty(String... params) {
