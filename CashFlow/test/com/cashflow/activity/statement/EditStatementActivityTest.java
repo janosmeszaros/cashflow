@@ -65,16 +65,16 @@ public class EditStatementActivityTest {
     private static final String CATEGORY_ID = "3";
     private static final String INCOME_ID = "1";
     private static final String EXPENSE_ID = "2";
-    private static final String NOTES = "notes";
+    private static final String NOTE = "notes";
     private static final String DATE = "2013";
     private static final String AMOUNT = "1234";
     private static final RecurringInterval INTERVAL = RecurringInterval.biweekly;
     private static final RecurringInterval NONE_INTERVAL = RecurringInterval.none;
     private static final Category CATEGORY = new Category(CATEGORY_ID, "category");
     private static final Category CHANGED_CATEGORY = new Category("4", "changed_category");
-    private static final Statement INCOME_STATEMENT = new Statement.Builder(AMOUNT, DATE).setNote(NOTES).setType(Income).setId(INCOME_ID)
+    private static final Statement INCOME_STATEMENT = new Statement.Builder(AMOUNT, DATE).setNote(NOTE).setType(Income).setId(INCOME_ID)
             .setCategory(CATEGORY).setRecurringInterval(NONE_INTERVAL).build();
-    private static final Statement EXPENSE_STATEMENT = new Statement.Builder(AMOUNT, DATE).setNote(NOTES).setType(Expense).setId(EXPENSE_ID)
+    private static final Statement EXPENSE_STATEMENT = new Statement.Builder(AMOUNT, DATE).setNote(NOTE).setType(Expense).setId(EXPENSE_ID)
             .setCategory(CATEGORY).setRecurringInterval(NONE_INTERVAL).build();
 
     private final String[] fromColumns = {AbstractStatement._ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE, COLUMN_NAME_NOTE};
@@ -148,7 +148,7 @@ public class EditStatementActivityTest {
 
     @Test
     public void testWhenEditIncomeActivityCreatedThenShouldFillUpViewsWithDataFromIntent() {
-        Statement statement = new Statement.Builder(AMOUNT, DATE).setId(INCOME_ID).setCategory(CATEGORY).setNote(NOTES)
+        Statement statement = new Statement.Builder(AMOUNT, DATE).setId(INCOME_ID).setCategory(CATEGORY).setNote(NOTE)
                 .setRecurringInterval(NONE_INTERVAL).setType(Income).build();
         underTest.setIntent(setUpIntentData(statement));
         underTest.onCreate(null);
@@ -158,13 +158,13 @@ public class EditStatementActivityTest {
         Button date = (Button) underTest.findViewById(R.id.dateButton);
 
         assertThat(amount.getText().toString(), equalTo(AMOUNT));
-        assertThat(note.getText().toString(), equalTo(NOTES));
+        assertThat(note.getText().toString(), equalTo(NOTE));
         assertThat(date.getText().toString(), equalTo(DATE));
     }
 
     @Test
     public void testOnCreateWhenRecurringIsNoneThenRecurringCheckBoxShouldBeUnchekedAndSpinnerValueIsNone() {
-        Statement statement = new Statement.Builder(AMOUNT, DATE).setId(INCOME_ID).setCategory(CATEGORY).setNote(NOTES)
+        Statement statement = new Statement.Builder(AMOUNT, DATE).setId(INCOME_ID).setCategory(CATEGORY).setNote(NOTE)
                 .setRecurringInterval(NONE_INTERVAL).setType(Income).build();
         underTest.setIntent(setUpIntentData(statement));
         underTest.onCreate(null);
@@ -178,7 +178,7 @@ public class EditStatementActivityTest {
 
     @Test
     public void testOnCreateWhenRecurringIsOtherThenNoneThenRecurringCheckBoxShouldBeCheckedAndSpinnerValueIsSettedToCorrectValue() {
-        Statement statement = new Statement.Builder(AMOUNT, DATE).setId("12").setCategory(CATEGORY).setNote(NOTES).setRecurringInterval(INTERVAL)
+        Statement statement = new Statement.Builder(AMOUNT, DATE).setId("12").setCategory(CATEGORY).setNote(NOTE).setRecurringInterval(INTERVAL)
                 .setType(Income).build();
         underTest.setIntent(setUpIntentData(statement));
         when(statementPersistentService.getStatementById("12")).thenReturn(statement);
@@ -197,8 +197,8 @@ public class EditStatementActivityTest {
         underTest.setIntent(setUpIntentData(INCOME_STATEMENT));
         underTest.onCreate(null);
 
-        Statement incomeStatement = new Statement.Builder(CHANGED_AMOUNT, DATE).setNote(NOTES).setType(Income).setId(INCOME_ID)
-                .setRecurringInterval(INTERVAL).setCategory(CATEGORY).build();
+        Statement incomeStatement = new Statement.Builder(CHANGED_AMOUNT, DATE).setNote(NOTE).setType(Income).setId(INCOME_ID)
+                .setRecurringInterval(NONE_INTERVAL).setCategory(CATEGORY).build();
         setViewsValues(incomeStatement);
 
         underTest.submit(null);
@@ -209,13 +209,13 @@ public class EditStatementActivityTest {
     }
 
     @Test
-    public void testSubmitWhenRecurringIntervalHasChangedThenShouldCallProperFunctionAndRefreshBalanceAndResultCodeShouldBeOK() {
+    public void testSubmitWhenRecurringIntervalHasChangedThenShouldCallProperFunctionAndResultCodeShouldBeOK() {
         ShadowFragmentActivity shadowFragmentActivity = Robolectric.shadowOf(underTest);
         underTest.setIntent(setUpIntentData(INCOME_STATEMENT));
         underTest.onCreate(null);
 
         setViewsValues(INCOME_STATEMENT);
-        Statement changedStatement = new Statement.Builder(AMOUNT, DATE).setNote(NOTES).setType(Income).setId(INCOME_ID)
+        Statement changedStatement = new Statement.Builder(AMOUNT, DATE).setNote(NOTE).setType(Income).setId(INCOME_ID)
                 .setRecurringInterval(INTERVAL).setCategory(CATEGORY).build();
         setViewsValues(changedStatement);
 
@@ -227,12 +227,29 @@ public class EditStatementActivityTest {
     }
 
     @Test
-    public void testSubmitWhenDateHasChangedThenShouldCallProperFunctionAAndResultCodeShouldBeOK() {
+    public void testSubmitExpenseWhenNothingWasChangedThenShouldCallProperFunctionAndResultCodeShouldBeCanceled() {
+        ShadowFragmentActivity shadowFragmentActivity = Robolectric.shadowOf(underTest);
+        underTest.setIntent(setUpIntentData(EXPENSE_STATEMENT));
+        underTest.onCreate(null);
+
+        setViewsValues(EXPENSE_STATEMENT);
+        Statement changedStatement = new Statement.Builder(AMOUNT, DATE).setNote(NOTE).setType(Expense).setId(EXPENSE_ID)
+                .setRecurringInterval(NONE_INTERVAL).setCategory(CATEGORY).build();
+        setViewsValues(changedStatement);
+
+        underTest.submit(null);
+
+        assertThat(shadowFragmentActivity.getResultCode(), equalTo(RESULT_CANCELED));
+        assertThat(shadowFragmentActivity.isFinishing(), equalTo(true));
+    }
+
+    @Test
+    public void testSubmitWhenDateHasChangedThenShouldCallProperFunctionAndResultCodeShouldBeOK() {
         ShadowFragmentActivity shadowFragmentActivity = Robolectric.shadowOf(underTest);
         underTest.setIntent(setUpIntentData(INCOME_STATEMENT));
         underTest.onCreate(null);
 
-        Statement changedDateStatement = new Statement.Builder(AMOUNT, CHANGED_DATE).setNote(NOTES).setType(Income).setId(INCOME_ID)
+        Statement changedDateStatement = new Statement.Builder(AMOUNT, CHANGED_DATE).setNote(NOTE).setType(Income).setId(INCOME_ID)
                 .setRecurringInterval(NONE_INTERVAL).setCategory(CATEGORY).build();
         setViewsValues(changedDateStatement);
         underTest.submit(null);
