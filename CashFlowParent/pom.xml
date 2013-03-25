@@ -56,7 +56,7 @@
 						<instrumentation>
 							<excludes>
 								<exclude>com/cashflow/**/R.class</exclude>
-								<exclude>com/cashflow/**/R$*.class</exclude>
+								<exclude>com/cashflow/**/*$*.class</exclude>
 								<exclude>com/cashflow/**/*Test*.class</exclude>
 								<exclude>com/cashflow/constants/Constants.class</exclude>
 								<exclude>com/cashflow/activity/testutil/**</exclude>
