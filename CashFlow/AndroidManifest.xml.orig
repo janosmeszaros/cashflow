@@ -23,9 +23,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.cashflow.activity.statement.AddStatementActivity" />
-        <activity android:name="com.cashflow.activity.statement.EditStatementActivity" />
-        <activity android:name="com.cashflow.activity.statement.ListStatementActivity" />
+        <activity android:name="com.cashflow.activity.AddStatementActivity" />
+        <activity android:name="com.cashflow.activity.EditStatementActivity" />
+        <activity android:name="com.cashflow.activity.ListStatementActivity" />
         <activity
             android:name="com.cashflow.activity.CreateCategoryActivity"
             android:label="@string/title_activity_create_category"
@@ -35,7 +35,11 @@
                 android:value="com.cashflow.activity.MainActivity" />
         </activity>
         <activity
+<<<<<<< HEAD
             android:name="com.cashflow.activity.bill.AddBillActivity"
+=======
+            android:name="com.cashflow.activity.AddBillActivity"
+>>>>>>> cbc8561f5742d00a9080094505e311959a8aa394
             android:label="@string/title_activity_add_bill" >
         </activity>
     </application>

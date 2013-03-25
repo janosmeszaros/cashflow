@@ -55,6 +55,7 @@ public final class DbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(DatabaseContracts.AbstractStatement.SQL_CREATE_ENTRIES);
         db.execSQL(DatabaseContracts.AbstractCategory.SQL_CREATE_ENTRIES);
+        db.execSQL(DatabaseContracts.AbstractBill.SQL_CREATE_ENTRIES);
 
     }
 
@@ -64,6 +65,7 @@ public final class DbHelper extends SQLiteOpenHelper {
         // to simply to discard the data and start over
         db.execSQL(DatabaseContracts.AbstractStatement.SQL_DELETE_ENTRIES);
         db.execSQL(DatabaseContracts.AbstractCategory.SQL_DELETE_ENTRIES);
+        db.execSQL(DatabaseContracts.AbstractBill.SQL_DELETE_ENTRIES);
         onCreate(db);
     }
 

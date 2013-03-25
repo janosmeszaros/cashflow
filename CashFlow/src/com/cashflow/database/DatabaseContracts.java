@@ -102,6 +102,7 @@ public abstract class DatabaseContracts {
 
         private AbstractStatement() {
         }
+
     }
 
     /**
@@ -109,8 +110,8 @@ public abstract class DatabaseContracts {
      * @author Janos_Gyula_Meszaros
      *
      */
-    public abstract static class AbstractBill implements BaseColumns {
-        public static final String COLUMN_NAME_NULLABLE = null;
+    public abstract static class AbstractBill implements BaseColumns, Tables {
+        public static final String NULLABLE = null;
         public static final String TABLE_NAME = "bill";
         public static final String COLUMN_NAME_AMOUNT = "amount";
         public static final String COLUMN_NAME_DATE_ADDED = "date";
@@ -134,5 +135,4 @@ public abstract class DatabaseContracts {
         private AbstractBill() {
         }
     }
-
 }

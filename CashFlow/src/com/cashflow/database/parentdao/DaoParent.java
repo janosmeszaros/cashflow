@@ -5,6 +5,7 @@ import static android.provider.BaseColumns._ID;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -133,9 +134,10 @@ public class DaoParent {
     @SuppressWarnings("unchecked")
     private void setColumnNames(Class<? extends Tables> clazz) {
         Field[] fields = clazz.getFields();
-        List<Field> list = new ArrayList<Field>(Arrays.asList(fields));
-        CollectionUtils.filter(list, new ColumnPredicate());
-        columnNames = new TreeSet<String>(CollectionUtils.collect(list, new FieldToStringTransformer()));
+        List<Field> listOfFields = new ArrayList<Field>(Arrays.asList(fields));
+        CollectionUtils.filter(listOfFields, new ColumnPredicate());
+        Collection<String> stringListOfFields = CollectionUtils.collect(listOfFields, new FieldToStringTransformer());
+        columnNames = new TreeSet<String>(stringListOfFields);
     }
 
     private void validateUpdateParams(ContentValues values, String id) {
