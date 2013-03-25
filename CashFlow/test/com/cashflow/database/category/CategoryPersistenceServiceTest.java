@@ -8,6 +8,9 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,6 +22,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 
+import com.cashflow.domain.Category;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 /**
@@ -87,7 +91,7 @@ public class CategoryPersistenceServiceTest {
         testList.add(category);
         MatrixCursor cursor = new MatrixCursor(new String[]{_ID, COLUMN_NAME_CATEGORY_NAME});
         cursor.addRow(new String[]{category.getId(), category.getName()});
-        when(dao.getCategories()).thenReturn(cursor);
+        when(dao.getValues()).thenReturn(cursor);
         underTest = new CategoryPersistenceService(dao);
 
         List<Category> result = underTest.getCategories();
