@@ -26,10 +26,10 @@ import com.cashflow.exceptions.IllegalTableException;
  * a
  * @author Janos_Gyula_Meszaros
  */
-public class ParentDao {
+public class DaoParent {
     private static final String EQUALS = " = ?";
     private static final String TABLE_NAME = "TABLE_NAME";
-    private static final Logger LOG = LoggerFactory.getLogger(ParentDao.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DaoParent.class);
     private final SQLiteDbProvider provider;
     private String table;
     private String[] projection;
@@ -42,8 +42,9 @@ public class ParentDao {
      * @throws IllegalArgumentException when <code>provider</code> or <code>table</code> is <code>null</code>.
      */
 
-    public ParentDao(SQLiteDbProvider provider, Class<? extends Tables> clazz) {
+    public DaoParent(SQLiteDbProvider provider, Class<? extends Tables> clazz) {
         nullCheck(provider);
+        nullCheck(clazz);
         this.provider = provider;
 
         setFields(clazz);
@@ -58,16 +59,16 @@ public class ParentDao {
     public boolean save(ContentValues values) {
         validateContentValues(values);
 
-        boolean result = false;
+        boolean isSuccessful = false;
 
         long newRowId = provider.getWritableDb().insert(table, null, values);
 
         if (newRowId >= 0) {
-            result = true;
+            isSuccessful = true;
             LOG.debug("New row created with row ID: " + newRowId);
         }
 
-        return result;
+        return isSuccessful;
     }
 
     /**
@@ -75,21 +76,20 @@ public class ParentDao {
      * @param values data needs to be updated. Can't be <code>null</code>. Have to be consistent with the table columns.
      * @param id row id. Can't be <code>null</code> or empty.
      * @throws IllegalArgumentException if <code>id</code> is empty or <code>null</code>.  Or <code>values</code> is <code>null</code> or do not contains proper column names. 
-     * @throws
      * @return <code>true</code> if one or more records updated, otherwise <code>false</code>
      */
     public boolean update(ContentValues values, String id) {
         validateUpdateParams(values, id);
 
-        boolean result = false;
+        boolean isSuccessful = false;
         int update = provider.getWritableDb().update(table, values, _ID + EQUALS, new String[]{id});
 
         if (update > 0) {
-            result = true;
+            isSuccessful = true;
         }
 
         LOG.debug("Num of rows updated: " + update);
-        return result;
+        return isSuccessful;
     }
 
     /**
@@ -119,14 +119,6 @@ public class ParentDao {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    private void setColumnNames(Class<? extends Tables> clazz) {
-        Field[] fields = clazz.getFields();
-        List<Field> list = new ArrayList<Field>(Arrays.asList(fields));
-        CollectionUtils.filter(list, new ColumnPredicate());
-        columnNames = new TreeSet<String>(CollectionUtils.collect(list, new FieldToStringTransformer()));
-    }
-
     private void setTableName(Class<? extends Tables> clazz) {
         try {
             Field field = clazz.getField(TABLE_NAME);
@@ -136,6 +128,14 @@ public class ParentDao {
         } catch (IllegalAccessException ex) {
             throw new IllegalTableException(clazz.getName(), TABLE_NAME);
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void setColumnNames(Class<? extends Tables> clazz) {
+        Field[] fields = clazz.getFields();
+        List<Field> list = new ArrayList<Field>(Arrays.asList(fields));
+        CollectionUtils.filter(list, new ColumnPredicate());
+        columnNames = new TreeSet<String>(CollectionUtils.collect(list, new FieldToStringTransformer()));
     }
 
     private void validateUpdateParams(ContentValues values, String id) {

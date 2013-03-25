@@ -1,7 +1,7 @@
 package com.cashflow.database.category;
 
 import com.cashflow.database.DatabaseContracts.AbstractCategory;
-import com.cashflow.database.parentdao.ParentDao;
+import com.cashflow.database.parentdao.DaoParent;
 import com.cashflow.database.SQLiteDbProvider;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -11,7 +11,7 @@ import com.google.inject.Singleton;
  * @author Kornel_Refi
  */
 @Singleton
-public class CategoryDao extends ParentDao {
+public class CategoryDao extends DaoParent {
     /**
      * Default constructor which get an Provider.
      * @param provider

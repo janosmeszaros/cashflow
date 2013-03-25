@@ -14,7 +14,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.cashflow.database.DatabaseContracts.AbstractStatement;
-import com.cashflow.database.parentdao.ParentDao;
+import com.cashflow.database.parentdao.DaoParent;
 import com.cashflow.database.SQLiteDbProvider;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -25,7 +25,7 @@ import com.google.inject.Singleton;
  * @author Janos_Gyula_Meszaros
  */
 @Singleton
-public class StatementDao extends ParentDao {
+public class StatementDao extends DaoParent {
     private final SQLiteDbProvider provider;
 
     /**
