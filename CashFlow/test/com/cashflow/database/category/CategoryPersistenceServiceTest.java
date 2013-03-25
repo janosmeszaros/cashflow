@@ -8,9 +8,6 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +19,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 
-import com.cashflow.domain.Category;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 /**
@@ -46,6 +42,7 @@ public class CategoryPersistenceServiceTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
+        when(dao.getValues()).thenReturn(cursor);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -95,7 +92,7 @@ public class CategoryPersistenceServiceTest {
 
         List<Category> result = underTest.getCategories();
 
-        verify(dao).getCategories();
+        verify(dao).getValues();
         assertThat(testList, equalTo(result));
     }
 

@@ -1,7 +1,5 @@
 package com.cashflow.database.statement;
 
-import static android.provider.BaseColumns._ID;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_NULLABLE;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.EXPENSE_SELECTION;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.INCOME_SELECTION;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.PROJECTION;
@@ -9,16 +7,14 @@ import static com.cashflow.database.DatabaseContracts.AbstractStatement.PROJECTI
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.RECURRING_INCOME_SELECTION;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.SELECT_STATEMENT_BY_ID;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.STATEMENT_INNER_JOINED_CATEGORY;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.TABLE_NAME;
 
 import org.apache.commons.lang.Validate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.cashflow.database.DatabaseContracts.AbstractStatement;
+import com.cashflow.database.parentdao.DaoParent;
 import com.cashflow.database.SQLiteDbProvider;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -29,11 +25,7 @@ import com.google.inject.Singleton;
  * @author Janos_Gyula_Meszaros
  */
 @Singleton
-public class StatementDao {
-    private static final String EQUALS = " = ?";
-
-    private static final Logger LOG = LoggerFactory.getLogger(StatementDao.class);
-
+public class StatementDao extends DaoParent {
     private final SQLiteDbProvider provider;
 
     /**
@@ -44,50 +36,9 @@ public class StatementDao {
      */
     @Inject
     public StatementDao(SQLiteDbProvider provider) {
+        super(provider, AbstractStatement.class);
         nullCheck(provider);
         this.provider = provider;
-    }
-
-    /**
-     * Persists values to the database.
-     * @param values Values to save. Can not be null.
-     * @throws IllegalArgumentException when <code>values</code> is null.
-     * @return true if save was successful, false otherwise.
-     */
-    public boolean save(ContentValues values) {
-        nullCheck(values);
-        boolean result = false;
-
-        long newRowId = provider.getWritableDb().insert(TABLE_NAME, COLUMN_NAME_NULLABLE, values);
-
-        if (newRowId >= 0) {
-            result = true;
-            LOG.debug("New row created with row ID: " + newRowId);
-        }
-
-        return result;
-    }
-
-    /**
-     * Updates a statement row with specified id.
-     * @param values
-     *            data needs to be updated.
-     * @param id
-     *            row id.
-     * @return <code>true</code> if 1 or more records updated, otherwise <code>false</code>
-     */
-    public boolean update(ContentValues values, String id) {
-        validateUpdateParams(values, id);
-
-        boolean result = false;
-        int update = provider.getWritableDb().update(TABLE_NAME, values, _ID + EQUALS, new String[]{id});
-
-        if (update > 0) {
-            result = true;
-        }
-
-        LOG.debug("Num of rows updated: " + update);
-        return result;
     }
 
     /**
@@ -131,11 +82,6 @@ public class StatementDao {
         SQLiteDatabase db = provider.getReadableDb();
         Cursor cursor = db.rawQuery(SELECT_STATEMENT_BY_ID, new String[]{id});
         return cursor;
-    }
-
-    private void validateUpdateParams(ContentValues values, String id) {
-        nullCheck(values);
-        idCheck(id);
     }
 
     private void idCheck(String id) {

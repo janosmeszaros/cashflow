@@ -3,6 +3,7 @@ package com.cashflow.database;
 import android.provider.BaseColumns;
 
 import com.cashflow.R;
+import com.cashflow.database.parentdao.Tables;
 
 /**
  * Database tables.
@@ -12,7 +13,7 @@ public abstract class DatabaseContracts {
     public static final String DATABASE_NAME = "CashFlow.db";
 
     // If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 4;
+    public static final int DATABASE_VERSION = 5;
     private static final String TEXT_TYPE = " TEXT";
     private static final String INTEGER_TYPE = " INTEGER";
     private static final String REAL_TYPE = " REAL";
@@ -35,8 +36,8 @@ public abstract class DatabaseContracts {
      * Category table.
      * @author Kornel_Refi
      */
-    public abstract static class AbstractCategory implements BaseColumns {
-        public static final String COLUMN_NAME_NULLABLE = null;
+    public abstract static class AbstractCategory implements BaseColumns, Tables {
+        public static final String NULLABLE = null;
         public static final String TABLE_NAME = "category";
         public static final String COLUMN_NAME_CATEGORY_NAME = "name";
         public static final String[] PROJECTION = new String[]{_ID, COLUMN_NAME_CATEGORY_NAME};
@@ -54,13 +55,13 @@ public abstract class DatabaseContracts {
       * Statement table.
       * @author Kornel_Refi
       */
-    public abstract static class AbstractStatement implements BaseColumns {
-        public static final String COLUMN_NAME_NULLABLE = null;
+    public static final class AbstractStatement implements BaseColumns, Tables {
+        public static final String NULLABLE = null;
         public static final String STATEMENT_ID_ALIAS = "statementId";
         public static final String CATEGORY_ID_ALIAS = "categoryId";
         public static final String TABLE_NAME = "statement";
         public static final String COLUMN_NAME_AMOUNT = "amount";
-        public static final String COLUMN_NAME_CATEGORY = "category_id";
+        public static final String COLUMN_NAME_CATEGORY = "category";
         public static final String COLUMN_NAME_IS_INCOME = "is_income";
         public static final String COLUMN_NAME_DATE = "date";
         public static final String COLUMN_NAME_NOTE = "note";
@@ -100,6 +101,37 @@ public abstract class DatabaseContracts {
         static final String SQL_DELETE_ENTRIES = DROP_TABLE + TABLE_NAME;
 
         private AbstractStatement() {
+        }
+    }
+
+    /**
+     * Database Table for bills.
+     * @author Janos_Gyula_Meszaros
+     *
+     */
+    public abstract static class AbstractBill implements BaseColumns {
+        public static final String COLUMN_NAME_NULLABLE = null;
+        public static final String TABLE_NAME = "bill";
+        public static final String COLUMN_NAME_AMOUNT = "amount";
+        public static final String COLUMN_NAME_DATE_ADDED = "date";
+        public static final String COLUMN_NAME_DATE_PAYED = "payedDate";
+        public static final String COLUMN_NAME_DATE_DEADLINE = "deadlineDate";
+        public static final String COLUMN_NAME_NOTE = "note";
+        public static final String COLUMN_NAME_CATEGORY = "category";
+        public static final String COLUMN_NAME_IS_PAYED = "payed";
+        public static final String COLUMN_NAME_INTERVAL = "interval";
+
+        public static final String[] PROJECTION = new String[]{_ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE_ADDED, COLUMN_NAME_DATE_PAYED,
+            COLUMN_NAME_DATE_DEADLINE, COLUMN_NAME_NOTE, COLUMN_NAME_IS_PAYED};
+
+        static final String SQL_CREATE_ENTRIES = CREATE_TABLE + TABLE_NAME + OPEN_PARENTHESIS + _ID + " INTEGER PRIMARY KEY," + COLUMN_NAME_AMOUNT
+                + INTEGER_TYPE + COMMA_SEP + COLUMN_NAME_DATE_ADDED + TEXT_TYPE + COMMA_SEP + COLUMN_NAME_DATE_DEADLINE + TEXT_TYPE + COMMA_SEP
+                + COLUMN_NAME_DATE_PAYED + TEXT_TYPE + COMMA_SEP + COLUMN_NAME_CATEGORY + TEXT_TYPE + COMMA_SEP + COLUMN_NAME_IS_PAYED + INTEGER_TYPE
+                + COMMA_SEP + COLUMN_NAME_NOTE + TEXT_TYPE + COMMA_SEP + COLUMN_NAME_INTERVAL + TEXT_TYPE + CLOSE_PARENTHESIS;
+
+        static final String SQL_DELETE_ENTRIES = DROP_TABLE + TABLE_NAME;
+
+        private AbstractBill() {
         }
     }
 

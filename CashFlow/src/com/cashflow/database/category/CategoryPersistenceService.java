@@ -108,7 +108,7 @@ public class CategoryPersistenceService {
      */
     public List<Category> getCategories() {
         List<Category> list = new ArrayList<Category>();
-        Cursor cursor = dao.getCategories();
+        Cursor cursor = dao.getValues();
 
         while (cursor.moveToNext()) {
             addNextCategoryToList(list, cursor);

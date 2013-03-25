@@ -115,4 +115,14 @@ public class MainActivity extends RoboActivity {
         startActivity(intent);
     }
 
+    /**
+     * Add bill onClick method.
+     * @param view
+     *            Required for onclick.
+     */
+    public void addBill(View view) {
+        Intent intent = new Intent(this, AddBillActivity.class);
+        startActivity(intent);
+    }
+
 }
