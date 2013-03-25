@@ -89,12 +89,12 @@ public class CategoryPersistenceServiceTest {
         testList.add(category);
         MatrixCursor cursor = new MatrixCursor(new String[]{_ID, COLUMN_NAME_CATEGORY_NAME});
         cursor.addRow(new String[]{category.getId(), category.getName()});
-        when(dao.getCategories()).thenReturn(cursor);
+        when(dao.getValues()).thenReturn(cursor);
         underTest = new CategoryPersistenceService(dao);
 
         List<Category> result = underTest.getCategories();
 
-        verify(dao).getCategories();
+        verify(dao).getValues();
         assertThat(testList, equalTo(result));
     }
 
