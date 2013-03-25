@@ -1,4 +1,4 @@
-package com.cashflow.activity;
+package com.cashflow.activity.bill;
 
 import static android.view.View.VISIBLE;
 
@@ -9,7 +9,6 @@ import java.util.List;
 import roboguice.activity.RoboFragmentActivity;
 import roboguice.inject.InjectView;
 import android.os.Bundle;
-import android.view.Menu;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -40,6 +39,8 @@ public class AddBillActivity extends RoboFragmentActivity {
     private Spinner recurringSpinner;
     @InjectView(R.id.recurring_checkbox)
     private CheckBox recurringCheckBox;
+    @InjectView(R.id.submitButton)
+    private Button submitButton;
 
     @Inject
     private DateButtonOnClickListener listener;
@@ -49,6 +50,8 @@ public class AddBillActivity extends RoboFragmentActivity {
     private SpinnerAdapter spinnerAdapter;
     @Inject
     private CategoryPersistenceService categoryService;
+    @Inject
+    private AddBillOnClickListener submitListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,13 +61,11 @@ public class AddBillActivity extends RoboFragmentActivity {
         setUpDateButton();
         activateRecurringArea();
         setCategorySpinner();
+        setSubmitButton();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.add_bill, menu);
-        return true;
+    private void setSubmitButton() {
+        submitButton.setOnClickListener(submitListener);
     }
 
     private void setCategorySpinner() {

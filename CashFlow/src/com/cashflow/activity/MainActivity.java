@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.cashflow.R;
+import com.cashflow.activity.bill.AddBillActivity;
 import com.cashflow.database.balance.Balance;
 import com.cashflow.database.statement.RecurringIncomeScheduler;
 import com.google.inject.Inject;
