@@ -23,7 +23,7 @@ import com.cashflow.database.SQLiteDbProvider;
 import com.cashflow.exceptions.IllegalTableException;
 
 /**
- * a
+ * Parent class for all dao. It contains the basic functions, such as insert, update and getValues;
  * @author Janos_Gyula_Meszaros
  */
 public class DaoParent {
