@@ -1,4 +1,4 @@
-package com.cashflow.activity;
+package com.cashflow.activity.statement;
 
 import static android.view.View.VISIBLE;
 import static com.cashflow.constants.Constants.ID_EXTRA;

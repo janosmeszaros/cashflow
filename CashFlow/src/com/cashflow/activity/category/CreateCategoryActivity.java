@@ -1,4 +1,4 @@
-package com.cashflow.activity;
+package com.cashflow.activity.category;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

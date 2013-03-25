@@ -1,4 +1,4 @@
-package com.cashflow.activity;
+package com.cashflow.activity.bill;
 
 import static android.view.View.VISIBLE;
 

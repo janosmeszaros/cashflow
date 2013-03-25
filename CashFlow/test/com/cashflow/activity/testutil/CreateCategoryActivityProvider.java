@@ -1,6 +1,6 @@
 package com.cashflow.activity.testutil;
 
-import com.cashflow.activity.CreateCategoryActivity;
+import com.cashflow.activity.category.CreateCategoryActivity;
 import com.google.inject.Provider;
 
 /**

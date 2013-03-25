@@ -1,4 +1,4 @@
-package com.cashflow.activity;
+package com.cashflow.activity.statement;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;

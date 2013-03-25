@@ -1,4 +1,4 @@
-package com.cashflow.activity;
+package com.cashflow.activity.category;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;

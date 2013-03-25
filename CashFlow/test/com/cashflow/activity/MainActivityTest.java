@@ -17,6 +17,9 @@ import android.database.MatrixCursor;
 import android.view.View;
 
 import com.cashflow.R;
+import com.cashflow.activity.category.CreateCategoryActivity;
+import com.cashflow.activity.statement.AddStatementActivity;
+import com.cashflow.activity.statement.ListStatementActivity;
 import com.cashflow.activity.testutil.ActivityModule;
 import com.cashflow.activity.testutil.ListStatementActivityProvider;
 import com.cashflow.activity.testutil.TestGuiceModule;

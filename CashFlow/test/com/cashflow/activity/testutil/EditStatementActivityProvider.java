@@ -1,6 +1,6 @@
 package com.cashflow.activity.testutil;
 
-import com.cashflow.activity.EditStatementActivity;
+import com.cashflow.activity.statement.EditStatementActivity;
 import com.google.inject.Provider;
 
 /**

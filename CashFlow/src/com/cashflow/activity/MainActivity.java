@@ -16,6 +16,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.cashflow.R;
+import com.cashflow.activity.bill.AddBillActivity;
+import com.cashflow.activity.category.CreateCategoryActivity;
+import com.cashflow.activity.statement.AddStatementActivity;
+import com.cashflow.activity.statement.ListStatementActivity;
 import com.cashflow.database.balance.Balance;
 import com.cashflow.database.statement.RecurringIncomeScheduler;
 import com.google.inject.Inject;

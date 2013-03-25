@@ -1,4 +1,4 @@
-package com.cashflow.activity;
+package com.cashflow.activity.statement;
 
 import static com.cashflow.constants.Constants.STATEMENT_TYPE_EXTRA;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
@@ -127,16 +127,6 @@ public class AddStatementActivityTest {
 
         assertThat((String) buttonButton.getText(), equalTo(date));
     }
-
-    //    @Test
-    //    public void testWhenIncomeActivityThenContentViewShouldBeAddStatement() {
-    //        AddStatementActivity activity = new AddStatementActivity();
-    //        activity.setIntent(new Intent().putExtra(STATEMENT_TYPE_EXTRA, INCOME_EXTRA));
-    //        activity.onCreate(null);
-    //        ShadowFragmentActivity shadowActivity = Robolectric.shadowOf(activity);
-    //
-    //        assertThat(shadowActivity.getContentView().getId(), equalTo(R.layout.activity_add_statement));
-    //    }
 
     @Test
     public void testOnCreateWhenCalledThenRercurringAreaShouldBeVisible() {
