@@ -18,7 +18,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Class to create category for DAO.
+ * Class to create {@link Category} for DAO.
  * @author Kornel_Refi
  *
  */
@@ -31,9 +31,9 @@ public class CategoryPersistenceService {
     /**
      * Default constructor which gets a context for DbHelper.
      * @param dao
-     *            {@link CategoryDao} to use to save data. Can't be null.
+     *            {@link CategoryDao} to use to save data. Can't be <code>null</code>
      * @throws IllegalArgumentException
-     *             when DAO is null.
+     *             when DAO is <code>null</code>
      */
     @Inject
     public CategoryPersistenceService(CategoryDao dao) {
@@ -66,10 +66,10 @@ public class CategoryPersistenceService {
     }
 
     /**
-     * Creates the category from data and then saves it to database.
+     * Creates the {@link Category} from data and then saves it to database.
      * @param name
-     *            name of the category.
-     * @return <code>true</code> if saving was successful and the amount wasn't zero, <code>false</code> otherwise.
+     *            name of the category
+     * @return <code>true</code> if saving was successful and the amount wasn't zero, otherwise <code>false</code>
      */
     public boolean saveCategory(String name) {
         validateInput(name);
@@ -86,10 +86,10 @@ public class CategoryPersistenceService {
     /**
      * Updates category at the specified id.
      * @param id
-     *            id.
+     *            of the {@link Category}
      * @param name
-     *            new name for the category.
-     * @return true if successful.
+     *            new name for the {@link Category}
+     * @return <code>true</code> if successful
      */
     public boolean updateCategory(String id, String name) {
         validateInput(name, id);
@@ -104,7 +104,7 @@ public class CategoryPersistenceService {
 
     /**
      * Get all categories.
-     * @return List of categories.
+     * @return List of {@link Category}
      */
     public List<Category> getCategories() {
         List<Category> list = new ArrayList<Category>();

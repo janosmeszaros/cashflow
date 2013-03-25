@@ -1,5 +1,6 @@
 package com.cashflow.database.category;
 
+import static android.provider.BaseColumns._ID;
 import static com.cashflow.database.DatabaseContracts.AbstractCategory.COLUMN_NAME_CATEGORY_NAME;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -7,6 +8,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
@@ -18,6 +20,7 @@ import org.mockito.MockitoAnnotations;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.MatrixCursor;
 
 import com.cashflow.domain.Category;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
@@ -43,7 +46,6 @@ public class CategoryPersistenceServiceTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        when(dao.getCategories()).thenReturn(cursor);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -82,12 +84,19 @@ public class CategoryPersistenceServiceTest {
     }
 
     @Test
-    public void testGetCategoriesShouldReturnCursor() {
+    public void testGetCategoriesShouldReturnCategoryList() {
+        Category category = new Category(ID_STR, CATEGORY_NAME);
+        List<Category> testList = new ArrayList<Category>();
+        testList.add(category);
+        MatrixCursor cursor = new MatrixCursor(new String[]{_ID, COLUMN_NAME_CATEGORY_NAME});
+        cursor.addRow(new String[]{category.getId(), category.getName()});
+        when(dao.getCategories()).thenReturn(cursor);
         underTest = new CategoryPersistenceService(dao);
 
-        List<Category> categories = underTest.getCategories();
+        List<Category> result = underTest.getCategories();
 
         verify(dao).getCategories();
+        assertThat(testList, equalTo(result));
     }
 
     @Test(expected = IllegalArgumentException.class)
