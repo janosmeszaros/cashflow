@@ -110,37 +110,6 @@ public abstract class DatabaseContracts {
      * @author Janos_Gyula_Meszaros
      *
      */
-    public abstract static class AbstractBill implements BaseColumns {
-        public static final String COLUMN_NAME_NULLABLE = null;
-        public static final String TABLE_NAME = "bill";
-        public static final String COLUMN_NAME_AMOUNT = "amount";
-        public static final String COLUMN_NAME_DATE_ADDED = "date";
-        public static final String COLUMN_NAME_DATE_PAYED = "payedDate";
-        public static final String COLUMN_NAME_DATE_DEADLINE = "deadlineDate";
-        public static final String COLUMN_NAME_NOTE = "note";
-        public static final String COLUMN_NAME_CATEGORY = "category";
-        public static final String COLUMN_NAME_IS_PAYED = "payed";
-        public static final String COLUMN_NAME_INTERVAL = "interval";
-
-        public static final String[] PROJECTION = new String[]{_ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE_ADDED, COLUMN_NAME_DATE_PAYED,
-            COLUMN_NAME_DATE_DEADLINE, COLUMN_NAME_NOTE, COLUMN_NAME_IS_PAYED};
-
-        static final String SQL_CREATE_ENTRIES = CREATE_TABLE + TABLE_NAME + OPEN_PARENTHESIS + _ID + " INTEGER PRIMARY KEY," + COLUMN_NAME_AMOUNT
-                + INTEGER_TYPE + COMMA_SEP + COLUMN_NAME_DATE_ADDED + TEXT_TYPE + COMMA_SEP + COLUMN_NAME_DATE_DEADLINE + TEXT_TYPE + COMMA_SEP
-                + COLUMN_NAME_DATE_PAYED + TEXT_TYPE + COMMA_SEP + COLUMN_NAME_CATEGORY + TEXT_TYPE + COMMA_SEP + COLUMN_NAME_IS_PAYED + INTEGER_TYPE
-                + COMMA_SEP + COLUMN_NAME_NOTE + TEXT_TYPE + COMMA_SEP + COLUMN_NAME_INTERVAL + TEXT_TYPE + CLOSE_PARENTHESIS;
-
-        static final String SQL_DELETE_ENTRIES = DROP_TABLE + TABLE_NAME;
-
-        private AbstractBill() {
-        }
-    }
-
-    /**
-     * Database Table for bills.
-     * @author Janos_Gyula_Meszaros
-     *
-     */
     public abstract static class AbstractBill implements BaseColumns, Tables {
         public static final String NULLABLE = null;
         public static final String TABLE_NAME = "bill";
@@ -166,5 +135,4 @@ public abstract class DatabaseContracts {
         private AbstractBill() {
         }
     }
-
 }
