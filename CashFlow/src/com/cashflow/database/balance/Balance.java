@@ -9,8 +9,8 @@ import org.slf4j.LoggerFactory;
 
 import android.database.Cursor;
 
-import com.cashflow.database.statement.StatementPersistenceService;
-import com.cashflow.database.statement.StatementType;
+import com.cashflow.statement.database.StatementPersistenceService;
+import com.cashflow.statement.database.StatementType;
 
 /**
  * Class to keep the actual balance. Thread safe access to the balance field.

@@ -4,7 +4,7 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import com.cashflow.constants.RecurringInterval;
-import com.cashflow.database.statement.StatementType;
+import com.cashflow.statement.database.StatementType;
 
 /**
  * Simple class for statement. This will hold data for one statement.

@@ -1,8 +1,8 @@
 package com.cashflow.activity;
 
 import static com.cashflow.constants.Constants.STATEMENT_TYPE_EXTRA;
-import static com.cashflow.database.statement.StatementType.Expense;
-import static com.cashflow.database.statement.StatementType.Income;
+import static com.cashflow.statement.database.StatementType.Expense;
+import static com.cashflow.statement.database.StatementType.Income;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,12 +16,12 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.cashflow.R;
-import com.cashflow.activity.bill.AddBillActivity;
-import com.cashflow.activity.category.CreateCategoryActivity;
-import com.cashflow.activity.statement.AddStatementActivity;
-import com.cashflow.activity.statement.ListStatementActivity;
+import com.cashflow.bill.activity.AddBillActivity;
+import com.cashflow.category.activity.CreateCategoryActivity;
 import com.cashflow.database.balance.Balance;
-import com.cashflow.database.statement.RecurringIncomeScheduler;
+import com.cashflow.statement.activity.AddStatementActivity;
+import com.cashflow.statement.activity.ListStatementActivity;
+import com.cashflow.statement.database.RecurringIncomeScheduler;
 import com.google.inject.Inject;
 
 /**

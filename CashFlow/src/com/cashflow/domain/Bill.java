@@ -2,16 +2,27 @@ package com.cashflow.domain;
 
 import com.cashflow.constants.RecurringInterval;
 
+/**
+ * Bill class.
+ * @author Janos_Gyula_Meszaros
+ *
+ */
 public class Bill {
-    private String amount;
-    private String date;
+    private final String amount;
+    private final String date;
     private String payedDate;
-    private String deadlineDate;
+    private final String deadlineDate;
     private String note;
     private Category category;
     private boolean payed;
     private RecurringInterval interval;
 
+    /**
+     * Create a Bill.
+     * @param amount amount
+     * @param date creation date
+     * @param deadlineDate deadline date
+     */
     public Bill(String amount, String date, String deadlineDate) {
         this.amount = amount;
         this.date = date;
