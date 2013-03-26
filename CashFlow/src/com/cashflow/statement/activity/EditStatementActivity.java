@@ -79,7 +79,7 @@ public class EditStatementActivity extends RoboFragmentActivity {
     private StatementType type;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LOG.debug("EditStatementActivity is creating...");
         setContentView(R.layout.activity_add_statement);
@@ -98,8 +98,8 @@ public class EditStatementActivity extends RoboFragmentActivity {
      * @param view
      *            Required for onClick.
      */
-    public void submit(View view) {
-        Statement statement = createStatement();
+    public void submit(final View view) {
+        final Statement statement = createStatement();
 
         if (isValuesChanged() && statementService.updateStatement(statement)) {
             setResult(RESULT_OK);
@@ -112,16 +112,17 @@ public class EditStatementActivity extends RoboFragmentActivity {
 
     private boolean isValuesChanged() {
         boolean result = true;
-        String amountStr = amountText.getText().toString();
-        String date = dateButton.getText().toString();
-        String note = notesText.getText().toString();
-        Category category = (Category) categorySpinner.getSelectedItem();
-        RecurringInterval interval = (RecurringInterval) recurringSpinner.getSelectedItem();
+        final String amountStr = amountText.getText().toString();
+        final String date = dateButton.getText().toString();
+        final String note = notesText.getText().toString();
+        final Category category = (Category) categorySpinner.getSelectedItem();
+        final RecurringInterval interval = (RecurringInterval) recurringSpinner.getSelectedItem();
 
         if (amountStr.equals(originalStatement.getAmount()) && date.equals(originalStatement.getDate()) && note.equals(originalStatement.getNote())
                 && interval.equals(originalStatement.getRecurringInterval()) && category.equals(originalStatement.getCategory())) {
             result = false;
         }
+
         return result;
     }
 
@@ -143,9 +144,9 @@ public class EditStatementActivity extends RoboFragmentActivity {
             setUpRecurringSpinner();
         }
 
-        List<Category> list = categoryService.getCategories();
-        ArrayAdapter<Category> adapter = new ArrayAdapter<Category>(this, android.R.layout.simple_spinner_dropdown_item, list);
-        int position = adapter.getPosition(originalStatement.getCategory());
+        final List<Category> list = categoryService.getCategories();
+        final ArrayAdapter<Category> adapter = new ArrayAdapter<Category>(this, android.R.layout.simple_spinner_dropdown_item, list);
+        final int position = adapter.getPosition(originalStatement.getCategory());
 
         categorySpinner.setAdapter(adapter);
         categorySpinner.setSelection(position);
@@ -160,7 +161,7 @@ public class EditStatementActivity extends RoboFragmentActivity {
 
     @SuppressWarnings("unchecked")
     private void setSelectedItem() {
-        RecurringInterval interval = originalStatement.getRecurringInterval();
+        final RecurringInterval interval = originalStatement.getRecurringInterval();
         if (!RecurringInterval.none.equals(interval)) {
             recurringCheckBox.setChecked(true);
             recurringCheckBoxArea.setVisibility(VISIBLE);
@@ -173,17 +174,17 @@ public class EditStatementActivity extends RoboFragmentActivity {
     }
 
     private Statement createStatement() {
-        String amountStr = amountText.getText().toString();
-        String date = dateButton.getText().toString();
-        String note = notesText.getText().toString();
-        Category category = (Category) categorySpinner.getSelectedItem();
-        String id = originalStatement.getId();
+        final String amountStr = amountText.getText().toString();
+        final String date = dateButton.getText().toString();
+        final String note = notesText.getText().toString();
+        final Category category = (Category) categorySpinner.getSelectedItem();
+        final String id = originalStatement.getId();
 
-        Builder builder = new Statement.Builder(amountStr, date);
+        final Builder builder = new Statement.Builder(amountStr, date);
         builder.setNote(note).setType(type).setId(id).setCategory(category);
 
         if (type.isIncome()) {
-            RecurringInterval interval = (RecurringInterval) recurringSpinner.getSelectedItem();
+            final RecurringInterval interval = (RecurringInterval) recurringSpinner.getSelectedItem();
             builder.setRecurringInterval(interval);
         }
 
@@ -195,8 +196,8 @@ public class EditStatementActivity extends RoboFragmentActivity {
     }
 
     private void getOriginalData() {
-        Intent intent = getIntent();
-        String id = intent.getStringExtra(ID_EXTRA);
+        final Intent intent = getIntent();
+        final String id = intent.getStringExtra(ID_EXTRA);
         originalStatement = statementService.getStatementById(id);
     }
 }

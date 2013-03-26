@@ -20,12 +20,12 @@ public class DateButtonOnClickListener implements OnClickListener {
      * @param datePickerFragment {@link DatePickerFragment} can't be <code>null</code>
      */
     @Inject
-    public DateButtonOnClickListener(DatePickerFragment datePickerFragment) {
+    public DateButtonOnClickListener(final DatePickerFragment datePickerFragment) {
         this.datePickerFragment = datePickerFragment;
     }
 
     @Override
-    public void onClick(View view) {
+    public void onClick(final View view) {
         datePickerFragment.show(((FragmentActivity) view.getContext()).getSupportFragmentManager(), "datePicker");
     }
 

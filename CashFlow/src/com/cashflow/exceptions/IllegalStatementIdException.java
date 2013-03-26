@@ -7,11 +7,13 @@ package com.cashflow.exceptions;
  */
 public class IllegalStatementIdException extends RuntimeException {
 
+    private static final long serialVersionUID = 6379973083610727615L;
+
     /**
      * Constructor which gets the id which is not exist.
      * @param id id.
      */
-    public IllegalStatementIdException(String id) {
+    public IllegalStatementIdException(final String id) {
         super("The statement for the " + id + " can't find in the database.");
     }
 

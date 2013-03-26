@@ -18,10 +18,10 @@ import com.cashflow.statement.database.StatementType;
  */
 public final class Balance {
     private static final Logger LOG = LoggerFactory.getLogger(Balance.class);
-    private volatile BigDecimal amountBalance = BigDecimal.ZERO;
+    private BigDecimal amountBalance = BigDecimal.ZERO;
     private final StatementPersistenceService service;
 
-    private Balance(StatementPersistenceService service) {
+    private Balance(final StatementPersistenceService service) {
         this.service = service;
     }
 
@@ -35,8 +35,8 @@ public final class Balance {
      *            {@link StatementPersistenceService}
      * @return the Balance instance.
      */
-    public static Balance getInstance(StatementPersistenceService service) {
-        Balance balance = new Balance(service);
+    public static Balance getInstance(final StatementPersistenceService service) {
+        final Balance balance = new Balance(service);
         balance.countBalance();
 
         return balance;
@@ -46,15 +46,15 @@ public final class Balance {
      * Calculates the current balance.
      */
     public void countBalance() {
-        double expenses = countSumOfStatement(service.getStatement(StatementType.Expense));
-        double incomes = countSumOfStatement(service.getStatement(StatementType.Income));
+        final double expenses = countSumOfStatement(service.getStatement(StatementType.Expense));
+        final double incomes = countSumOfStatement(service.getStatement(StatementType.Income));
 
         amountBalance = BigDecimal.valueOf(incomes - expenses);
         LOG.debug("Balance is: " + amountBalance.doubleValue());
     }
 
-    private double countSumOfStatement(Cursor cursor) {
-        int index = cursor.getColumnIndex(COLUMN_NAME_AMOUNT);
+    private double countSumOfStatement(final Cursor cursor) {
+        final int index = cursor.getColumnIndex(COLUMN_NAME_AMOUNT);
         double amount = 0L;
 
         cursor.moveToFirst();

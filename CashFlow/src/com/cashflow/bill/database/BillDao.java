@@ -19,7 +19,7 @@ public class BillDao extends DaoParent {
      * @param provider Provider to get database.
      */
     @Inject
-    public BillDao(SQLiteDbProvider provider) {
+    public BillDao(final SQLiteDbProvider provider) {
         super(provider, AbstractBill.class);
     }
 

@@ -23,29 +23,29 @@ public class Bill {
      * @param date creation date
      * @param deadlineDate deadline date
      */
-    public Bill(String amount, String date, String deadlineDate) {
+    public Bill(final String amount, final String date, final String deadlineDate) {
         this.amount = amount;
         this.date = date;
         this.deadlineDate = deadlineDate;
     }
 
-    public void setPayedDate(String payedDate) {
+    public void setPayedDate(final String payedDate) {
         this.payedDate = payedDate;
     }
 
-    public void setNote(String note) {
+    public void setNote(final String note) {
         this.note = note;
     }
 
-    public void setCategory(Category category) {
+    public void setCategory(final Category category) {
         this.category = category;
     }
 
-    public void setPayed(boolean payed) {
+    public void setPayed(final boolean payed) {
         this.payed = payed;
     }
 
-    public void setInterval(RecurringInterval interval) {
+    public void setInterval(final RecurringInterval interval) {
         this.interval = interval;
     }
 

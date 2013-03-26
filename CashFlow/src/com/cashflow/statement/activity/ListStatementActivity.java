@@ -42,7 +42,7 @@ public class ListStatementActivity extends RoboActivity {
     private ListView list;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LOG.debug("ListStatementActivity is creating...");
 
@@ -55,7 +55,7 @@ public class ListStatementActivity extends RoboActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(final Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.list_incomes, menu);
         return true;
@@ -67,15 +67,15 @@ public class ListStatementActivity extends RoboActivity {
      * @param view
      *            Needed by onClick event.
      */
-    public void editButtonOnClick(View view) {
+    public void editButtonOnClick(final View view) {
         LOG.debug("Edit button clicked");
-        Intent intent = new Intent(this, EditStatementActivity.class);
+        final Intent intent = new Intent(this, EditStatementActivity.class);
         addExtras((View) view.getParent(), intent);
         startActivityForResult(intent, EDIT_ACTIVITY_CODE);
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         LOG.debug("ListStatementActivity's onActivityResult method called with params: \nrequestCode: " + requestCode + "\nresultCode: "
                 + requestCode);
@@ -84,13 +84,13 @@ public class ListStatementActivity extends RoboActivity {
         }
     }
 
-    private void addExtras(View view, Intent intent) {
-        TextView id = (TextView) view.findViewById(R.id.row_id);
+    private void addExtras(final View view, final Intent intent) {
+        final TextView id = (TextView) view.findViewById(R.id.row_id);
 
         intent.putExtra(ID_EXTRA, id.getText());
     }
 
-    private boolean isEditActivity(int requestCode, int resultCode) {
+    private boolean isEditActivity(final int requestCode, final int resultCode) {
         return resultCode == RESULT_OK && requestCode == EDIT_ACTIVITY_CODE;
     }
 
@@ -98,7 +98,7 @@ public class ListStatementActivity extends RoboActivity {
     private void getDataFromDatabase() {
         LOG.debug("Starting query for type: " + type);
 
-        Cursor cursor = statementService.getStatement(type);
+        final Cursor cursor = statementService.getStatement(type);
 
         mAdapter = new SimpleCursorAdapter(this, R.layout.list_statements_row, cursor, PROJECTION, TO_VIEWS);
         list.setAdapter(mAdapter);
@@ -115,7 +115,7 @@ public class ListStatementActivity extends RoboActivity {
     }
 
     private void setStatementType() {
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
         type = StatementType.valueOf(intent.getStringExtra(STATEMENT_TYPE_EXTRA));
     }
 }

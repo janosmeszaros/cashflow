@@ -4,9 +4,7 @@ import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 import static android.provider.BaseColumns._ID;
 import static com.cashflow.constants.Constants.EDIT_ACTIVITY_CODE;
-import static com.cashflow.constants.Constants.EXPENSE_EXTRA;
 import static com.cashflow.constants.Constants.ID_EXTRA;
-import static com.cashflow.constants.Constants.INCOME_EXTRA;
 import static com.cashflow.constants.Constants.STATEMENT_TYPE_EXTRA;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_DATE;
@@ -89,12 +87,12 @@ public class ListStatementActivityTest {
     }
 
     private void setExpenseIntent() {
-        underTest.setIntent(new Intent().putExtra(STATEMENT_TYPE_EXTRA, EXPENSE_EXTRA));
+        underTest.setIntent(new Intent().putExtra(STATEMENT_TYPE_EXTRA, Expense.toString()));
         underTest.onCreate(null);
     }
 
     private void setIncomeIntent() {
-        underTest.setIntent(new Intent().putExtra(STATEMENT_TYPE_EXTRA, INCOME_EXTRA));
+        underTest.setIntent(new Intent().putExtra(STATEMENT_TYPE_EXTRA, Income.toString()));
         underTest.onCreate(null);
     }
 
@@ -207,7 +205,7 @@ public class ListStatementActivityTest {
     public void testWhenListStatementIsIncomeThenTitleShouldBeListIncomeTitle() {
         setIncomeIntent();
         ListStatementActivity underTest = new ListStatementActivity();
-        underTest.setIntent(new Intent().putExtra(STATEMENT_TYPE_EXTRA, INCOME_EXTRA));
+        underTest.setIntent(new Intent().putExtra(STATEMENT_TYPE_EXTRA, Income.toString()));
         underTest.onCreate(null);
 
         assertThat((String) underTest.getTitle(), equalTo(underTest.getString(R.string.title_activity_list_incomes)));

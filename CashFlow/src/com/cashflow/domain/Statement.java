@@ -20,7 +20,7 @@ public final class Statement {
     private final StatementType type;
     private final RecurringInterval recurringInterval;
 
-    private Statement(Builder builder) {
+    private Statement(final Builder builder) {
         this.id = builder.id;
         this.amount = builder.amount;
         this.category = builder.category;
@@ -64,7 +64,7 @@ public final class Statement {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         return EqualsBuilder.reflectionEquals(this, obj);
     }
 
@@ -90,7 +90,7 @@ public final class Statement {
          * @param amount the amount of {@link Statement}
          * @param date the date of {@link Statement}
          */
-        public Builder(String amount, String date) {
+        public Builder(final String amount, final String date) {
             this.amount = amount;
             this.date = date;
         }
@@ -100,7 +100,7 @@ public final class Statement {
          * @param note note for the {@link Statement}
          * @return {@link Builder}
          */
-        public Builder setNote(String note) {
+        public Builder setNote(final String note) {
             this.note = note;
             return this;
         }
@@ -110,7 +110,7 @@ public final class Statement {
          * @param type type for the {@link Statement}
          * @return {@link Builder}
          */
-        public Builder setType(StatementType type) {
+        public Builder setType(final StatementType type) {
             this.type = type;
             return this;
         }
@@ -120,7 +120,7 @@ public final class Statement {
          * @param interval interval for the {@link Statement}
          * @return {@link Builder}
          */
-        public Builder setRecurringInterval(RecurringInterval interval) {
+        public Builder setRecurringInterval(final RecurringInterval interval) {
             recurringInterval = interval;
             return this;
         }
@@ -130,7 +130,7 @@ public final class Statement {
          * @param id id for the {@link Statement}
          * @return {@link Builder}
          */
-        public Builder setId(String id) {
+        public Builder setId(final String id) {
             this.id = id;
             return this;
         }
@@ -140,7 +140,7 @@ public final class Statement {
          * @param category 
          * @return {@link Builder}
          */
-        public Builder setCategory(Category category) {
+        public Builder setCategory(final Category category) {
             this.category = category;
             return this;
         }

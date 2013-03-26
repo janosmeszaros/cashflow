@@ -26,14 +26,14 @@ import com.google.inject.Singleton;
 public class BillPersistenceService {
     private static final String TRUE = "1";
     private static final String FALSE = "0";
-    private BillDao dao;
+    private final BillDao dao;
 
     /**
      * Constructor which gets a dao to save {@link Bill}.
      * @param dao {@link BillDao} class.
      */
     @Inject
-    public BillPersistenceService(BillDao dao) {
+    public BillPersistenceService(final BillDao dao) {
         this.dao = dao;
     }
 
@@ -43,11 +43,11 @@ public class BillPersistenceService {
      * @throws IllegalArgumentException when {@link Bill} is null.
      * @return <code>true</code> if saving was successful. <code>false</code> otherwise.
      */
-    public boolean saveBill(Bill bill) {
+    public boolean saveBill(final Bill bill) {
         nullCheck(bill);
         boolean isSuccessful = false;
 
-        ContentValues valuesToSave = createContentValues(bill);
+        final ContentValues valuesToSave = createContentValues(bill);
         if (dao.save(valuesToSave)) {
             isSuccessful = true;
         }
@@ -55,8 +55,8 @@ public class BillPersistenceService {
         return isSuccessful;
     }
 
-    private ContentValues createContentValues(Bill bill) {
-        ContentValues values = new ContentValues();
+    private ContentValues createContentValues(final Bill bill) {
+        final ContentValues values = new ContentValues();
 
         values.put(COLUMN_NAME_AMOUNT, bill.getAmount());
         values.put(COLUMN_NAME_DATE_ADDED, bill.getDate());
@@ -70,7 +70,7 @@ public class BillPersistenceService {
         return values;
     }
 
-    private void nullCheck(Bill bill) {
+    private void nullCheck(final Bill bill) {
         Validate.notNull(bill);
     }
 }

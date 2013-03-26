@@ -49,7 +49,7 @@ public class StatementPersistenceService {
      * @throws IllegalArgumentException when DAO is <code>null</code>.
      */
     @Inject
-    public StatementPersistenceService(StatementDao dao) {
+    public StatementPersistenceService(final StatementDao dao) {
         validateObjectsNotNull(dao);
         this.dao = dao;
     }
@@ -60,14 +60,14 @@ public class StatementPersistenceService {
      * @throws IllegalArgumentException when one of the above is empty or null.
      * @return <code>true</code> if saving was successful and the amount wasn't zero, <code>false</code> otherwise.
      */
-    public boolean saveStatement(Statement statement) {
+    public boolean saveStatement(final Statement statement) {
         validateStatement(statement);
 
         boolean result = false;
-        BigDecimal amount = parseAmount(statement.getAmount());
+        final BigDecimal amount = parseAmount(statement.getAmount());
 
         if (checkIfNotZero(amount)) {
-            ContentValues values = createContentValue(amount, statement);
+            final ContentValues values = createContentValue(amount, statement);
             dao.save(values);
             result = true;
         }
@@ -80,7 +80,7 @@ public class StatementPersistenceService {
      * @throws IllegalArgumentException when parameter is null.
      * @return a {@link Cursor} which contains the values.
      */
-    public Cursor getStatement(StatementType type) {
+    public Cursor getStatement(final StatementType type) {
         validateObjectsNotNull(type);
 
         Cursor result = null;
@@ -98,8 +98,8 @@ public class StatementPersistenceService {
      * @return list of statements which are recurring incomes.
      */
     public List<Statement> getRecurringIncomes() {
-        List<Statement> list = new ArrayList<Statement>();
-        Cursor cursor = dao.getRecurringIncomes();
+        final List<Statement> list = new ArrayList<Statement>();
+        final Cursor cursor = dao.getRecurringIncomes();
 
         while (cursor.moveToNext()) {
             list.add(buildStatement(cursor));
@@ -114,13 +114,13 @@ public class StatementPersistenceService {
      * @throws IllegalArgumentException when one of them above is not setted.
      * @return <code>true</code> if successful, otherwise <code>false</code>.
      */
-    public boolean updateStatement(Statement statement) {
+    public boolean updateStatement(final Statement statement) {
         validateUpdateStatement(statement);
 
         boolean result = false;
-        BigDecimal amount = parseAmount(statement.getAmount());
+        final BigDecimal amount = parseAmount(statement.getAmount());
 
-        ContentValues value = createContentValue(amount, statement);
+        final ContentValues value = createContentValue(amount, statement);
         if (dao.update(value, statement.getId())) {
             result = true;
         }
@@ -130,26 +130,26 @@ public class StatementPersistenceService {
 
     /**
      * Get {@link Statement} by id. 
-     * @param id of {@link Statement} can't be empty or null.
+     * @param statementId of {@link Statement} can't be empty or null.
      * @throws IllegalArgumentException when id is empty or null.
      * @throws IllegalStatementIdException when statement does not exist for the id.
      * @return {@link Statement} for the specified id.
      */
-    public Statement getStatementById(String id) {
-        validateStringsNotEmpty(id);
-        Statement statement;
-        Cursor cursor = dao.getStatementById(id);
+    public Statement getStatementById(final String statementId) {
+        validateStringsNotEmpty(statementId);
+        final Statement statement;
+        final Cursor cursor = dao.getStatementById(statementId);
 
         if (cursor.moveToNext()) {
             statement = buildStatement(cursor);
         } else {
-            throw new IllegalStatementIdException(id);
+            throw new IllegalStatementIdException(statementId);
         }
 
         return statement;
     }
 
-    private boolean checkIfNotZero(BigDecimal amount) {
+    private boolean checkIfNotZero(final BigDecimal amount) {
         boolean result = true;
         if (amount.compareTo(BigDecimal.ZERO) == 0) {
             result = false;
@@ -157,7 +157,7 @@ public class StatementPersistenceService {
         return result;
     }
 
-    private BigDecimal parseAmount(String amountStr) {
+    private BigDecimal parseAmount(final String amountStr) {
         BigDecimal amount = BigDecimal.ZERO;
 
         try {
@@ -168,8 +168,8 @@ public class StatementPersistenceService {
         return amount;
     }
 
-    private ContentValues createContentValue(BigDecimal amount, Statement statement) {
-        ContentValues values = new ContentValues();
+    private ContentValues createContentValue(final BigDecimal amount, final Statement statement) {
+        final ContentValues values = new ContentValues();
         values.put(COLUMN_NAME_AMOUNT, amount.toString());
         values.put(COLUMN_NAME_CATEGORY, statement.getCategory().getId());
         values.put(COLUMN_NAME_DATE, statement.getDate());
@@ -182,9 +182,9 @@ public class StatementPersistenceService {
         return values;
     }
 
-    private Map<String, String> getColumnValues(Cursor cursor) {
-        Map<String, Integer> columnNumbers = getColumnNumbers(cursor);
-        Map<String, String> columnValues = new HashMap<String, String>();
+    private Map<String, String> getColumnValues(final Cursor cursor) {
+        final Map<String, Integer> columnNumbers = getColumnNumbers(cursor);
+        final Map<String, String> columnValues = new HashMap<String, String>();
 
         columnValues.put(COLUMN_NAME_INTERVAL, cursor.getString(columnNumbers.get(COLUMN_NAME_INTERVAL)));
         columnValues.put(COLUMN_NAME_AMOUNT, cursor.getString(columnNumbers.get(COLUMN_NAME_AMOUNT)));
@@ -198,8 +198,8 @@ public class StatementPersistenceService {
         return columnValues;
     }
 
-    private Map<String, Integer> getColumnNumbers(Cursor cursor) {
-        Map<String, Integer> columnNumbers = new HashMap<String, Integer>();
+    private Map<String, Integer> getColumnNumbers(final Cursor cursor) {
+        final Map<String, Integer> columnNumbers = new HashMap<String, Integer>();
 
         columnNumbers.put(COLUMN_NAME_DATE, cursor.getColumnIndexOrThrow(COLUMN_NAME_DATE));
         columnNumbers.put(COLUMN_NAME_AMOUNT, cursor.getColumnIndexOrThrow(COLUMN_NAME_AMOUNT));
@@ -213,32 +213,32 @@ public class StatementPersistenceService {
         return columnNumbers;
     }
 
-    private Statement buildStatement(Cursor cursor) {
-        Map<String, String> values = getColumnValues(cursor);
+    private Statement buildStatement(final Cursor cursor) {
+        final Map<String, String> values = getColumnValues(cursor);
 
-        Category category = new Category(values.get(CATEGORY_ID_ALIAS), values.get(AbstractCategory.COLUMN_NAME_CATEGORY_NAME));
-        StatementType type = INCOME_TYPE.equals(values.get(COLUMN_NAME_IS_INCOME)) ? StatementType.Income : StatementType.Expense;
+        final Category category = new Category(values.get(CATEGORY_ID_ALIAS), values.get(AbstractCategory.COLUMN_NAME_CATEGORY_NAME));
+        final StatementType type = INCOME_TYPE.equals(values.get(COLUMN_NAME_IS_INCOME)) ? StatementType.Income : StatementType.Expense;
 
         return new Statement.Builder(values.get(COLUMN_NAME_AMOUNT), values.get(COLUMN_NAME_DATE)).setId(values.get(STATEMENT_ID_ALIAS))
                 .setNote(values.get(COLUMN_NAME_NOTE)).setRecurringInterval(RecurringInterval.valueOf(values.get(COLUMN_NAME_INTERVAL)))
                 .setType(type).setCategory(category).build();
     }
 
-    private void validateStatement(Statement statement) {
+    private void validateStatement(final Statement statement) {
         validateObjectsNotNull(statement.getType(), statement.getCategory());
         validateStringsNotEmpty(statement.getAmount(), statement.getDate());
     }
 
-    private void validateUpdateStatement(Statement statement) {
+    private void validateUpdateStatement(final Statement statement) {
         validateStringsNotEmpty(statement.getId());
         validateStatement(statement);
     }
 
-    private void validateObjectsNotNull(Object... objects) {
+    private void validateObjectsNotNull(final Object... objects) {
         Validate.noNullElements(objects);
     }
 
-    private void validateStringsNotEmpty(String... params) {
+    private void validateStringsNotEmpty(final String... params) {
         for (String string : params) {
             Validate.notEmpty(string);
         }

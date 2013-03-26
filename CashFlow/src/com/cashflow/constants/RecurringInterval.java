@@ -11,7 +11,7 @@ import org.joda.time.Period;
 public enum RecurringInterval {
     none(Period.ZERO) {
         @Override
-        public int numOfPassedPeriods(DateTime date) {
+        public int numOfPassedPeriods(final DateTime date) {
             return 0;
         }
     },
@@ -19,7 +19,7 @@ public enum RecurringInterval {
 
     private final Period period;
 
-    private RecurringInterval(Period period) {
+    private RecurringInterval(final Period period) {
         this.period = period;
     }
 
@@ -28,7 +28,7 @@ public enum RecurringInterval {
      * @param date checkable date.
      * @return number of periods.
      */
-    public int numOfPassedPeriods(DateTime date) {
+    public int numOfPassedPeriods(final DateTime date) {
         return countPassedPeriods(date);
     }
 
@@ -36,7 +36,7 @@ public enum RecurringInterval {
         return period;
     }
 
-    private int countPassedPeriods(DateTime date) {
+    private int countPassedPeriods(final DateTime date) {
         DateTime time = date.plus(getPeriod());
         int result = 0;
 

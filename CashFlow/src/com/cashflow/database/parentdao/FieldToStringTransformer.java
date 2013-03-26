@@ -14,8 +14,8 @@ import com.cashflow.exceptions.IllegalTableException;
 public class FieldToStringTransformer implements Transformer {
 
     @Override
-    public Object transform(Object input) {
-        Field field = (Field) input;
+    public Object transform(final Object input) {
+        final Field field = (Field) input;
         String result = "";
 
         try {

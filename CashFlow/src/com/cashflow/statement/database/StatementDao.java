@@ -14,8 +14,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.cashflow.database.DatabaseContracts.AbstractStatement;
-import com.cashflow.database.parentdao.DaoParent;
 import com.cashflow.database.SQLiteDbProvider;
+import com.cashflow.database.parentdao.DaoParent;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -35,7 +35,7 @@ public class StatementDao extends DaoParent {
      *            Provider to get database.
      */
     @Inject
-    public StatementDao(SQLiteDbProvider provider) {
+    public StatementDao(final SQLiteDbProvider provider) {
         super(provider, AbstractStatement.class);
         nullCheck(provider);
         this.provider = provider;
@@ -46,9 +46,8 @@ public class StatementDao extends DaoParent {
      * @return Cursor which contains the data.
      */
     public Cursor getExpenses() {
-        SQLiteDatabase db = provider.getReadableDb();
-        Cursor cursor = db.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION, EXPENSE_SELECTION, null, null, null, null);
-        return cursor;
+        final SQLiteDatabase dataBase = provider.getReadableDb();
+        return dataBase.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION, EXPENSE_SELECTION, null, null, null, null);
     }
 
     /**
@@ -56,9 +55,8 @@ public class StatementDao extends DaoParent {
      * @return Cursor which contains the data.
      */
     public Cursor getIncomes() {
-        SQLiteDatabase db = provider.getReadableDb();
-        Cursor cursor = db.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION, INCOME_SELECTION, null, null, null, null);
-        return cursor;
+        final SQLiteDatabase dataBase = provider.getReadableDb();
+        return dataBase.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION, INCOME_SELECTION, null, null, null, null);
     }
 
     /**
@@ -66,29 +64,27 @@ public class StatementDao extends DaoParent {
      * @return Cursor which contains the data.
      */
     public Cursor getRecurringIncomes() {
-        SQLiteDatabase db = provider.getReadableDb();
-        Cursor cursor = db.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION_WITH_ALIAS, RECURRING_INCOME_SELECTION, null, null, null, null);
-        return cursor;
+        final SQLiteDatabase dataBase = provider.getReadableDb();
+        return dataBase.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION_WITH_ALIAS, RECURRING_INCOME_SELECTION, null, null, null, null);
     }
 
     /**
      * Get Statement by id.
-     * @param id of statement
+     * @param statementId of statement
      * @return statement
      */
-    public Cursor getStatementById(String id) {
-        idCheck(id);
+    public Cursor getStatementById(final String statementId) {
+        idCheck(statementId);
 
-        SQLiteDatabase db = provider.getReadableDb();
-        Cursor cursor = db.rawQuery(SELECT_STATEMENT_BY_ID, new String[]{id});
-        return cursor;
+        final SQLiteDatabase dataBase = provider.getReadableDb();
+        return dataBase.rawQuery(SELECT_STATEMENT_BY_ID, new String[]{statementId});
     }
 
-    private void idCheck(String id) {
-        Validate.notEmpty(id);
+    private void idCheck(final String statementId) {
+        Validate.notEmpty(statementId);
     }
 
-    private void nullCheck(Object object) {
+    private void nullCheck(final Object object) {
         Validate.notNull(object);
     }
 

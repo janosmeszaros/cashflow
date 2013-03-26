@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import android.content.ContentValues;
@@ -108,14 +109,13 @@ public class CategoryPersistenceServiceTest {
     @Test
     public void testUpdateCategoryWhenNameIsFineThenShouldCallDaosUpdateMethodAndReturnTrue() {
         underTest = new CategoryPersistenceService(dao);
+        when(dao.update(Mockito.any(ContentValues.class), Mockito.eq(ID_STR))).thenReturn(true);
 
         boolean updateWasSuccesful = underTest.updateCategory(ID_STR, CATEGORY_NAME);
 
         ArgumentCaptor<ContentValues> argument = ArgumentCaptor.forClass(ContentValues.class);
         verify(dao).update(argument.capture(), eq(ID_STR));
-
         assertThat((String) argument.getValue().get(COLUMN_NAME_CATEGORY_NAME), equalTo(CATEGORY_NAME));
-
         assertThat(updateWasSuccesful, equalTo(true));
     }
 }

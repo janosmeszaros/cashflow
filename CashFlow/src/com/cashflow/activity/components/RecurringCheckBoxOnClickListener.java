@@ -30,8 +30,8 @@ public class RecurringCheckBoxOnClickListener implements OnClickListener {
      */
     @Override
     @SuppressLint("NewApi")
-    public void onClick(View view) {
-        boolean checked = ((CheckBox) view).isChecked();
+    public void onClick(final View view) {
+        final boolean checked = ((CheckBox) view).isChecked();
         if (checked) {
             startInAnimationForCheckboxArea((Activity) view.getContext());
         } else {
@@ -39,20 +39,20 @@ public class RecurringCheckBoxOnClickListener implements OnClickListener {
         }
     }
 
-    private void startOutAnimationForCheckboxArea(Activity context) {
-        LinearLayout checkBoxLayout = (LinearLayout) context.findViewById(R.id.recurring_checkbox_area);
+    private void startOutAnimationForCheckboxArea(final Activity context) {
+        final LinearLayout checkBoxLayout = (LinearLayout) context.findViewById(R.id.recurring_checkbox_area);
 
-        Animation out = AnimationUtils.makeOutAnimation(context, true);
+        final Animation out = AnimationUtils.makeOutAnimation(context, true);
         out.setDuration(DURATION_MILLIS);
         out.setAnimationListener(new AnimationListenerImplementation(checkBoxLayout, GONE));
         checkBoxLayout.setAnimation(out);
         checkBoxLayout.startLayoutAnimation();
     }
 
-    private void startInAnimationForCheckboxArea(Activity context) {
-        LinearLayout checkBoxLayout = (LinearLayout) context.findViewById(R.id.recurring_checkbox_area);
+    private void startInAnimationForCheckboxArea(final Activity context) {
+        final LinearLayout checkBoxLayout = (LinearLayout) context.findViewById(R.id.recurring_checkbox_area);
 
-        Animation in = AnimationUtils.makeInChildBottomAnimation(context);
+        final Animation in = AnimationUtils.makeInChildBottomAnimation(context);
         in.setDuration(DURATION_MILLIS);
         in.setAnimationListener(new AnimationListenerImplementation(checkBoxLayout, VISIBLE));
         checkBoxLayout.setAnimation(in);
@@ -75,16 +75,16 @@ public class RecurringCheckBoxOnClickListener implements OnClickListener {
         }
 
         @Override
-        public void onAnimationEnd(Animation animation) {
+        public void onAnimationEnd(final Animation animation) {
             layout.setVisibility(onAnimationEnd);
         }
 
         @Override
-        public void onAnimationRepeat(Animation animation) {
+        public void onAnimationRepeat(final Animation animation) {
         }
 
         @Override
-        public void onAnimationStart(Animation animation) {
+        public void onAnimationStart(final Animation animation) {
             layout.setVisibility(INVISIBLE);
         }
     }

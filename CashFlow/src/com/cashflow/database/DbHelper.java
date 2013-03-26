@@ -17,14 +17,14 @@ public final class DbHelper extends SQLiteOpenHelper {
      * @param context
      *            Required for SQLiteOpenHelper.
      */
-    private DbHelper(Context context) {
+    private DbHelper(final Context context) {
         super(context, DatabaseContracts.DATABASE_NAME, null, DatabaseContracts.DATABASE_VERSION);
     }
 
     /**
      * Returns a read-only {@link SQLiteDatabase} instance.
      * @param context
-     *            context for the databasehelper.
+     *            context for the databaseHelper.
      * @return readable database.
      */
     public static synchronized SQLiteDatabase getReadableDatabase(final Context context) {
@@ -49,24 +49,24 @@ public final class DbHelper extends SQLiteOpenHelper {
 
     /**
      * This method is invoked when the database doesn't exists.
-     * @param db {@link SQLiteDatabase}
+     * @param dataBase {@link SQLiteDatabase}
      */
     @Override
-    public void onCreate(SQLiteDatabase db) {
-        db.execSQL(DatabaseContracts.AbstractStatement.SQL_CREATE_ENTRIES);
-        db.execSQL(DatabaseContracts.AbstractCategory.SQL_CREATE_ENTRIES);
-        db.execSQL(DatabaseContracts.AbstractBill.SQL_CREATE_ENTRIES);
+    public void onCreate(final SQLiteDatabase dataBase) {
+        dataBase.execSQL(DatabaseContracts.AbstractStatement.SQL_CREATE_ENTRIES);
+        dataBase.execSQL(DatabaseContracts.AbstractCategory.SQL_CREATE_ENTRIES);
+        dataBase.execSQL(DatabaseContracts.AbstractBill.SQL_CREATE_ENTRIES);
 
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    public void onUpgrade(final SQLiteDatabase dataBase, final int oldVersion, final int newVersion) {
         // This database is only a cache for online data, so its upgrade policy is
         // to simply to discard the data and start over
-        db.execSQL(DatabaseContracts.AbstractStatement.SQL_DELETE_ENTRIES);
-        db.execSQL(DatabaseContracts.AbstractCategory.SQL_DELETE_ENTRIES);
-        db.execSQL(DatabaseContracts.AbstractBill.SQL_DELETE_ENTRIES);
-        onCreate(db);
+        dataBase.execSQL(DatabaseContracts.AbstractStatement.SQL_DELETE_ENTRIES);
+        dataBase.execSQL(DatabaseContracts.AbstractCategory.SQL_DELETE_ENTRIES);
+        dataBase.execSQL(DatabaseContracts.AbstractBill.SQL_DELETE_ENTRIES);
+        onCreate(dataBase);
     }
 
     // @Override

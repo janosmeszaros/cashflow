@@ -18,7 +18,7 @@ public class Category {
      * @param id of {@link Category}
      * @param name of {@link Category}
      */
-    public Category(String id, String name) {
+    public Category(final String id, final String name) {
         this.id = id;
         this.name = name;
     }
@@ -42,7 +42,7 @@ public class Category {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         return EqualsBuilder.reflectionEquals(this, obj);
     }
 

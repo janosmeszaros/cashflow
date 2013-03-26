@@ -27,7 +27,7 @@
         <activity android:name="com.cashflow.statement.activity.EditStatementActivity" />
         <activity android:name="com.cashflow.statement.activity.ListStatementActivity" />
         <activity
-            android:name="com.cashflow.activity.CreateCategoryActivity"
+            android:name="com.cashflow.category.activity.CreateCategoryActivity"
             android:label="@string/title_activity_create_category"
             android:parentActivityName="com.cashflow.activity.MainActivity" >
             <meta-data

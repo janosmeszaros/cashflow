@@ -51,7 +51,7 @@ public class AddBillActivity extends RoboFragmentActivity {
     private CategoryPersistenceService categoryService;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_bill);
 
@@ -61,22 +61,22 @@ public class AddBillActivity extends RoboFragmentActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(final Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.add_bill, menu);
         return true;
     }
 
     private void setCategorySpinner() {
-        List<Category> list = categoryService.getCategories();
+        final List<Category> list = categoryService.getCategories();
 
-        ArrayAdapter<Category> adapter = new ArrayAdapter<Category>(this, android.R.layout.simple_spinner_dropdown_item, list);
+        final ArrayAdapter<Category> adapter = new ArrayAdapter<Category>(this, android.R.layout.simple_spinner_dropdown_item, list);
         categorySpinner.setAdapter(adapter);
     }
 
     private void setUpDateButton() {
         final Calendar calendar = Calendar.getInstance();
-        DateFormat fmtDateAndTime = DateFormat.getDateInstance(DateFormat.MEDIUM);
+        final DateFormat fmtDateAndTime = DateFormat.getDateInstance(DateFormat.MEDIUM);
         dateButton.setText(fmtDateAndTime.format(calendar.getTime()));
 
         dateButton.setOnClickListener(listener);

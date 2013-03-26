@@ -50,7 +50,7 @@ public class CreateCategoryActivity extends RoboActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(final Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.create_category, menu);
         return true;
@@ -60,9 +60,9 @@ public class CreateCategoryActivity extends RoboActivity {
      * Submit button onClick method.
      * @param view Required for onClick.
      */
-    public void createCategory(View view) {
+    public void createCategory(final View view) {
         LOG.debug("Creating category: " + nameText.getText());
-        String name = nameText.getText().toString();
+        final String name = nameText.getText().toString();
 
         if (service.saveCategory(name)) {
             finish();

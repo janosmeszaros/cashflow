@@ -20,12 +20,12 @@ public class DbHelperSQLiteDbProvider implements SQLiteDbProvider {
      *             if argument is <code>null</code>
      */
     @Inject
-    public DbHelperSQLiteDbProvider(Application application) {
+    public DbHelperSQLiteDbProvider(final Application application) {
         nullCheck(application);
         this.application = application;
     }
 
-    private void nullCheck(Application application) {
+    private void nullCheck(final Application application) {
         if (application == null) {
             throw new IllegalArgumentException();
         }

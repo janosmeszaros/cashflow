@@ -36,20 +36,20 @@ public class CategoryPersistenceService {
      *             when DAO is <code>null</code>
      */
     @Inject
-    public CategoryPersistenceService(CategoryDao dao) {
+    public CategoryPersistenceService(final CategoryDao dao) {
         validateInput(dao);
         this.dao = dao;
     }
 
-    private void validateInput(Object obj, String... params) {
+    private void validateInput(final Object obj, final String... params) {
         for (String string : params) {
             Validate.notEmpty(string);
         }
         Validate.notNull(obj);
     }
 
-    private ContentValues createContentValue(String note) {
-        ContentValues values = new ContentValues();
+    private ContentValues createContentValue(final String note) {
+        final ContentValues values = new ContentValues();
         values.put(COLUMN_NAME_CATEGORY_NAME, note);
 
         LOG.debug("Content created: " + values);
@@ -57,7 +57,7 @@ public class CategoryPersistenceService {
         return values;
     }
 
-    private boolean checkIfNotEmptyString(String name) {
+    private boolean checkIfNotEmptyString(final String name) {
         boolean result = true;
         if (EMPTY_STRING.equals(name)) {
             result = false;
@@ -71,12 +71,12 @@ public class CategoryPersistenceService {
      *            name of the category
      * @return <code>true</code> if saving was successful and the amount wasn't zero, otherwise <code>false</code>
      */
-    public boolean saveCategory(String name) {
+    public boolean saveCategory(final String name) {
         validateInput(name);
         boolean result = false;
 
         if (checkIfNotEmptyString(name)) {
-            ContentValues values = createContentValue(name);
+            final ContentValues values = createContentValue(name);
             dao.save(values);
             result = true;
         }
@@ -91,15 +91,11 @@ public class CategoryPersistenceService {
      *            new name for the {@link Category}
      * @return <code>true</code> if successful
      */
-    public boolean updateCategory(String id, String name) {
+    public boolean updateCategory(final String id, final String name) {
         validateInput(name, id);
 
-        boolean result = true;
-
-        ContentValues value = createContentValue(name);
-        dao.update(value, id);
-
-        return result;
+        final ContentValues value = createContentValue(name);
+        return dao.update(value, id);
     }
 
     /**
@@ -107,8 +103,8 @@ public class CategoryPersistenceService {
      * @return List of {@link Category}
      */
     public List<Category> getCategories() {
-        List<Category> list = new ArrayList<Category>();
-        Cursor cursor = dao.getValues();
+        final List<Category> list = new ArrayList<Category>();
+        final Cursor cursor = dao.getValues();
 
         while (cursor.moveToNext()) {
             addNextCategoryToList(list, cursor);
@@ -117,9 +113,9 @@ public class CategoryPersistenceService {
         return list;
     }
 
-    private void addNextCategoryToList(List<Category> list, Cursor cursor) {
-        String id = cursor.getString(cursor.getColumnIndex(_ID));
-        String name = cursor.getString(cursor.getColumnIndex(COLUMN_NAME_CATEGORY_NAME));
+    private void addNextCategoryToList(final List<Category> list, final Cursor cursor) {
+        final String id = cursor.getString(cursor.getColumnIndex(_ID));
+        final String name = cursor.getString(cursor.getColumnIndex(COLUMN_NAME_CATEGORY_NAME));
 
         list.add(new Category(id, name));
     }

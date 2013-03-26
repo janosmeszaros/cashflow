@@ -22,13 +22,13 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 
 /**
- * Roboguice configuration file.
+ * RoboGuice configuration file.
  * @author Janos_Gyula_Meszaros
  */
 public class AppModule implements Module {
 
     @Override
-    public void configure(Binder binder) {
+    public void configure(final Binder binder) {
         binder.bind(CategoryDao.class);
         binder.bind(CategoryPersistenceService.class);
         binder.bind(DateButtonOnClickListener.class);
@@ -47,7 +47,7 @@ public class AppModule implements Module {
 
     @Provides
     @Singleton
-    private Balance balanceProvider(StatementPersistenceService service) {
+    private Balance balanceProvider(final StatementPersistenceService service) {
         return Balance.getInstance(service);
     }
 

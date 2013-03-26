@@ -72,7 +72,7 @@ public class AddStatementActivity extends RoboFragmentActivity {
     private StatementType type;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LOG.debug("AddStatementActivity is creating...");
 
@@ -86,15 +86,14 @@ public class AddStatementActivity extends RoboFragmentActivity {
     }
 
     private void setCategorySpinner() {
-        List<Category> list = categoryService.getCategories();
+        final List<Category> list = categoryService.getCategories();
 
-        //        SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, android.R.layout.simple_spinner_dropdown_item, cursor, fromColumns, toViews);
-        ArrayAdapter<Category> adapter = new ArrayAdapter<Category>(this, android.R.layout.simple_spinner_dropdown_item, list);
+        final ArrayAdapter<Category> adapter = new ArrayAdapter<Category>(this, android.R.layout.simple_spinner_dropdown_item, list);
         categorySpinner.setAdapter(adapter);
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(final Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.activity_add_expense, menu);
         return true;
@@ -106,8 +105,8 @@ public class AddStatementActivity extends RoboFragmentActivity {
      * @param view
      *            Required for onClick.
      */
-    public void submit(View view) {
-        Statement statement = createStatement();
+    public void submit(final View view) {
+        final Statement statement = createStatement();
 
         if (statementService.saveStatement(statement)) {
             setResult(RESULT_OK);
@@ -118,7 +117,7 @@ public class AddStatementActivity extends RoboFragmentActivity {
     }
 
     private void setStatementType() {
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
         type = StatementType.valueOf(intent.getStringExtra(STATEMENT_TYPE_EXTRA));
         if (type.isIncome()) {
             activateRecurringArea();
@@ -141,19 +140,19 @@ public class AddStatementActivity extends RoboFragmentActivity {
 
     private void setUpDateButton() {
         final Calendar calendar = Calendar.getInstance();
-        DateFormat fmtDateAndTime = DateFormat.getDateInstance(DateFormat.MEDIUM);
+        final DateFormat fmtDateAndTime = DateFormat.getDateInstance(DateFormat.MEDIUM);
         dateButton.setText(fmtDateAndTime.format(calendar.getTime()));
 
         dateButton.setOnClickListener(listener);
     }
 
     private Statement createStatement() {
-        String amountStr = amountText.getText().toString();
-        String date = dateButton.getText().toString();
-        String note = notesText.getText().toString();
-        Category category = (Category) categorySpinner.getSelectedItem();
+        final String amountStr = amountText.getText().toString();
+        final String date = dateButton.getText().toString();
+        final String note = notesText.getText().toString();
+        final Category category = (Category) categorySpinner.getSelectedItem();
 
-        Builder builder = new Statement.Builder(amountStr, date);
+        final Builder builder = new Statement.Builder(amountStr, date);
         builder.setNote(note).setType(type).setCategory(category);
         if (type.isIncome()) {
             builder.setRecurringInterval((RecurringInterval) recurringSpinner.getSelectedItem());

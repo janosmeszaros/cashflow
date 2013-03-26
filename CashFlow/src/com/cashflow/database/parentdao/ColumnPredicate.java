@@ -12,8 +12,8 @@ import org.apache.commons.collections.Predicate;
 public class ColumnPredicate implements Predicate {
 
     @Override
-    public boolean evaluate(Object obj) {
-        Field field = (Field) obj;
+    public boolean evaluate(final Object obj) {
+        final Field field = (Field) obj;
 
         return field.getName().contains("COLUMN_NAME");
     }

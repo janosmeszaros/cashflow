@@ -40,7 +40,7 @@ public class MainActivity extends RoboActivity {
     private RecurringIncomeScheduler scheduler;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -48,18 +48,18 @@ public class MainActivity extends RoboActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(final Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.activity_main, menu);
         return true;
     }
 
     @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
+    public void onWindowFocusChanged(final boolean hasFocus) {
         LOG.debug("MainActivity's focus changed to: " + hasFocus);
         if (hasFocus) {
             balance.countBalance();
-            String value = String.valueOf(balance.getBalance());
+            final String value = String.valueOf(balance.getBalance());
             balanceText.setText(value);
         }
     }

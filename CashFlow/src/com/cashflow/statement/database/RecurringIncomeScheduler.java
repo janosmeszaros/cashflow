@@ -29,7 +29,7 @@ public class RecurringIncomeScheduler {
      * @param statementPersistenceService service.
      */
     @Inject
-    public RecurringIncomeScheduler(StatementPersistenceService statementPersistenceService) {
+    public RecurringIncomeScheduler(final StatementPersistenceService statementPersistenceService) {
         nullChecK(statementPersistenceService);
         this.statementPersistenceService = statementPersistenceService;
     }
@@ -39,16 +39,16 @@ public class RecurringIncomeScheduler {
      * last occurred statement date to not get multiple statement on one date.  
      */
     public void schedule() {
-        List<Statement> list = getRecurringStatements();
+        final List<Statement> list = getRecurringStatements();
 
         interateThrough(list);
     }
 
-    private void interateThrough(List<Statement> list) {
+    private void interateThrough(final List<Statement> list) {
         for (Statement statement : list) {
-            int periods = countPeriods(statement);
+            final int periods = countPeriods(statement);
 
-            String newDate = saveNewStatements(statement, periods);
+            final String newDate = saveNewStatements(statement, periods);
             updateRecurringStatement(statement, newDate);
 
         }
@@ -58,10 +58,10 @@ public class RecurringIncomeScheduler {
         return statementPersistenceService.getRecurringIncomes();
     }
 
-    private void updateRecurringStatement(Statement recurringStatement, String newDate) {
+    private void updateRecurringStatement(final Statement recurringStatement, final String newDate) {
         if (!recurringStatement.getDate().equals(newDate)) {
 
-            Statement statement = new Statement.Builder(recurringStatement.getAmount(), newDate).setId(recurringStatement.getId())
+            final Statement statement = new Statement.Builder(recurringStatement.getAmount(), newDate).setId(recurringStatement.getId())
                     .setNote(recurringStatement.getNote()).setCategory(recurringStatement.getCategory())
                     .setRecurringInterval(recurringStatement.getRecurringInterval()).setType(StatementType.Income).build();
 
@@ -70,20 +70,20 @@ public class RecurringIncomeScheduler {
         }
     }
 
-    private int countPeriods(Statement statement) {
-        int periods = statement.getRecurringInterval().numOfPassedPeriods(formatter.parseDateTime(statement.getDate()));
+    private int countPeriods(final Statement statement) {
+        final int periods = statement.getRecurringInterval().numOfPassedPeriods(formatter.parseDateTime(statement.getDate()));
 
         LOG.debug("Number of periods: " + periods);
 
         return periods;
     }
 
-    private String saveNewStatements(Statement recurringStatement, int periods) {
+    private String saveNewStatements(final Statement recurringStatement, final int periods) {
         String result = recurringStatement.getDate();
 
         if (periods > 0) {
             for (int i = 0; i <= periods; i++) {
-                Statement statement = createStatement(recurringStatement, i);
+                final Statement statement = createStatement(recurringStatement, i);
                 statementPersistenceService.saveStatement(statement);
                 result = statement.getDate();
             }
@@ -92,7 +92,7 @@ public class RecurringIncomeScheduler {
         return result;
     }
 
-    private Statement createStatement(Statement recurringStatement, int periods) {
+    private Statement createStatement(final Statement recurringStatement, final int periods) {
         DateTime dateTime = formatter.parseDateTime(recurringStatement.getDate());
 
         for (int i = 0; i < periods; i++) {
@@ -102,13 +102,13 @@ public class RecurringIncomeScheduler {
         return buildStatement(recurringStatement, dateTime.toString(formatter));
     }
 
-    private Statement buildStatement(Statement recurringStatement, String dateTime) {
+    private Statement buildStatement(final Statement recurringStatement, final String dateTime) {
         return new Statement.Builder(recurringStatement.getAmount(), dateTime).setNote(recurringStatement.getNote())
                 .setCategory(recurringStatement.getCategory()).setRecurringInterval(RecurringInterval.none).setType(StatementType.Income).build();
 
     }
 
-    private void nullChecK(StatementPersistenceService statementPersistenceService) {
+    private void nullChecK(final StatementPersistenceService statementPersistenceService) {
         Validate.notNull(statementPersistenceService, "Constructor argument can't be null.");
     }
 }

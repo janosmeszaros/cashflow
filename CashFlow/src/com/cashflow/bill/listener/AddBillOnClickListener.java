@@ -48,15 +48,15 @@ public class AddBillOnClickListener implements OnClickListener {
      * @param persistenceService {@link BillPersistenceService} to save data.
      */
     @Inject
-    public AddBillOnClickListener(BillPersistenceService persistenceService) {
+    public AddBillOnClickListener(final BillPersistenceService persistenceService) {
         this.persistenceService = persistenceService;
 
     }
 
     @Override
-    public void onClick(View v) {
-        Bill billToSave = createBill();
-        Activity parent = (Activity) v.getContext();
+    public void onClick(final View view) {
+        final Bill billToSave = createBill();
+        final Activity parent = (Activity) view.getContext();
 
         if (persistenceService.saveBill(billToSave)) {
             parent.setResult(Activity.RESULT_OK);
@@ -68,10 +68,10 @@ public class AddBillOnClickListener implements OnClickListener {
     }
 
     private Bill createBill() {
-        DateFormat fmtDateAndTime = DateFormat.getDateInstance(DateFormat.MEDIUM);
-        Calendar myCalendar = Calendar.getInstance();
+        final DateFormat fmtDateAndTime = DateFormat.getDateInstance(DateFormat.MEDIUM);
+        final Calendar myCalendar = Calendar.getInstance();
 
-        Bill billToSave = new Bill(amountText.getText().toString(), fmtDateAndTime.format(myCalendar.getTime()), deadlineDateButton.getText()
+        final Bill billToSave = new Bill(amountText.getText().toString(), fmtDateAndTime.format(myCalendar.getTime()), deadlineDateButton.getText()
                 .toString());
         billToSave.setCategory((Category) categorySpinner.getSelectedItem());
         billToSave.setInterval((RecurringInterval) recurringSpinner.getSelectedItem());
