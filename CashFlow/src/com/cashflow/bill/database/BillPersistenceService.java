@@ -34,6 +34,7 @@ public class BillPersistenceService {
      */
     @Inject
     public BillPersistenceService(BillDao dao) {
+        nullCheck(dao);
         this.dao = dao;
     }
 
@@ -45,12 +46,9 @@ public class BillPersistenceService {
      */
     public boolean saveBill(Bill bill) {
         nullCheck(bill);
-        boolean isSuccessful = false;
 
         ContentValues valuesToSave = createContentValues(bill);
-        if (dao.save(valuesToSave)) {
-            isSuccessful = true;
-        }
+        boolean isSuccessful = dao.save(valuesToSave);
 
         return isSuccessful;
     }
@@ -70,7 +68,7 @@ public class BillPersistenceService {
         return values;
     }
 
-    private void nullCheck(Bill bill) {
-        Validate.notNull(bill);
+    private void nullCheck(Object obj) {
+        Validate.notNull(obj);
     }
 }
