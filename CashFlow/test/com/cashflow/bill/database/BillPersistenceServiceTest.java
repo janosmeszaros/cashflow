@@ -60,6 +60,27 @@ public class BillPersistenceServiceTest {
         underTest.saveBill(null);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testSaveBillWhenBillsAmountIsNullThenShouldThrowException() {
+        Bill billToSave = new Bill(null, null, null);
+
+        underTest.saveBill(billToSave);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testSaveBillWhenBillsDateIsEmptyThenShouldThrowException() {
+        Bill billToSave = new Bill("1233", "", null);
+
+        underTest.saveBill(billToSave);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testSaveBillWhenBillsDeadlineDateIsNullThenShouldThrowException() {
+        Bill billToSave = new Bill("1231", "12.12.12", null);
+
+        underTest.saveBill(billToSave);
+    }
+
     @Test
     public void testSaveBillWhenBillIsPayedThenShouldCallDaosSaveMethodAndReturnTrueIfItWasSuccessful() {
         Bill billToSave = createBillToSave(true);

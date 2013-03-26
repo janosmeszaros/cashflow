@@ -41,11 +41,12 @@ public class BillPersistenceService {
     /**
      * Save the given bill to database.
      * @param bill {@link Bill} to save.
-     * @throws IllegalArgumentException when {@link Bill} is null.
+     * @throws IllegalArgumentException when {@link Bill} is null, or
+     *  {@link Bill}'s <code>Amount</code>, <code>Date</code> or <code>Deadline date</code> is empty or null.
      * @return <code>true</code> if saving was successful. <code>false</code> otherwise.
      */
     public boolean saveBill(Bill bill) {
-        nullCheck(bill);
+        validateBill(bill);
 
         ContentValues valuesToSave = createContentValues(bill);
         boolean isSuccessful = dao.save(valuesToSave);
@@ -66,6 +67,17 @@ public class BillPersistenceService {
         values.put(COLUMN_NAME_INTERVAL, bill.getInterval().toString());
 
         return values;
+    }
+
+    private void validateBill(Bill bill) {
+        nullCheck(bill);
+        validateStringsNotEmpty(bill.getAmount(), bill.getDate(), bill.getDeadlineDate());
+    }
+
+    private void validateStringsNotEmpty(String... params) {
+        for (String string : params) {
+            Validate.notEmpty(string);
+        }
     }
 
     private void nullCheck(Object obj) {
