@@ -3,6 +3,8 @@ package com.cashflow.bill.listener;
 import java.text.DateFormat;
 import java.util.Calendar;
 
+import org.apache.commons.lang.Validate;
+
 import roboguice.inject.InjectView;
 import android.app.Activity;
 import android.view.View;
@@ -43,6 +45,7 @@ public class AddBillOnClickListener implements OnClickListener {
      */
     @Inject
     public AddBillOnClickListener(BillPersistenceService persistenceService) {
+        Validate.notNull(persistenceService);
         this.persistenceService = persistenceService;
 
     }

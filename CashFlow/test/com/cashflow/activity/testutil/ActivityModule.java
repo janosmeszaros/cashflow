@@ -1,5 +1,7 @@
 package com.cashflow.activity.testutil;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -8,14 +10,22 @@ import java.util.Set;
 import roboguice.RoboGuice;
 import roboguice.config.DefaultRoboModule;
 import roboguice.inject.ContextSingleton;
+import roboguice.inject.InjectView;
 import roboguice.inject.RoboInjector;
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
+import android.util.SparseArray;
+import android.view.View;
 
 import com.cashflow.AppModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
 import com.google.inject.Provider;
+import com.google.inject.TypeLiteral;
+import com.google.inject.matcher.Matchers;
+import com.google.inject.spi.TypeEncounter;
+import com.google.inject.spi.TypeListener;
 import com.google.inject.util.Modules;
 import com.xtremelabs.robolectric.Robolectric;
 
@@ -28,6 +38,7 @@ public class ActivityModule extends AbstractModule {
 
     private Map<Class<?>, Object> bindings;
     private Provider provider;
+    private SparseArray<Object> viewBindings;
 
     /**
      * Creates a new Guice module for ListExpenseActivity testing.
@@ -35,6 +46,7 @@ public class ActivityModule extends AbstractModule {
      */
     public ActivityModule(Provider provider) {
         bindings = new HashMap<Class<?>, Object>();
+        viewBindings = new SparseArray<Object>();
         this.provider = provider;
     }
 
@@ -46,6 +58,7 @@ public class ActivityModule extends AbstractModule {
         for (Entry<Class<?>, Object> entry : entries) {
             bind((Class<Object>) entry.getKey()).toInstance(entry.getValue());
         }
+        bindListener(Matchers.any(), new ViewTypeListener());
     }
 
     /**
@@ -55,6 +68,15 @@ public class ActivityModule extends AbstractModule {
      */
     public void addBinding(Class<?> type, Object object) {
         bindings.put(type, object);
+    }
+
+    /**
+     * Add view binding.
+     * @param id view id.
+     * @param object Object to bind.
+     */
+    public void addViewBinding(int id, Object object) {
+        viewBindings.put(id, object);
     }
 
     /**
@@ -79,5 +101,28 @@ public class ActivityModule extends AbstractModule {
         Application app = Robolectric.application;
         DefaultRoboModule defaultModule = RoboGuice.newDefaultRoboModule(app);
         RoboGuice.setBaseApplicationInjector(app, RoboGuice.DEFAULT_STAGE, defaultModule);
+    }
+
+    private final class ViewTypeListener implements TypeListener {
+
+        @Override
+        public <I> void hear(TypeLiteral<I> typeLiteral, TypeEncounter<I> typeEncounter) {
+            for (Class<?> c = typeLiteral.getRawType(); c != Object.class; c = c.getSuperclass()) {
+                for (Field field : c.getDeclaredFields()) {
+                    if (field.isAnnotationPresent(InjectView.class)) {
+                        if (Modifier.isStatic(field.getModifiers())) {
+                            throw new UnsupportedOperationException("Views may not be statically injected");
+                        } else if (!View.class.isAssignableFrom(field.getType())) {
+                            throw new UnsupportedOperationException("You may only use @InjectView on fields descended from type View");
+                        } else if (Context.class.isAssignableFrom(field.getDeclaringClass())
+                                && !Activity.class.isAssignableFrom(field.getDeclaringClass())) {
+                            throw new UnsupportedOperationException("You may only use @InjectView in Activity contexts");
+                        } else {
+                            typeEncounter.register(new TestViewMembersInjector<I>(viewBindings, field));
+                        }
+                    }
+                }
+            }
+        }
     }
 }

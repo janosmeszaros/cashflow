@@ -156,7 +156,7 @@ public class DaoParent {
     }
 
     private void checkColumns(Set<String> names) {
-        if (!names.equals(columnNames)) {
+        if (!columnNames.equals(names)) {
             throw new IllegalArgumentException("Wrong column names!");
         }
     }
