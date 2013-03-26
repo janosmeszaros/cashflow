@@ -118,9 +118,16 @@ public class EditStatementActivity extends RoboFragmentActivity {
         final Category category = (Category) categorySpinner.getSelectedItem();
         final RecurringInterval interval = (RecurringInterval) recurringSpinner.getSelectedItem();
 
-        if (amountStr.equals(originalStatement.getAmount()) && date.equals(originalStatement.getDate()) && note.equals(originalStatement.getNote())
-                && interval.equals(originalStatement.getRecurringInterval()) && category.equals(originalStatement.getCategory())) {
-            result = false;
+        if (amountStr.equals(originalStatement.getAmount())) {
+            if (date.equals(originalStatement.getDate())) {
+                if (interval.equals(originalStatement.getRecurringInterval())) {
+                    if (note.equals(originalStatement.getNote())) {
+                        if (category.equals(originalStatement.getCategory())) {
+                            result = false;
+                        }
+                    }
+                }
+            }
         }
 
         return result;

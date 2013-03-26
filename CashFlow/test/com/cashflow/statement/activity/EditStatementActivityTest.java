@@ -274,6 +274,21 @@ public class EditStatementActivityTest {
         assertThat(shadowFragmentActivity.getResultCode(), equalTo(RESULT_OK));
         assertThat(shadowFragmentActivity.isFinishing(), equalTo(true));
     }
+    @Test
+    public void testSubmitWhenCategoryHasChangedThenShouldCallProperFunctionAndResultCodeShouldBeOK() {
+        ShadowFragmentActivity shadowFragmentActivity = Robolectric.shadowOf(underTest);
+        underTest.setIntent(setUpIntentData(INCOME_STATEMENT));
+        underTest.onCreate(null);
+        
+        Statement changedNoteStatement = new Statement.Builder(AMOUNT, DATE).setNote(NOTE).setType(Income).setId(INCOME_ID)
+                .setRecurringInterval(NONE_INTERVAL).setCategory(CHANGED_CATEGORY).build();
+        setViewsValues(changedNoteStatement);
+        underTest.submit(null);
+        
+        verify(statementPersistentService, times(1)).updateStatement(changedNoteStatement);
+        assertThat(shadowFragmentActivity.getResultCode(), equalTo(RESULT_OK));
+        assertThat(shadowFragmentActivity.isFinishing(), equalTo(true));
+    }
 
     @Test
     public void testSubmitWhenCategoryHasChangedButTheSaveFailedThenResultCodeShouldBeCanceled() {
