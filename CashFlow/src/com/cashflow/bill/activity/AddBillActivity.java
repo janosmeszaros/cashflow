@@ -20,6 +20,7 @@ import android.widget.SpinnerAdapter;
 import com.cashflow.R;
 import com.cashflow.activity.components.DateButtonOnClickListener;
 import com.cashflow.activity.components.RecurringCheckBoxOnClickListener;
+import com.cashflow.bill.listener.AddBillOnClickListener;
 import com.cashflow.category.database.CategoryPersistenceService;
 import com.cashflow.domain.Category;
 import com.google.inject.Inject;
@@ -40,6 +41,8 @@ public class AddBillActivity extends RoboFragmentActivity {
     private Spinner recurringSpinner;
     @InjectView(R.id.recurring_checkbox)
     private CheckBox recurringCheckBox;
+    @InjectView(R.id.submitButton)
+    private Button submitButton;
 
     @Inject
     private DateButtonOnClickListener listener;
@@ -49,6 +52,8 @@ public class AddBillActivity extends RoboFragmentActivity {
     private SpinnerAdapter spinnerAdapter;
     @Inject
     private CategoryPersistenceService categoryService;
+    @Inject
+    private AddBillOnClickListener addBillOnClickListener;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -58,6 +63,7 @@ public class AddBillActivity extends RoboFragmentActivity {
         setUpDateButton();
         activateRecurringArea();
         setCategorySpinner();
+        submitButton.setOnClickListener(addBillOnClickListener);
     }
 
     @Override

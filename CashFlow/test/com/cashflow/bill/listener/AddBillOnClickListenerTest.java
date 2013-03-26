@@ -1,5 +1,7 @@
 package com.cashflow.bill.listener;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -30,6 +32,7 @@ import com.cashflow.domain.Bill;
 import com.cashflow.domain.Category;
 import com.google.inject.Inject;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
+import com.xtremelabs.robolectric.shadows.ShadowToast;
 
 @RunWith(RobolectricTestRunner.class)
 public class AddBillOnClickListenerTest {
@@ -79,6 +82,16 @@ public class AddBillOnClickListenerTest {
         verify(service).saveBill(billToSave);
         verify(activity).setResult(Activity.RESULT_CANCELED);
         verify(activity).finish();
+    }
+
+    @Test
+    public void testOnClickWhenSaveThrowsExceptionThenShouldShowToast() {
+        when(service.saveBill(billToSave)).thenThrow(new IllegalArgumentException("Exception"));
+
+        underTest.onClick(submitButton);
+
+        verify(service).saveBill(billToSave);
+        assertThat(ShadowToast.shownToastCount(), equalTo(1));
     }
 
     private void setUpActivityModule() {

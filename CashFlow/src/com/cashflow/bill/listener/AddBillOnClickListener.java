@@ -12,6 +12,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.cashflow.R;
 import com.cashflow.bill.database.BillPersistenceService;
@@ -55,13 +56,17 @@ public class AddBillOnClickListener implements OnClickListener {
         final Bill billToSave = createBill();
         final Activity parent = (Activity) view.getContext();
 
-        if (persistenceService.saveBill(billToSave)) {
-            parent.setResult(Activity.RESULT_OK);
-        } else {
-            parent.setResult(Activity.RESULT_CANCELED);
+        try {
+            if (persistenceService.saveBill(billToSave)) {
+                parent.setResult(Activity.RESULT_OK);
+            } else {
+                parent.setResult(Activity.RESULT_CANCELED);
+            }
+            parent.finish();
+        } catch (IllegalArgumentException e) {
+            Toast toast = Toast.makeText(parent, e.getMessage(), Toast.LENGTH_SHORT);
+            toast.show();
         }
-
-        parent.finish();
     }
 
     private Bill createBill() {
