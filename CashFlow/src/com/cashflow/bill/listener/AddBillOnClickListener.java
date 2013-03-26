@@ -3,14 +3,14 @@ package com.cashflow.bill.listener;
 import java.text.DateFormat;
 import java.util.Calendar;
 
+import org.apache.commons.lang.Validate;
+
 import roboguice.inject.InjectView;
 import android.app.Activity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import com.cashflow.R;
@@ -34,12 +34,8 @@ public class AddBillOnClickListener implements OnClickListener {
     private EditText notesText;
     @InjectView(R.id.categorySpinner)
     private Spinner categorySpinner;
-    @InjectView(R.id.recurring_area)
-    private LinearLayout recurringArea;
     @InjectView(R.id.recurring_spinner)
     private Spinner recurringSpinner;
-    @InjectView(R.id.recurring_checkbox)
-    private CheckBox recurringCheckBox;
 
     private final BillPersistenceService persistenceService;
 
@@ -49,6 +45,7 @@ public class AddBillOnClickListener implements OnClickListener {
      */
     @Inject
     public AddBillOnClickListener(final BillPersistenceService persistenceService) {
+        Validate.notNull(persistenceService);
         this.persistenceService = persistenceService;
 
     }
@@ -68,10 +65,10 @@ public class AddBillOnClickListener implements OnClickListener {
     }
 
     private Bill createBill() {
-        final DateFormat fmtDateAndTime = DateFormat.getDateInstance(DateFormat.MEDIUM);
+        final DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM);
         final Calendar myCalendar = Calendar.getInstance();
 
-        final Bill billToSave = new Bill(amountText.getText().toString(), fmtDateAndTime.format(myCalendar.getTime()), deadlineDateButton.getText()
+        Bill billToSave = new Bill(amountText.getText().toString(), dateFormatter.format(myCalendar.getTime()), deadlineDateButton.getText()
                 .toString());
         billToSave.setCategory((Category) categorySpinner.getSelectedItem());
         billToSave.setInterval((RecurringInterval) recurringSpinner.getSelectedItem());

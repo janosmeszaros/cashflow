@@ -46,6 +46,7 @@ import com.cashflow.domain.Category;
 import com.cashflow.domain.Statement;
 import com.cashflow.statement.database.StatementPersistenceService;
 import com.cashflow.statement.database.StatementType;
+import com.google.inject.Inject;
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 import com.xtremelabs.robolectric.shadows.ShadowFragmentActivity;
@@ -67,6 +68,7 @@ public class AddStatementActivityTest {
     private final String[] fromColumns = {AbstractStatement._ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE, COLUMN_NAME_NOTE};
     private final Object[] values = new Object[]{1, 1234L, "2012", "note"};
     private Balance balance;
+    @Inject
     private AddStatementActivity underTest;
     private final ArrayAdapter<RecurringInterval> arrayAdapter = new ArrayAdapter<RecurringInterval>(underTest,
             android.R.layout.simple_spinner_dropdown_item, RecurringInterval.values());
@@ -86,8 +88,6 @@ public class AddStatementActivityTest {
         addBindings(module);
 
         ActivityModule.setUp(this, module);
-
-        underTest = new AddStatementActivity();
     }
 
     private void createAddIncome() {

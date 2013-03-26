@@ -54,7 +54,7 @@ public class DaoParent {
     /**
      * Persists values to the database.
      * @param values Values to save. Can not be <code>null</code>. Have to be consistent with the table columns.
-     * @throws IllegalArgumentException when <code>values</code> is <code>null</code>.
+     * @throws IllegalArgumentException when <code>values</code> is <code>null</code>.  Or <code>values</code> is <code>null</code> or do not contains proper column names.
      * @return <code>true</code> if save was successful, <code>false</code> otherwise.
      */
     public boolean save(final ContentValues values) {
@@ -155,8 +155,8 @@ public class DaoParent {
         Validate.notNull(object);
     }
 
-    private void checkColumns(final Set<String> names) {
-        if (!names.equals(columnNames)) {
+    private void checkColumns(Set<String> names) {
+        if (!columnNames.equals(names)) {
             throw new IllegalArgumentException("Wrong column names!");
         }
     }
