@@ -25,7 +25,7 @@ import android.widget.Spinner;
 
 import com.cashflow.R;
 import com.cashflow.activity.testutil.ActivityModule;
-import com.cashflow.activity.testutil.AddBillActivityProvider;
+import com.cashflow.activity.testutil.ActivityProvider;
 import com.cashflow.bill.database.BillPersistenceService;
 import com.cashflow.constants.RecurringInterval;
 import com.cashflow.domain.Bill;
@@ -95,7 +95,7 @@ public class AddBillOnClickListenerTest {
     }
 
     private void setUpActivityModule() {
-        ActivityModule module = new ActivityModule(new AddBillActivityProvider());
+        ActivityModule module = new ActivityModule(new ActivityProvider());
 
         billToSave = createBillToSave(false);
         setViewsValues(billToSave, module);
