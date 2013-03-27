@@ -5,7 +5,7 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="10"
+        android:minSdkVersion="11"
         android:targetSdkVersion="17" />
 
     <application
@@ -37,6 +37,10 @@
         <activity
             android:name="com.cashflow.bill.activity.AddBillActivity"
             android:label="@string/title_activity_add_bill" >
+        </activity>
+        <activity
+            android:name="com.cashflow.SwipedAddStatement"
+            android:label="@string/title_activity_swiped_add_statement" >
         </activity>
     </application>
 

@@ -99,4 +99,15 @@
             android:onClick="addBill"
             android:text="@string/add_bill_label" />
 
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/submitButton"
+            android:layout_below="@+id/createCategoryButton"
+            android:layout_marginRight="18dp"
+            android:layout_marginTop="33dp"
+            android:text="Proba"
+            android:onClick="proba" />
+
 </RelativeLayout>

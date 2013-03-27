@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.cashflow.R;
+import com.cashflow.SwipedAddStatement;
 import com.cashflow.bill.activity.AddBillActivity;
 import com.cashflow.category.activity.CreateCategoryActivity;
 import com.cashflow.database.balance.Balance;
@@ -126,6 +127,16 @@ public class MainActivity extends RoboActivity {
      */
     public void addBill(View view) {
         Intent intent = new Intent(this, AddBillActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * proba
+     * @param view
+     *            Required for onclick.
+     */
+    public void proba(View view) {
+        Intent intent = new Intent(this, SwipedAddStatement.class);
         startActivity(intent);
     }
 

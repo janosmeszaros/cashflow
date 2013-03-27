@@ -10,12 +10,12 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import roboguice.activity.RoboFragmentActivity;
+import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectView;
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -40,7 +40,7 @@ import com.google.inject.Inject;
  * Statement adding. It gets it's type in the intent in extra named by <code>STATEMENT_TYPE_EXTRA</code>.
  * @author Janos_Gyula_Meszaros
  */
-public class AddStatementActivity extends RoboFragmentActivity {
+public class AddStatementActivity extends RoboFragment {
 
     private static final Logger LOG = LoggerFactory.getLogger(AddStatementActivity.class);
 
@@ -72,14 +72,21 @@ public class AddStatementActivity extends RoboFragmentActivity {
     private StatementType type;
 
     @Override
-    protected void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+
+        return inflater.inflate(R.layout.activity_add_statement, container, false);
+
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         LOG.debug("AddStatementActivity is creating...");
 
-        setContentView(R.layout.activity_add_statement);
         setUpDateButton();
         setStatementType();
-        setTitle();
+        //        setTitle();
         setCategorySpinner();
 
         LOG.debug("AddStatementActivity has created with type: " + type);
@@ -88,15 +95,8 @@ public class AddStatementActivity extends RoboFragmentActivity {
     private void setCategorySpinner() {
         final List<Category> list = categoryService.getCategories();
 
-        final ArrayAdapter<Category> adapter = new ArrayAdapter<Category>(this, android.R.layout.simple_spinner_dropdown_item, list);
+        final ArrayAdapter<Category> adapter = new ArrayAdapter<Category>(this.getActivity(), android.R.layout.simple_spinner_dropdown_item, list);
         categorySpinner.setAdapter(adapter);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(final Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.activity_add_expense, menu);
-        return true;
     }
 
     /**
@@ -109,16 +109,18 @@ public class AddStatementActivity extends RoboFragmentActivity {
         final Statement statement = createStatement();
 
         if (statementService.saveStatement(statement)) {
-            setResult(RESULT_OK);
+            LOG.debug("saved");
+            //            setResult(Activity.RESULT_OK);
         } else {
-            setResult(RESULT_CANCELED);
+            LOG.debug("not saved");
+            //            setResult(Activity.RESULT_CANCELED);
         }
-        finish();
+        //        finish();
     }
 
     private void setStatementType() {
-        final Intent intent = getIntent();
-        type = StatementType.valueOf(intent.getStringExtra(STATEMENT_TYPE_EXTRA));
+        final Bundle intent = getArguments();
+        type = StatementType.valueOf(intent.getString(STATEMENT_TYPE_EXTRA));
         if (type.isIncome()) {
             activateRecurringArea();
         }
@@ -130,13 +132,13 @@ public class AddStatementActivity extends RoboFragmentActivity {
         recurringSpinner.setAdapter(spinnerAdapter);
     }
 
-    private void setTitle() {
-        if (type.isIncome()) {
-            setTitle(R.string.title_activity_add_income);
-        } else {
-            setTitle(R.string.title_activity_add_expense);
-        }
-    }
+    //    private void setTitle() {
+    //        if (type.isIncome()) {
+    //            setTitle(R.string.title_activity_add_income);
+    //        } else {
+    //            setTitle(R.string.title_activity_add_expense);
+    //        }
+    //    }
 
     private void setUpDateButton() {
         final Calendar calendar = Calendar.getInstance();
