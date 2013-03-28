@@ -1,6 +1,7 @@
 /*/.checkstyle
 /*/.classpath
 /*/.project
+/*/.pmd
 /*/target
 /*/.settings/*
 /*/tmp/
@@ -9,6 +10,7 @@
 /CashFlow/gen
 /CashFlow/libs
 /CashFlow/layout
+/CashFlow/reports
 /CashFlow/*.tmp
 /CashFlow/lint.xml
 
