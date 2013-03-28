@@ -3,6 +3,7 @@ package com.cashflow.activity.components;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,6 +17,7 @@ import android.widget.LinearLayout;
 import com.cashflow.R;
 import com.cashflow.activity.testutil.ActivityModule;
 import com.cashflow.activity.testutil.ActivityProvider;
+import com.cashflow.activity.testutil.TestGuiceModule;
 import com.google.inject.Inject;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
@@ -36,6 +38,11 @@ public class RecurringCheckBoxOnClickListenerTest {
         MockitoAnnotations.initMocks(this);
 
         setUpActivityModule();
+    }
+
+    @After
+    public void tearDown() {
+        TestGuiceModule.tearDown();
     }
 
     private void setUpActivityModule() {

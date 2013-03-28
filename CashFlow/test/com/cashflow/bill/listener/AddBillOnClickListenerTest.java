@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,6 +27,7 @@ import android.widget.Spinner;
 import com.cashflow.R;
 import com.cashflow.activity.testutil.ActivityModule;
 import com.cashflow.activity.testutil.ActivityProvider;
+import com.cashflow.activity.testutil.TestGuiceModule;
 import com.cashflow.bill.database.BillPersistenceService;
 import com.cashflow.constants.RecurringInterval;
 import com.cashflow.domain.Bill;
@@ -55,6 +57,11 @@ public class AddBillOnClickListenerTest {
 
         setUpActivityModule();
         when(submitButton.getContext()).thenReturn(activity);
+    }
+
+    @After
+    public void tearDown() {
+        TestGuiceModule.tearDown();
     }
 
     @Test(expected = IllegalArgumentException.class)

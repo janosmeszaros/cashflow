@@ -4,9 +4,7 @@ import static java.util.Calendar.DAY_OF_MONTH;
 import static java.util.Calendar.MONTH;
 import static java.util.Calendar.YEAR;
 
-import java.text.DateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
@@ -17,12 +15,18 @@ import android.widget.Button;
 import android.widget.DatePicker;
 
 import com.cashflow.R;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * DatePicker fragment.
  * @author Kornel_Refi
  */
+@Singleton
 public class DatePickerFragment extends DialogFragment implements OnDateSetListener {
+
+    @Inject
+    private OnDateSetService dateSetService;
 
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
@@ -32,29 +36,13 @@ public class DatePickerFragment extends DialogFragment implements OnDateSetListe
         final int month = c.get(MONTH);
         final int day = c.get(DAY_OF_MONTH);
 
-        // Create a new instance of DatePickerDialog and return it
         return new DatePickerDialog(getActivity(), this, year, month, day);
     }
 
     @Override
     public void onDateSet(final DatePicker view, final int year, final int month, final int day) {
-        final Date setDate = getDateForYearMonthDay(year, month, day);
-
-        updateButtonTextToDate(setDate);
-    }
-
-    private Date getDateForYearMonthDay(final int year, final int month, final int day) {
-        final Calendar myCalendar = Calendar.getInstance();
-        myCalendar.set(year, month, day);
-
-        return myCalendar.getTime();
-    }
-
-    private void updateButtonTextToDate(final Date setDate) {
-        final DateFormat fmtDateAndTime = DateFormat.getDateInstance(DateFormat.MEDIUM);
-
         final Button dateButton = (Button) getActivity().findViewById(R.id.dateButton);
-        dateButton.setText(fmtDateAndTime.format(setDate));
+        dateSetService.onDateSet(dateButton, view);
     }
 
 }
