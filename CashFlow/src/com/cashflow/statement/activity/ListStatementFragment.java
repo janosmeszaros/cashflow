@@ -9,14 +9,16 @@ import static com.cashflow.database.DatabaseContracts.AbstractStatement.TO_VIEWS
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import roboguice.activity.RoboActivity;
+import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectView;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.view.Menu;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -30,8 +32,8 @@ import com.google.inject.Inject;
  * Basic class to list statements. The type is setted from intent's <code>STATEMENT_TYPE_EXTRA</code> extra.
  * @author Janos_Gyula_Meszaros 
  */
-public class ListStatementActivity extends RoboActivity {
-    private static final Logger LOG = LoggerFactory.getLogger(ListStatementActivity.class);
+public class ListStatementFragment extends RoboFragment {
+    private static final Logger LOG = LoggerFactory.getLogger(ListStatementFragment.class);
 
     private StatementType type;
     private SimpleCursorAdapter mAdapter;
@@ -42,23 +44,20 @@ public class ListStatementActivity extends RoboActivity {
     private ListView list;
 
     @Override
-    protected void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        LOG.debug("ListStatementActivity is creating...");
-
-        setContentView(R.layout.activity_list_statements);
-        setStatementType();
-        setTitle();
-        getDataFromDatabase();
-
-        LOG.debug("ListStatementActivity has created with type: " + type);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+        return inflater.inflate(R.layout.activity_list_statements, container, false);
     }
 
     @Override
-    public boolean onCreateOptionsMenu(final Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.list_incomes, menu);
-        return true;
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        LOG.debug("ListStatementActivity is creating...");
+
+        setStatementType();
+        getDataFromDatabase();
+
+        LOG.debug("ListStatementActivity has created with type: " + type);
     }
 
     /**
@@ -69,13 +68,13 @@ public class ListStatementActivity extends RoboActivity {
      */
     public void editButtonOnClick(final View view) {
         LOG.debug("Edit button clicked");
-        final Intent intent = new Intent(this, EditStatementActivity.class);
+        final Intent intent = new Intent(this.getActivity(), EditStatementActivity.class);
         addExtras((View) view.getParent(), intent);
         startActivityForResult(intent, EDIT_ACTIVITY_CODE);
     }
 
     @Override
-    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         LOG.debug("ListStatementActivity's onActivityResult method called with params: \nrequestCode: " + requestCode + "\nresultCode: "
                 + requestCode);
@@ -91,7 +90,7 @@ public class ListStatementActivity extends RoboActivity {
     }
 
     private boolean isEditActivity(final int requestCode, final int resultCode) {
-        return resultCode == RESULT_OK && requestCode == EDIT_ACTIVITY_CODE;
+        return resultCode == Activity.RESULT_OK && requestCode == EDIT_ACTIVITY_CODE;
     }
 
     @SuppressLint("NewApi")
@@ -100,22 +99,14 @@ public class ListStatementActivity extends RoboActivity {
 
         final Cursor cursor = statementService.getStatement(type);
 
-        mAdapter = new SimpleCursorAdapter(this, R.layout.list_statements_row, cursor, PROJECTION, TO_VIEWS);
+        mAdapter = new SimpleCursorAdapter(this.getActivity(), R.layout.list_statements_row, cursor, PROJECTION, TO_VIEWS);
         list.setAdapter(mAdapter);
 
         LOG.debug("Query has done.");
     }
 
-    private void setTitle() {
-        if (type.isIncome()) {
-            setTitle(R.string.title_activity_list_incomes);
-        } else {
-            setTitle(R.string.title_activity_list_expenses);
-        }
-    }
-
     private void setStatementType() {
-        final Intent intent = getIntent();
-        type = StatementType.valueOf(intent.getStringExtra(STATEMENT_TYPE_EXTRA));
+        final Bundle bundle = getArguments();
+        type = StatementType.valueOf(bundle.getString(STATEMENT_TYPE_EXTRA));
     }
 }

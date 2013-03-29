@@ -49,7 +49,15 @@ public class MainActivity extends RoboActivity {
                 startActivity(intent);
             }
         });
-        findViewById(R.id.header_list_button).setVisibility(View.VISIBLE);
+        findViewById(R.id.header_list_button).setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getBaseContext(), ListActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
     @Override

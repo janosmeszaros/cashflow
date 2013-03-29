@@ -1,16 +1,16 @@
 package com.cashflow.activity.testutil;
 
-import com.cashflow.statement.activity.ListStatementActivity;
+import com.cashflow.statement.activity.ListStatementFragment;
 import com.google.inject.Provider;
 
 /**
  * {@link ListExpensesActivity} {@link Provider}.
  * @author Kornel_Refi
  */
-public class ListStatementActivityProvider implements Provider<ListStatementActivity> {
+public class ListStatementActivityProvider implements Provider<ListStatementFragment> {
 
     @Override
-    public ListStatementActivity get() {
-        return new ListStatementActivity();
+    public ListStatementFragment get() {
+        return new ListStatementFragment();
     }
 }

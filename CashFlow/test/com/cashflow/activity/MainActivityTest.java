@@ -27,7 +27,7 @@ import com.cashflow.bill.activity.AddBillActivity;
 import com.cashflow.category.activity.CreateCategoryActivity;
 import com.cashflow.database.balance.Balance;
 import com.cashflow.statement.activity.AddStatementFragment;
-import com.cashflow.statement.activity.ListStatementActivity;
+import com.cashflow.statement.activity.ListStatementFragment;
 import com.cashflow.statement.database.RecurringIncomeScheduler;
 import com.cashflow.statement.database.StatementPersistenceService;
 import com.xtremelabs.robolectric.Robolectric;
@@ -110,7 +110,7 @@ public class MainActivityTest {
         ShadowActivity shadowActivity = Robolectric.shadowOf(activity);
         Intent startedIntent = shadowActivity.getNextStartedActivity();
         ShadowIntent shadowIntent = Robolectric.shadowOf(startedIntent);
-        assertThat(shadowIntent.getComponent().getClassName(), equalTo(ListStatementActivity.class.getName()));
+        assertThat(shadowIntent.getComponent().getClassName(), equalTo(ListStatementFragment.class.getName()));
     }
 
     @Test
@@ -124,7 +124,7 @@ public class MainActivityTest {
         ShadowActivity shadowActivity = Robolectric.shadowOf(activity);
         Intent startedIntent = shadowActivity.getNextStartedActivity();
         ShadowIntent shadowIntent = Robolectric.shadowOf(startedIntent);
-        assertThat(shadowIntent.getComponent().getClassName(), equalTo(ListStatementActivity.class.getName()));
+        assertThat(shadowIntent.getComponent().getClassName(), equalTo(ListStatementFragment.class.getName()));
     }
 
     @Test

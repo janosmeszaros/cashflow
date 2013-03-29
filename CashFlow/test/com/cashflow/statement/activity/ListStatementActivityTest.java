@@ -49,7 +49,7 @@ import com.xtremelabs.robolectric.shadows.ShadowActivity;
 import com.xtremelabs.robolectric.shadows.ShadowActivity.IntentForResult;
 
 /**
- * {@link ListStatementActivity} test, specially this class tests the expense listing functionality.
+ * {@link ListStatementFragment} test, specially this class tests the expense listing functionality.
  * @author Kornel_Refi
  * @author Janos_Gyula_Meszaros
  */
@@ -68,7 +68,7 @@ public class ListStatementActivityTest {
     private static final RecurringInterval INTERVAL = RecurringInterval.biweekly;
 
     private final Object[] values = new Object[]{1, 1, 1234L, "category", "2012", "note", "none"};
-    private ListStatementActivity underTest;
+    private ListStatementFragment underTest;
     @Mock
     private StatementPersistenceService statementPersistentService;
 
@@ -83,7 +83,7 @@ public class ListStatementActivityTest {
 
         ActivityModule.setUp(this, module);
 
-        underTest = new ListStatementActivity();
+        underTest = new ListStatementFragment();
     }
 
     private void setExpenseIntent() {
@@ -204,7 +204,7 @@ public class ListStatementActivityTest {
     @Test
     public void testWhenListStatementIsIncomeThenTitleShouldBeListIncomeTitle() {
         setIncomeIntent();
-        ListStatementActivity underTest = new ListStatementActivity();
+        ListStatementFragment underTest = new ListStatementFragment();
         underTest.setIntent(new Intent().putExtra(STATEMENT_TYPE_EXTRA, Income.toString()));
         underTest.onCreate(null);
 
