@@ -2,6 +2,10 @@ package com.cashflow.activity.components;
 
 import static org.hamcrest.Matchers.equalTo;
 
+import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,9 +45,13 @@ public class OnDateSetListenerServiceTest {
         Mockito.when(datePickerMock.getMonth()).thenReturn(3);
         Mockito.when(datePickerMock.getDayOfMonth()).thenReturn(28);
         Mockito.when(activity.findViewById(R.id.dateButton)).thenReturn(dateButton);
+        final DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2013, 3, 28);
+        Date date = calendar.getTime();
 
         underTest.onDateSet(datePickerMock, 2013, 3, 28);
 
-        Assert.assertThat(dateButton.getText().toString(), equalTo("2013.04.28."));
+        Assert.assertThat(dateButton.getText().toString(), equalTo(dateFormatter.format(date)));
     }
 }
