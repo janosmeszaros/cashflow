@@ -46,20 +46,21 @@ public final class Balance {
      * Calculates the current balance.
      */
     public void countBalance() {
-        final double expenses = countSumOfStatement(service.getStatement(StatementType.Expense));
-        final double incomes = countSumOfStatement(service.getStatement(StatementType.Income));
+        final BigDecimal expenses = countSumOfStatement(service.getStatement(StatementType.Expense));
+        final BigDecimal incomes = countSumOfStatement(service.getStatement(StatementType.Income));
 
-        amountBalance = BigDecimal.valueOf(incomes - expenses);
+        amountBalance = incomes.subtract(expenses);
         LOG.debug("Balance is: " + amountBalance.doubleValue());
     }
 
-    private double countSumOfStatement(final Cursor cursor) {
+    private BigDecimal countSumOfStatement(final Cursor cursor) {
         final int index = cursor.getColumnIndex(COLUMN_NAME_AMOUNT);
-        double amount = 0L;
+        BigDecimal amount = BigDecimal.ZERO;
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            amount += cursor.getLong(index);
+            double value = cursor.getDouble(index);
+            amount = amount.add(BigDecimal.valueOf(value));
             cursor.moveToNext();
         }
 

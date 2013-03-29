@@ -39,7 +39,7 @@ public class BalanceTest {
 
         when(matrixCursorMock.getColumnIndex(COLUMN_NAME_AMOUNT)).thenReturn(0);
         when(matrixCursorMock.isAfterLast()).thenReturn(false, true, false, true);
-        when(matrixCursorMock.getLong(0)).thenReturn(1L, 2L);
+        when(matrixCursorMock.getDouble(0)).thenReturn(1D, 2D);
 
         underTest = Balance.getInstance(statementPersistentServiceMock);
     }
@@ -49,15 +49,4 @@ public class BalanceTest {
         assertThat(underTest.getBalance(), equalTo(1D));
     }
 
-    //    @Test
-    //    public void testSubtractResultShouldBeZero() {
-    //        underTest.subtract(BigDecimal.ONE);
-    //        assertThat(underTest.getBalance(), equalTo(0D));
-    //    }
-    //
-    //    @Test
-    //    public void testAddResultShouldBeTwo() {
-    //        underTest.add(BigDecimal.ONE);
-    //        assertThat(underTest.getBalance(), equalTo(2D));
-    //    }
 }

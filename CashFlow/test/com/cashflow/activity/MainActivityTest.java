@@ -162,7 +162,7 @@ public class MainActivityTest {
         // Have to mock again because onWindowFocusChanged invoked by onCreate.
         when(matrixCursorMock.getColumnIndex(COLUMN_NAME_AMOUNT)).thenReturn(0);
         when(matrixCursorMock.isAfterLast()).thenReturn(false, true, false, true);
-        when(matrixCursorMock.getLong(0)).thenReturn(1L, 2L);
+        when(matrixCursorMock.getDouble(0)).thenReturn(1D, 2D);
         MainActivity activity = new MainActivity();
         activity.onCreate(null);
         TextView balanceText = (TextView) activity.findViewById(R.id.textViewBalanceAmount);
