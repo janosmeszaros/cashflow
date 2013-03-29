@@ -81,7 +81,7 @@ public class AddStatementFragment extends RoboFragment {
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        return inflater.inflate(R.layout.activity_add_statement, container, false);
+        return inflater.inflate(R.layout.add_statement_fragment, container, false);
 
     }
 

@@ -32,7 +32,7 @@ public class ActionsActivity extends RoboFragmentActivity implements ActionBar.T
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_swiped_add_statement);
+        setContentView(R.layout.tabbed_actions);
 
         final ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
