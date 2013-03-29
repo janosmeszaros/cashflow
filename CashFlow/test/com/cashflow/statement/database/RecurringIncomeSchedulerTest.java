@@ -98,7 +98,7 @@ public class RecurringIncomeSchedulerTest {
     @Test
     public void testScheduleWhenOneMonthAndTheIntervalIsBeWeeklyThenShouldUpdateCurrentStatement() {
         RecurringInterval interval = RecurringInterval.biweekly;
-        Statement statement = createStatement(ONE_MONTH_BEFORE, interval);
+        Statement statement = createStatement(DateTime.now().minusWeeks(4), interval);
         statements.add(statement);
 
         underTest.schedule();

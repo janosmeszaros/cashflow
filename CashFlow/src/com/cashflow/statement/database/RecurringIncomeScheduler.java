@@ -81,12 +81,10 @@ public class RecurringIncomeScheduler {
     private String saveNewStatements(final Statement recurringStatement, final int periods) {
         String result = recurringStatement.getDate();
 
-        if (periods > 0) {
-            for (int i = 0; i <= periods; i++) {
-                final Statement statement = createStatement(recurringStatement, i);
-                statementPersistenceService.saveStatement(statement);
-                result = statement.getDate();
-            }
+        for (int i = 1; i <= periods; i++) {
+            final Statement statement = createStatement(recurringStatement, i);
+            statementPersistenceService.saveStatement(statement);
+            result = statement.getDate();
         }
 
         return result;
@@ -95,8 +93,23 @@ public class RecurringIncomeScheduler {
     private Statement createStatement(final Statement recurringStatement, final int periods) {
         DateTime dateTime = formatter.parseDateTime(recurringStatement.getDate());
 
-        for (int i = 0; i < periods; i++) {
-            dateTime = dateTime.plus(recurringStatement.getRecurringInterval().getPeriod());
+        switch (recurringStatement.getRecurringInterval()) {
+        case annually:
+            dateTime = dateTime.plusYears(periods);
+            break;
+        case monthly:
+            dateTime = dateTime.plusMonths(periods);
+            break;
+        case biweekly:
+            dateTime = dateTime.plusWeeks(periods * 2);
+            break;
+        case weekly:
+            dateTime = dateTime.plusWeeks(periods);
+            break;
+        case daily:
+            dateTime = dateTime.plusDays(periods);
+            break;
+        default:
         }
 
         return buildStatement(recurringStatement, dateTime.toString(formatter));
