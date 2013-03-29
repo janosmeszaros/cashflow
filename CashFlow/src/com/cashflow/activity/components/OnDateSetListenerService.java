@@ -4,24 +4,34 @@ import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import android.app.Activity;
+import android.app.DatePickerDialog.OnDateSetListener;
 import android.widget.Button;
 import android.widget.DatePicker;
+
+import com.cashflow.R;
 
 /**
  * OnDateSet button service for {@link DatePickerFragment}.
  * @author Kornel_Refi
  *
  */
-public class OnDateSetService {
+public class OnDateSetListenerService implements OnDateSetListener {
+
+    private final Activity activity;
 
     /**
-     * Sets the button text to the picked date.
-     * @param dateButton {@link Button}
-     * @param datePicker {@link DatePicker}
+     * Creates an {@link OnDateSetListenerService}.
+     * @param activity {@link Activity}
      */
-    public void onDateSet(final Button dateButton, final DatePicker datePicker) {
-        final Date setDate = getDateForYearMonthDay(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth());
+    public OnDateSetListenerService(final Activity activity) {
+        this.activity = activity;
+    }
 
+    @Override
+    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+        final Button dateButton = (Button) activity.findViewById(R.id.dateButton);
+        final Date setDate = getDateForYearMonthDay(year, monthOfYear, dayOfMonth);
         updateButtonTextToDate(dateButton, setDate);
     }
 

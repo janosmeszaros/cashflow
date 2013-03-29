@@ -11,22 +11,12 @@ import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.widget.Button;
-import android.widget.DatePicker;
-
-import com.cashflow.R;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 /**
  * DatePicker fragment.
  * @author Kornel_Refi
  */
-@Singleton
-public class DatePickerFragment extends DialogFragment implements OnDateSetListener {
-
-    @Inject
-    private OnDateSetService dateSetService;
+public class DatePickerFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
@@ -36,13 +26,9 @@ public class DatePickerFragment extends DialogFragment implements OnDateSetListe
         final int month = c.get(MONTH);
         final int day = c.get(DAY_OF_MONTH);
 
-        return new DatePickerDialog(getActivity(), this, year, month, day);
-    }
+        OnDateSetListener dateSetListener = new OnDateSetListenerService(getActivity());
 
-    @Override
-    public void onDateSet(final DatePicker view, final int year, final int month, final int day) {
-        final Button dateButton = (Button) getActivity().findViewById(R.id.dateButton);
-        dateSetService.onDateSet(dateButton, view);
+        return new DatePickerDialog(getActivity(), dateSetListener, year, month, day);
     }
 
 }

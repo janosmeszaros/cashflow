@@ -4,7 +4,6 @@ import android.widget.SpinnerAdapter;
 
 import com.cashflow.activity.components.DateButtonOnClickListener;
 import com.cashflow.activity.components.DatePickerFragment;
-import com.cashflow.activity.components.OnDateSetService;
 import com.cashflow.activity.components.RecurringCheckBoxOnClickListener;
 import com.cashflow.bill.database.BillDao;
 import com.cashflow.bill.database.BillPersistenceService;
@@ -39,7 +38,6 @@ public class AppModule implements Module {
         binder.bind(DatePickerFragment.class);
         binder.bind(StatementDao.class);
         binder.bind(StatementPersistenceService.class);
-        binder.bind(OnDateSetService.class);
         binder.bind(RecurringCheckBoxOnClickListener.class);
         binder.bind(RecurringIncomeScheduler.class).in(Singleton.class);
         binder.bind(SpinnerAdapter.class).toProvider(RecurringIntervalArrayAdapterProvider.class);
