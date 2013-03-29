@@ -53,7 +53,7 @@ import com.xtremelabs.robolectric.shadows.ShadowFragmentActivity;
 import com.xtremelabs.robolectric.shadows.ShadowTextView;
 
 /**
- * {@link AddStatementActivity} test, specially this class tests the income adding functionality.
+ * {@link AddStatementFragment} test, specially this class tests the income adding functionality.
  * @author Janos_Gyula_Meszaros
  *
  */
@@ -69,7 +69,7 @@ public class AddStatementActivityTest {
     private final Object[] values = new Object[]{1, 1234L, "2012", "note"};
     private Balance balance;
     @Inject
-    private AddStatementActivity underTest;
+    private AddStatementFragment underTest;
     private final ArrayAdapter<RecurringInterval> arrayAdapter = new ArrayAdapter<RecurringInterval>(underTest,
             android.R.layout.simple_spinner_dropdown_item, RecurringInterval.values());
     @Mock

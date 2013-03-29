@@ -59,14 +59,19 @@ public class AddBillOnClickListener implements OnClickListener {
         try {
             if (persistenceService.saveBill(billToSave)) {
                 parent.setResult(Activity.RESULT_OK);
+                parent.finish();
             } else {
-                parent.setResult(Activity.RESULT_CANCELED);
+                showToast(parent, parent.getString(R.string.database_error));
             }
-            parent.finish();
+
         } catch (IllegalArgumentException e) {
-            Toast toast = Toast.makeText(parent, e.getMessage(), Toast.LENGTH_SHORT);
-            toast.show();
+            showToast(parent, e.getMessage());
         }
+    }
+
+    private void showToast(final Activity parent, String msg) {
+        Toast toast = Toast.makeText(parent, msg, Toast.LENGTH_SHORT);
+        toast.show();
     }
 
     private Bill createBill() {

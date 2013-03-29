@@ -17,11 +17,9 @@ import android.view.Window;
 import android.widget.TextView;
 
 import com.cashflow.R;
-import com.cashflow.SwipedAddStatement;
 import com.cashflow.bill.activity.AddBillFragment;
 import com.cashflow.category.activity.CreateCategoryActivity;
 import com.cashflow.database.balance.Balance;
-import com.cashflow.statement.activity.AddStatementFragment;
 import com.cashflow.statement.activity.ListStatementActivity;
 import com.cashflow.statement.database.RecurringIncomeScheduler;
 import com.google.inject.Inject;
@@ -54,7 +52,7 @@ public class MainActivity extends RoboActivity {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getBaseContext(), SwipedAddStatement.class);
+                Intent intent = new Intent(getBaseContext(), ActionsActivity.class);
                 startActivity(intent);
             }
         });
@@ -69,29 +67,6 @@ public class MainActivity extends RoboActivity {
             final String value = String.valueOf(balance.getBalance());
             balanceText.setText(value);
         }
-    }
-
-    /**
-     * Add new income onClick method.
-     * @param view
-     *            Required for onClick.
-     */
-    public void addIncome(View view) {
-        Intent intent = new Intent(this, AddStatementFragment.class);
-        intent.putExtra(STATEMENT_TYPE_EXTRA, Income.toString());
-        startActivity(intent);
-
-    }
-
-    /**
-     * Add new Expense onClick method.
-     * @param view
-     *            Required for onClick.
-     */
-    public void addExpense(View view) {
-        Intent intent = new Intent(this, AddStatementFragment.class);
-        intent.putExtra(STATEMENT_TYPE_EXTRA, Expense.toString());
-        startActivity(intent);
     }
 
     /**

@@ -1,4 +1,4 @@
-package com.cashflow;
+package com.cashflow.activity;
 
 import static com.cashflow.constants.Constants.STATEMENT_TYPE_EXTRA;
 
@@ -14,29 +14,19 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 
-import com.cashflow.statement.activity.AddStatementActivity;
+import com.cashflow.R;
+import com.cashflow.bill.activity.AddBillFragment;
+import com.cashflow.statement.activity.AddStatementFragment;
 import com.cashflow.statement.database.StatementType;
 
 /**
- * proba
+ * List the actions in tabbed form.
  * @author Janos_Gyula_Meszaros
  *
  */
-public class SwipedAddStatement extends RoboFragmentActivity implements ActionBar.TabListener {
+public class ActionsActivity extends RoboFragmentActivity implements ActionBar.TabListener {
 
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link android.support.v4.app.FragmentPagerAdapter} derivative, which
-     * will keep every loaded fragment in memory. If this becomes too memory
-     * intensive, it may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
     private SectionsPagerAdapter mSectionsPagerAdapter;
-
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
     private ViewPager mViewPager;
 
     @Override
@@ -44,23 +34,16 @@ public class SwipedAddStatement extends RoboFragmentActivity implements ActionBa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_swiped_add_statement);
 
-        // Set up the action bar.
         final ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayShowHomeEnabled(false);
 
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the app.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        // When swiping between different sections, select the corresponding
-        // tab. We can also use ActionBar.Tab#select() to do this if we have
-        // a reference to the Tab.
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
@@ -68,12 +51,7 @@ public class SwipedAddStatement extends RoboFragmentActivity implements ActionBa
             }
         });
 
-        // For each of the sections in the app, add a tab to the action bar.
         for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
-            // Create a tab with text corresponding to the page title defined by
-            // the adapter. Also specify this Activity object, which implements
-            // the TabListener interface, as the callback (listener) for when
-            // this tab is selected.
             actionBar.addTab(actionBar.newTab().setText(mSectionsPagerAdapter.getPageTitle(i)).setTabListener(this));
         }
     }
@@ -116,12 +94,18 @@ public class SwipedAddStatement extends RoboFragmentActivity implements ActionBa
 
         @Override
         public Fragment getItem(int position) {
-            Fragment fragment = new AddStatementActivity();
+            Fragment fragment = new AddStatementFragment();
             Bundle args = new Bundle();
-            if (position == 0) {
+            switch (position) {
+            case 0:
                 args.putString(STATEMENT_TYPE_EXTRA, StatementType.Income.toString());
-            } else {
+                break;
+            case 1:
                 args.putString(STATEMENT_TYPE_EXTRA, StatementType.Expense.toString());
+                break;
+            case 2:
+                fragment = new AddBillFragment();
+                break;
             }
             fragment.setArguments(args);
             return fragment;
@@ -129,19 +113,26 @@ public class SwipedAddStatement extends RoboFragmentActivity implements ActionBa
 
         @Override
         public int getCount() {
-            return 2;
+            return 3;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
             Locale l = Locale.getDefault();
+            CharSequence name = null;
+
             switch (position) {
             case 0:
-                return getString(R.string.title_activity_add_income).toUpperCase(l);
+                name = getString(R.string.title_activity_add_income).toUpperCase(l);
+                break;
             case 1:
-                return getString(R.string.title_activity_add_expense).toUpperCase(l);
+                name = getString(R.string.title_activity_add_expense).toUpperCase(l);
+                break;
+            case 2:
+                name = getString(R.string.title_activity_add_bill).toUpperCase(l);
+                break;
             }
-            return null;
+            return name;
         }
     }
 
