@@ -10,22 +10,22 @@
 
     <application
         android:name="com.cashflow.App"
-        android:allowBackup="true">
+        android:allowBackup="true"
+        android:theme="@android:style/Theme.Holo.Light">
         <activity
-            android:name="com.cashflow.activity.MainActivity"
-            android:theme="@style/MainTheme" >
+            android:name="com.cashflow.activity.MainActivity"  android:theme="@style/MainTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.cashflow.statement.activity.AddStatementActivity" android:theme="@style/MainTheme"/>
+        <activity android:name="com.cashflow.statement.activity.AddStatementActivity"/>
         <activity android:name="com.cashflow.statement.activity.EditStatementActivity" />
         <activity android:name="com.cashflow.statement.activity.ListStatementActivity" />
         <activity android:name="com.cashflow.category.activity.CreateCategoryActivity" />
         <activity android:name="com.cashflow.bill.activity.AddBillActivity" />
-        <activity android:name="com.cashflow.SwipedAddStatement" android:theme="@style/MainTheme"/>
+        <activity android:name="com.cashflow.SwipedAddStatement"/>
     </application>
 
 </manifest>

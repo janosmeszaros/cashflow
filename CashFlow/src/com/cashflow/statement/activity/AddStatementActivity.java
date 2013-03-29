@@ -86,7 +86,6 @@ public class AddStatementActivity extends RoboFragment {
 
         setUpDateButton();
         setStatementType();
-        //        setTitle();
         setCategorySpinner();
 
         LOG.debug("AddStatementActivity has created with type: " + type);
@@ -131,14 +130,6 @@ public class AddStatementActivity extends RoboFragment {
         recurringArea.setVisibility(VISIBLE);
         recurringSpinner.setAdapter(spinnerAdapter);
     }
-
-    //    private void setTitle() {
-    //        if (type.isIncome()) {
-    //            setTitle(R.string.title_activity_add_income);
-    //        } else {
-    //            setTitle(R.string.title_activity_add_expense);
-    //        }
-    //    }
 
     private void setUpDateButton() {
         final Calendar calendar = Calendar.getInstance();
