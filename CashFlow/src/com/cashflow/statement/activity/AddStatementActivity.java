@@ -27,6 +27,7 @@ import android.widget.SpinnerAdapter;
 import com.cashflow.R;
 import com.cashflow.activity.components.DateButtonOnClickListener;
 import com.cashflow.activity.components.RecurringCheckBoxOnClickListener;
+import com.cashflow.category.activity.CreateCategoryActivity;
 import com.cashflow.category.database.CategoryPersistenceService;
 import com.cashflow.constants.RecurringInterval;
 import com.cashflow.domain.Category;
@@ -83,6 +84,13 @@ public class AddStatementActivity extends RoboFragmentActivity {
         setCategorySpinner();
 
         LOG.debug("AddStatementActivity has created with type: " + type);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setCategorySpinner();
+        categorySpinner.setSelection(categorySpinner.getAdapter().getCount() - 1);
     }
 
     private void setCategorySpinner() {
@@ -159,6 +167,16 @@ public class AddStatementActivity extends RoboFragmentActivity {
         }
 
         return builder.build();
+    }
+
+    /**
+     * Create categories onClick method.
+     * @param view
+     *            Required for onClick.
+     */
+    public void createNewCategory(View view) {
+        Intent intent = new Intent(this, CreateCategoryActivity.class);
+        startActivity(intent);
     }
 
 }
