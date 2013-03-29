@@ -24,7 +24,6 @@
     <string name="title_activity_list_incomes">List Incomes</string>
     <string name="title_activity_edit_incomes">Edit Incomes</string>
     <string name="title_activity_edit_expenses">Edit Expenses</string>
-    <string name="hello_world">Hello world!</string>
     <string name="title_activity_create_category">Create Category</string>
     <string name="button_create_categories">Create Categories</string>
     <string name="hint_category_name">Category name</string>
@@ -35,8 +34,10 @@
     <string name="recurring_start">Start date:</string>
     <string name="recurring_interval">Repeat income:</string>
     <string name="repeat_prompt">Choose an interval</string>
-    <string name="title_activity_add_bill">AddBillActivity</string>
+    <string name="title_activity_add_bill">Add bill</string>
     <string name="deadline_label">Deadline</string>
     <string name="add_bill_label">Add Bill</string>
+    <string name="title_activity_swiped_add_statement">SwipedAddStatement</string>
+    <string name="database_error">"Something hapend with the database. Please try again!"</string>
 
 </resources>

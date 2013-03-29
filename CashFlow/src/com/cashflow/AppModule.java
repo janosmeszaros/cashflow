@@ -7,7 +7,6 @@ import com.cashflow.activity.components.DatePickerFragment;
 import com.cashflow.activity.components.RecurringCheckBoxOnClickListener;
 import com.cashflow.bill.database.BillDao;
 import com.cashflow.bill.database.BillPersistenceService;
-import com.cashflow.bill.listener.AddBillOnClickListener;
 import com.cashflow.category.database.CategoryDao;
 import com.cashflow.category.database.CategoryPersistenceService;
 import com.cashflow.database.DbHelperSQLiteDbProvider;
@@ -29,7 +28,6 @@ public class AppModule implements Module {
 
     @Override
     public void configure(final Binder binder) {
-        binder.bind(AddBillOnClickListener.class);
         binder.bind(BillDao.class);
         binder.bind(BillPersistenceService.class);
         binder.bind(CategoryDao.class);
@@ -38,6 +36,8 @@ public class AppModule implements Module {
         binder.bind(DatePickerFragment.class);
         binder.bind(StatementDao.class);
         binder.bind(StatementPersistenceService.class);
+        binder.bind(BillPersistenceService.class);
+        binder.bind(SQLiteDbProvider.class).to(DbHelperSQLiteDbProvider.class);
         binder.bind(RecurringCheckBoxOnClickListener.class);
         binder.bind(RecurringIncomeScheduler.class).in(Singleton.class);
         binder.bind(SpinnerAdapter.class).toProvider(RecurringIntervalArrayAdapterProvider.class);
