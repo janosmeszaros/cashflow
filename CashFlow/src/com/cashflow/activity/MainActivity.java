@@ -11,8 +11,8 @@ import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.View;
+import android.view.Window;
 import android.widget.TextView;
 
 import com.cashflow.R;
@@ -43,16 +43,14 @@ public class MainActivity extends RoboActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.activity_main);
+        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.activity_title_bar);
 
         scheduler.schedule();
-    }
 
-    @Override
-    public boolean onCreateOptionsMenu(final Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.activity_main, menu);
-        return true;
+        findViewById(R.id.header_add_button).setVisibility(View.VISIBLE);
+        findViewById(R.id.header_list_button).setVisibility(View.VISIBLE);
     }
 
     @Override

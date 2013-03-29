@@ -10,38 +10,22 @@
 
     <application
         android:name="com.cashflow.App"
-        android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:allowBackup="true">
         <activity
             android:name="com.cashflow.activity.MainActivity"
-            android:label="@string/app_name" >
+            android:theme="@style/MainTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.cashflow.statement.activity.AddStatementActivity" />
+        <activity android:name="com.cashflow.statement.activity.AddStatementActivity" android:theme="@style/MainTheme"/>
         <activity android:name="com.cashflow.statement.activity.EditStatementActivity" />
         <activity android:name="com.cashflow.statement.activity.ListStatementActivity" />
-        <activity
-            android:name="com.cashflow.category.activity.CreateCategoryActivity"
-            android:label="@string/title_activity_create_category"
-            android:parentActivityName="com.cashflow.activity.MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.cashflow.activity.MainActivity" />
-        </activity>
-        <activity
-            android:name="com.cashflow.bill.activity.AddBillActivity"
-            android:label="@string/title_activity_add_bill" >
-        </activity>
-        <activity
-            android:name="com.cashflow.SwipedAddStatement"
-            android:label="@string/title_activity_swiped_add_statement" >
-        </activity>
+        <activity android:name="com.cashflow.category.activity.CreateCategoryActivity" />
+        <activity android:name="com.cashflow.bill.activity.AddBillActivity" />
+        <activity android:name="com.cashflow.SwipedAddStatement" android:theme="@style/MainTheme"/>
     </application>
 
 </manifest>
