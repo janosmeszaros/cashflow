@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity" >
- 
+
     <TextView
         android:id="@+id/textViewBalance"
         android:layout_width="wrap_content"
@@ -44,9 +44,9 @@
         android:layout_alignLeft="@+id/textViewBalance"
         android:layout_below="@+id/textViewBalance"
         android:layout_marginTop="54dp"
+        android:background="@drawable/transparent_button"
         android:onClick="addIncome"
-        android:text="@string/add_income_button" 
-        android:background="@drawable/green_button"/>
+        android:text="@string/add_income_button" />
 
     <Button
         android:id="@+id/addExpenseButton"
@@ -55,9 +55,9 @@
         android:layout_alignBaseline="@+id/submitButton"
         android:layout_alignBottom="@+id/submitButton"
         android:layout_alignRight="@+id/textViewBalanceCurrency"
+        android:background="@drawable/red_button"
         android:onClick="addExpense"
-        android:text="@string/add_expense_button"
-        android:background="@drawable/red_button" />
+        android:text="@string/add_expense_button" />
 
     <Button
         android:id="@+id/listIncomesButton"
@@ -86,28 +86,17 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/listIncomesButton"
         android:layout_marginTop="26dp"
-        android:text="@string/button_create_categories"
-        android:onClick="createCategories" />
+        android:onClick="createCategories"
+        android:text="@string/button_create_categories" />
 
-        <Button
-            android:id="@+id/addBillButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/createCategoryButton"
-            android:layout_alignBottom="@+id/createCategoryButton"
-            android:layout_alignLeft="@+id/textViewBalanceAmount"
-            android:onClick="addBill"
-            android:text="@string/add_bill_label" />
-
-        <Button
-            android:id="@+id/button1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignRight="@+id/submitButton"
-            android:layout_below="@+id/createCategoryButton"
-            android:layout_marginRight="18dp"
-            android:layout_marginTop="33dp"
-            android:text="Proba"
-            android:onClick="proba" />
+    <Button
+        android:id="@+id/addBillButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/createCategoryButton"
+        android:layout_alignBottom="@+id/createCategoryButton"
+        android:layout_alignLeft="@+id/textViewBalanceAmount"
+        android:onClick="addBill"
+        android:text="@string/add_bill_label" />
 
 </RelativeLayout>

@@ -30,19 +30,19 @@
     <ImageButton
         android:id="@+id/header_add_button"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:background="@drawable/green_button"
+        android:background="@drawable/transparent_button"
         android:src="@android:drawable/ic_menu_set_as" />
 
     <ImageButton
         android:id="@+id/header_list_button"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/header_add_button"
-        android:background="@drawable/green_button"
+        android:background="@drawable/transparent_button"
         android:src="@android:drawable/ic_menu_search" />
 
 

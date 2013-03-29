@@ -12,15 +12,16 @@ import roboguice.inject.InjectView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.TextView;
 
 import com.cashflow.R;
 import com.cashflow.SwipedAddStatement;
-import com.cashflow.bill.activity.AddBillActivity;
+import com.cashflow.bill.activity.AddBillFragment;
 import com.cashflow.category.activity.CreateCategoryActivity;
 import com.cashflow.database.balance.Balance;
-import com.cashflow.statement.activity.AddStatementActivity;
+import com.cashflow.statement.activity.AddStatementFragment;
 import com.cashflow.statement.activity.ListStatementActivity;
 import com.cashflow.statement.database.RecurringIncomeScheduler;
 import com.google.inject.Inject;
@@ -49,7 +50,14 @@ public class MainActivity extends RoboActivity {
 
         scheduler.schedule();
 
-        findViewById(R.id.header_add_button).setVisibility(View.VISIBLE);
+        findViewById(R.id.header_add_button).setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getBaseContext(), SwipedAddStatement.class);
+                startActivity(intent);
+            }
+        });
         findViewById(R.id.header_list_button).setVisibility(View.VISIBLE);
     }
 
@@ -69,7 +77,7 @@ public class MainActivity extends RoboActivity {
      *            Required for onClick.
      */
     public void addIncome(View view) {
-        Intent intent = new Intent(this, AddStatementActivity.class);
+        Intent intent = new Intent(this, AddStatementFragment.class);
         intent.putExtra(STATEMENT_TYPE_EXTRA, Income.toString());
         startActivity(intent);
 
@@ -81,7 +89,7 @@ public class MainActivity extends RoboActivity {
      *            Required for onClick.
      */
     public void addExpense(View view) {
-        Intent intent = new Intent(this, AddStatementActivity.class);
+        Intent intent = new Intent(this, AddStatementFragment.class);
         intent.putExtra(STATEMENT_TYPE_EXTRA, Expense.toString());
         startActivity(intent);
     }
@@ -124,17 +132,7 @@ public class MainActivity extends RoboActivity {
      *            Required for onclick.
      */
     public void addBill(View view) {
-        Intent intent = new Intent(this, AddBillActivity.class);
-        startActivity(intent);
-    }
-
-    /**
-     * proba
-     * @param view
-     *            Required for onclick.
-     */
-    public void proba(View view) {
-        Intent intent = new Intent(this, SwipedAddStatement.class);
+        Intent intent = new Intent(this, AddBillFragment.class);
         startActivity(intent);
     }
 
