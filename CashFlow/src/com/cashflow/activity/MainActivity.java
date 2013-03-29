@@ -1,9 +1,5 @@
 package com.cashflow.activity;
 
-import static com.cashflow.constants.Constants.STATEMENT_TYPE_EXTRA;
-import static com.cashflow.statement.database.StatementType.Expense;
-import static com.cashflow.statement.database.StatementType.Income;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,10 +13,7 @@ import android.view.Window;
 import android.widget.TextView;
 
 import com.cashflow.R;
-import com.cashflow.bill.activity.AddBillFragment;
-import com.cashflow.category.activity.CreateCategoryActivity;
 import com.cashflow.database.balance.Balance;
-import com.cashflow.statement.activity.ListStatementActivity;
 import com.cashflow.statement.database.RecurringIncomeScheduler;
 import com.google.inject.Inject;
 
@@ -67,48 +60,6 @@ public class MainActivity extends RoboActivity {
             final String value = String.valueOf(balance.getBalance());
             balanceText.setText(value);
         }
-    }
-
-    /**
-     * List incomes onClick method.
-     * @param view
-     *            Required for onClick.
-     */
-    public void listIncomes(View view) {
-        Intent intent = new Intent(this, ListStatementActivity.class);
-        intent.putExtra(STATEMENT_TYPE_EXTRA, Income.toString());
-        startActivity(intent);
-    }
-
-    /**
-     * List expenses onClick method.
-     * @param view
-     *            Required for onClick.
-     */
-    public void listExpenses(View view) {
-        Intent intent = new Intent(this, ListStatementActivity.class);
-        intent.putExtra(STATEMENT_TYPE_EXTRA, Expense.toString());
-        startActivity(intent);
-    }
-
-    /**
-     * Create categories onClick method.
-     * @param view
-     *            Required for onClick.
-     */
-    public void createCategories(View view) {
-        Intent intent = new Intent(this, CreateCategoryActivity.class);
-        startActivity(intent);
-    }
-
-    /**
-     * Add bill onClick method.
-     * @param view
-     *            Required for onclick.
-     */
-    public void addBill(View view) {
-        Intent intent = new Intent(this, AddBillFragment.class);
-        startActivity(intent);
     }
 
 }
