@@ -88,14 +88,14 @@ public class AddStatementFragment extends RoboFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        LOG.debug("AddStatementActivity is creating...");
+        LOG.debug("AddStatementFragment is creating...");
 
         setUpDateButton();
         setStatementType();
         setCategorySpinner();
         setSubmitButton();
 
-        LOG.debug("AddStatementActivity has created with type: " + type);
+        LOG.debug("AddStatementFragment has created with type: " + type);
     }
 
     private void setSubmitButton() {
