@@ -3,7 +3,6 @@ package com.cashflow.activity.components;
 import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
-import roboguice.inject.InjectView;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.view.View;
@@ -25,7 +24,6 @@ public class RecurringCheckBoxOnClickListener implements OnClickListener {
 
     private static final int DURATION_MILLIS = 1000;
 
-    @InjectView(R.id.recurring_checkbox_area)
     private LinearLayout checkBoxLayout;
 
     /**
@@ -38,10 +36,12 @@ public class RecurringCheckBoxOnClickListener implements OnClickListener {
     public void onClick(final View view) {
         final boolean checked = ((CheckBox) view).isChecked();
         Activity activity = (Activity) view.getContext();
+        checkBoxLayout = (LinearLayout) activity.findViewById(R.id.recurring_checkbox_area);
+
         if (checked) {
             startInAnimationForCheckboxArea(activity);
         } else {
-            startOutAnimationForCheckboxArea((Activity) view.getContext());
+            startOutAnimationForCheckboxArea(activity);
         }
     }
 
