@@ -17,6 +17,8 @@ import android.widget.SpinnerAdapter;
 
 import com.cashflow.R;
 import com.cashflow.activity.components.RecurringCheckBoxOnClickListener;
+import com.cashflow.constants.RecurringInterval;
+import com.cashflow.domain.Statement;
 import com.cashflow.statement.database.StatementType;
 import com.google.inject.Inject;
 
@@ -54,11 +56,17 @@ public class AddIncomeFragment extends AddStatementFragment {
         super.onViewCreated(view, savedInstanceState);
         LOG.debug("AddStatementFragment is creating...");
 
-        setType(StatementType.Income);
         activateRecurringArea();
-        setRecurringSpinner(recurringSpinner);
 
-        LOG.debug("AddStatementFragment has created with type: " + getType());
+        LOG.debug("AddStatementFragment has created with type: " + StatementType.Income);
+    }
+
+    @Override
+    protected Statement createStatement() {
+        Statement statement = super.createStatement();
+        statement = new Statement.Builder(statement.getAmount(), statement.getDate()).setNote(statement.getNote()).setType(StatementType.Income)
+                .setCategory(statement.getCategory()).setRecurringInterval((RecurringInterval) recurringSpinner.getSelectedItem()).build();
+        return statement;
     }
 
     @Override

@@ -27,7 +27,6 @@ import com.cashflow.R;
 import com.cashflow.activity.components.DateButtonOnClickListener;
 import com.cashflow.category.activity.CreateCategoryActivity;
 import com.cashflow.category.database.CategoryPersistenceService;
-import com.cashflow.constants.RecurringInterval;
 import com.cashflow.domain.Category;
 import com.cashflow.domain.Statement;
 import com.cashflow.domain.Statement.Builder;
@@ -36,7 +35,7 @@ import com.cashflow.statement.database.StatementType;
 import com.google.inject.Inject;
 
 /**
- * Expense statement adding.
+ * AddStatement Base class. Default type is Expense.
  * @author Janos_Gyula_Meszaros
  */
 public class AddStatementFragment extends RoboFragment {
@@ -63,24 +62,7 @@ public class AddStatementFragment extends RoboFragment {
     @InjectView(R.id.submitButton)
     private Button submit;
 
-    private StatementType type = StatementType.Expense;
-    private Spinner recurringSpinner;
-
-    public Spinner getRecurringSpinner() {
-        return recurringSpinner;
-    }
-
-    public void setRecurringSpinner(Spinner recurringSpinner) {
-        this.recurringSpinner = recurringSpinner;
-    }
-
-    public StatementType getType() {
-        return type;
-    }
-
-    public void setType(StatementType type) {
-        this.type = type;
-    }
+    private final StatementType type = StatementType.Expense;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
@@ -129,6 +111,18 @@ public class AddStatementFragment extends RoboFragment {
         dateButton.setOnClickListener(dateListener);
     }
 
+    protected Statement createStatement() {
+        final String amountStr = amountText.getText().toString();
+        final String date = dateButton.getText().toString();
+        final String note = notesText.getText().toString();
+        final Category category = (Category) categorySpinner.getSelectedItem();
+
+        final Builder builder = new Statement.Builder(amountStr, date);
+        builder.setNote(note).setType(type).setCategory(category);
+
+        return builder.build();
+    }
+
     protected class CreateCategoryOnClickListener implements OnClickListener {
 
         @Override
@@ -163,21 +157,6 @@ public class AddStatementFragment extends RoboFragment {
                 showToast(activity, e.getMessage());
             }
 
-        }
-
-        private Statement createStatement() {
-            final String amountStr = amountText.getText().toString();
-            final String date = dateButton.getText().toString();
-            final String note = notesText.getText().toString();
-            final Category category = (Category) categorySpinner.getSelectedItem();
-
-            final Builder builder = new Statement.Builder(amountStr, date);
-            builder.setNote(note).setType(type).setCategory(category);
-            if (type.isIncome()) {
-                builder.setRecurringInterval((RecurringInterval) recurringSpinner.getSelectedItem());
-            }
-
-            return builder.build();
         }
 
         private void showToast(final Activity activity, String msg) {
