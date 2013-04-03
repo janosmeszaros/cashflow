@@ -25,8 +25,9 @@ public class RecurringIncomeSchedulerTest {
     private static final String ID = "1";
     private static final String NOTE = "fizu";
     private static final String AMOUNT = "1234";
+    private static final DateTime FOUR_WEEKS_BEFORE = DateTime.now().minusWeeks(4);
     private static final DateTime ONE_MONTH_BEFORE = DateTime.now().minusMonths(1);
-    private static final DateTime THREE_MONTH_BEFORE = DateTime.now().minusMonths(3);
+    private static final DateTime THREE_MONTHS_BEFORE = DateTime.now().minusMonths(3);
     private static final DateTime ONE_YEAR_BEFORE = DateTime.now().minusYears(1);
     private static final Category CATEGORY = new Category("1", "cat");
 
@@ -56,16 +57,16 @@ public class RecurringIncomeSchedulerTest {
     @Test
     public void testScheduleWhenOneMonthAndTheIntervalIsBeWeeklyThenShouldSaveTwoNewStatement() {
         RecurringInterval interval = RecurringInterval.biweekly;
-        Statement statement = createStatement(ONE_MONTH_BEFORE, interval);
+        Statement statement = createStatement(FOUR_WEEKS_BEFORE, interval);
         statements.add(statement);
 
         underTest.schedule();
 
         verify(service).saveStatement(
-                new Statement.Builder(AMOUNT, formatter.print(ONE_MONTH_BEFORE.plus(interval.getPeriod()))).setNote(NOTE)
+                new Statement.Builder(AMOUNT, formatter.print(FOUR_WEEKS_BEFORE.plus(interval.getPeriod()))).setNote(NOTE)
                         .setRecurringInterval(RecurringInterval.none).setCategory(CATEGORY).setType(StatementType.Income).build());
         verify(service).saveStatement(
-                new Statement.Builder(AMOUNT, formatter.print(ONE_MONTH_BEFORE.plusMonths(1))).setNote(NOTE)
+                new Statement.Builder(AMOUNT, formatter.print(FOUR_WEEKS_BEFORE.plusWeeks(4))).setNote(NOTE)
                         .setRecurringInterval(RecurringInterval.none).setCategory(CATEGORY).setType(StatementType.Income).build());
     }
 
@@ -98,13 +99,13 @@ public class RecurringIncomeSchedulerTest {
     @Test
     public void testScheduleWhenOneMonthAndTheIntervalIsBeWeeklyThenShouldUpdateCurrentStatement() {
         RecurringInterval interval = RecurringInterval.biweekly;
-        Statement statement = createStatement(DateTime.now().minusWeeks(4), interval);
+        Statement statement = createStatement(FOUR_WEEKS_BEFORE, interval);
         statements.add(statement);
 
         underTest.schedule();
 
         verify(service).updateStatement(
-                new Statement.Builder(AMOUNT, formatter.print(ONE_MONTH_BEFORE.plusWeeks(4))).setId(ID).setNote(NOTE)
+                new Statement.Builder(AMOUNT, formatter.print(FOUR_WEEKS_BEFORE.plusWeeks(4))).setId(ID).setNote(NOTE)
                         .setRecurringInterval(RecurringInterval.biweekly).setCategory(CATEGORY).setType(StatementType.Income).build());
 
     }
@@ -125,19 +126,19 @@ public class RecurringIncomeSchedulerTest {
     @Test
     public void testScheduleWhenThreeMonthAndTheIntervalIsMonthlyThenShouldSaveThreeStatement() {
         RecurringInterval interval = RecurringInterval.monthly;
-        Statement statement = createStatement(THREE_MONTH_BEFORE, interval);
+        Statement statement = createStatement(THREE_MONTHS_BEFORE, interval);
         statements.add(statement);
 
         underTest.schedule();
 
         verify(service).saveStatement(
-                new Statement.Builder(AMOUNT, formatter.print(THREE_MONTH_BEFORE.plusMonths(1))).setNote(NOTE)
+                new Statement.Builder(AMOUNT, formatter.print(THREE_MONTHS_BEFORE.plusMonths(1))).setNote(NOTE)
                         .setRecurringInterval(RecurringInterval.none).setCategory(CATEGORY).setType(StatementType.Income).build());
         verify(service).saveStatement(
-                new Statement.Builder(AMOUNT, formatter.print(THREE_MONTH_BEFORE.plusMonths(2))).setNote(NOTE)
+                new Statement.Builder(AMOUNT, formatter.print(THREE_MONTHS_BEFORE.plusMonths(2))).setNote(NOTE)
                         .setRecurringInterval(RecurringInterval.none).setCategory(CATEGORY).setType(StatementType.Income).build());
         verify(service).saveStatement(
-                new Statement.Builder(AMOUNT, formatter.print(THREE_MONTH_BEFORE.plusMonths(3))).setNote(NOTE)
+                new Statement.Builder(AMOUNT, formatter.print(THREE_MONTHS_BEFORE.plusMonths(3))).setNote(NOTE)
                         .setRecurringInterval(RecurringInterval.none).setCategory(CATEGORY).setType(StatementType.Income).build());
     }
 

@@ -4,26 +4,26 @@ import static com.cashflow.constants.Constants.STATEMENT_TYPE_EXTRA;
 
 import java.util.Locale;
 
-import roboguice.activity.RoboFragmentActivity;
-import android.app.ActionBar;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.view.Menu;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.TabListener;
 import com.cashflow.R;
 import com.cashflow.statement.activity.ListStatementFragment;
 import com.cashflow.statement.database.StatementType;
+import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
 
 /**
  * Tabbed lists for statements.
  * @author Janos_Gyula_Meszaros
  *
  */
-public class ListActivity extends RoboFragmentActivity implements ActionBar.TabListener {
+public class ListActivity extends RoboSherlockFragmentActivity implements TabListener {
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
@@ -33,7 +33,7 @@ public class ListActivity extends RoboFragmentActivity implements ActionBar.TabL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tabbed_actions);
 
-        final ActionBar actionBar = getActionBar();
+        final ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayShowHomeEnabled(false);
@@ -53,13 +53,6 @@ public class ListActivity extends RoboFragmentActivity implements ActionBar.TabL
         for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
             actionBar.addTab(actionBar.newTab().setText(mSectionsPagerAdapter.getPageTitle(i)).setTabListener(this));
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.list, menu);
-        return true;
     }
 
     @Override

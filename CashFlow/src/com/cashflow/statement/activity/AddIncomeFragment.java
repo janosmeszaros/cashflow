@@ -39,9 +39,9 @@ public class AddIncomeFragment extends AddStatementFragment {
     private Spinner recurringSpinner;
     @InjectView(R.id.recurring_income)
     private LinearLayout recurringArea;
-    @InjectView(R.id.recurring_checkbox_area_statement)
+    @InjectView(R.id.recurring_checkbox_area_income)
     private LinearLayout recurringCheckBoxArea;
-    @InjectView(R.id.recurring_checkbox_statement)
+    @InjectView(R.id.recurring_checkbox_income)
     private CheckBox recurringCheckBox;
 
     @Override

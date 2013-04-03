@@ -50,7 +50,7 @@ public class RecurringCheckBoxOnClickListener implements OnClickListener {
         checkBoxLayout = (LinearLayout) activity.findViewById(R.id.recurring_checkbox_area_bill);
 
         if (checkBoxLayout == null) {
-            checkBoxLayout = (LinearLayout) activity.findViewById(R.id.recurring_checkbox_area_statement);
+            checkBoxLayout = (LinearLayout) activity.findViewById(R.id.recurring_checkbox_area_income);
         }
     }
 

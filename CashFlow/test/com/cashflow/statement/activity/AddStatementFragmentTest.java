@@ -142,7 +142,7 @@ public class AddStatementFragmentTest {
     @Test
     public void testOnCreateWhenCalledThenRecurringCheckBoxOnClickListenerShouldBeRecurringCheckBoxOnClickListener() {
         createAddIncome();
-        CheckBox recurringCheckBox = (CheckBox) underTest.getActivity().findViewById(R.id.recurring_checkbox);
+        CheckBox recurringCheckBox = (CheckBox) underTest.getActivity().findViewById(R.id.recurring_checkbox_income);
         ShadowTextView shadowTextView = Robolectric.shadowOf(recurringCheckBox);
 
         assertThat((RecurringCheckBoxOnClickListener) shadowTextView.getOnClickListener(), equalTo(checkBoxListener));
@@ -269,7 +269,7 @@ public class AddStatementFragmentTest {
         categorySpinner.setSelection(categoryPos);
 
         if (selection != 0) {
-            CheckBox recurringCheckBox = (CheckBox) underTest.getActivity().findViewById(R.id.recurring_checkbox);
+            CheckBox recurringCheckBox = (CheckBox) underTest.getActivity().findViewById(R.id.recurring_checkbox_income);
             recurringCheckBox.setChecked(true);
         }
     }

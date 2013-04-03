@@ -59,9 +59,9 @@ public class EditStatementActivity extends RoboFragmentActivity {
     private Spinner categorySpinner;
     @InjectView(R.id.recurring_income)
     private LinearLayout recurringArea;
-    @InjectView(R.id.recurring_checkbox_statement)
+    @InjectView(R.id.recurring_checkbox_income)
     private CheckBox recurringCheckBox;
-    @InjectView(R.id.recurring_checkbox_area_statement)
+    @InjectView(R.id.recurring_checkbox_area_income)
     private LinearLayout recurringCheckBoxArea;
     @Inject
     private StatementPersistenceService statementService;

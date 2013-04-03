@@ -48,7 +48,7 @@ public class RecurringCheckBoxOnClickListenerTest {
     private void setUpActivityModule() {
         ActivityModule module = new ActivityModule(new ActivityProvider());
 
-        module.addViewBinding(R.id.recurring_checkbox_area, checkBoxLayout);
+        module.addViewBinding(R.id.recurring_checkbox_area_income, checkBoxLayout);
 
         ActivityModule.setUp(this, module);
     }

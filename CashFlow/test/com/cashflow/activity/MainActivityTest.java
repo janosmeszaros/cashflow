@@ -14,26 +14,17 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import android.content.Intent;
 import android.database.MatrixCursor;
-import android.view.View;
 import android.widget.TextView;
 
 import com.cashflow.R;
 import com.cashflow.activity.testutil.ActivityModule;
 import com.cashflow.activity.testutil.ListStatementActivityProvider;
 import com.cashflow.activity.testutil.TestGuiceModule;
-import com.cashflow.bill.activity.AddBillActivity;
-import com.cashflow.category.activity.CreateCategoryActivity;
 import com.cashflow.database.balance.Balance;
-import com.cashflow.statement.activity.AddStatementFragment;
-import com.cashflow.statement.activity.ListStatementFragment;
 import com.cashflow.statement.database.RecurringIncomeScheduler;
 import com.cashflow.statement.database.StatementPersistenceService;
-import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
-import com.xtremelabs.robolectric.shadows.ShadowActivity;
-import com.xtremelabs.robolectric.shadows.ShadowIntent;
 
 /**
  * {@link MainActivity} test.
@@ -73,89 +64,18 @@ public class MainActivityTest {
         TestGuiceModule.tearDown();
     }
 
-    @Test
-    public void addIncomeButtonClickShouldCreateAddIncomeActivity() {
-        MainActivity activity = new MainActivity();
-        activity.onCreate(null);
-        View addIncome = activity.findViewById(R.id.submitButton);
-
-        addIncome.performClick();
-        ShadowActivity shadowActivity = Robolectric.shadowOf(activity);
-        Intent startedIntent = shadowActivity.getNextStartedActivity();
-        ShadowIntent shadowIntent = Robolectric.shadowOf(startedIntent);
-        assertThat(shadowIntent.getComponent().getClassName(), equalTo(AddStatementFragment.class.getName()));
-    }
-
-    @Test
-    public void addExpenseButtonClickShouldCreateAddExpenseeActivity() {
-        MainActivity activity = new MainActivity();
-        activity.onCreate(null);
-        View addExpense = activity.findViewById(R.id.addExpenseButton);
-
-        addExpense.performClick();
-        ShadowActivity shadowActivity = Robolectric.shadowOf(activity);
-        Intent startedIntent = shadowActivity.getNextStartedActivity();
-        ShadowIntent shadowIntent = Robolectric.shadowOf(startedIntent);
-        assertThat(shadowIntent.getComponent().getClassName(), equalTo(AddStatementFragment.class.getName()));
-    }
-
-    @Test
-    public void listExpensesButtonClickShouldCreateListExpensesActivity() {
-        MainActivity activity = new MainActivity();
-        activity.onCreate(null);
-        View listExpenses = activity.findViewById(R.id.listExpensesButton);
-
-        listExpenses.performClick();
-
-        ShadowActivity shadowActivity = Robolectric.shadowOf(activity);
-        Intent startedIntent = shadowActivity.getNextStartedActivity();
-        ShadowIntent shadowIntent = Robolectric.shadowOf(startedIntent);
-        assertThat(shadowIntent.getComponent().getClassName(), equalTo(ListStatementFragment.class.getName()));
-    }
-
-    @Test
-    public void listIncomesButtonClickShouldCreateListIncomesActivity() {
-        MainActivity activity = new MainActivity();
-        activity.onCreate(null);
-        View listIncomes = activity.findViewById(R.id.listIncomesButton);
-
-        listIncomes.performClick();
-
-        ShadowActivity shadowActivity = Robolectric.shadowOf(activity);
-        Intent startedIntent = shadowActivity.getNextStartedActivity();
-        ShadowIntent shadowIntent = Robolectric.shadowOf(startedIntent);
-        assertThat(shadowIntent.getComponent().getClassName(), equalTo(ListStatementFragment.class.getName()));
-    }
-
-    @Test
-    public void testCreateCategoriesButtonClickShouldCreateCreateCategoryActivity() {
-        MainActivity activity = new MainActivity();
-        activity.onCreate(null);
-        View createCategory = activity.findViewById(R.id.createCategoryButton);
-
-        createCategory.performClick();
-
-        ShadowActivity shadowActivity = Robolectric.shadowOf(activity);
-        Intent startedIntent = shadowActivity.getNextStartedActivity();
-        ShadowIntent shadowIntent = Robolectric.shadowOf(startedIntent);
-        assertThat(shadowIntent.getComponent().getClassName(), equalTo(CreateCategoryActivity.class.getName()));
-
-    }
-
-    @Test
-    public void testAddBillButtonClickShouldAddBillActivity() {
-        MainActivity activity = new MainActivity();
-        activity.onCreate(null);
-        View addBill = activity.findViewById(R.id.addBillButton);
-
-        addBill.performClick();
-
-        ShadowActivity shadowActivity = Robolectric.shadowOf(activity);
-        Intent startedIntent = shadowActivity.getNextStartedActivity();
-        ShadowIntent shadowIntent = Robolectric.shadowOf(startedIntent);
-        assertThat(shadowIntent.getComponent().getClassName(), equalTo(AddBillActivity.class.getName()));
-
-    }
+    //    @Test
+    //    public void addIncomeButtonClickShouldCreateAddIncomeActivity() {
+    //        MainActivity activity = new MainActivity();
+    //        activity.onCreate(null);
+    //        View addIncome = activity.findViewById(R.id.submitButton);
+    //
+    //        addIncome.performClick();
+    //        ShadowActivity shadowActivity = Robolectric.shadowOf(activity);
+    //        Intent startedIntent = shadowActivity.getNextStartedActivity();
+    //        ShadowIntent shadowIntent = Robolectric.shadowOf(startedIntent);
+    //        assertThat(shadowIntent.getComponent().getClassName(), equalTo(AddStatementFragment.class.getName()));
+    //    }
 
     @Test
     public void testOnWindowFocusChangedWhenFocusIsChanged() {
