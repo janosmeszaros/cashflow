@@ -3,25 +3,24 @@ package com.cashflow.activity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.Window;
 import android.widget.TextView;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.cashflow.R;
 import com.cashflow.database.balance.Balance;
 import com.cashflow.statement.database.RecurringIncomeScheduler;
+import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
 import com.google.inject.Inject;
 
 /**
  * Main activity.
  * @author Kornel_Refi
  */
-public class MainActivity extends RoboActivity {
+public class MainActivity extends RoboSherlockActivity {
     private static final Logger LOG = LoggerFactory.getLogger(MainActivity.class);
 
     @InjectView(R.id.textViewBalanceAmount)
@@ -35,29 +34,20 @@ public class MainActivity extends RoboActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.activity_main);
-        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.activity_title_bar);
-
+        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.main_header_selector));
+        setTitle(getString(R.string.app_name));
         scheduler.schedule();
+    }
 
-        findViewById(R.id.header_add_button).setOnClickListener(new OnClickListener() {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add(0, 0, Menu.NONE, "List").setIcon(android.R.drawable.ic_menu_search).setIntent(new Intent(this, ListActivity.class))
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        menu.add(0, 1, Menu.NONE, "Add").setIcon(android.R.drawable.ic_menu_set_as).setIntent(new Intent(this, ActionsActivity.class))
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getBaseContext(), ActionsActivity.class);
-                startActivity(intent);
-            }
-        });
-        findViewById(R.id.header_list_button).setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getBaseContext(), ListActivity.class);
-                startActivity(intent);
-            }
-        });
-
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override

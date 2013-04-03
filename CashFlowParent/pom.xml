@@ -35,6 +35,8 @@
 		<org.slf4j.slf4j-api.version>1.7.2</org.slf4j.slf4j-api.version>
 		<roboguice.version>2.0</roboguice.version>
 		<joda-time.version>2.1</joda-time.version>
+		<actionbarsherlock.version>4.2.0</actionbarsherlock.version>
+		<roboguice-sherlock.version>1.5</roboguice-sherlock.version>
 	</properties>
 
 	<build>
@@ -127,8 +129,17 @@
 				<artifactId>joda-time</artifactId>
 				<version>${joda-time.version}</version>
 			</dependency>
-
-
+			<dependency>
+				<groupId>com.actionbarsherlock</groupId>
+				<artifactId>actionbarsherlock</artifactId>
+				<version>${actionbarsherlock.version}</version>
+				<type>jar</type>
+			</dependency>
+			<dependency>
+				<groupId>com.github.rtyley</groupId>
+				<artifactId>roboguice-sherlock</artifactId>
+				<version>${roboguice-sherlock.version}</version>
+			</dependency>
 			<!-- Tests -->
 
 			<dependency>

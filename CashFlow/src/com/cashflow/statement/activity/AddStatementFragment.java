@@ -1,8 +1,5 @@
 package com.cashflow.statement.activity;
 
-import static android.view.View.VISIBLE;
-import static com.cashflow.constants.Constants.STATEMENT_TYPE_EXTRA;
-
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -21,17 +18,13 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
 import com.cashflow.R;
 import com.cashflow.activity.components.DateButtonOnClickListener;
-import com.cashflow.activity.components.RecurringCheckBoxOnClickListener;
 import com.cashflow.category.activity.CreateCategoryActivity;
 import com.cashflow.category.database.CategoryPersistenceService;
 import com.cashflow.constants.RecurringInterval;
@@ -43,7 +36,7 @@ import com.cashflow.statement.database.StatementType;
 import com.google.inject.Inject;
 
 /**
- * Statement adding. It gets it's type in the intent in extra named by <code>STATEMENT_TYPE_EXTRA</code>.
+ * Expense statement adding.
  * @author Janos_Gyula_Meszaros
  */
 public class AddStatementFragment extends RoboFragment {
@@ -55,10 +48,6 @@ public class AddStatementFragment extends RoboFragment {
     @Inject
     private DateButtonOnClickListener dateListener;
     @Inject
-    private RecurringCheckBoxOnClickListener checkBoxListener;
-    @Inject
-    private SpinnerAdapter spinnerAdapter;
-    @Inject
     private StatementPersistenceService statementService;
 
     @InjectView(R.id.amountText)
@@ -69,25 +58,35 @@ public class AddStatementFragment extends RoboFragment {
     private EditText notesText;
     @InjectView(R.id.categorySpinner)
     private Spinner categorySpinner;
-    @InjectView(R.id.recurring_spinner)
-    private Spinner recurringSpinner;
-    @InjectView(R.id.recurring_income)
-    private LinearLayout recurringArea;
-    @InjectView(R.id.recurring_checkbox)
-    private CheckBox recurringCheckBox;
     @InjectView(R.id.createCategoryButton)
     private ImageButton createCategory;
     @InjectView(R.id.submitButton)
     private Button submit;
 
-    private StatementType type;
+    private StatementType type = StatementType.Expense;
+    private Spinner recurringSpinner;
+
+    public Spinner getRecurringSpinner() {
+        return recurringSpinner;
+    }
+
+    public void setRecurringSpinner(Spinner recurringSpinner) {
+        this.recurringSpinner = recurringSpinner;
+    }
+
+    public StatementType getType() {
+        return type;
+    }
+
+    public void setType(StatementType type) {
+        this.type = type;
+    }
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        return inflater.inflate(R.layout.add_statement_fragment, container, false);
-
+        return inflater.inflate(R.layout.add_expense_statement_fragment, container, false);
     }
 
     @Override
@@ -96,7 +95,6 @@ public class AddStatementFragment extends RoboFragment {
         LOG.debug("AddStatementFragment is creating...");
 
         setUpDateButton();
-        setStatementType();
         setCategorySpinner();
         setUpButtons();
 
@@ -121,20 +119,6 @@ public class AddStatementFragment extends RoboFragment {
 
         final ArrayAdapter<Category> adapter = new ArrayAdapter<Category>(this.getActivity(), android.R.layout.simple_spinner_dropdown_item, list);
         categorySpinner.setAdapter(adapter);
-    }
-
-    private void setStatementType() {
-        final Bundle intent = getArguments();
-        type = StatementType.valueOf(intent.getString(STATEMENT_TYPE_EXTRA));
-        if (type.isIncome()) {
-            activateRecurringArea();
-        }
-    }
-
-    private void activateRecurringArea() {
-        recurringCheckBox.setOnClickListener(checkBoxListener);
-        recurringArea.setVisibility(VISIBLE);
-        recurringSpinner.setAdapter(spinnerAdapter);
     }
 
     private void setUpDateButton() {

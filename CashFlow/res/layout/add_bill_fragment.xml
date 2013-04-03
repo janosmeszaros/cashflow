@@ -108,22 +108,22 @@
             android:visibility="visible" >
 
             <CheckBox
-                android:id="@+id/recurring_checkbox"
+                android:id="@+id/recurring_checkbox_bill"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/recurring_label" />
 
             <LinearLayout
-                android:id="@+id/recurring_checkbox_area"
+                android:id="@+id/recurring_checkbox_area_bill"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:visibility="gone" >
+                android:visibility="invisible" >
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/recurring_interval"
+                    android:text="@string/recurring_bill_label"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <Spinner

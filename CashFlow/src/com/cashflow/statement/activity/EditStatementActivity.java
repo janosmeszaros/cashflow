@@ -59,9 +59,9 @@ public class EditStatementActivity extends RoboFragmentActivity {
     private Spinner categorySpinner;
     @InjectView(R.id.recurring_income)
     private LinearLayout recurringArea;
-    @InjectView(R.id.recurring_checkbox)
+    @InjectView(R.id.recurring_checkbox_statement)
     private CheckBox recurringCheckBox;
-    @InjectView(R.id.recurring_checkbox_area)
+    @InjectView(R.id.recurring_checkbox_area_statement)
     private LinearLayout recurringCheckBoxArea;
     @Inject
     private StatementPersistenceService statementService;
@@ -82,7 +82,7 @@ public class EditStatementActivity extends RoboFragmentActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LOG.debug("EditStatementActivity is creating...");
-        setContentView(R.layout.add_statement_fragment);
+        setContentView(R.layout.add_expense_statement_fragment);
 
         setListenerForDateButton();
         getOriginalData();

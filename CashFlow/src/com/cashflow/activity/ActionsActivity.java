@@ -1,7 +1,5 @@
 package com.cashflow.activity;
 
-import static com.cashflow.constants.Constants.STATEMENT_TYPE_EXTRA;
-
 import java.util.Locale;
 
 import roboguice.activity.RoboFragmentActivity;
@@ -15,8 +13,8 @@ import android.support.v4.view.ViewPager;
 
 import com.cashflow.R;
 import com.cashflow.bill.activity.AddBillFragment;
+import com.cashflow.statement.activity.AddIncomeFragment;
 import com.cashflow.statement.activity.AddStatementFragment;
-import com.cashflow.statement.database.StatementType;
 
 /**
  * List the actions in tabbed form.
@@ -84,20 +82,18 @@ public class ActionsActivity extends RoboFragmentActivity implements ActionBar.T
 
         @Override
         public Fragment getItem(int position) {
-            Fragment fragment = new AddStatementFragment();
-            Bundle args = new Bundle();
+            Fragment fragment = null;
             switch (position) {
             case 0:
-                args.putString(STATEMENT_TYPE_EXTRA, StatementType.Income.toString());
+                fragment = new AddIncomeFragment();
                 break;
             case 1:
-                args.putString(STATEMENT_TYPE_EXTRA, StatementType.Expense.toString());
+                fragment = new AddStatementFragment();
                 break;
             case 2:
                 fragment = new AddBillFragment();
                 break;
             }
-            fragment.setArguments(args);
             return fragment;
         }
 

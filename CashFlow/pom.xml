@@ -23,7 +23,7 @@
 			<plugin>
 				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
 				<artifactId>android-maven-plugin</artifactId>
-				<version>3.1.1</version>
+				<version>3.4.0</version>
 				<configuration>
 					<androidManifestFile>${project.basedir}/AndroidManifest.xml</androidManifestFile>
 					<assetsDirectory>${project.basedir}/assets</assetsDirectory>
@@ -39,6 +39,7 @@
 			</plugin>
 		</plugins>
 	</build>
+
 	<dependencies>
 		<!-- Android -->
 		<dependency>
@@ -54,6 +55,15 @@
 		<dependency>
 			<groupId>com.google.android</groupId>
 			<artifactId>annotations</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.actionbarsherlock</groupId>
+			<artifactId>actionbarsherlock</artifactId>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>com.github.rtyley</groupId>
+			<artifactId>roboguice-sherlock</artifactId>
 		</dependency>
 		<!-- Android logger -->
 		<dependency>

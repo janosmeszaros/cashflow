@@ -6,6 +6,9 @@ import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectView;
 import android.app.Activity;
@@ -39,6 +42,8 @@ import com.google.inject.Inject;
  *
  */
 public class AddBillFragment extends RoboFragment {
+    private static final Logger LOG = LoggerFactory.getLogger(AddBillFragment.class);
+
     @InjectView(R.id.amountText)
     private EditText amountText;
     @InjectView(R.id.dateButton)
@@ -51,9 +56,11 @@ public class AddBillFragment extends RoboFragment {
     private Button dateButton;
     @InjectView(R.id.recurring_area)
     private LinearLayout recurringArea;
+    @InjectView(R.id.recurring_checkbox_area_bill)
+    private LinearLayout recurringCheckBoxArea;
     @InjectView(R.id.recurring_spinner)
     private Spinner recurringSpinner;
-    @InjectView(R.id.recurring_checkbox)
+    @InjectView(R.id.recurring_checkbox_bill)
     private CheckBox recurringCheckBox;
     @InjectView(R.id.submitButton)
     private Button submitButton;
@@ -86,6 +93,14 @@ public class AddBillFragment extends RoboFragment {
         submitButton.setOnClickListener(new AddBillOnClickListener());
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (recurringCheckBox.isChecked()) {
+            recurringCheckBoxArea.setVisibility(VISIBLE);
+        }
+    }
+
     private void setCategorySpinner() {
         final List<Category> list = categoryService.getCategories();
 
@@ -102,6 +117,7 @@ public class AddBillFragment extends RoboFragment {
     }
 
     private void activateRecurringArea() {
+        LOG.debug(checkBoxListener.toString());
         recurringCheckBox.setOnClickListener(checkBoxListener);
         recurringArea.setVisibility(VISIBLE);
         recurringSpinner.setAdapter(spinnerAdapter);

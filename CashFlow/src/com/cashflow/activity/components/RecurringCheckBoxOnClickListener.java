@@ -1,6 +1,5 @@
 package com.cashflow.activity.components;
 
-import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import android.annotation.SuppressLint;
@@ -36,12 +35,22 @@ public class RecurringCheckBoxOnClickListener implements OnClickListener {
     public void onClick(final View view) {
         final boolean checked = ((CheckBox) view).isChecked();
         Activity activity = (Activity) view.getContext();
-        checkBoxLayout = (LinearLayout) activity.findViewById(R.id.recurring_checkbox_area);
+        getCheckbox(activity);
 
         if (checked) {
             startInAnimationForCheckboxArea(activity);
         } else {
             startOutAnimationForCheckboxArea(activity);
+        }
+    }
+
+    private void getCheckbox(Activity activity) {
+        checkBoxLayout = null;
+
+        checkBoxLayout = (LinearLayout) activity.findViewById(R.id.recurring_checkbox_area_bill);
+
+        if (checkBoxLayout == null) {
+            checkBoxLayout = (LinearLayout) activity.findViewById(R.id.recurring_checkbox_area_statement);
         }
     }
 
@@ -56,7 +65,7 @@ public class RecurringCheckBoxOnClickListener implements OnClickListener {
     private void startOutAnimationForCheckboxArea(final Activity context) {
         final Animation out = AnimationUtils.loadAnimation(context, android.R.anim.slide_out_right);
         out.setDuration(DURATION_MILLIS);
-        out.setAnimationListener(new AnimationListenerImplementation(checkBoxLayout, GONE));
+        out.setAnimationListener(new AnimationListenerImplementation(checkBoxLayout, INVISIBLE));
         checkBoxLayout.setAnimation(out);
         checkBoxLayout.startLayoutAnimation();
     }
