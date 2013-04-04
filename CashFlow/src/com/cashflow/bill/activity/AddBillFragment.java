@@ -75,6 +75,8 @@ public class AddBillFragment extends RoboFragment {
     private CategoryPersistenceService categoryService;
     @Inject
     private BillPersistenceService persistenceService;
+    @Inject
+    private AddBillOnClickListener addBillOnClickListener;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
@@ -90,7 +92,7 @@ public class AddBillFragment extends RoboFragment {
         setUpDateButton();
         activateRecurringArea();
         setCategorySpinner();
-        submitButton.setOnClickListener(new AddBillOnClickListener());
+        submitButton.setOnClickListener(addBillOnClickListener);
     }
 
     @Override

@@ -48,7 +48,6 @@ public class AddBillOnClickListener implements OnClickListener {
     public AddBillOnClickListener(final BillPersistenceService persistenceService) {
         Validate.notNull(persistenceService);
         this.persistenceService = persistenceService;
-
     }
 
     @Override

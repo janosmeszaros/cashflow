@@ -72,7 +72,7 @@ public class AddStatementFragment extends RoboFragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(final View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         LOG.debug("AddStatementFragment is creating...");
 
@@ -84,7 +84,7 @@ public class AddStatementFragment extends RoboFragment {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         setCategorySpinner();
@@ -126,8 +126,8 @@ public class AddStatementFragment extends RoboFragment {
     protected class CreateCategoryOnClickListener implements OnClickListener {
 
         @Override
-        public void onClick(View v) {
-            Intent intent = new Intent(getActivity(), CreateCategoryActivity.class);
+        public void onClick(final View view) {
+            final Intent intent = new Intent(getActivity(), CreateCategoryActivity.class);
             startActivityForResult(intent, 1);
         }
 
@@ -159,8 +159,8 @@ public class AddStatementFragment extends RoboFragment {
 
         }
 
-        private void showToast(final Activity activity, String msg) {
-            Toast toast = Toast.makeText(activity, msg, Toast.LENGTH_SHORT);
+        private void showToast(final Activity activity, final String msg) {
+            final Toast toast = Toast.makeText(activity, msg, Toast.LENGTH_SHORT);
             toast.show();
         }
 

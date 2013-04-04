@@ -94,6 +94,7 @@ public class ActionsActivity extends RoboFragmentActivity implements ActionBar.T
                 fragment = new AddBillFragment();
                 break;
             default:
+                break;
             }
             return fragment;
         }
@@ -105,7 +106,7 @@ public class ActionsActivity extends RoboFragmentActivity implements ActionBar.T
 
         @Override
         public CharSequence getPageTitle(final int position) {
-            Locale locale = Locale.getDefault();
+            final Locale locale = Locale.getDefault();
             CharSequence name = null;
 
             switch (position) {
