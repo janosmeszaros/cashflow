@@ -69,8 +69,8 @@ public class AddBillOnClickListener implements OnClickListener {
         }
     }
 
-    private void showToast(final Activity parent, String msg) {
-        Toast toast = Toast.makeText(parent, msg, Toast.LENGTH_SHORT);
+    private void showToast(final Activity parent, final String msg) {
+        final Toast toast = Toast.makeText(parent, msg, Toast.LENGTH_SHORT);
         toast.show();
     }
 
@@ -78,7 +78,7 @@ public class AddBillOnClickListener implements OnClickListener {
         final DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM);
         final Calendar myCalendar = Calendar.getInstance();
 
-        Bill billToSave = new Bill(amountText.getText().toString(), dateFormatter.format(myCalendar.getTime()), deadlineDateButton.getText()
+        final Bill billToSave = new Bill(amountText.getText().toString(), dateFormatter.format(myCalendar.getTime()), deadlineDateButton.getText()
                 .toString());
         billToSave.setCategory((Category) categorySpinner.getSelectedItem());
         billToSave.setInterval((RecurringInterval) recurringSpinner.getSelectedItem());

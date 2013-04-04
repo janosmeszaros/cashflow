@@ -29,7 +29,7 @@ public class ListActivity extends RoboSherlockFragmentActivity implements TabLis
     private ViewPager mViewPager;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tabbed_actions);
 
@@ -45,7 +45,7 @@ public class ListActivity extends RoboSherlockFragmentActivity implements TabLis
 
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
-            public void onPageSelected(int position) {
+            public void onPageSelected(final int position) {
                 actionBar.setSelectedNavigationItem(position);
             }
         });
@@ -56,16 +56,16 @@ public class ListActivity extends RoboSherlockFragmentActivity implements TabLis
     }
 
     @Override
-    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+    public void onTabSelected(final ActionBar.Tab tab, final FragmentTransaction transaction) {
         mViewPager.setCurrentItem(tab.getPosition());
     }
 
     @Override
-    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+    public void onTabUnselected(final ActionBar.Tab tab, final FragmentTransaction transaction) {
     }
 
     @Override
-    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+    public void onTabReselected(final ActionBar.Tab tab, final FragmentTransaction transaction) {
     }
 
     /**
@@ -76,16 +76,16 @@ public class ListActivity extends RoboSherlockFragmentActivity implements TabLis
 
         /**
          * FragmentPagerAdapter.
-         * @param fm fm.
+         * @param manager {@link FragmentManager}.
          */
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
+        public SectionsPagerAdapter(final FragmentManager manager) {
+            super(manager);
         }
 
         @Override
-        public Fragment getItem(int position) {
-            Fragment fragment = new ListStatementFragment();
-            Bundle args = new Bundle();
+        public Fragment getItem(final int position) {
+            final Fragment fragment = new ListStatementFragment();
+            final Bundle args = new Bundle();
             if (position == 0) {
                 args.putString(STATEMENT_TYPE_EXTRA, StatementType.Income.toString());
             } else {
@@ -101,16 +101,18 @@ public class ListActivity extends RoboSherlockFragmentActivity implements TabLis
         }
 
         @Override
-        public CharSequence getPageTitle(int position) {
-            Locale l = Locale.getDefault();
+        public CharSequence getPageTitle(final int position) {
+            final Locale locale = Locale.getDefault();
             CharSequence name = null;
 
             switch (position) {
             case 0:
-                name = getString(R.string.title_activity_list_incomes).toUpperCase(l);
+                name = getString(R.string.title_activity_list_incomes).toUpperCase(locale);
                 break;
             case 1:
-                name = getString(R.string.title_activity_list_expenses).toUpperCase(l);
+                name = getString(R.string.title_activity_list_expenses).toUpperCase(locale);
+                break;
+            default:
                 break;
             }
             return name;

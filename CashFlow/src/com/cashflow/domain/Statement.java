@@ -133,11 +133,11 @@ public final class Statement {
 
         /**
          * Set id for the {@link Statement}.
-         * @param id id for the {@link Statement}
+         * @param statementId is the ID of the {@link Statement}
          * @return {@link Builder}
          */
-        public Builder setId(final String id) {
-            this.id = id;
+        public Builder setId(final String statementId) {
+            this.id = statementId;
             return this;
         }
 

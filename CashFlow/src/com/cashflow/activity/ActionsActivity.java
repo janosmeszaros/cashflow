@@ -27,7 +27,7 @@ public class ActionsActivity extends RoboFragmentActivity implements ActionBar.T
     private ViewPager mViewPager;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tabbed_actions);
 
@@ -43,7 +43,7 @@ public class ActionsActivity extends RoboFragmentActivity implements ActionBar.T
 
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
-            public void onPageSelected(int position) {
+            public void onPageSelected(final int position) {
                 actionBar.setSelectedNavigationItem(position);
             }
         });
@@ -54,16 +54,16 @@ public class ActionsActivity extends RoboFragmentActivity implements ActionBar.T
     }
 
     @Override
-    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+    public void onTabSelected(final ActionBar.Tab tab, final FragmentTransaction transaction) {
         mViewPager.setCurrentItem(tab.getPosition());
     }
 
     @Override
-    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+    public void onTabUnselected(final ActionBar.Tab tab, final FragmentTransaction transaction) {
     }
 
     @Override
-    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+    public void onTabReselected(final ActionBar.Tab tab, final FragmentTransaction transaction) {
     }
 
     /**
@@ -74,14 +74,14 @@ public class ActionsActivity extends RoboFragmentActivity implements ActionBar.T
 
         /**
          * Constructor
-         * @param fm fm
+         * @param manager {@link FragmentManager}
          */
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
+        public SectionsPagerAdapter(final FragmentManager manager) {
+            super(manager);
         }
 
         @Override
-        public Fragment getItem(int position) {
+        public Fragment getItem(final int position) {
             Fragment fragment = null;
             switch (position) {
             case 0:
@@ -93,6 +93,7 @@ public class ActionsActivity extends RoboFragmentActivity implements ActionBar.T
             case 2:
                 fragment = new AddBillFragment();
                 break;
+            default:
             }
             return fragment;
         }
@@ -103,20 +104,21 @@ public class ActionsActivity extends RoboFragmentActivity implements ActionBar.T
         }
 
         @Override
-        public CharSequence getPageTitle(int position) {
-            Locale l = Locale.getDefault();
+        public CharSequence getPageTitle(final int position) {
+            Locale locale = Locale.getDefault();
             CharSequence name = null;
 
             switch (position) {
             case 0:
-                name = getString(R.string.title_activity_add_income).toUpperCase(l);
+                name = getString(R.string.title_activity_add_income).toUpperCase(locale);
                 break;
             case 1:
-                name = getString(R.string.title_activity_add_expense).toUpperCase(l);
+                name = getString(R.string.title_activity_add_expense).toUpperCase(locale);
                 break;
             case 2:
-                name = getString(R.string.title_activity_add_bill).toUpperCase(l);
+                name = getString(R.string.title_activity_add_bill).toUpperCase(locale);
                 break;
+            default:
             }
             return name;
         }

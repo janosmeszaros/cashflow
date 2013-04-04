@@ -34,10 +34,12 @@ import com.cashflow.domain.Bill;
 import com.cashflow.domain.Category;
 import com.google.inject.Inject;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
+import com.xtremelabs.robolectric.shadows.ShadowHandler;
 import com.xtremelabs.robolectric.shadows.ShadowToast;
 
 @RunWith(RobolectricTestRunner.class)
 public class AddBillOnClickListenerTest {
+    private static final String TOAST_MESSAGE = "Something happened with the database. Please try again!";
     @Inject
     private AddBillOnClickListener underTest;
     @Mock
@@ -81,14 +83,16 @@ public class AddBillOnClickListenerTest {
     }
 
     @Test
-    public void testOnClickWhenViewSettedButSaveWasUnsuccessfulThenShouldCallServicesSaveBillMethodAndSetResultToCanceled() {
+    public void testOnClickWhenViewSettedButSaveWasUnsuccessfulThenShouldCallServicesSaveBillMethodAndShowToast() {
         when(service.saveBill(billToSave)).thenReturn(false);
+        when(submitButton.getContext()).thenReturn(activity);
+        when(activity.getString(R.string.database_error)).thenReturn(TOAST_MESSAGE);
 
         underTest.onClick(submitButton);
 
         verify(service).saveBill(billToSave);
-        verify(activity).setResult(Activity.RESULT_CANCELED);
-        verify(activity).finish();
+        ShadowHandler.idleMainLooper();
+        assertThat(ShadowToast.getTextOfLatestToast(), equalTo(TOAST_MESSAGE));
     }
 
     @Test
@@ -102,7 +106,7 @@ public class AddBillOnClickListenerTest {
     }
 
     private void setUpActivityModule() {
-        ActivityModule module = new ActivityModule(new ActivityProvider());
+        final ActivityModule module = new ActivityModule(new ActivityProvider());
 
         billToSave = createBillToSave(false);
         setViewsValues(billToSave, module);
@@ -111,11 +115,11 @@ public class AddBillOnClickListenerTest {
         ActivityModule.setUp(this, module);
     }
 
-    private Bill createBillToSave(boolean isSaved) {
-        DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM);
-        Calendar calendar = Calendar.getInstance();
+    private Bill createBillToSave(final boolean isSaved) {
+        final DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM);
+        final Calendar calendar = Calendar.getInstance();
 
-        Bill billToSave = new Bill("123", dateFormatter.format(calendar.getTime()), dateFormatter.format(calendar.getTime()));
+        final Bill billToSave = new Bill("123", dateFormatter.format(calendar.getTime()), dateFormatter.format(calendar.getTime()));
         billToSave.setCategory(new Category("1", "category"));
         billToSave.setInterval(RecurringInterval.none);
         billToSave.setNote("note");
@@ -125,31 +129,31 @@ public class AddBillOnClickListenerTest {
         return billToSave;
     }
 
-    private void setViewsValues(Bill bill, ActivityModule module) {
-        EditText amount = new EditText(activity);
+    private void setViewsValues(final Bill bill, final ActivityModule module) {
+        final EditText amount = new EditText(activity);
         amount.setText(bill.getAmount());
         module.addViewBinding(R.id.amountText, amount);
 
-        Button button = new Button(activity);
+        final Button button = new Button(activity);
         button.setText(bill.getDate());
         module.addViewBinding(R.id.dateButton, button);
 
-        EditText notes = new EditText(activity);
+        final EditText notes = new EditText(activity);
         notes.setText(bill.getNote());
         module.addViewBinding(R.id.notesText, notes);
 
-        Spinner spinner = new Spinner(activity);
+        final Spinner spinner = new Spinner(activity);
         spinner.setAdapter(arrayAdapter);
-        int selection = arrayAdapter.getPosition(bill.getInterval());
+        final int selection = arrayAdapter.getPosition(bill.getInterval());
         spinner.setSelection(selection);
         module.addViewBinding(R.id.recurring_spinner, spinner);
 
-        Spinner categorySpinner = new Spinner(activity);
-        List<Category> categories = new ArrayList<Category>();
+        final Spinner categorySpinner = new Spinner(activity);
+        final List<Category> categories = new ArrayList<Category>();
         categories.add(bill.getCategory());
-        ArrayAdapter<Category> categoryArrayAdapter = new ArrayAdapter<Category>(activity, android.R.layout.simple_spinner_dropdown_item, categories);
-        categorySpinner.setAdapter(categoryArrayAdapter);
-        int categoryPos = categoryArrayAdapter.getPosition(bill.getCategory());
+        final ArrayAdapter<Category> categoryAdapter = new ArrayAdapter<Category>(activity, android.R.layout.simple_spinner_dropdown_item, categories);
+        categorySpinner.setAdapter(categoryAdapter);
+        final int categoryPos = categoryAdapter.getPosition(bill.getCategory());
         categorySpinner.setSelection(categoryPos);
         module.addViewBinding(R.id.categorySpinner, categorySpinner);
     }
