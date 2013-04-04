@@ -2,17 +2,20 @@ package com.cashflow.activity;
 
 import static com.cashflow.constants.Constants.STATEMENT_TYPE_EXTRA;
 
-import java.util.Locale;
+import java.util.ArrayList;
+import java.util.List;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TabHost;
+import android.widget.TabWidget;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.ActionBar.TabListener;
 import com.cashflow.R;
 import com.cashflow.statement.activity.ListStatementFragment;
 import com.cashflow.statement.database.StatementType;
@@ -23,100 +26,163 @@ import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmen
  * @author Janos_Gyula_Meszaros
  *
  */
-public class ListActivity extends RoboSherlockFragmentActivity implements TabListener {
+public class ListActivity extends RoboSherlockFragmentActivity {
 
-    private SectionsPagerAdapter mSectionsPagerAdapter;
+    private TabHost mTabHost;
     private ViewPager mViewPager;
+    private TabsAdapter mTabsAdapter;
 
     @Override
-    protected void onCreate(final Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.tabbed_actions);
 
-        final ActionBar actionBar = getSupportActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayShowHomeEnabled(false);
-
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.main_header_selector));
+        setContentView(R.layout.list_fragments);
+        mTabHost = (TabHost) findViewById(android.R.id.tabhost);
+        mTabHost.setup();
 
         mViewPager = (ViewPager) findViewById(R.id.pager);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(final int position) {
-                actionBar.setSelectedNavigationItem(position);
-            }
-        });
+        mTabsAdapter = new TabsAdapter(this, mTabHost, mViewPager);
 
-        for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
-            actionBar.addTab(actionBar.newTab().setText(mSectionsPagerAdapter.getPageTitle(i)).setTabListener(this));
+        Bundle bundle = new Bundle();
+        bundle.putString(STATEMENT_TYPE_EXTRA, StatementType.Income.toString());
+        mTabsAdapter.addTab(mTabHost.newTabSpec("income").setIndicator(getString(R.string.title_activity_add_income)), ListStatementFragment.class,
+                bundle);
+        bundle = new Bundle();
+        bundle.putString(STATEMENT_TYPE_EXTRA, StatementType.Expense.toString());
+        mTabsAdapter.addTab(mTabHost.newTabSpec("expense").setIndicator(getString(R.string.title_activity_add_expense)), ListStatementFragment.class,
+                bundle);
+
+        if (savedInstanceState != null) {
+            mTabHost.setCurrentTabByTag(savedInstanceState.getString("tab"));
         }
     }
 
     @Override
-    public void onTabSelected(final ActionBar.Tab tab, final FragmentTransaction transaction) {
-        mViewPager.setCurrentItem(tab.getPosition());
-    }
-
-    @Override
-    public void onTabUnselected(final ActionBar.Tab tab, final FragmentTransaction transaction) {
-    }
-
-    @Override
-    public void onTabReselected(final ActionBar.Tab tab, final FragmentTransaction transaction) {
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("tab", mTabHost.getCurrentTabTag());
     }
 
     /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
+     * Helper class.
+     * @author Janos_Gyula_Meszaros
+     *
      */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    public static class TabsAdapter extends FragmentPagerAdapter implements TabHost.OnTabChangeListener, ViewPager.OnPageChangeListener {
+        private final Context mContext;
+        private final TabHost mTabHost;
+        private final ViewPager mViewPager;
+        private final List<TabInfo> mTabs = new ArrayList<TabInfo>();
 
         /**
-         * FragmentPagerAdapter.
-         * @param manager {@link FragmentManager}.
+         * Constructor.
+         * @param activity activity.
+         * @param tabHost tabHost.
+         * @param pager pager.
          */
-        public SectionsPagerAdapter(final FragmentManager manager) {
-            super(manager);
+        public TabsAdapter(FragmentActivity activity, TabHost tabHost, ViewPager pager) {
+            super(activity.getSupportFragmentManager());
+            mContext = activity;
+            mTabHost = tabHost;
+            mViewPager = pager;
+            mTabHost.setOnTabChangedListener(this);
+            mViewPager.setAdapter(this);
+            mViewPager.setOnPageChangeListener(this);
         }
 
-        @Override
-        public Fragment getItem(final int position) {
-            final Fragment fragment = new ListStatementFragment();
-            final Bundle args = new Bundle();
-            if (position == 0) {
-                args.putString(STATEMENT_TYPE_EXTRA, StatementType.Income.toString());
-            } else {
-                args.putString(STATEMENT_TYPE_EXTRA, StatementType.Expense.toString());
-            }
-            fragment.setArguments(args);
-            return fragment;
+        /**
+         * add tab.
+         * @param tabSpec tabSpec.
+         * @param clss class
+         * @param args args
+         */
+        public void addTab(TabHost.TabSpec tabSpec, Class<?> clss, Bundle args) {
+            tabSpec.setContent(new DummyTabFactory(mContext));
+            String tag = tabSpec.getTag();
+
+            TabInfo info = new TabInfo(tag, clss, args);
+            mTabs.add(info);
+            mTabHost.addTab(tabSpec);
+            notifyDataSetChanged();
         }
 
         @Override
         public int getCount() {
-            return 2;
+            return mTabs.size();
         }
 
         @Override
-        public CharSequence getPageTitle(final int position) {
-            final Locale locale = Locale.getDefault();
-            CharSequence name = null;
+        public Fragment getItem(int position) {
+            TabInfo info = mTabs.get(position);
+            return Fragment.instantiate(mContext, info.clss.getName(), info.args);
+        }
 
-            switch (position) {
-            case 0:
-                name = getString(R.string.title_activity_list_incomes).toUpperCase(locale);
-                break;
-            case 1:
-                name = getString(R.string.title_activity_list_expenses).toUpperCase(locale);
-                break;
-            default:
-                break;
+        @Override
+        public void onTabChanged(String tabId) {
+            int position = mTabHost.getCurrentTab();
+            mViewPager.setCurrentItem(position);
+        }
+
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            // Unfortunately when TabHost changes the current tab, it kindly
+            // also takes care of putting focus on it when not in touch mode.
+            // The jerk.
+            // This hack tries to prevent this from pulling focus out of our
+            // ViewPager.
+            TabWidget widget = mTabHost.getTabWidget();
+            int oldFocusability = widget.getDescendantFocusability();
+            widget.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+            mTabHost.setCurrentTab(position);
+            widget.setDescendantFocusability(oldFocusability);
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+        }
+
+        static final class TabInfo {
+            private final String tag;
+            private final Class<?> clss;
+            private final Bundle args;
+
+            /**
+             * Constructor.
+             * @param tag tag
+             * @param clazz class
+             * @param args arg
+             */
+            TabInfo(String tag, Class<?> clazz, Bundle args) {
+                this.tag = tag;
+                this.clss = clazz;
+                this.args = args;
             }
-            return name;
+
+            public String getTag() {
+                return tag;
+            }
+        }
+
+        static class DummyTabFactory implements TabHost.TabContentFactory {
+            private final Context mContext;
+
+            public DummyTabFactory(Context context) {
+                mContext = context;
+            }
+
+            @Override
+            public View createTabContent(String tag) {
+                View v = new View(mContext);
+                v.setMinimumWidth(0);
+                v.setMinimumHeight(0);
+                return v;
+            }
         }
     }
-
 }
