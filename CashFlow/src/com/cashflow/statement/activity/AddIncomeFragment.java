@@ -46,7 +46,7 @@ public class AddIncomeFragment extends AddStatementFragment {
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
+        LOG.debug("AddIncomeFragment is creating!");
 
         return inflater.inflate(R.layout.add_income_statement_fragment, container, false);
     }
@@ -54,11 +54,8 @@ public class AddIncomeFragment extends AddStatementFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        LOG.debug("AddStatementFragment is creating...");
 
         activateRecurringArea();
-
-        LOG.debug("AddStatementFragment has created with type: " + StatementType.Income);
     }
 
     @Override

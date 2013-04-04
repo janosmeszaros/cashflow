@@ -22,8 +22,8 @@
     <string name="main_no_items">No statement to diplay</string>
     <string name="edit_button">Edit button</string>
     <string name="title_activity_list_incomes">List Incomes</string>
-    <string name="title_activity_edit_incomes">Edit Incomes</string>
-    <string name="title_activity_edit_expenses">Edit Expenses</string>
+    <string name="title_activity_edit_incomes">Edit Income</string>
+    <string name="title_activity_edit_expenses">Edit Expense</string>
     <string name="title_activity_create_category">Create Category</string>
     <string name="button_create_categories">Create Categories</string>
     <string name="hint_category_name">Category name</string>

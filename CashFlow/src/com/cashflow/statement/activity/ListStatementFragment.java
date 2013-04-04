@@ -53,7 +53,6 @@ public class ListStatementFragment extends RoboSherlockFragment implements OnChe
     private StatementType type;
     private final List<String> selectedIds = new ArrayList<String>();
     private final List<Integer> selectedPositions = new ArrayList<Integer>();
-    private final OnCheckedChangeListener listener = this;
     private ActionMode actionMode;
 
     @Inject
@@ -86,7 +85,12 @@ public class ListStatementFragment extends RoboSherlockFragment implements OnChe
      */
     private void editButtonOnClick() {
         LOG.debug("Edit button clicked");
-        final Intent intent = new Intent(this.getActivity(), EditStatementActivity.class);
+        Intent intent;
+        if (type.isIncome()) {
+            intent = new Intent(this.getActivity(), EditIncomeActivity.class);
+        } else {
+            intent = new Intent(this.getActivity(), EditStatementActivity.class);
+        }
         addExtras(selectedIds.get(0), intent);
         startActivityForResult(intent, EDIT_ACTIVITY_CODE);
     }
@@ -116,7 +120,10 @@ public class ListStatementFragment extends RoboSherlockFragment implements OnChe
 
     private void removeFromSelection(View view) {
         String id = getIdFromView(view);
+        int position = list.getPositionForView(view);
+
         selectedIds.remove(id);
+        selectedPositions.remove((Object) position);
 
         if (selectedIds.size() == 0) {
             actionMode.finish();
@@ -163,7 +170,7 @@ public class ListStatementFragment extends RoboSherlockFragment implements OnChe
                 View view = super.getView(position, convertView, parent);
 
                 CheckBox checkBox = (CheckBox) view.findViewById(R.id.selectedCheckbox);
-                checkBox.setOnCheckedChangeListener(listener);
+                checkBox.setOnCheckedChangeListener(ListStatementFragment.this);
 
                 return view;
             }
@@ -195,7 +202,7 @@ public class ListStatementFragment extends RoboSherlockFragment implements OnChe
                         .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
                 menu.add(GROUP_ID, DELETE_ID, Menu.NONE, DELETE).setIcon(android.R.drawable.ic_menu_delete)
                         .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-            } else if (selectedIds.size() > 1) {
+            } else if (selectedIds.size() >= 1) {
                 menu.add(GROUP_ID, DELETE_ID, Menu.NONE, DELETE).setIcon(android.R.drawable.ic_menu_delete)
                         .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
             }
