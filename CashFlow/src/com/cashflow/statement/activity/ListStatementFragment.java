@@ -28,8 +28,8 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
+import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.cashflow.R;
 import com.cashflow.statement.database.StatementPersistenceService;
@@ -51,9 +51,10 @@ public class ListStatementFragment extends RoboSherlockFragment implements OnChe
     private static final Logger LOG = LoggerFactory.getLogger(ListStatementFragment.class);
 
     private StatementType type;
-    private SimpleCursorAdapter mAdapter;
-    private final List<String> selectedItems = new ArrayList<String>();
+    private final List<String> selectedIds = new ArrayList<String>();
+    private final List<Integer> selectedPositions = new ArrayList<Integer>();
     private final OnCheckedChangeListener listener = this;
+    private ActionMode actionMode;
 
     @Inject
     private StatementPersistenceService statementService;
@@ -79,28 +80,14 @@ public class ListStatementFragment extends RoboSherlockFragment implements OnChe
         LOG.debug("ListStatementActivity has created with type: " + type);
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if (selectedItems.size() == 1) {
-            menu.add(GROUP_ID, DELETE_ID, Menu.NONE, DELETE).setIcon(android.R.drawable.ic_menu_delete)
-                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-            menu.add(GROUP_ID, EDIT_ID, Menu.NONE, EDIT).setIcon(android.R.drawable.ic_menu_edit).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        } else if (selectedItems.size() >= 1) {
-            menu.add(GROUP_ID, DELETE_ID, Menu.NONE, DELETE).setIcon(android.R.drawable.ic_menu_delete)
-                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        }
-    }
-
     /**
      * Starts the edit statement interface. Add actual values to the {@link EditStatementActivity}'s 
      * intent under the proper extra.
-     * @param view
-     *            Needed by onClick event.
      */
-    public void editButtonOnClick(final View view) {
+    private void editButtonOnClick() {
         LOG.debug("Edit button clicked");
         final Intent intent = new Intent(this.getActivity(), EditStatementActivity.class);
-        addExtras((View) view.getParent(), intent);
+        addExtras(selectedIds.get(0), intent);
         startActivityForResult(intent, EDIT_ACTIVITY_CODE);
     }
 
@@ -123,17 +110,32 @@ public class ListStatementFragment extends RoboSherlockFragment implements OnChe
         } else {
             removeFromSelection(view);
         }
-        getSherlockActivity().invalidateOptionsMenu();
+
+        actionMode.invalidate();
     }
 
     private void removeFromSelection(View view) {
         String id = getIdFromView(view);
-        selectedItems.remove(id);
+        selectedIds.remove(id);
+
+        if (selectedIds.size() == 0) {
+            actionMode.finish();
+        }
     }
 
     private void addSelectedId(View view) {
+        createActionModeIfNecesarry();
+
         String id = getIdFromView(view);
-        selectedItems.add(id);
+        int position = list.getPositionForView(view);
+        selectedIds.add(id);
+        selectedPositions.add(position);
+    }
+
+    private void createActionModeIfNecesarry() {
+        if (selectedIds.size() == 0) {
+            actionMode = getSherlockActivity().startActionMode(new AnActionModeOfEpicProportions());
+        }
     }
 
     private String getIdFromView(View view) {
@@ -141,10 +143,8 @@ public class ListStatementFragment extends RoboSherlockFragment implements OnChe
         return text.getText().toString();
     }
 
-    private void addExtras(final View view, final Intent intent) {
-        final TextView id = (TextView) view.findViewById(R.id.row_id);
-
-        intent.putExtra(ID_EXTRA, id.getText());
+    private void addExtras(final String id, final Intent intent) {
+        intent.putExtra(ID_EXTRA, id);
     }
 
     private boolean isEditActivity(final int requestCode, final int resultCode) {
@@ -157,7 +157,7 @@ public class ListStatementFragment extends RoboSherlockFragment implements OnChe
 
         final Cursor cursor = statementService.getStatement(type);
 
-        mAdapter = new SimpleCursorAdapter(this.getActivity(), R.layout.list_statements_row, cursor, PROJECTION, TO_VIEWS) {
+        SimpleCursorAdapter adapter = new SimpleCursorAdapter(this.getActivity(), R.layout.list_statements_row, cursor, PROJECTION, TO_VIEWS) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 View view = super.getView(position, convertView, parent);
@@ -169,7 +169,7 @@ public class ListStatementFragment extends RoboSherlockFragment implements OnChe
             }
         };
 
-        list.setAdapter(mAdapter);
+        list.setAdapter(adapter);
 
         LOG.debug("Query has done.");
     }
@@ -177,6 +177,51 @@ public class ListStatementFragment extends RoboSherlockFragment implements OnChe
     private void setStatementType() {
         final Bundle bundle = getArguments();
         type = StatementType.valueOf(bundle.getString(STATEMENT_TYPE_EXTRA));
+    }
+
+    private final class AnActionModeOfEpicProportions implements ActionMode.Callback {
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            menu.removeGroup(GROUP_ID);
+
+            mode.setTitle(selectedPositions.size() + " selected.");
+            if (selectedIds.size() == 1) {
+                menu.add(GROUP_ID, EDIT_ID, Menu.NONE, EDIT).setIcon(android.R.drawable.ic_menu_edit)
+                        .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+                menu.add(GROUP_ID, DELETE_ID, Menu.NONE, DELETE).setIcon(android.R.drawable.ic_menu_delete)
+                        .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            } else if (selectedIds.size() > 1) {
+                menu.add(GROUP_ID, DELETE_ID, Menu.NONE, DELETE).setIcon(android.R.drawable.ic_menu_delete)
+                        .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            }
+
+            return true;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            int id = item.getItemId();
+            if (id == EDIT_ID) {
+                editButtonOnClick();
+            }
+
+            mode.finish();
+            return true;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            for (Integer i : selectedPositions) {
+                View view = list.getChildAt(i);
+                CheckBox checkbox = (CheckBox) view.findViewById(R.id.selectedCheckbox);
+                checkbox.setChecked(false);
+            }
+        }
     }
 
 }

@@ -82,7 +82,7 @@ public class EditStatementActivity extends RoboFragmentActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LOG.debug("EditStatementActivity is creating...");
-        setContentView(R.layout.add_expense_statement_fragment);
+        setContentView(R.layout.add_income_statement_fragment);
 
         setListenerForDateButton();
         getOriginalData();

@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.TabHost;
 import android.widget.TabWidget;
 
+import com.actionbarsherlock.view.Window;
 import com.cashflow.R;
 import com.cashflow.statement.activity.ListStatementFragment;
 import com.cashflow.statement.database.StatementType;
@@ -36,7 +37,8 @@ public class ListActivity extends RoboSherlockFragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.main_header_selector));
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         setContentView(R.layout.list_fragments);
         mTabHost = (TabHost) findViewById(android.R.id.tabhost);
         mTabHost.setup();
