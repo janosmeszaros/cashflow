@@ -46,7 +46,7 @@ public class DaoParentTest {
     @Mock
     private SQLiteDbProvider provider;
     @Mock
-    private SQLiteDatabase db;
+    private SQLiteDatabase databaseMock;
     @Mock
     private ContentValues values;
     @Mock
@@ -58,8 +58,8 @@ public class DaoParentTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        when(provider.getWritableDb()).thenReturn(db);
-        when(provider.getReadableDb()).thenReturn(db);
+        when(provider.getWritableDb()).thenReturn(databaseMock);
+        when(provider.getReadableDb()).thenReturn(databaseMock);
 
         underTest = new DaoParent(provider, AbstractStatement.class);
     }
@@ -108,25 +108,25 @@ public class DaoParentTest {
 
     @Test
     public void testSaveWhenEverythingIsOkThenCallProperFunctionAndReturnTrue() {
-        when(db.insert(anyString(), anyString(), (ContentValues) anyObject())).thenReturn(1L);
+        when(databaseMock.insert(anyString(), anyString(), (ContentValues) anyObject())).thenReturn(1L);
         setKeySet(AbstractStatement.class);
 
         boolean result = underTest.save(values);
 
         verify(provider).getWritableDb();
-        verify(db).insert(TABLE_NAME, NULLABLE, values);
+        verify(databaseMock).insert(TABLE_NAME, NULLABLE, values);
         assertThat(result, equalTo(true));
     }
 
     @Test
     public void testSaveWhenSomethinWrongWithDatabaseThenShouldReturnFalse() {
-        when(db.insert(anyString(), anyString(), (ContentValues) anyObject())).thenReturn(-1L);
+        when(databaseMock.insert(anyString(), anyString(), (ContentValues) anyObject())).thenReturn(-1L);
         setKeySet(AbstractStatement.class);
 
         boolean result = underTest.save(values);
 
         verify(provider).getWritableDb();
-        verify(db).insert(TABLE_NAME, NULLABLE, values);
+        verify(databaseMock).insert(TABLE_NAME, NULLABLE, values);
         assertThat(result, equalTo(false));
     }
 
@@ -150,12 +150,12 @@ public class DaoParentTest {
     public void testUpdateWhenEverythingIsOkThenShouldCallProperFunctionAndReturnTrue() {
         setKeySet(AbstractStatement.class);
         String id = "id";
-        when(db.update(anyString(), (ContentValues) anyObject(), anyString(), (String[]) anyObject())).thenReturn(1);
+        when(databaseMock.update(anyString(), (ContentValues) anyObject(), anyString(), (String[]) anyObject())).thenReturn(1);
 
         boolean result = underTest.update(values, id);
 
         verify(provider).getWritableDb();
-        verify(db).update(TABLE_NAME, values, _ID + EQUALS, new String[]{id});
+        verify(databaseMock).update(TABLE_NAME, values, _ID + EQUALS, new String[]{id});
         assertThat(result, equalTo(true));
     }
 
@@ -163,23 +163,23 @@ public class DaoParentTest {
     public void testUpdateWhenSomethinWrongWithDatabaseThenShouldReturnFalse() {
         setKeySet(AbstractStatement.class);
         String id = "2";
-        when(db.update(anyString(), (ContentValues) anyObject(), anyString(), (String[]) anyObject())).thenReturn(0);
+        when(databaseMock.update(anyString(), (ContentValues) anyObject(), anyString(), (String[]) anyObject())).thenReturn(0);
 
         boolean result = underTest.update(values, id);
 
         verify(provider).getWritableDb();
-        verify(db).update(TABLE_NAME, values, _ID + EQUALS, new String[]{id});
+        verify(databaseMock).update(TABLE_NAME, values, _ID + EQUALS, new String[]{id});
         assertThat(result, equalTo(false));
     }
 
     @Test
     public void testGetValuesWhenEverythingIsOkThenCallProperFunctionAndReturnCursor() {
-        when(db.query(TABLE_NAME, PROJECTION, null, null, null, null, null)).thenReturn(cursorMock);
+        when(databaseMock.query(TABLE_NAME, PROJECTION, null, null, null, null, null)).thenReturn(cursorMock);
 
         Cursor cursor = underTest.getValues();
 
         verify(provider).getReadableDb();
-        verify(db).query(TABLE_NAME, PROJECTION, null, null, null, null, null);
+        verify(databaseMock).query(TABLE_NAME, PROJECTION, null, null, null, null, null);
         assertThat(cursor, equalTo(cursorMock));
     }
 

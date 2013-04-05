@@ -4,10 +4,10 @@ import static com.cashflow.constants.Constants.STATEMENT_TYPE_EXTRA;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_DATE;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_NOTE;
-import static com.cashflow.statement.database.StatementType.Expense;
 import static com.cashflow.statement.database.StatementType.Income;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.text.DateFormat;
@@ -29,6 +29,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
@@ -54,13 +55,8 @@ import com.xtremelabs.robolectric.shadows.ShadowHandler;
 import com.xtremelabs.robolectric.shadows.ShadowTextView;
 import com.xtremelabs.robolectric.shadows.ShadowToast;
 
-/**
- * {@link AddStatementFragment} test, specially this class tests the income adding functionality.
- * @author Janos_Gyula_Meszaros
- *
- */
 @RunWith(RobolectricTestRunner.class)
-public class AddStatementFragmentTest {
+public class AddIncomeFragmentTest {
 
     private static final String NOTES = "notes";
     private static final String DATE = "2013";
@@ -69,10 +65,9 @@ public class AddStatementFragmentTest {
     private static final Category CATEGORY = new Category("3", "category");
     private final String[] fromColumns = {AbstractStatement._ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE, COLUMN_NAME_NOTE};
     private final Object[] values = new Object[]{1, 1234L, "2012", "note"};
-    private Balance balance;
     private ArrayAdapter<RecurringInterval> arrayAdapter;
 
-    private AddStatementFragment underTest;
+    private AddIncomeFragment underTest;
     @Mock
     private StatementPersistenceService statementPersistentService;
     @Mock
@@ -96,10 +91,10 @@ public class AddStatementFragmentTest {
         ActivityModule.setUp(this, module);
     }
 
-    private void createAddExpense() {
+    private void createAddIncome() {
         final Bundle bundle = new Bundle();
-        bundle.putString(STATEMENT_TYPE_EXTRA, Expense.toString());
-        underTest = new AddStatementFragment();
+        bundle.putString(STATEMENT_TYPE_EXTRA, Income.toString());
+        underTest = new AddIncomeFragment();
         underTest.setArguments(bundle);
 
         final FragmentManager fragmentManager = actionsActivity.getSupportFragmentManager();
@@ -116,7 +111,7 @@ public class AddStatementFragmentTest {
 
     @Test
     public void testOnCreateWhenCalledThenShouldSetTheDateButtonToTheCurrentDate() {
-        createAddExpense();
+        createAddIncome();
         final Calendar calendar = Calendar.getInstance();
         final DateFormat fmtDateAndTime = DateFormat.getDateInstance(DateFormat.MEDIUM);
         final Button buttonButton = (Button) underTest.getView().findViewById(R.id.dateButton);
@@ -126,8 +121,44 @@ public class AddStatementFragmentTest {
     }
 
     @Test
+    public void testOnCreateWhenCalledThenRecurringCheckBoxOnClickListenerShouldBeRecurringCheckBoxOnClickListener() {
+        createAddIncome();
+        final CheckBox recurringCheckBox = (CheckBox) underTest.getView().findViewById(R.id.recurring_checkbox_income);
+        final ShadowTextView shadowTextView = Robolectric.shadowOf(recurringCheckBox);
+
+        assertThat((RecurringCheckBoxOnClickListener) shadowTextView.getOnClickListener(), equalTo(checkBoxListener));
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testOnCreateWhenCalledThenRecurringSpinnersAdapterShouldBeSettedToArrayAdapterWithValuesFromRecurringInterval() {
+        createAddIncome();
+        final Spinner recurringSpinner = (Spinner) underTest.getView().findViewById(R.id.recurring_spinner);
+
+        assertThat((ArrayAdapter<RecurringInterval>) recurringSpinner.getAdapter(), equalTo(arrayAdapter));
+    }
+
+    @Test
+    public void testSubmitWhenIncomeIsNotRecurringThenShouldCallSaveStatementWithCorrectStatement() {
+        createAddIncome();
+        final Button submit = (Button) underTest.getView().findViewById(R.id.submitButton);
+        final ShadowButton shadowButton = (ShadowButton) Robolectric.shadowOf(submit);
+        final ShadowFragmentActivity shadowActivity = Robolectric.shadowOf(underTest.getActivity());
+        final Statement statement = new Statement.Builder(AMOUNT, DATE).setNote(NOTES).setType(Income).setCategory(CATEGORY)
+                .setRecurringInterval(RecurringInterval.none).build();
+        setViewsValues(statement);
+        when(statementPersistentService.saveStatement(statement)).thenReturn(true);
+
+        shadowButton.performClick();
+
+        verify(statementPersistentService).saveStatement(statement);
+        assertThat(shadowActivity.getResultCode(), equalTo(Activity.RESULT_OK));
+        assertThat(shadowActivity.isFinishing(), equalTo(true));
+    }
+
+    @Test
     public void testOnCreateWhenCalledThenShouldSetTheListenerClassToTheDateButton() {
-        createAddExpense();
+        createAddIncome();
         final Button button = (Button) underTest.getView().findViewById(R.id.dateButton);
         final ShadowTextView shadowButton = Robolectric.shadowOf(button);
 
@@ -135,26 +166,26 @@ public class AddStatementFragmentTest {
     }
 
     @Test
-    public void testSubmitValidExpenseThenShouldSetTheResultToOkAndCloseTheActivity() {
-        createAddExpense();
+    public void testSubmitWhenIncomeIsRecurringThenShouldCallSaveStatementWithCorrectStatement() {
+        createAddIncome();
         final Button submit = (Button) underTest.getView().findViewById(R.id.submitButton);
         final ShadowButton shadowButton = (ShadowButton) Robolectric.shadowOf(submit);
-
         final ShadowFragmentActivity shadowActivity = Robolectric.shadowOf(underTest.getActivity());
-        final Statement statement = new Statement.Builder(AMOUNT, DATE).setCategory(CATEGORY).setNote(NOTES).setType(Expense)
-                .setRecurringInterval(RecurringInterval.none).build();
+        final Statement statement = new Statement.Builder(AMOUNT, DATE).setCategory(CATEGORY).setNote(NOTES).setType(Income)
+                .setRecurringInterval(RecurringInterval.biweekly).build();
         setViewsValues(statement);
         when(statementPersistentService.saveStatement(statement)).thenReturn(true);
 
         shadowButton.performClick();
 
+        verify(statementPersistentService).saveStatement(statement);
         assertThat(shadowActivity.getResultCode(), equalTo(Activity.RESULT_OK));
         assertThat(shadowActivity.isFinishing(), equalTo(true));
     }
 
     @Test
     public void testSubmitWhenSomethingWentWrongThenShouldSetTheResultToCanceledAndCloseTheActivity() {
-        createAddExpense();
+        createAddIncome();
         final Button submit = (Button) underTest.getView().findViewById(R.id.submitButton);
         final ShadowButton shadowButton = (ShadowButton) Robolectric.shadowOf(submit);
         final Statement statement = new Statement.Builder(INVALID_AMOUNT, DATE).setCategory(CATEGORY).setNote(NOTES).setType(Income)
@@ -176,6 +207,11 @@ public class AddStatementFragmentTest {
         final Button button = (Button) underTest.getView().findViewById(R.id.dateButton);
         button.setText(statement.getDate());
 
+        final Spinner spinner = (Spinner) underTest.getView().findViewById(R.id.recurring_spinner);
+        spinner.setAdapter(arrayAdapter);
+        final int selection = arrayAdapter.getPosition(statement.getRecurringInterval());
+        spinner.setSelection(selection);
+
         final Spinner categorySpinner = (Spinner) underTest.getView().findViewById(R.id.categorySpinner);
         final List<Category> categories = new ArrayList<Category>();
         categories.add(statement.getCategory());
@@ -184,10 +220,15 @@ public class AddStatementFragmentTest {
         categorySpinner.setAdapter(categoryAdapter);
         final int categoryPos = categoryAdapter.getPosition(statement.getCategory());
         categorySpinner.setSelection(categoryPos);
+
+        if (selection != 0) {
+            final CheckBox recurringCheckBox = (CheckBox) underTest.getView().findViewById(R.id.recurring_checkbox_income);
+            recurringCheckBox.setChecked(true);
+        }
     }
 
     private void addBindings(final ActivityModule module) {
-        balance = Balance.getInstance(statementPersistentService);
+        final Balance balance = Balance.getInstance(statementPersistentService);
 
         module.addBinding(Balance.class, balance);
         module.addBinding(DateButtonOnClickListener.class, listener);
