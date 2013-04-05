@@ -24,13 +24,14 @@
 				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
 				<artifactId>android-maven-plugin</artifactId>
 				<version>3.4.0</version>
+				<inherited>true</inherited>
 				<configuration>
 					<androidManifestFile>${project.basedir}/AndroidManifest.xml</androidManifestFile>
 					<assetsDirectory>${project.basedir}/assets</assetsDirectory>
 					<resourceDirectory>${project.basedir}/res</resourceDirectory>
 					<nativeLibrariesDirectory>${project.basedir}/src/main/native</nativeLibrariesDirectory>
 					<sdk>
-						<path>${env.ANDROID_HOME}</path>
+<!-- 						<path>${env.ANDROID_HOME}</path> -->
 						<platform>17</platform>
 					</sdk>
 					<undeployBeforeDeploy>true</undeployBeforeDeploy>
@@ -55,6 +56,12 @@
 		<dependency>
 			<groupId>com.google.android</groupId>
 			<artifactId>annotations</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.actionbarsherlock</groupId>
+			<artifactId>actionbarsherlock</artifactId>
+			<type>apklib</type>
 		</dependency>
 		<dependency>
 			<groupId>com.actionbarsherlock</groupId>

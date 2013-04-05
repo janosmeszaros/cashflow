@@ -10,7 +10,7 @@
         android:layout_height="wrap_content" >
 
         <include
-            android:id="@+id/title_bar"
+            android:id="@+id/content"
             layout="@layout/add_statement" />
 
         <Button

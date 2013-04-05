@@ -33,6 +33,7 @@ public class MainActivity extends RoboSherlockActivity {
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
+        setTheme(com.actionbarsherlock.R.style.Theme_Sherlock_Light);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.main_header_selector));

@@ -5,11 +5,10 @@ import org.slf4j.LoggerFactory;
 
 import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
-import android.annotation.TargetApi;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -29,45 +28,34 @@ public class CreateCategoryActivity extends RoboActivity {
 
     @InjectView(R.id.categoryNameText)
     private EditText nameText;
+    @InjectView(R.id.createCategoryButton)
+    private Button submitButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_create_category);
-        // Show the Up button in the action bar.
-        setupActionBar();
+        submitButton.setOnClickListener(new SubmitButtonOnClick());
     }
 
     /**
-     * Set up the {@link android.app.ActionBar}, if the API is available.
+     * Submit button onClick listener for submit button on {@link CreateCategoryActivity}.
+     * @author Janos_Gyula_Meszaros
+     *
      */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    private void setupActionBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            getActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-    }
+    private class SubmitButtonOnClick implements OnClickListener {
 
-    @Override
-    public boolean onCreateOptionsMenu(final Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.create_category, menu);
-        return true;
-    }
+        @Override
+        public void onClick(View v) {
+            LOG.debug("Creating category: " + nameText.getText());
+            final String name = nameText.getText().toString();
 
-    /**
-     * Submit button onClick method.
-     * @param view Required for onClick.
-     */
-    public void createCategory(final View view) {
-        LOG.debug("Creating category: " + nameText.getText());
-        final String name = nameText.getText().toString();
-
-        if (service.saveCategory(name)) {
-            finish();
-        } else {
-            Toast.makeText(this, getString(R.string.empty_category), Toast.LENGTH_SHORT).show();
+            if (service.saveCategory(name)) {
+                finish();
+            } else {
+                Toast.makeText(CreateCategoryActivity.this, getString(R.string.empty_category), Toast.LENGTH_SHORT).show();
+            }
         }
 
     }

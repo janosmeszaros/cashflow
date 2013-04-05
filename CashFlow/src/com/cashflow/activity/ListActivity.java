@@ -36,10 +36,9 @@ public class ListActivity extends RoboSherlockFragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-
         setContentView(R.layout.list_fragments);
+
         mTabHost = (TabHost) findViewById(android.R.id.tabhost);
         mTabHost.setup();
 
@@ -49,12 +48,12 @@ public class ListActivity extends RoboSherlockFragmentActivity {
 
         Bundle bundle = new Bundle();
         bundle.putString(STATEMENT_TYPE_EXTRA, StatementType.Income.toString());
-        mTabsAdapter.addTab(mTabHost.newTabSpec("income").setIndicator(getString(R.string.title_activity_add_income)), ListStatementFragment.class,
+        mTabsAdapter.addTab(mTabHost.newTabSpec("income").setIndicator(getString(R.string.title_activity_list_incomes)), ListStatementFragment.class,
                 bundle);
         bundle = new Bundle();
         bundle.putString(STATEMENT_TYPE_EXTRA, StatementType.Expense.toString());
-        mTabsAdapter.addTab(mTabHost.newTabSpec("expense").setIndicator(getString(R.string.title_activity_add_expense)), ListStatementFragment.class,
-                bundle);
+        mTabsAdapter.addTab(mTabHost.newTabSpec("expense").setIndicator(getString(R.string.title_activity_list_expenses)),
+                ListStatementFragment.class, bundle);
 
         if (savedInstanceState != null) {
             mTabHost.setCurrentTabByTag(savedInstanceState.getString("tab"));
