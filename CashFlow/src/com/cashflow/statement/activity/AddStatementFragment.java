@@ -66,21 +66,17 @@ public class AddStatementFragment extends RoboFragment {
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
-
+        LOG.debug("AddStatementFragment is creating...");
         return inflater.inflate(R.layout.add_expense_statement_fragment, container, false);
     }
 
     @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        LOG.debug("AddStatementFragment is creating...");
 
         setUpDateButton();
         setCategorySpinner();
         setUpButtons();
-
-        LOG.debug("AddStatementFragment has created with type: " + type);
     }
 
     @Override
@@ -138,7 +134,7 @@ public class AddStatementFragment extends RoboFragment {
      * @author Janos_Gyula_Meszaros
      *
      */
-    public class SubmitButtonOnClickListener implements OnClickListener {
+    protected class SubmitButtonOnClickListener implements OnClickListener {
 
         @Override
         public void onClick(final View view) {

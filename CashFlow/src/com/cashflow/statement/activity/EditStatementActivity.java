@@ -1,6 +1,5 @@
 package com.cashflow.statement.activity;
 
-import static android.view.View.VISIBLE;
 import static com.cashflow.constants.Constants.ID_EXTRA;
 
 import java.util.List;
@@ -10,22 +9,20 @@ import org.slf4j.LoggerFactory;
 
 import roboguice.activity.RoboFragmentActivity;
 import roboguice.inject.InjectView;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
+import android.widget.Toast;
 
 import com.cashflow.R;
 import com.cashflow.activity.components.DateButtonOnClickListener;
-import com.cashflow.activity.components.RecurringCheckBoxOnClickListener;
 import com.cashflow.category.database.CategoryPersistenceService;
-import com.cashflow.constants.RecurringInterval;
 import com.cashflow.domain.Category;
 import com.cashflow.domain.Statement;
 import com.cashflow.domain.Statement.Builder;
@@ -47,84 +44,64 @@ import com.google.inject.Inject;
  */
 public class EditStatementActivity extends RoboFragmentActivity {
     private static final Logger LOG = LoggerFactory.getLogger(EditStatementActivity.class);
+
     @InjectView(R.id.amountText)
     private EditText amountText;
     @InjectView(R.id.dateButton)
     private Button dateButton;
     @InjectView(R.id.notesText)
     private EditText notesText;
-    @InjectView(R.id.recurring_spinner)
-    private Spinner recurringSpinner;
     @InjectView(R.id.categorySpinner)
     private Spinner categorySpinner;
-    @InjectView(R.id.recurring_income)
-    private LinearLayout recurringArea;
-    @InjectView(R.id.recurring_checkbox_income)
-    private CheckBox recurringCheckBox;
-    @InjectView(R.id.recurring_checkbox_area_income)
-    private LinearLayout recurringCheckBoxArea;
+    @InjectView(R.id.submitButton)
+    private Button submit;
     @Inject
     private StatementPersistenceService statementService;
     @Inject
     private CategoryPersistenceService categoryService;
     @Inject
     private DateButtonOnClickListener listener;
-    @Inject
-    private RecurringCheckBoxOnClickListener checkBoxListener;
-    @Inject
-    private SpinnerAdapter spinnerAdapter;
 
+    private StatementType type = StatementType.Expense;
     private Statement originalStatement;
 
-    private StatementType type;
+    protected Statement getOriginalStatement() {
+        return originalStatement;
+    }
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LOG.debug("EditStatementActivity is creating...");
-        setContentView(R.layout.add_expense_statement_fragment);
 
+        setContent();
+        setSubmitButton();
         setListenerForDateButton();
         getOriginalData();
         fillFieldsWithData();
         setTitle();
-
-        LOG.debug("EditStatementActivity has created with type: " + type);
     }
 
-    /**
-     * Submit onClick method. Save the statement to database. If the save was successful then refresh the balance 
-     * and set the result to <code>RESULT_OK</code> then close the activity.
-     * @param view
-     *            Required for onClick.
-     */
-    public void submit(final View view) {
-        final Statement statement = createStatement();
-
-        if (isValuesChanged() && statementService.updateStatement(statement)) {
-            setResult(RESULT_OK);
-        } else {
-            setResult(RESULT_CANCELED);
-        }
-
-        finish();
+    private void setSubmitButton() {
+        submit.setOnClickListener(new SubmitButtonOnClickListener());
     }
 
-    private boolean isValuesChanged() {
+    protected void setContent() {
+        setContentView(R.layout.add_expense_statement_fragment);
+    }
+
+    protected boolean isValuesChanged() {
         boolean result = true;
         final String amountStr = amountText.getText().toString();
         final String date = dateButton.getText().toString();
         final String note = notesText.getText().toString();
         final Category category = (Category) categorySpinner.getSelectedItem();
-        final RecurringInterval interval = (RecurringInterval) recurringSpinner.getSelectedItem();
 
         if (amountStr.equals(originalStatement.getAmount())) {
             if (date.equals(originalStatement.getDate())) {
-                if (interval.equals(originalStatement.getRecurringInterval())) {
-                    if (note.equals(originalStatement.getNote())) {
-                        if (category.equals(originalStatement.getCategory())) {
-                            result = false;
-                        }
+                if (note.equals(originalStatement.getNote())) {
+                    if (category.equals(originalStatement.getCategory())) {
+                        result = false;
                     }
                 }
             }
@@ -133,23 +110,15 @@ public class EditStatementActivity extends RoboFragmentActivity {
         return result;
     }
 
-    private void setTitle() {
-        if (type.isIncome()) {
-            setTitle(R.string.title_activity_edit_incomes);
-        } else {
-            setTitle(R.string.title_activity_edit_expenses);
-        }
+    protected void setTitle() {
+        setTitle(R.string.title_activity_edit_expenses);
     }
 
-    private void fillFieldsWithData() {
+    protected void fillFieldsWithData() {
         amountText.setText(originalStatement.getAmount());
         notesText.setText(originalStatement.getNote());
         dateButton.setText(originalStatement.getDate());
         type = originalStatement.getType();
-
-        if (type.isIncome()) {
-            setUpRecurringSpinner();
-        }
 
         final List<Category> list = categoryService.getCategories();
         final ArrayAdapter<Category> adapter = new ArrayAdapter<Category>(this, android.R.layout.simple_spinner_dropdown_item, list);
@@ -159,28 +128,7 @@ public class EditStatementActivity extends RoboFragmentActivity {
         categorySpinner.setSelection(position);
     }
 
-    private void setUpRecurringSpinner() {
-        recurringCheckBox.setOnClickListener(checkBoxListener);
-        recurringArea.setVisibility(VISIBLE);
-        bindValuesToSpinner();
-        setSelectedItem();
-    }
-
-    @SuppressWarnings("unchecked")
-    private void setSelectedItem() {
-        final RecurringInterval interval = originalStatement.getRecurringInterval();
-        if (!RecurringInterval.none.equals(interval)) {
-            recurringCheckBox.setChecked(true);
-            recurringCheckBoxArea.setVisibility(VISIBLE);
-            recurringSpinner.setSelection(((ArrayAdapter<RecurringInterval>) spinnerAdapter).getPosition(interval));
-        }
-    }
-
-    private void bindValuesToSpinner() {
-        recurringSpinner.setAdapter(spinnerAdapter);
-    }
-
-    private Statement createStatement() {
+    protected Statement createStatement() {
         final String amountStr = amountText.getText().toString();
         final String date = dateButton.getText().toString();
         final String note = notesText.getText().toString();
@@ -189,11 +137,6 @@ public class EditStatementActivity extends RoboFragmentActivity {
 
         final Builder builder = new Statement.Builder(amountStr, date);
         builder.setNote(note).setType(type).setId(id).setCategory(category);
-
-        if (type.isIncome()) {
-            final RecurringInterval interval = (RecurringInterval) recurringSpinner.getSelectedItem();
-            builder.setRecurringInterval(interval);
-        }
 
         return builder.build();
     }
@@ -206,5 +149,40 @@ public class EditStatementActivity extends RoboFragmentActivity {
         final Intent intent = getIntent();
         final String id = intent.getStringExtra(ID_EXTRA);
         originalStatement = statementService.getStatementById(id);
+    }
+
+    /**
+     * Submit onClick method. Save the statement to database. If the save was successful then refresh the balance 
+     * and set the result to <code>RESULT_OK</code> then close the activity.
+     * @author Janos_Gyula_Meszaros
+     *
+     */
+    protected class SubmitButtonOnClickListener implements OnClickListener {
+
+        @Override
+        public void onClick(final View view) {
+            final Statement statement = createStatement();
+
+            try {
+                if (!isValuesChanged()) {
+                    setResult(Activity.RESULT_CANCELED);
+                    finish();
+                } else if (statementService.updateStatement(statement)) {
+                    LOG.debug("Statement saved: " + statement.toString());
+                    setResult(Activity.RESULT_OK);
+                    finish();
+                } else {
+                    showToast(getString(R.string.database_error));
+                }
+            } catch (IllegalArgumentException e) {
+                showToast(e.getMessage());
+            }
+
+        }
+
+        private void showToast(final String msg) {
+            Toast toast = Toast.makeText(EditStatementActivity.this, msg, Toast.LENGTH_SHORT);
+            toast.show();
+        }
     }
 }

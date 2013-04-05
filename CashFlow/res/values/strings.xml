@@ -22,8 +22,8 @@
     <string name="main_no_items">No statement to diplay</string>
     <string name="edit_button">Edit button</string>
     <string name="title_activity_list_incomes">List Incomes</string>
-    <string name="title_activity_edit_incomes">Edit Incomes</string>
-    <string name="title_activity_edit_expenses">Edit Expenses</string>
+    <string name="title_activity_edit_incomes">Edit Income</string>
+    <string name="title_activity_edit_expenses">Edit Expense</string>
     <string name="title_activity_create_category">Create Category</string>
     <string name="button_create_categories">Create Categories</string>
     <string name="hint_category_name">Category name</string>
@@ -38,11 +38,8 @@
     <string name="deadline_label">Deadline</string>
     <string name="add_bill_label">Add Bill</string>
     <string name="title_activity_swiped_add_statement">SwipedAddStatement</string>
-    <string name="database_error">"Something happened with the database. Please try again!"</string>
-    <string name="title_activity_list">ListActivity</string>
-    <string name="title_section1">Section 1</string>
-    <string name="title_section2">Section 2</string>
-    <string name="title_section3">Section 3</string>
+    <string name="database_error">"Something hapend with the database. Please try again!"</string>
+    <string name="title_activity_list">List</string>
     <string name="recurring_bill_label">Recurring interval</string>
 
 </resources>
