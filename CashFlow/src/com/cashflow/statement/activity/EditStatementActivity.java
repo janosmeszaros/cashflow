@@ -17,11 +17,13 @@ import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.cashflow.R;
 import com.cashflow.activity.components.DateButtonOnClickListener;
+import com.cashflow.category.activity.CreateCategoryActivity;
 import com.cashflow.category.database.CategoryPersistenceService;
 import com.cashflow.domain.Category;
 import com.cashflow.domain.Statement;
@@ -53,6 +55,8 @@ public class EditStatementActivity extends RoboFragmentActivity {
     private EditText notesText;
     @InjectView(R.id.categorySpinner)
     private Spinner categorySpinner;
+    @InjectView(R.id.createCategoryButton)
+    private ImageButton createCategoryButton;
     @InjectView(R.id.submitButton)
     private Button submit;
     @Inject
@@ -75,15 +79,16 @@ public class EditStatementActivity extends RoboFragmentActivity {
         LOG.debug("EditStatementActivity is creating...");
 
         setContent();
-        setSubmitButton();
-        setListenerForDateButton();
+        setUpButtons();
         getOriginalData();
         fillFieldsWithData();
         setTitle();
     }
 
-    private void setSubmitButton() {
+    private void setUpButtons() {
+        createCategoryButton.setOnClickListener(new CreateCategoryOnClickListener());
         submit.setOnClickListener(new SubmitButtonOnClickListener());
+        dateButton.setOnClickListener(listener);
     }
 
     protected void setContent() {
@@ -120,12 +125,17 @@ public class EditStatementActivity extends RoboFragmentActivity {
         dateButton.setText(originalStatement.getDate());
         type = originalStatement.getType();
 
+        final ArrayAdapter<Category> adapter = setCategorySpinner();
+        final int position = adapter.getPosition(originalStatement.getCategory());
+        categorySpinner.setSelection(position);
+    }
+
+    private ArrayAdapter<Category> setCategorySpinner() {
         final List<Category> list = categoryService.getCategories();
         final ArrayAdapter<Category> adapter = new ArrayAdapter<Category>(this, android.R.layout.simple_spinner_dropdown_item, list);
-        final int position = adapter.getPosition(originalStatement.getCategory());
 
         categorySpinner.setAdapter(adapter);
-        categorySpinner.setSelection(position);
+        return adapter;
     }
 
     protected Statement createStatement() {
@@ -141,14 +151,28 @@ public class EditStatementActivity extends RoboFragmentActivity {
         return builder.build();
     }
 
-    private void setListenerForDateButton() {
-        dateButton.setOnClickListener(listener);
-    }
-
     private void getOriginalData() {
         final Intent intent = getIntent();
         final String id = intent.getStringExtra(ID_EXTRA);
         originalStatement = statementService.getStatementById(id);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        ArrayAdapter<Category> adapter = setCategorySpinner();
+        categorySpinner.setSelection(adapter.getCount() - 1);
+    }
+
+    protected class CreateCategoryOnClickListener implements OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(EditStatementActivity.this, CreateCategoryActivity.class);
+            startActivityForResult(intent, 1);
+        }
+
     }
 
     /**

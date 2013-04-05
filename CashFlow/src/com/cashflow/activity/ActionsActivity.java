@@ -2,26 +2,26 @@ package com.cashflow.activity;
 
 import java.util.Locale;
 
-import roboguice.activity.RoboFragmentActivity;
-import android.app.ActionBar;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.cashflow.R;
 import com.cashflow.bill.activity.AddBillFragment;
 import com.cashflow.statement.activity.AddIncomeFragment;
 import com.cashflow.statement.activity.AddStatementFragment;
+import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
 
 /**
  * List the actions in tabbed form.
  * @author Janos_Gyula_Meszaros
  *
  */
-public class ActionsActivity extends RoboFragmentActivity implements ActionBar.TabListener {
+public class ActionsActivity extends RoboSherlockFragmentActivity implements ActionBar.TabListener {
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
@@ -31,7 +31,7 @@ public class ActionsActivity extends RoboFragmentActivity implements ActionBar.T
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tabbed_actions);
 
-        final ActionBar actionBar = getActionBar();
+        final ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayShowHomeEnabled(false);
