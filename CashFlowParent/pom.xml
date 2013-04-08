@@ -108,6 +108,7 @@
 				<groupId>${android.groupid}</groupId>
 				<artifactId>annotations</artifactId>
 				<version>${android.annotations.version}</version>
+				<scope>provided</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>

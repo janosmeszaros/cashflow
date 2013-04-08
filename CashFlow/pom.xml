@@ -64,11 +64,6 @@
 			<type>apklib</type>
 		</dependency>
 		<dependency>
-			<groupId>com.actionbarsherlock</groupId>
-			<artifactId>actionbarsherlock</artifactId>
-			<type>jar</type>
-		</dependency>
-		<dependency>
 			<groupId>com.github.rtyley</groupId>
 			<artifactId>roboguice-sherlock</artifactId>
 		</dependency>

@@ -19,18 +19,18 @@ import android.widget.TextView;
 
 import com.cashflow.R;
 import com.cashflow.activity.testutil.ActivityModule;
+import com.cashflow.activity.testutil.ExtendedRobolectricTestRunner;
 import com.cashflow.activity.testutil.ListStatementActivityProvider;
 import com.cashflow.activity.testutil.TestGuiceModule;
 import com.cashflow.database.balance.Balance;
 import com.cashflow.statement.database.RecurringIncomeScheduler;
 import com.cashflow.statement.database.StatementPersistenceService;
-import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 /**
  * {@link MainActivity} test.
  * @author Kornel_Refi
  */
-@RunWith(RobolectricTestRunner.class)
+@RunWith(ExtendedRobolectricTestRunner.class)
 public class MainActivityTest {
 
     @Mock
@@ -43,8 +43,9 @@ public class MainActivityTest {
 
     @Before
     public void setUp() {
+        //        ActionBarSherlock.registerImplementation(ActionBarSherlockRobolectric.class);
         MockitoAnnotations.initMocks(this);
-        ActivityModule module = new ActivityModule(new ListStatementActivityProvider());
+        final ActivityModule module = new ActivityModule(new ListStatementActivityProvider());
 
         when(service.getStatement(Expense)).thenReturn(matrixCursorMock);
         when(service.getStatement(Income)).thenReturn(matrixCursorMock);
@@ -57,6 +58,7 @@ public class MainActivityTest {
         balance = Balance.getInstance(service);
         module.addBinding(Balance.class, balance);
         ActivityModule.setUp(this, module);
+
     }
 
     @After
@@ -83,9 +85,9 @@ public class MainActivityTest {
         when(matrixCursorMock.getColumnIndex(COLUMN_NAME_AMOUNT)).thenReturn(0);
         when(matrixCursorMock.isAfterLast()).thenReturn(false, true, false, true);
         when(matrixCursorMock.getDouble(0)).thenReturn(1D, 2D);
-        MainActivity activity = new MainActivity();
+        final MainActivity activity = new MainActivity();
         activity.onCreate(null);
-        TextView balanceText = (TextView) activity.findViewById(R.id.textViewBalanceAmount);
+        final TextView balanceText = (TextView) activity.findViewById(R.id.textViewBalanceAmount);
         balanceText.setText("0");
 
         activity.onWindowFocusChanged(true);
@@ -95,10 +97,10 @@ public class MainActivityTest {
 
     @Test
     public void testOnWindowFocusChangedWhenFocusIsNotChanged() {
-        MainActivity activity = new MainActivity();
+        final MainActivity activity = new MainActivity();
         activity.onCreate(null);
-        TextView balanceText = (TextView) activity.findViewById(R.id.textViewBalanceAmount);
-        String initBalance = String.valueOf(balance.getBalance());
+        final TextView balanceText = (TextView) activity.findViewById(R.id.textViewBalanceAmount);
+        final String initBalance = String.valueOf(balance.getBalance());
         balanceText.setText(initBalance);
         balance.countBalance();
 

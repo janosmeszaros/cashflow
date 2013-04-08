@@ -91,6 +91,11 @@ public class AddIncomeFragmentTest {
         ActivityModule.setUp(this, module);
     }
 
+    @After
+    public void tearDown() {
+        ActivityModule.tearDown();
+    }
+
     private void createAddIncome() {
         final Bundle bundle = new Bundle();
         bundle.putString(STATEMENT_TYPE_EXTRA, Income.toString());
@@ -102,11 +107,6 @@ public class AddIncomeFragmentTest {
         transaction.add(underTest, null);
         transaction.commit();
         fragmentManager.executePendingTransactions();
-    }
-
-    @After
-    public void tearDown() {
-        ActivityModule.tearDown();
     }
 
     @Test

@@ -96,20 +96,17 @@ public class EditStatementActivity extends RoboFragmentActivity {
     }
 
     protected boolean isValuesChanged() {
-        boolean result = true;
-        final String amountStr = amountText.getText().toString();
+        boolean result;
+        final String amount = amountText.getText().toString();
         final String date = dateButton.getText().toString();
         final String note = notesText.getText().toString();
         final Category category = (Category) categorySpinner.getSelectedItem();
 
-        if (amountStr.equals(originalStatement.getAmount())) {
-            if (date.equals(originalStatement.getDate())) {
-                if (note.equals(originalStatement.getNote())) {
-                    if (category.equals(originalStatement.getCategory())) {
-                        result = false;
-                    }
-                }
-            }
+        if (amount.equals(originalStatement.getAmount()) && date.equals(originalStatement.getDate()) && note.equals(originalStatement.getNote())
+                && category.equals(originalStatement.getCategory())) {
+            result = false;
+        } else {
+            result = true;
         }
 
         return result;
@@ -143,33 +140,33 @@ public class EditStatementActivity extends RoboFragmentActivity {
         final String date = dateButton.getText().toString();
         final String note = notesText.getText().toString();
         final Category category = (Category) categorySpinner.getSelectedItem();
-        final String id = originalStatement.getId();
+        final String statementId = originalStatement.getId();
 
         final Builder builder = new Statement.Builder(amountStr, date);
-        builder.setNote(note).setType(type).setId(id).setCategory(category);
+        builder.setNote(note).setType(type).setId(statementId).setCategory(category);
 
         return builder.build();
     }
 
     private void getOriginalData() {
         final Intent intent = getIntent();
-        final String id = intent.getStringExtra(ID_EXTRA);
-        originalStatement = statementService.getStatementById(id);
+        final String statementId = intent.getStringExtra(ID_EXTRA);
+        originalStatement = statementService.getStatementById(statementId);
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        ArrayAdapter<Category> adapter = setCategorySpinner();
+        final ArrayAdapter<Category> adapter = setCategorySpinner();
         categorySpinner.setSelection(adapter.getCount() - 1);
     }
 
     protected class CreateCategoryOnClickListener implements OnClickListener {
 
         @Override
-        public void onClick(View v) {
-            Intent intent = new Intent(EditStatementActivity.this, CreateCategoryActivity.class);
+        public void onClick(final View view) {
+            final Intent intent = new Intent(EditStatementActivity.this, CreateCategoryActivity.class);
             startActivityForResult(intent, 1);
         }
 
@@ -185,27 +182,30 @@ public class EditStatementActivity extends RoboFragmentActivity {
 
         @Override
         public void onClick(final View view) {
-            final Statement statement = createStatement();
 
             try {
-                if (!isValuesChanged()) {
+                if (isValuesChanged()) {
+
+                    final Statement statement = createStatement();
+
+                    if (statementService.updateStatement(statement)) {
+                        LOG.debug("Statement saved: " + statement.toString());
+                        setResult(Activity.RESULT_OK);
+                        finish();
+                    } else {
+                        showToast(getString(R.string.database_error));
+                    }
+                } else {
                     setResult(Activity.RESULT_CANCELED);
                     finish();
-                } else if (statementService.updateStatement(statement)) {
-                    LOG.debug("Statement saved: " + statement.toString());
-                    setResult(Activity.RESULT_OK);
-                    finish();
-                } else {
-                    showToast(getString(R.string.database_error));
                 }
-            } catch (IllegalArgumentException e) {
+            } catch (final IllegalArgumentException e) {
                 showToast(e.getMessage());
             }
-
         }
 
         private void showToast(final String msg) {
-            Toast toast = Toast.makeText(EditStatementActivity.this, msg, Toast.LENGTH_SHORT);
+            final Toast toast = Toast.makeText(EditStatementActivity.this, msg, Toast.LENGTH_SHORT);
             toast.show();
         }
     }

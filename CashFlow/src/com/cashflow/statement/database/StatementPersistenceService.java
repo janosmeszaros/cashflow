@@ -132,7 +132,6 @@ public class StatementPersistenceService {
      * Get {@link Statement} by id. 
      * @param statementId of {@link Statement} can't be empty or null.
      * @throws IllegalArgumentException when id is empty or null.
-     * @throws IllegalStatementIdException when statement does not exist for the id.
      * @return {@link Statement} for the specified id.
      */
     public Statement getStatementById(final String statementId) {

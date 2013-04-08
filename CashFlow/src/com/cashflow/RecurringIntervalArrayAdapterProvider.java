@@ -9,7 +9,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 /**
- * Roboguice provider for filling up recurring spinners with recurring intervals from {@link RecurringInterval}'s values.
+ * RoboGuice provider for filling up recurring spinners with recurring intervals from {@link RecurringInterval}'s values.
  * Context will be always the current activity.
  * @author Janos_Gyula_Meszaros
  *

@@ -35,48 +35,21 @@ import com.xtremelabs.robolectric.Robolectric;
  *
  */
 public class ActivityModule extends AbstractModule {
+    private final Map<Class<?>, Object> bindings;
 
-    private Map<Class<?>, Object> bindings;
-    private Provider provider;
-    private SparseArray<Object> viewBindings;
+    private final Provider provider;
+
+    private final SparseArray<Object> viewBindings;
 
     /**
      * Creates a new Guice module for ListExpenseActivity testing.
      * @param provider provider to bind the activity.
      */
-    public ActivityModule(Provider provider) {
+    public ActivityModule(final Provider provider) {
+        super();
         bindings = new HashMap<Class<?>, Object>();
         viewBindings = new SparseArray<Object>();
         this.provider = provider;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    protected void configure() {
-        bind(Activity.class).toProvider(provider).in(ContextSingleton.class);
-        Set<Entry<Class<?>, Object>> entries = bindings.entrySet();
-        for (Entry<Class<?>, Object> entry : entries) {
-            bind((Class<Object>) entry.getKey()).toInstance(entry.getValue());
-        }
-        bindListener(Matchers.any(), new ViewTypeListener());
-    }
-
-    /**
-     * Add binding.
-     * @param type class name
-     * @param object actual object
-     */
-    public void addBinding(Class<?> type, Object object) {
-        bindings.put(type, object);
-    }
-
-    /**
-     * Add view binding.
-     * @param id view id.
-     * @param object Object to bind.
-     */
-    public void addViewBinding(int id, Object object) {
-        viewBindings.put(id, object);
     }
 
     /**
@@ -84,12 +57,12 @@ public class ActivityModule extends AbstractModule {
      * @param testObject underTest
      * @param module Guice module
      */
-    public static void setUp(Object testObject, ActivityModule module) {
-        Module roboGuiceModule = RoboGuice.newDefaultRoboModule(Robolectric.application);
-        Module productionModule = Modules.override(roboGuiceModule).with(new AppModule());
-        Module testModule = Modules.override(productionModule).with(module);
+    public static void setUp(final Object testObject, final ActivityModule module) {
+        final Module roboGuiceModule = RoboGuice.newDefaultRoboModule(Robolectric.application);
+        final Module productionModule = Modules.override(roboGuiceModule).with(new AppModule());
+        final Module testModule = Modules.override(productionModule).with(module);
         RoboGuice.setBaseApplicationInjector(Robolectric.application, RoboGuice.DEFAULT_STAGE, testModule);
-        RoboInjector injector = RoboGuice.getInjector(Robolectric.application);
+        final RoboInjector injector = RoboGuice.getInjector(Robolectric.application);
         injector.injectMembers(testObject);
     }
 
@@ -98,17 +71,46 @@ public class ActivityModule extends AbstractModule {
      */
     public static void tearDown() {
         RoboGuice.util.reset();
-        Application app = Robolectric.application;
-        DefaultRoboModule defaultModule = RoboGuice.newDefaultRoboModule(app);
+        final Application app = Robolectric.application;
+        final DefaultRoboModule defaultModule = RoboGuice.newDefaultRoboModule(app);
         RoboGuice.setBaseApplicationInjector(app, RoboGuice.DEFAULT_STAGE, defaultModule);
+    }
+
+    /**
+     * Add binding.
+     * @param type class name
+     * @param object actual object
+     */
+    public void addBinding(final Class<?> type, final Object object) {
+        bindings.put(type, object);
+    }
+
+    /**
+     * Add view binding.
+     * @param id view id.
+     * @param object Object to bind.
+     */
+    public void addViewBinding(final int id, final Object object) {
+        viewBindings.put(id, object);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    protected void configure() {
+        bind(Activity.class).toProvider(provider).in(ContextSingleton.class);
+        final Set<Entry<Class<?>, Object>> entries = bindings.entrySet();
+        for (final Entry<Class<?>, Object> entry : entries) {
+            bind((Class<Object>) entry.getKey()).toInstance(entry.getValue());
+        }
+        bindListener(Matchers.any(), new ViewTypeListener());
     }
 
     private final class ViewTypeListener implements TypeListener {
 
         @Override
-        public <I> void hear(TypeLiteral<I> typeLiteral, TypeEncounter<I> typeEncounter) {
+        public <I> void hear(final TypeLiteral<I> typeLiteral, final TypeEncounter<I> typeEncounter) {
             for (Class<?> c = typeLiteral.getRawType(); c != Object.class; c = c.getSuperclass()) {
-                for (Field field : c.getDeclaredFields()) {
+                for (final Field field : c.getDeclaredFields()) {
                     if (field.isAnnotationPresent(InjectView.class)) {
                         if (Modifier.isStatic(field.getModifiers())) {
                             throw new UnsupportedOperationException("Views may not be statically injected");
