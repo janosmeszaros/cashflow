@@ -18,7 +18,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -31,24 +30,22 @@ import com.xtremelabs.robolectric.RobolectricTestRunner;
  */
 @RunWith(RobolectricTestRunner.class)
 public class StatementDaoTest {
-    private static final String ID = "1";
+    private static final String STATEMENT_ID = "1";
 
     private StatementDao underTest;
     @Mock
     private SQLiteDbProvider provider;
     @Mock
-    private SQLiteDatabase db;
+    private SQLiteDatabase database;
     @Mock
     private Cursor cursorMock;
-    @Mock
-    private ContentValues values;
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        when(provider.getWritableDb()).thenReturn(db);
-        when(provider.getReadableDb()).thenReturn(db);
+        when(provider.getWritableDb()).thenReturn(database);
+        when(provider.getReadableDb()).thenReturn(database);
 
         underTest = new StatementDao(provider);
     }
@@ -60,35 +57,35 @@ public class StatementDaoTest {
 
     @Test
     public void testGetExpensesWhenEverythingIsOkThenCallProperFunctionAndReturnCursor() {
-        when(db.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION, EXPENSE_SELECTION, null, null, null, null)).thenReturn(cursorMock);
+        when(database.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION, EXPENSE_SELECTION, null, null, null, null)).thenReturn(cursorMock);
 
-        Cursor cursor = underTest.getExpenses();
+        final Cursor cursor = underTest.getExpenses();
 
         verify(provider).getReadableDb();
-        verify(db).query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION, EXPENSE_SELECTION, null, null, null, null);
+        verify(database).query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION, EXPENSE_SELECTION, null, null, null, null);
         assertThat(cursor, equalTo(cursorMock));
     }
 
     @Test
     public void testGetIncomesWhenEverythingIsOkThenCallProperFunctionAndReturnCursor() {
-        when(db.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION, INCOME_SELECTION, null, null, null, null)).thenReturn(cursorMock);
+        when(database.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION, INCOME_SELECTION, null, null, null, null)).thenReturn(cursorMock);
 
-        Cursor cursor = underTest.getIncomes();
+        final Cursor cursor = underTest.getIncomes();
 
         verify(provider).getReadableDb();
-        verify(db).query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION, INCOME_SELECTION, null, null, null, null);
+        verify(database).query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION, INCOME_SELECTION, null, null, null, null);
         assertThat(cursor, equalTo(cursorMock));
     }
 
     @Test
     public void testGetRecurringIncomesWhenEverythingIsOkThenCallProperFunctionAndReturnCursor() {
-        when(db.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION_WITH_ALIAS, RECURRING_INCOME_SELECTION, null, null, null, null)).thenReturn(
+        when(database.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION_WITH_ALIAS, RECURRING_INCOME_SELECTION, null, null, null, null)).thenReturn(
                 cursorMock);
 
-        Cursor cursor = underTest.getRecurringIncomes();
+        final Cursor cursor = underTest.getRecurringIncomes();
 
         verify(provider).getReadableDb();
-        verify(db).query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION_WITH_ALIAS, RECURRING_INCOME_SELECTION, null, null, null, null);
+        verify(database).query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION_WITH_ALIAS, RECURRING_INCOME_SELECTION, null, null, null, null);
         assertThat(cursor, equalTo(cursorMock));
     }
 
@@ -99,12 +96,12 @@ public class StatementDaoTest {
 
     @Test
     public void testGetStatementByIdWhenParamIdIsOkThenShouldCallProperFunctionAndReturnCursor() {
-        when(db.rawQuery(SELECT_STATEMENT_BY_ID, new String[]{ID})).thenReturn(cursorMock);
+        when(database.rawQuery(SELECT_STATEMENT_BY_ID, new String[]{STATEMENT_ID})).thenReturn(cursorMock);
 
-        Cursor cursor = underTest.getStatementById(ID);
+        final Cursor cursor = underTest.getStatementById(STATEMENT_ID);
 
         verify(provider).getReadableDb();
-        verify(db).rawQuery(SELECT_STATEMENT_BY_ID, new String[]{ID});
+        verify(database).rawQuery(SELECT_STATEMENT_BY_ID, new String[]{STATEMENT_ID});
         assertThat(cursor, equalTo(cursorMock));
     }
 }

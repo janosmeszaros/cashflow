@@ -38,7 +38,7 @@ public class EditIncomeActivity extends EditStatementActivity {
     private SpinnerAdapter spinnerAdapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
@@ -73,11 +73,11 @@ public class EditIncomeActivity extends EditStatementActivity {
 
     @Override
     protected Statement createStatement() {
-        Statement statement = super.createStatement();
-        statement = new Statement.Builder(statement.getAmount(), statement.getDate()).setNote(statement.getNote()).setType(StatementType.Income)
-                .setId(statement.getId()).setCategory(statement.getCategory())
+        final Statement expense = super.createStatement();
+        final Statement income = new Statement.Builder(expense.getAmount(), expense.getDate()).setNote(expense.getNote())
+                .setType(StatementType.Income).setId(expense.getId()).setCategory(expense.getCategory())
                 .setRecurringInterval((RecurringInterval) recurringSpinner.getSelectedItem()).build();
-        return statement;
+        return income;
     }
 
     private void setUpRecurringSpinner() {

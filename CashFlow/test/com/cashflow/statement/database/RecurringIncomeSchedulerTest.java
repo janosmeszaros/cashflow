@@ -22,14 +22,14 @@ import com.cashflow.domain.Statement;
 
 public class RecurringIncomeSchedulerTest {
 
-    private static final String ID = "1";
+    private static final String INCOME_ID = "1";
     private static final String NOTE = "fizu";
     private static final String AMOUNT = "1234";
     private static final DateTime FOUR_WEEKS_BEFORE = DateTime.now().minusWeeks(4);
     private static final DateTime ONE_MONTH_BEFORE = DateTime.now().minusMonths(1);
     private static final DateTime THREE_MONTHS_BEFORE = DateTime.now().minusMonths(3);
     private static final DateTime ONE_YEAR_BEFORE = DateTime.now().minusYears(1);
-    private static final Category CATEGORY = new Category("1", "cat");
+    private static final Category CATEGORY = new Category("2", "cat");
 
     private final DateTimeFormatter formatter = DateTimeFormat.mediumDate().withLocale(Locale.getDefault());
 
@@ -56,8 +56,8 @@ public class RecurringIncomeSchedulerTest {
 
     @Test
     public void testScheduleWhenOneMonthAndTheIntervalIsBeWeeklyThenShouldSaveTwoNewStatement() {
-        RecurringInterval interval = RecurringInterval.biweekly;
-        Statement statement = createStatement(FOUR_WEEKS_BEFORE, interval);
+        final RecurringInterval interval = RecurringInterval.biweekly;
+        final Statement statement = createStatement(FOUR_WEEKS_BEFORE, interval);
         statements.add(statement);
 
         underTest.schedule();
@@ -72,8 +72,8 @@ public class RecurringIncomeSchedulerTest {
 
     @Test
     public void testScheduleWhenOneMonthAndTheIntervalIsMonthlyThenShouldSaveOneStatement() {
-        RecurringInterval interval = RecurringInterval.monthly;
-        Statement statement = createStatement(ONE_MONTH_BEFORE, interval);
+        final RecurringInterval interval = RecurringInterval.monthly;
+        final Statement statement = createStatement(ONE_MONTH_BEFORE, interval);
         statements.add(statement);
 
         underTest.schedule();
@@ -85,8 +85,8 @@ public class RecurringIncomeSchedulerTest {
 
     @Test
     public void testScheduleWhenOneMonthAndTheIntervalIsAnnuallyThenShouldSaveNoneStatement() {
-        RecurringInterval interval = RecurringInterval.annually;
-        Statement statement = createStatement(ONE_MONTH_BEFORE, interval);
+        final RecurringInterval interval = RecurringInterval.annually;
+        final Statement statement = createStatement(ONE_MONTH_BEFORE, interval);
         statements.add(statement);
 
         underTest.schedule();
@@ -98,22 +98,22 @@ public class RecurringIncomeSchedulerTest {
 
     @Test
     public void testScheduleWhenOneMonthAndTheIntervalIsBeWeeklyThenShouldUpdateCurrentStatement() {
-        RecurringInterval interval = RecurringInterval.biweekly;
-        Statement statement = createStatement(FOUR_WEEKS_BEFORE, interval);
+        final RecurringInterval interval = RecurringInterval.biweekly;
+        final Statement statement = createStatement(FOUR_WEEKS_BEFORE, interval);
         statements.add(statement);
 
         underTest.schedule();
 
         verify(service).updateStatement(
-                new Statement.Builder(AMOUNT, formatter.print(FOUR_WEEKS_BEFORE.plusWeeks(4))).setId(ID).setNote(NOTE)
+                new Statement.Builder(AMOUNT, formatter.print(FOUR_WEEKS_BEFORE.plusWeeks(4))).setId(INCOME_ID).setNote(NOTE)
                         .setRecurringInterval(RecurringInterval.biweekly).setCategory(CATEGORY).setType(StatementType.Income).build());
 
     }
 
     @Test
     public void testScheduleWhenOneYearAndTheIntervalIsannuallyThenShouldSaveOneStatement() {
-        RecurringInterval interval = RecurringInterval.annually;
-        Statement statement = createStatement(ONE_YEAR_BEFORE, interval);
+        final RecurringInterval interval = RecurringInterval.annually;
+        final Statement statement = createStatement(ONE_YEAR_BEFORE, interval);
         statements.add(statement);
 
         underTest.schedule();
@@ -125,8 +125,8 @@ public class RecurringIncomeSchedulerTest {
 
     @Test
     public void testScheduleWhenThreeMonthAndTheIntervalIsMonthlyThenShouldSaveThreeStatement() {
-        RecurringInterval interval = RecurringInterval.monthly;
-        Statement statement = createStatement(THREE_MONTHS_BEFORE, interval);
+        final RecurringInterval interval = RecurringInterval.monthly;
+        final Statement statement = createStatement(THREE_MONTHS_BEFORE, interval);
         statements.add(statement);
 
         underTest.schedule();
@@ -142,9 +142,9 @@ public class RecurringIncomeSchedulerTest {
                         .setRecurringInterval(RecurringInterval.none).setCategory(CATEGORY).setType(StatementType.Income).build());
     }
 
-    private Statement createStatement(DateTime time, RecurringInterval interval) {
-        Statement statement = new Statement.Builder(AMOUNT, formatter.print(time)).setRecurringInterval(interval).setType(StatementType.Income)
-                .setNote(NOTE).setCategory(CATEGORY).setId(ID).build();
+    private Statement createStatement(final DateTime time, final RecurringInterval interval) {
+        final Statement statement = new Statement.Builder(AMOUNT, formatter.print(time)).setRecurringInterval(interval).setType(StatementType.Income)
+                .setNote(NOTE).setCategory(CATEGORY).setId(INCOME_ID).build();
         return statement;
     }
 }

@@ -19,18 +19,18 @@ import android.widget.TextView;
 
 import com.cashflow.R;
 import com.cashflow.activity.testutil.ActivityModule;
-import com.cashflow.activity.testutil.ExtendedRobolectricTestRunner;
 import com.cashflow.activity.testutil.ListStatementActivityProvider;
 import com.cashflow.activity.testutil.TestGuiceModule;
 import com.cashflow.database.balance.Balance;
 import com.cashflow.statement.database.RecurringIncomeScheduler;
 import com.cashflow.statement.database.StatementPersistenceService;
+import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 /**
  * {@link MainActivity} test.
  * @author Kornel_Refi
  */
-@RunWith(ExtendedRobolectricTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class MainActivityTest {
 
     @Mock

@@ -32,7 +32,7 @@ public class CreateCategoryActivity extends RoboActivity {
     private Button submitButton;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_create_category);
@@ -47,7 +47,7 @@ public class CreateCategoryActivity extends RoboActivity {
     private class SubmitButtonOnClick implements OnClickListener {
 
         @Override
-        public void onClick(View v) {
+        public void onClick(final View view) {
             LOG.debug("Creating category: " + nameText.getText());
             final String name = nameText.getText().toString();
 

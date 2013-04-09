@@ -59,7 +59,7 @@ public final class Balance {
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            double value = cursor.getDouble(index);
+            final double value = cursor.getDouble(index);
             amount = amount.add(BigDecimal.valueOf(value));
             cursor.moveToNext();
         }

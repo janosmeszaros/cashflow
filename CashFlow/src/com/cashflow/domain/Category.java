@@ -10,21 +10,21 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  */
 public class Category {
 
-    private final String id;
+    private final String categoryId;
     private final String name;
 
     /**
      * Constructor.
-     * @param id of {@link Category}
+     * @param categoryId of {@link Category}
      * @param name of {@link Category}
      */
-    public Category(final String id, final String name) {
-        this.id = id;
+    public Category(final String categoryId, final String name) {
+        this.categoryId = categoryId;
         this.name = name;
     }
 
     public String getId() {
-        return id;
+        return categoryId;
     }
 
     public String getName() {

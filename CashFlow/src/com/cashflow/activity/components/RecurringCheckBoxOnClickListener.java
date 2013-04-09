@@ -34,7 +34,7 @@ public class RecurringCheckBoxOnClickListener implements OnClickListener {
     @SuppressLint("NewApi")
     public void onClick(final View view) {
         final boolean checked = ((CheckBox) view).isChecked();
-        Activity activity = (Activity) view.getContext();
+        final Activity activity = (Activity) view.getContext();
         getCheckbox(activity);
 
         if (checked) {
@@ -44,9 +44,7 @@ public class RecurringCheckBoxOnClickListener implements OnClickListener {
         }
     }
 
-    private void getCheckbox(Activity activity) {
-        checkBoxLayout = null;
-
+    private void getCheckbox(final Activity activity) {
         checkBoxLayout = (LinearLayout) activity.findViewById(R.id.recurring_checkbox_area_bill);
 
         if (checkBoxLayout == null) {
@@ -55,19 +53,17 @@ public class RecurringCheckBoxOnClickListener implements OnClickListener {
     }
 
     private void startInAnimationForCheckboxArea(final Activity context) {
-        final Animation in = AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left);
-        in.setDuration(DURATION_MILLIS);
-        in.setAnimationListener(new AnimationListenerImplementation(checkBoxLayout, VISIBLE));
-        checkBoxLayout.setAnimation(in);
-        checkBoxLayout.startLayoutAnimation();
+        final Animation slideIn = AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left);
+        slideIn.setDuration(DURATION_MILLIS);
+        slideIn.setAnimationListener(new AnimationListenerImplementation(checkBoxLayout, VISIBLE));
+        checkBoxLayout.startAnimation(slideIn);
     }
 
     private void startOutAnimationForCheckboxArea(final Activity context) {
-        final Animation out = AnimationUtils.loadAnimation(context, android.R.anim.slide_out_right);
-        out.setDuration(DURATION_MILLIS);
-        out.setAnimationListener(new AnimationListenerImplementation(checkBoxLayout, INVISIBLE));
-        checkBoxLayout.setAnimation(out);
-        checkBoxLayout.startLayoutAnimation();
+        final Animation slideOut = AnimationUtils.loadAnimation(context, android.R.anim.slide_out_right);
+        slideOut.setDuration(DURATION_MILLIS);
+        slideOut.setAnimationListener(new AnimationListenerImplementation(checkBoxLayout, INVISIBLE));
+        checkBoxLayout.startAnimation(slideOut);
     }
 
     /**
@@ -77,16 +73,16 @@ public class RecurringCheckBoxOnClickListener implements OnClickListener {
      */
     private final class AnimationListenerImplementation implements AnimationListener {
         private final LinearLayout layout;
-        private final int onAnimationEnd;
+        private final int visibilityResult;
 
-        private AnimationListenerImplementation(LinearLayout layout, int onAnimationEnd) {
+        private AnimationListenerImplementation(final LinearLayout layout, final int onAnimationEnd) {
             this.layout = layout;
-            this.onAnimationEnd = onAnimationEnd;
+            visibilityResult = onAnimationEnd;
         }
 
         @Override
         public void onAnimationEnd(final Animation animation) {
-            layout.setVisibility(onAnimationEnd);
+            layout.setVisibility(visibilityResult);
         }
 
         @Override
@@ -95,7 +91,6 @@ public class RecurringCheckBoxOnClickListener implements OnClickListener {
 
         @Override
         public void onAnimationStart(final Animation animation) {
-            layout.setVisibility(INVISIBLE);
         }
     }
 

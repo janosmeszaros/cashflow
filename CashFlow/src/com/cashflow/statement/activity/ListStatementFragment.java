@@ -62,13 +62,13 @@ public class ListStatementFragment extends RoboSherlockFragment implements OnChe
     private ListView list;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         return inflater.inflate(R.layout.activity_list_statements, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(final View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         LOG.debug("ListStatementActivity is creating...");
 
@@ -87,9 +87,9 @@ public class ListStatementFragment extends RoboSherlockFragment implements OnChe
         LOG.debug("Edit button clicked");
         Intent intent;
         if (type.isIncome()) {
-            intent = new Intent(this.getActivity(), EditIncomeActivity.class);
+            intent = new Intent(getActivity(), EditIncomeActivity.class);
         } else {
-            intent = new Intent(this.getActivity(), EditStatementActivity.class);
+            intent = new Intent(getActivity(), EditStatementActivity.class);
         }
         addExtras(selectedIds.get(0), intent);
         startActivityForResult(intent, EDIT_ACTIVITY_CODE);
@@ -106,8 +106,8 @@ public class ListStatementFragment extends RoboSherlockFragment implements OnChe
     }
 
     @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        View view = (View) buttonView.getParent();
+    public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
+        final View view = (View) buttonView.getParent();
 
         if (isChecked) {
             addSelectedId(view);
@@ -118,44 +118,44 @@ public class ListStatementFragment extends RoboSherlockFragment implements OnChe
         actionMode.invalidate();
     }
 
-    private void removeFromSelection(View view) {
-        String id = getIdFromView(view);
-        int position = list.getPositionForView(view);
+    private void removeFromSelection(final View view) {
+        final String statementId = getIdFromView(view);
+        final int position = list.getPositionForView(view);
 
-        selectedIds.remove(id);
+        selectedIds.remove(statementId);
         selectedPositions.remove((Object) position);
 
-        if (selectedIds.size() == 0) {
+        if (selectedIds.isEmpty()) {
             actionMode.finish();
         }
     }
 
-    private void addSelectedId(View view) {
+    private void addSelectedId(final View view) {
         createActionModeIfNecesarry();
 
-        String id = getIdFromView(view);
-        int position = list.getPositionForView(view);
-        selectedIds.add(id);
+        final String statementId = getIdFromView(view);
+        final int position = list.getPositionForView(view);
+        selectedIds.add(statementId);
         selectedPositions.add(position);
     }
 
     private void createActionModeIfNecesarry() {
-        if (selectedIds.size() == 0) {
+        if (selectedIds.isEmpty()) {
             actionMode = getSherlockActivity().startActionMode(new AnActionModeOfEpicProportions());
         }
     }
 
-    private String getIdFromView(View view) {
-        TextView text = (TextView) view.findViewById(R.id.row_id);
+    private String getIdFromView(final View view) {
+        final TextView text = (TextView) view.findViewById(R.id.row_id);
         return text.getText().toString();
     }
 
-    private void addExtras(final String id, final Intent intent) {
-        intent.putExtra(ID_EXTRA, id);
+    private void addExtras(final String statementId, final Intent intent) {
+        intent.putExtra(ID_EXTRA, statementId);
     }
 
     private boolean isEditActivity(final int requestCode, final int resultCode) {
-        return resultCode == Activity.RESULT_OK && requestCode == EDIT_ACTIVITY_CODE;
+        return (resultCode == Activity.RESULT_OK) && (requestCode == EDIT_ACTIVITY_CODE);
     }
 
     @SuppressLint("NewApi")
@@ -164,12 +164,12 @@ public class ListStatementFragment extends RoboSherlockFragment implements OnChe
 
         final Cursor cursor = statementService.getStatement(type);
 
-        SimpleCursorAdapter adapter = new SimpleCursorAdapter(this.getActivity(), R.layout.list_statements_row, cursor, PROJECTION, TO_VIEWS) {
+        final SimpleCursorAdapter adapter = new SimpleCursorAdapter(getActivity(), R.layout.list_statements_row, cursor, PROJECTION, TO_VIEWS) {
             @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                View view = super.getView(position, convertView, parent);
+            public View getView(final int position, final View convertView, final ViewGroup parent) {
+                final View view = super.getView(position, convertView, parent);
 
-                CheckBox checkBox = (CheckBox) view.findViewById(R.id.selectedCheckbox);
+                final CheckBox checkBox = (CheckBox) view.findViewById(R.id.selectedCheckbox);
                 checkBox.setOnCheckedChangeListener(ListStatementFragment.this);
 
                 return view;
@@ -188,12 +188,12 @@ public class ListStatementFragment extends RoboSherlockFragment implements OnChe
 
     private final class AnActionModeOfEpicProportions implements ActionMode.Callback {
         @Override
-        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+        public boolean onCreateActionMode(final ActionMode mode, final Menu menu) {
             return true;
         }
 
         @Override
-        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+        public boolean onPrepareActionMode(final ActionMode mode, final Menu menu) {
             menu.removeGroup(GROUP_ID);
 
             mode.setTitle(selectedPositions.size() + " selected.");
@@ -211,9 +211,9 @@ public class ListStatementFragment extends RoboSherlockFragment implements OnChe
         }
 
         @Override
-        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            int id = item.getItemId();
-            if (id == EDIT_ID) {
+        public boolean onActionItemClicked(final ActionMode mode, final MenuItem item) {
+            final int statementId = item.getItemId();
+            if (statementId == EDIT_ID) {
                 editButtonOnClick();
             }
 
@@ -222,10 +222,10 @@ public class ListStatementFragment extends RoboSherlockFragment implements OnChe
         }
 
         @Override
-        public void onDestroyActionMode(ActionMode mode) {
-            for (Integer i : selectedPositions) {
-                View view = list.getChildAt(i);
-                CheckBox checkbox = (CheckBox) view.findViewById(R.id.selectedCheckbox);
+        public void onDestroyActionMode(final ActionMode mode) {
+            for (final Integer i : selectedPositions) {
+                final View view = list.getChildAt(i);
+                final CheckBox checkbox = (CheckBox) view.findViewById(R.id.selectedCheckbox);
                 checkbox.setChecked(false);
             }
         }

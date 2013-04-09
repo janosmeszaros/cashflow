@@ -21,14 +21,13 @@ public class DatePickerFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
         // Use the current date as the default date in the picker
-        final Calendar c = Calendar.getInstance();
-        final int year = c.get(YEAR);
-        final int month = c.get(MONTH);
-        final int day = c.get(DAY_OF_MONTH);
+        final Calendar calendar = Calendar.getInstance();
+        final int year = calendar.get(YEAR);
+        final int month = calendar.get(MONTH);
+        final int day = calendar.get(DAY_OF_MONTH);
 
-        OnDateSetListener dateSetListener = new OnDateSetListenerService(getActivity());
+        final OnDateSetListener dateSetListener = new OnDateSetListenerService(getActivity());
 
         return new DatePickerDialog(getActivity(), dateSetListener, year, month, day);
     }
-
 }

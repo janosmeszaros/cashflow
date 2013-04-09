@@ -75,8 +75,6 @@ public class AddBillFragment extends RoboFragment {
     private CategoryPersistenceService categoryService;
     @Inject
     private BillPersistenceService persistenceService;
-    @Inject
-    private AddBillOnClickListener addBillOnClickListener;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
@@ -92,7 +90,7 @@ public class AddBillFragment extends RoboFragment {
         setUpDateButton();
         activateRecurringArea();
         setCategorySpinner();
-        submitButton.setOnClickListener(addBillOnClickListener);
+        submitButton.setOnClickListener(new AddBillOnClickListener());
     }
 
     @Override
@@ -144,13 +142,13 @@ public class AddBillFragment extends RoboFragment {
                     showToast(parent, parent.getString(R.string.database_error));
                 }
 
-            } catch (IllegalArgumentException e) {
+            } catch (final IllegalArgumentException e) {
                 showToast(parent, e.getMessage());
             }
         }
 
-        private void showToast(final Activity parent, String msg) {
-            Toast toast = Toast.makeText(parent, msg, Toast.LENGTH_SHORT);
+        private void showToast(final Activity parent, final String msg) {
+            final Toast toast = Toast.makeText(parent, msg, Toast.LENGTH_SHORT);
             toast.show();
         }
 
@@ -158,8 +156,8 @@ public class AddBillFragment extends RoboFragment {
             final DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM);
             final Calendar myCalendar = Calendar.getInstance();
 
-            Bill billToSave = new Bill(amountText.getText().toString(), dateFormatter.format(myCalendar.getTime()), deadlineDateButton.getText()
-                    .toString());
+            final Bill billToSave = new Bill(amountText.getText().toString(), dateFormatter.format(myCalendar.getTime()), deadlineDateButton
+                    .getText().toString());
             billToSave.setCategory((Category) categorySpinner.getSelectedItem());
             billToSave.setInterval((RecurringInterval) recurringSpinner.getSelectedItem());
             billToSave.setNote(notesText.getText().toString());

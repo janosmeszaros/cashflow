@@ -34,9 +34,7 @@ import com.cashflow.R;
 import com.cashflow.activity.ListActivity;
 import com.cashflow.activity.testutil.ActivityModule;
 import com.cashflow.activity.testutil.ListStatementActivityProvider;
-import com.cashflow.constants.RecurringInterval;
 import com.cashflow.database.DatabaseContracts.AbstractCategory;
-import com.cashflow.domain.Category;
 import com.cashflow.statement.database.StatementPersistenceService;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
@@ -52,12 +50,12 @@ public class ListStatementActivityTest {
     public static final int[] TO_VIEWS = {R.id.row_id, R.id.row_amount, R.id.row_category, R.id.row_date, R.id.row_note, R.id.row_interval};
     private static final Logger LOG = LoggerFactory.getLogger(ListStatementActivityTest.class);
     private static final int BAD_REQUEST_CODE = 1;
-    private static final String ID = "2";
-    private static final String NOTES = "notes2";
-    private static final Category CATEGORY = new Category("1", "category2");
-    private static final String DATE = "2013";
-    private static final String AMOUNT = "12345678";
-    private static final RecurringInterval INTERVAL = RecurringInterval.biweekly;
+    //    private static final String ID = "2";
+    //    private static final String NOTES = "notes2";
+    //    private static final Category CATEGORY = new Category("1", "category2");
+    //    private static final String DATE = "2013";
+    //    private static final String AMOUNT = "12345678";
+    //    private static final RecurringInterval INTERVAL = RecurringInterval.biweekly;
 
     private final Object[] values = new Object[]{1, 1, 1234L, "category", "2012", "note", "none"};
     private Fragment underTest;
@@ -68,7 +66,7 @@ public class ListStatementActivityTest {
     public void setUp() {
         LOG.debug("\nTest starts!!!");
         MockitoAnnotations.initMocks(this);
-        ActivityModule module = new ActivityModule(new ListStatementActivityProvider());
+        final ActivityModule module = new ActivityModule(new ListStatementActivityProvider());
 
         setUpPersistentService();
         addBindings(module);
@@ -79,23 +77,23 @@ public class ListStatementActivityTest {
     }
 
     private void setExpenseIntent() {
-        Bundle bundle = new Bundle();
+        final Bundle bundle = new Bundle();
         bundle.putString(STATEMENT_TYPE_EXTRA, Expense.toString());
         underTest.setArguments(bundle);
 
-        ListActivity listActivity = new ListActivity();
-        FragmentTransaction transaction = listActivity.getSupportFragmentManager().beginTransaction();
+        final ListActivity listActivity = new ListActivity();
+        final FragmentTransaction transaction = listActivity.getSupportFragmentManager().beginTransaction();
         transaction.add(underTest, Expense.toString());
         transaction.commit();
     }
 
     private void setIncomeIntent() {
-        Bundle bundle = new Bundle();
+        final Bundle bundle = new Bundle();
         bundle.putString(STATEMENT_TYPE_EXTRA, Income.toString());
         underTest.setArguments(bundle);
 
-        ListActivity listActivity = new ListActivity();
-        FragmentTransaction transaction = listActivity.getSupportFragmentManager().beginTransaction();
+        final ListActivity listActivity = new ListActivity();
+        final FragmentTransaction transaction = listActivity.getSupportFragmentManager().beginTransaction();
         transaction.add(underTest, Expense.toString());
         transaction.commit();
     }
@@ -177,12 +175,12 @@ public class ListStatementActivityTest {
     //        assertThat(cursor.getString(4), equalTo(values[4]));
     //    }
 
-    private void addBindings(ActivityModule module) {
+    private void addBindings(final ActivityModule module) {
         module.addBinding(StatementPersistenceService.class, statementPersistentService);
     }
 
     private void setUpPersistentService() {
-        MatrixCursor matrixCursor = new MatrixCursor(PROJECTION);
+        final MatrixCursor matrixCursor = new MatrixCursor(PROJECTION);
         matrixCursor.addRow(values);
         when(statementPersistentService.getStatement(Expense)).thenReturn(matrixCursor);
         when(statementPersistentService.getStatement(Income)).thenReturn(matrixCursor);

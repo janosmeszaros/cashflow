@@ -98,9 +98,8 @@ public class DaoParent {
      * @return Cursor which contains the data.
      */
     public Cursor getValues() {
-        final SQLiteDatabase db = provider.getReadableDb();
-        final Cursor cursor = db.query(table, projection, null, null, null, null, null);
-        return cursor;
+        final SQLiteDatabase database = provider.getReadableDb();
+        return database.query(table, projection, null, null, null, null, null);
     }
 
     private void setFields(final Class<? extends Tables> clazz) {
@@ -113,9 +112,9 @@ public class DaoParent {
         try {
             final Field field = clazz.getField("PROJECTION");
             projection = (String[]) field.get(null);
-        } catch (NoSuchFieldException e) {
+        } catch (final NoSuchFieldException e) {
             throw new IllegalTableException(clazz.getName(), TABLE_NAME);
-        } catch (IllegalAccessException ex) {
+        } catch (final IllegalAccessException ex) {
             throw new IllegalTableException(clazz.getName(), TABLE_NAME);
         }
     }
@@ -124,9 +123,9 @@ public class DaoParent {
         try {
             final Field field = clazz.getField(TABLE_NAME);
             table = (String) field.get(null);
-        } catch (NoSuchFieldException e) {
+        } catch (final NoSuchFieldException e) {
             throw new IllegalTableException(clazz.getName(), TABLE_NAME);
-        } catch (IllegalAccessException ex) {
+        } catch (final IllegalAccessException ex) {
             throw new IllegalTableException(clazz.getName(), TABLE_NAME);
         }
     }
@@ -155,7 +154,7 @@ public class DaoParent {
         Validate.notNull(object);
     }
 
-    private void checkColumns(Set<String> names) {
+    private void checkColumns(final Set<String> names) {
         if (!columnNames.equals(names)) {
             throw new IllegalArgumentException("Wrong column names!");
         }

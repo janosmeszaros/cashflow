@@ -34,7 +34,7 @@ public class ListActivity extends RoboSherlockFragmentActivity {
     private TabsAdapter mTabsAdapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.list_fragments);
@@ -61,7 +61,7 @@ public class ListActivity extends RoboSherlockFragmentActivity {
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString("tab", mTabHost.getCurrentTabTag());
     }
@@ -83,7 +83,7 @@ public class ListActivity extends RoboSherlockFragmentActivity {
          * @param tabHost tabHost.
          * @param pager pager.
          */
-        public TabsAdapter(FragmentActivity activity, TabHost tabHost, ViewPager pager) {
+        public TabsAdapter(final FragmentActivity activity, final TabHost tabHost, final ViewPager pager) {
             super(activity.getSupportFragmentManager());
             mContext = activity;
             mTabHost = tabHost;
@@ -99,11 +99,11 @@ public class ListActivity extends RoboSherlockFragmentActivity {
          * @param clss class
          * @param args args
          */
-        public void addTab(TabHost.TabSpec tabSpec, Class<?> clss, Bundle args) {
+        public void addTab(final TabHost.TabSpec tabSpec, final Class<?> clss, final Bundle args) {
             tabSpec.setContent(new DummyTabFactory(mContext));
-            String tag = tabSpec.getTag();
+            final String tag = tabSpec.getTag();
 
-            TabInfo info = new TabInfo(tag, clss, args);
+            final TabInfo info = new TabInfo(tag, clss, args);
             mTabs.add(info);
             mTabHost.addTab(tabSpec);
             notifyDataSetChanged();
@@ -115,37 +115,37 @@ public class ListActivity extends RoboSherlockFragmentActivity {
         }
 
         @Override
-        public Fragment getItem(int position) {
-            TabInfo info = mTabs.get(position);
+        public Fragment getItem(final int position) {
+            final TabInfo info = mTabs.get(position);
             return Fragment.instantiate(mContext, info.clss.getName(), info.args);
         }
 
         @Override
-        public void onTabChanged(String tabId) {
-            int position = mTabHost.getCurrentTab();
+        public void onTabChanged(final String tabId) {
+            final int position = mTabHost.getCurrentTab();
             mViewPager.setCurrentItem(position);
         }
 
         @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
         }
 
         @Override
-        public void onPageSelected(int position) {
+        public void onPageSelected(final int position) {
             // Unfortunately when TabHost changes the current tab, it kindly
             // also takes care of putting focus on it when not in touch mode.
             // The jerk.
             // This hack tries to prevent this from pulling focus out of our
             // ViewPager.
-            TabWidget widget = mTabHost.getTabWidget();
-            int oldFocusability = widget.getDescendantFocusability();
+            final TabWidget widget = mTabHost.getTabWidget();
+            final int oldFocusability = widget.getDescendantFocusability();
             widget.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
             mTabHost.setCurrentTab(position);
             widget.setDescendantFocusability(oldFocusability);
         }
 
         @Override
-        public void onPageScrollStateChanged(int state) {
+        public void onPageScrollStateChanged(final int state) {
         }
 
         static final class TabInfo {
@@ -159,9 +159,9 @@ public class ListActivity extends RoboSherlockFragmentActivity {
              * @param clazz class
              * @param args arg
              */
-            TabInfo(String tag, Class<?> clazz, Bundle args) {
+            TabInfo(final String tag, final Class<?> clazz, final Bundle args) {
                 this.tag = tag;
-                this.clss = clazz;
+                clss = clazz;
                 this.args = args;
             }
 
@@ -173,16 +173,16 @@ public class ListActivity extends RoboSherlockFragmentActivity {
         static class DummyTabFactory implements TabHost.TabContentFactory {
             private final Context mContext;
 
-            public DummyTabFactory(Context context) {
+            public DummyTabFactory(final Context context) {
                 mContext = context;
             }
 
             @Override
-            public View createTabContent(String tag) {
-                View v = new View(mContext);
-                v.setMinimumWidth(0);
-                v.setMinimumHeight(0);
-                return v;
+            public View createTabContent(final String tag) {
+                final View view = new View(mContext);
+                view.setMinimumWidth(0);
+                view.setMinimumHeight(0);
+                return view;
             }
         }
     }

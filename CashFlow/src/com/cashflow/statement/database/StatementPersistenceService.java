@@ -61,16 +61,19 @@ public class StatementPersistenceService {
      * @return <code>true</code> if saving was successful and the amount wasn't zero, <code>false</code> otherwise.
      */
     public boolean saveStatement(final Statement statement) {
+        boolean result;
         validateStatement(statement);
 
-        boolean result = false;
         final BigDecimal amount = parseAmount(statement.getAmount());
 
         if (checkIfNotZero(amount)) {
             final ContentValues values = createContentValue(amount, statement);
             dao.save(values);
             result = true;
+        } else {
+            result = false;
         }
+
         return result;
     }
 
@@ -115,14 +118,16 @@ public class StatementPersistenceService {
      * @return <code>true</code> if successful, otherwise <code>false</code>.
      */
     public boolean updateStatement(final Statement statement) {
+        boolean result;
         validateUpdateStatement(statement);
 
-        boolean result = false;
         final BigDecimal amount = parseAmount(statement.getAmount());
 
         final ContentValues value = createContentValue(amount, statement);
         if (dao.update(value, statement.getId())) {
             result = true;
+        } else {
+            result = false;
         }
 
         return result;
@@ -149,9 +154,11 @@ public class StatementPersistenceService {
     }
 
     private boolean checkIfNotZero(final BigDecimal amount) {
-        boolean result = true;
+        boolean result;
         if (amount.compareTo(BigDecimal.ZERO) == 0) {
             result = false;
+        } else {
+            result = true;
         }
         return result;
     }
@@ -161,7 +168,7 @@ public class StatementPersistenceService {
 
         try {
             amount = new BigDecimal(amountStr);
-        } catch (NumberFormatException e) {
+        } catch (final NumberFormatException e) {
             throw new IllegalArgumentException();
         }
         return amount;
@@ -238,7 +245,7 @@ public class StatementPersistenceService {
     }
 
     private void validateStringsNotEmpty(final String... params) {
-        for (String string : params) {
+        for (final String string : params) {
             Validate.notEmpty(string);
         }
     }

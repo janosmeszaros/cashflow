@@ -85,17 +85,17 @@ public class CategoryPersistenceService {
 
     /**
      * Updates category at the specified id.
-     * @param id
+     * @param categoryId
      *            of the {@link Category}
      * @param name
      *            new name for the {@link Category}
      * @return <code>true</code> if successful
      */
-    public boolean updateCategory(final String id, final String name) {
-        validateInput(name, id);
+    public boolean updateCategory(final String categoryId, final String name) {
+        validateInput(name, categoryId);
 
         final ContentValues value = createContentValue(name);
-        return dao.update(value, id);
+        return dao.update(value, categoryId);
     }
 
     /**
