@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.cashflow.R;
@@ -34,11 +35,9 @@ public class MainActivity extends RoboSherlockActivity {
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
-        setTheme(com.actionbarsherlock.R.style.Theme_Sherlock_Light);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        final Drawable drawable = getResources().getDrawable(R.drawable.main_header_selector);
-        getSupportActionBar().setBackgroundDrawable(drawable);
+        setView();
+        setActionBar();
         setTitle(getString(R.string.app_name));
         scheduler.schedule();
 
@@ -46,12 +45,24 @@ public class MainActivity extends RoboSherlockActivity {
 
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
-        menu.add(0, 0, Menu.NONE, "List").setIcon(android.R.drawable.ic_menu_search).setIntent(new Intent(this, ListActivity.class))
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        menu.add(0, 1, Menu.NONE, "Add").setIcon(android.R.drawable.ic_menu_set_as).setIntent(new Intent(this, ActionsActivity.class))
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        createListMenuItem(menu);
+        createAddMenuItem(menu);
 
         return super.onCreateOptionsMenu(menu);
+    }
+
+    private void createAddMenuItem(final Menu menu) {
+        final MenuItem addItem = menu.add(0, 1, Menu.NONE, "Add");
+        addItem.setIcon(android.R.drawable.ic_menu_set_as);
+        addItem.setIntent(new Intent(this, ActionsActivity.class));
+        addItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+    }
+
+    private void createListMenuItem(final Menu menu) {
+        final MenuItem listItem = menu.add(0, 0, Menu.NONE, "List");
+        listItem.setIcon(android.R.drawable.ic_menu_search);
+        listItem.setIntent(new Intent(this, ListActivity.class));
+        listItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
     @Override
@@ -62,6 +73,17 @@ public class MainActivity extends RoboSherlockActivity {
             final String value = String.valueOf(balance.getBalance());
             balanceText.setText(value);
         }
+    }
+
+    private void setActionBar() {
+        final Drawable drawable = getResources().getDrawable(R.drawable.main_header_selector);
+        final ActionBar actionBar = getSupportActionBar();
+        actionBar.setBackgroundDrawable(drawable);
+    }
+
+    private void setView() {
+        setTheme(com.actionbarsherlock.R.style.Theme_Sherlock_Light);
+        setContentView(R.layout.activity_main);
     }
 
 }
