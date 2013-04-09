@@ -58,10 +58,13 @@
 						<instrumentation>
 							<excludes>
 								<exclude>com/cashflow/**/R.class</exclude>
-								<exclude>com/cashflow/**/*$*.class</exclude>
+								<exclude>com/cashflow/**/R$*.class</exclude>
 								<exclude>com/cashflow/**/*Test*.class</exclude>
 								<exclude>com/cashflow/constants/Constants.class</exclude>
 								<exclude>com/cashflow/activity/testutil/**</exclude>
+								<exclude>com/actionbarsherlock/**</exclude>
+								<exclude>android/support/v4/app/Watson.class</exclude>
+								<exclude>android/support/v4/app/*$*.class</exclude>
 							</excludes>
 						</instrumentation>
 					</configuration>
