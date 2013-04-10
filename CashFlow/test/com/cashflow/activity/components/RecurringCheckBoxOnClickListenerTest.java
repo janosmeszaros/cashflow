@@ -18,8 +18,8 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 
 import com.cashflow.R;
-import com.cashflow.activity.testutil.AddIncomeStatementActivityProvider;
 import com.cashflow.activity.testutil.ActivityModule;
+import com.cashflow.activity.testutil.AddIncomeStatementActivityProvider;
 import com.cashflow.activity.testutil.TestGuiceModule;
 import com.google.inject.Inject;
 import com.xtremelabs.robolectric.Robolectric;
