@@ -52,7 +52,7 @@ public class AddIncomeFragment extends AddStatementFragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(final View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         activateRecurringArea();
@@ -60,10 +60,15 @@ public class AddIncomeFragment extends AddStatementFragment {
 
     @Override
     protected Statement createStatement() {
-        Statement statement = super.createStatement();
-        statement = new Statement.Builder(statement.getAmount(), statement.getDate()).setNote(statement.getNote()).setType(StatementType.Income)
-                .setCategory(statement.getCategory()).setRecurringInterval((RecurringInterval) recurringSpinner.getSelectedItem()).build();
-        return statement;
+        final Statement statement = super.createStatement();
+        final Statement.Builder builder = new Statement.Builder(statement.getAmount(), statement.getDate()).setNote(statement.getNote())
+                .setType(StatementType.Income).setCategory(statement.getCategory());
+
+        if (recurringCheckBox.isChecked()) {
+            builder.setRecurringInterval((RecurringInterval) recurringSpinner.getSelectedItem());
+        }
+
+        return builder.build();
     }
 
     @Override
