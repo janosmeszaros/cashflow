@@ -46,14 +46,12 @@ public class AddBillFragment extends RoboFragment {
 
     @InjectView(R.id.amountText)
     private EditText amountText;
-    @InjectView(R.id.dateButton)
-    private Button deadlineDateButton;
     @InjectView(R.id.notesText)
     private EditText notesText;
     @InjectView(R.id.categorySpinner)
     private Spinner categorySpinner;
     @InjectView(R.id.dateButton)
-    private Button dateButton;
+    private Button deadLineDateButton;
     @InjectView(R.id.recurring_area)
     private LinearLayout recurringArea;
     @InjectView(R.id.recurring_checkbox_area_bill)
@@ -111,9 +109,9 @@ public class AddBillFragment extends RoboFragment {
     private void setUpDateButton() {
         final Calendar calendar = Calendar.getInstance();
         final DateFormat fmtDateAndTime = DateFormat.getDateInstance(DateFormat.MEDIUM);
-        dateButton.setText(fmtDateAndTime.format(calendar.getTime()));
+        deadLineDateButton.setText(fmtDateAndTime.format(calendar.getTime()));
 
-        dateButton.setOnClickListener(listener);
+        deadLineDateButton.setOnClickListener(listener);
     }
 
     private void activateRecurringArea() {
@@ -156,13 +154,16 @@ public class AddBillFragment extends RoboFragment {
             final DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM);
             final Calendar myCalendar = Calendar.getInstance();
 
-            final Bill billToSave = new Bill(amountText.getText().toString(), dateFormatter.format(myCalendar.getTime()), deadlineDateButton
+            final Bill billToSave = new Bill(amountText.getText().toString(), dateFormatter.format(myCalendar.getTime()), deadLineDateButton
                     .getText().toString());
             billToSave.setCategory((Category) categorySpinner.getSelectedItem());
-            billToSave.setInterval((RecurringInterval) recurringSpinner.getSelectedItem());
             billToSave.setNote(notesText.getText().toString());
             billToSave.setPayed(false);
             billToSave.setPayedDate("");
+
+            if (recurringCheckBox.isChecked()) {
+                billToSave.setInterval((RecurringInterval) recurringSpinner.getSelectedItem());
+            }
 
             return billToSave;
         }
