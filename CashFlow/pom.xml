@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.cashflow</groupId>
-		<artifactId>cashflow-parent</artifactId>
+		<artifactId>CashFlowParent</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 		<relativePath>../CashFlowParent/pom.xml</relativePath>
 	</parent>

@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.cashflow</groupId>
-	<artifactId>cashflow-parent</artifactId>
+	<artifactId>CashFlowParent</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
@@ -12,6 +12,7 @@
 	<modules>
 		<module>../CashFlow</module>
 		<module>../CashFlowTest</module>
+		<module>../CashFlowWeb</module>
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -37,10 +38,10 @@
 		<joda-time.version>2.1</joda-time.version>
 		<actionbarsherlock.version>4.2.0</actionbarsherlock.version>
 		<roboguice-sherlock.version>1.5</roboguice-sherlock.version>
+		<spring.version>3.1.0.RELEASE</spring.version>
 	</properties>
 
 	<build>
-		<sourceDirectory>src</sourceDirectory>
 		<pluginManagement>
 			<plugins>
 				<plugin>
