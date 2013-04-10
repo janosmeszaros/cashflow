@@ -1,4 +1,4 @@
-package com.cashflow.bill.activity;
+package com.cashflow.activity.testutil;
 
 import roboguice.activity.RoboFragmentActivity;
 import android.support.v4.app.Fragment;
@@ -12,7 +12,7 @@ import com.google.inject.Provider;
  * @author Janos_Gyula_Meszaros
  *
  */
-public class FragmentProviderWithActionsActivity implements Provider<RoboFragmentActivity> {
+public class FragmentProviderWithRoboFragmentActivity implements Provider<RoboFragmentActivity> {
 
     private final Fragment fragment;
 
@@ -20,7 +20,7 @@ public class FragmentProviderWithActionsActivity implements Provider<RoboFragmen
      * Constructor witch gets a fragment what will be in actionsactivity.    
      * @param fragment fragment
      */
-    public FragmentProviderWithActionsActivity(final Fragment fragment) {
+    public FragmentProviderWithRoboFragmentActivity(final Fragment fragment) {
         this.fragment = fragment;
     }
 

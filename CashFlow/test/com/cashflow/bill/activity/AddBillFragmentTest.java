@@ -32,6 +32,7 @@ import com.cashflow.R;
 import com.cashflow.activity.ActionsActivity;
 import com.cashflow.activity.components.RecurringCheckBoxOnClickListener;
 import com.cashflow.activity.testutil.ActivityModule;
+import com.cashflow.activity.testutil.FragmentProviderWithRoboFragmentActivity;
 import com.cashflow.bill.database.BillPersistenceService;
 import com.cashflow.category.database.CategoryPersistenceService;
 import com.cashflow.constants.RecurringInterval;
@@ -78,7 +79,7 @@ public class AddBillFragmentTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        final ActivityModule module = new ActivityModule(new FragmentProviderWithActionsActivity(new AddBillFragment()));
+        final ActivityModule module = new ActivityModule(new FragmentProviderWithRoboFragmentActivity(new AddBillFragment()));
 
         module.addBinding(SpinnerAdapter.class, arrayAdapter);
         module.addBinding(RecurringCheckBoxOnClickListener.class, checkBoxListener);
