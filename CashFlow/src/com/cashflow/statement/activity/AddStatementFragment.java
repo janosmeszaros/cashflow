@@ -41,6 +41,7 @@ import com.google.inject.Inject;
 public class AddStatementFragment extends RoboFragment {
 
     private static final Logger LOG = LoggerFactory.getLogger(AddStatementFragment.class);
+    private static final int CREATE_CATEGORY_ACTIVITY_ID = 1;
 
     @Inject
     private CategoryPersistenceService categoryService;
@@ -81,10 +82,10 @@ public class AddStatementFragment extends RoboFragment {
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        setCategorySpinner();
-        categorySpinner.setSelection(categorySpinner.getAdapter().getCount() - 1);
+        if (requestCode == CREATE_CATEGORY_ACTIVITY_ID && resultCode == Activity.RESULT_OK) {
+            setCategorySpinner();
+            categorySpinner.setSelection(categorySpinner.getAdapter().getCount() - 1);
+        }
     }
 
     private void setUpButtons() {
@@ -119,14 +120,13 @@ public class AddStatementFragment extends RoboFragment {
         return builder.build();
     }
 
-    protected class CreateCategoryOnClickListener implements OnClickListener {
+    class CreateCategoryOnClickListener implements OnClickListener {
 
         @Override
         public void onClick(final View view) {
             final Intent intent = new Intent(getActivity(), CreateCategoryActivity.class);
-            startActivityForResult(intent, 1);
+            startActivityForResult(intent, CREATE_CATEGORY_ACTIVITY_ID);
         }
-
     }
 
     /**
@@ -134,7 +134,7 @@ public class AddStatementFragment extends RoboFragment {
      * @author Janos_Gyula_Meszaros
      *
      */
-    protected class SubmitButtonOnClickListener implements OnClickListener {
+    class SubmitButtonOnClickListener implements OnClickListener {
 
         @Override
         public void onClick(final View view) {
@@ -149,7 +149,7 @@ public class AddStatementFragment extends RoboFragment {
                 } else {
                     showToast(activity, activity.getString(R.string.database_error));
                 }
-            } catch (IllegalArgumentException e) {
+            } catch (final IllegalArgumentException e) {
                 showToast(activity, e.getMessage());
             }
 

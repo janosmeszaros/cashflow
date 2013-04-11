@@ -52,6 +52,7 @@ public class CreateCategoryActivity extends RoboActivity {
             final String name = nameText.getText().toString();
 
             if (service.saveCategory(name)) {
+                setResult(RESULT_OK);
                 finish();
             } else {
                 Toast.makeText(CreateCategoryActivity.this, getString(R.string.empty_category), Toast.LENGTH_SHORT).show();
