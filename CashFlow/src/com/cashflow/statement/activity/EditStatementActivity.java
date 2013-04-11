@@ -45,6 +45,8 @@ import com.google.inject.Inject;
  * @author Janos_Gyula_Meszaros
  */
 public class EditStatementActivity extends RoboFragmentActivity {
+    private static final int REQUEST_CODE_FOR_CATEGORY = 1;
+
     private static final Logger LOG = LoggerFactory.getLogger(EditStatementActivity.class);
 
     @InjectView(R.id.amountText)
@@ -156,10 +158,10 @@ public class EditStatementActivity extends RoboFragmentActivity {
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        final ArrayAdapter<Category> adapter = setCategorySpinner();
-        categorySpinner.setSelection(adapter.getCount() - 1);
+        if (requestCode == REQUEST_CODE_FOR_CATEGORY && resultCode == RESULT_OK) {
+            final ArrayAdapter<Category> adapter = setCategorySpinner();
+            categorySpinner.setSelection(adapter.getCount() - 1);
+        }
     }
 
     protected class CreateCategoryOnClickListener implements OnClickListener {
@@ -167,7 +169,7 @@ public class EditStatementActivity extends RoboFragmentActivity {
         @Override
         public void onClick(final View view) {
             final Intent intent = new Intent(EditStatementActivity.this, CreateCategoryActivity.class);
-            startActivityForResult(intent, 1);
+            startActivityForResult(intent, REQUEST_CODE_FOR_CATEGORY);
         }
 
     }
