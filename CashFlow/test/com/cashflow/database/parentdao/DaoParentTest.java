@@ -76,20 +76,24 @@ public class DaoParentTest {
 
     @Test(expected = IllegalTableException.class)
     public void testConstructorWhenPROJECTIONFieldIsNotExistsInClassThenShouldThrowException() {
-        try {
-            when(table.getClass().getField("PROJECTION")).thenThrow(new NoSuchFieldException());
-        } catch (NoSuchFieldException e) {
-            LOG.debug("Exception handling!");
-        }
+        //        try {
+        //            when(table.getClass().getField("PROJECTION")).thenThrow(new NoSuchFieldException());
+        //        } catch (final NoSuchFieldException e) {
+        //            LOG.debug("Exception handling!");
+        //        }
+        final Tables clazz = new Tables() {
+            //            public static final String PROJECTION = "name";
+            //            private static final String TABLE_NAME = "12";
+        };
 
-        underTest = new DaoParent(provider, table.getClass());
+        underTest = new DaoParent(provider, clazz.getClass());
     }
 
     @Test(expected = IllegalTableException.class)
     public void testConstructorWhenTABLENAMEFieldIsNotExistsInClassThenShouldThrowException() {
         try {
             when(table.getClass().getField("TABLE_NAME")).thenThrow(new NoSuchFieldException());
-        } catch (NoSuchFieldException e) {
+        } catch (final NoSuchFieldException e) {
             LOG.debug("Exception handling2!");
         }
 
@@ -111,7 +115,7 @@ public class DaoParentTest {
         when(databaseMock.insert(anyString(), anyString(), (ContentValues) anyObject())).thenReturn(1L);
         setKeySet(AbstractStatement.class);
 
-        boolean result = underTest.save(values);
+        final boolean result = underTest.save(values);
 
         verify(provider).getWritableDb();
         verify(databaseMock).insert(TABLE_NAME, NULLABLE, values);
@@ -123,7 +127,7 @@ public class DaoParentTest {
         when(databaseMock.insert(anyString(), anyString(), (ContentValues) anyObject())).thenReturn(-1L);
         setKeySet(AbstractStatement.class);
 
-        boolean result = underTest.save(values);
+        final boolean result = underTest.save(values);
 
         verify(provider).getWritableDb();
         verify(databaseMock).insert(TABLE_NAME, NULLABLE, values);
@@ -149,10 +153,10 @@ public class DaoParentTest {
     @Test
     public void testUpdateWhenEverythingIsOkThenShouldCallProperFunctionAndReturnTrue() {
         setKeySet(AbstractStatement.class);
-        String id = "id";
+        final String id = "id";
         when(databaseMock.update(anyString(), (ContentValues) anyObject(), anyString(), (String[]) anyObject())).thenReturn(1);
 
-        boolean result = underTest.update(values, id);
+        final boolean result = underTest.update(values, id);
 
         verify(provider).getWritableDb();
         verify(databaseMock).update(TABLE_NAME, values, _ID + EQUALS, new String[]{id});
@@ -162,10 +166,10 @@ public class DaoParentTest {
     @Test
     public void testUpdateWhenSomethinWrongWithDatabaseThenShouldReturnFalse() {
         setKeySet(AbstractStatement.class);
-        String id = "2";
+        final String id = "2";
         when(databaseMock.update(anyString(), (ContentValues) anyObject(), anyString(), (String[]) anyObject())).thenReturn(0);
 
-        boolean result = underTest.update(values, id);
+        final boolean result = underTest.update(values, id);
 
         verify(provider).getWritableDb();
         verify(databaseMock).update(TABLE_NAME, values, _ID + EQUALS, new String[]{id});
@@ -176,7 +180,7 @@ public class DaoParentTest {
     public void testGetValuesWhenEverythingIsOkThenCallProperFunctionAndReturnCursor() {
         when(databaseMock.query(TABLE_NAME, PROJECTION, null, null, null, null, null)).thenReturn(cursorMock);
 
-        Cursor cursor = underTest.getValues();
+        final Cursor cursor = underTest.getValues();
 
         verify(provider).getReadableDb();
         verify(databaseMock).query(TABLE_NAME, PROJECTION, null, null, null, null, null);
@@ -184,11 +188,11 @@ public class DaoParentTest {
     }
 
     @SuppressWarnings("unchecked")
-    private void setKeySet(Class<? extends Tables> clazz) {
-        Field[] fields = clazz.getFields();
-        List<Field> list = new ArrayList<Field>(Arrays.asList(fields));
+    private void setKeySet(final Class<? extends Tables> clazz) {
+        final Field[] fields = clazz.getFields();
+        final List<Field> list = new ArrayList<Field>(Arrays.asList(fields));
         CollectionUtils.filter(list, new ColumnPredicate());
-        Set<String> columnNames = new TreeSet<String>(CollectionUtils.collect(list, new FieldToStringTransformer()));
+        final Set<String> columnNames = new TreeSet<String>(CollectionUtils.collect(list, new FieldToStringTransformer()));
 
         when(values.keySet()).thenReturn(columnNames);
     }

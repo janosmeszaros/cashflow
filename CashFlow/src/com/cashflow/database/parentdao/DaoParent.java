@@ -113,9 +113,9 @@ public class DaoParent {
             final Field field = clazz.getField("PROJECTION");
             projection = (String[]) field.get(null);
         } catch (final NoSuchFieldException e) {
-            throw new IllegalTableException(clazz.getName(), TABLE_NAME);
+            throw new IllegalTableException(clazz.getName(), "PROJECTION");
         } catch (final IllegalAccessException ex) {
-            throw new IllegalTableException(clazz.getName(), TABLE_NAME);
+            throw new IllegalTableException(clazz.getName(), "PROJECTION");
         }
     }
 
