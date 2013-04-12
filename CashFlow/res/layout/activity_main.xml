@@ -4,38 +4,116 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity" >
 
-    <TextView
-        android:id="@+id/textViewBalance"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/LinearLayoutIncomes"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textViewBalanceAmount"
-        android:layout_alignBottom="@+id/textViewBalanceAmount"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="20dp"
-        android:text="@string/balance_string"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:orientation="horizontal" >
 
-    <TextView
-        android:id="@+id/textViewBalanceCurrency"
-        android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/textViewIncome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="22dp"
+            android:layout_marginTop="22dp"
+            
+            android:text="@string/income_string"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView
+            android:id="@+id/textViewIncomeAmount"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:layout_marginRight="10dp"
+            android:gravity="right"
+            android:text="@string/balance_value"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView
+            android:id="@+id/textViewIncomesCurrency"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:layout_marginRight="16dp"
+            android:text="@string/currency"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/LinearLayoutExpenses"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textViewBalanceAmount"
-        android:layout_alignBottom="@+id/textViewBalanceAmount"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="21dp"
-        android:text="@string/currency"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:layout_below="@id/LinearLayoutIncomes"
+        android:orientation="horizontal" >
 
-    <TextView
-        android:id="@+id/textViewBalanceAmount"
-        android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/textViewExpense"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/expense_string"
+            android:layout_marginLeft="22dp"
+            android:layout_marginTop="22dp"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView
+            android:id="@+id/textViewExpenseAmount"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:layout_marginRight="10dp"
+            android:gravity="right"
+            android:text="@string/balance_value"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView
+            android:id="@+id/textViewExpensesCurrency"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/currency"
+            android:layout_marginTop="22dp"
+            android:layout_marginRight="16dp"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/LinearLayoutBalance"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginRight="22dp"
-        android:layout_marginTop="30dp"
-        android:layout_toLeftOf="@+id/textViewBalanceCurrency"
-        android:text="@string/balance_value"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:layout_below="@id/LinearLayoutExpenses"
+        android:orientation="horizontal" >
 
+        <TextView
+            android:id="@+id/textViewBalance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="22dp"
+            android:layout_marginTop="22dp"
+            android:text="@string/balance_string"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView
+            android:id="@+id/textViewBalanceAmount"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="22dp"
+            android:gravity="right"
+            android:text="@string/balance_value"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView
+            android:id="@+id/textViewBalanceCurrency"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="22dp"
+            android:text="@string/currency"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+    </LinearLayout>
 
 </RelativeLayout>

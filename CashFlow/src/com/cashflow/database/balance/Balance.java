@@ -20,9 +20,19 @@ public final class Balance {
     private static final Logger LOG = LoggerFactory.getLogger(Balance.class);
     private BigDecimal amountBalance = BigDecimal.ZERO;
     private final StatementPersistenceService service;
+    private BigDecimal expenses;
+    private BigDecimal incomes;
 
     private Balance(final StatementPersistenceService service) {
         this.service = service;
+    }
+
+    public BigDecimal getExpenses() {
+        return expenses;
+    }
+
+    public BigDecimal getIncomes() {
+        return incomes;
     }
 
     public double getBalance() {
@@ -46,8 +56,8 @@ public final class Balance {
      * Calculates the current balance.
      */
     public void countBalance() {
-        final BigDecimal expenses = countSumOfStatement(service.getStatement(StatementType.Expense));
-        final BigDecimal incomes = countSumOfStatement(service.getStatement(StatementType.Income));
+        expenses = countSumOfStatement(service.getStatement(StatementType.Expense));
+        incomes = countSumOfStatement(service.getStatement(StatementType.Income));
 
         amountBalance = incomes.subtract(expenses);
         LOG.debug("Balance is: " + amountBalance.doubleValue());

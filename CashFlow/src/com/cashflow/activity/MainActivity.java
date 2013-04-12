@@ -27,6 +27,10 @@ public class MainActivity extends RoboSherlockActivity {
 
     @InjectView(R.id.textViewBalanceAmount)
     private TextView balanceText;
+    @InjectView(R.id.textViewIncomeAmount)
+    private TextView incomeText;
+    @InjectView(R.id.textViewExpenseAmount)
+    private TextView expenseText;
 
     @Inject
     private Balance balance;
@@ -72,6 +76,8 @@ public class MainActivity extends RoboSherlockActivity {
             balance.countBalance();
             final String value = String.valueOf(balance.getBalance());
             balanceText.setText(value);
+            incomeText.setText(String.valueOf(balance.getIncomes().doubleValue()));
+            expenseText.setText("- " + String.valueOf(balance.getExpenses().doubleValue()));
         }
     }
 
