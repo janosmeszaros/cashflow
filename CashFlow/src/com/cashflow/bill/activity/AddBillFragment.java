@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectView;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
@@ -30,6 +32,7 @@ import com.cashflow.R;
 import com.cashflow.activity.components.DateButtonOnClickListener;
 import com.cashflow.activity.components.RecurringCheckBoxOnClickListener;
 import com.cashflow.bill.database.BillPersistenceService;
+import com.cashflow.category.activity.CreateCategoryActivity;
 import com.cashflow.category.database.CategoryPersistenceService;
 import com.cashflow.constants.RecurringInterval;
 import com.cashflow.domain.Bill;
@@ -64,6 +67,8 @@ public class AddBillFragment extends RoboFragment {
     private CheckBox recurringCheckBox;
     @InjectView(R.id.submitButton)
     private Button submitButton;
+    @InjectView(R.id.createCategoryButton)
+    private ImageButton createCategory;
 
     @Inject
     private DateButtonOnClickListener listener;
@@ -91,6 +96,15 @@ public class AddBillFragment extends RoboFragment {
         activateRecurringArea();
         setCategorySpinner();
         submitButton.setOnClickListener(new AddBillOnClickListener());
+        createCategory.setOnClickListener(new CreateCategoryOnClickListener());
+    }
+
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        setCategorySpinner();
+        categorySpinner.setSelection(categorySpinner.getAdapter().getCount() - 1);
     }
 
     @Override
@@ -121,6 +135,16 @@ public class AddBillFragment extends RoboFragment {
         recurringCheckBox.setOnClickListener(checkBoxListener);
         recurringArea.setVisibility(VISIBLE);
         recurringSpinner.setAdapter(spinnerAdapter);
+    }
+
+    protected class CreateCategoryOnClickListener implements OnClickListener {
+
+        @Override
+        public void onClick(final View view) {
+            final Intent intent = new Intent(getActivity(), CreateCategoryActivity.class);
+            startActivityForResult(intent, 1);
+        }
+
     }
 
     /**

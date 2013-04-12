@@ -6,7 +6,7 @@
     <LinearLayout
         android:id="@+id/LinearLayout1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical" >
 
         <LinearLayout
@@ -25,15 +25,25 @@
 
             <EditText
                 android:id="@+id/amountText"
-                android:layout_width="fill_parent"
+                android:layout_width="189dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="30dp"
                 android:digits="0123456789."
                 android:ems="10"
+                android:gravity="right"
                 android:hint="@string/amount_hint"
                 android:inputType="numberDecimal" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="30dp"
+                android:text="@string/currency"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
 
         <LinearLayout
@@ -54,8 +64,16 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
-                android:layout_weight="1"
+                android:layout_weight="0.64"
                 android:prompt="@string/label_category" />
+
+            <ImageButton
+                android:id="@+id/createCategoryButton"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/title_activity_create_category"
+                android:src="@android:drawable/ic_menu_add" />
         </LinearLayout>
 
         <LinearLayout
