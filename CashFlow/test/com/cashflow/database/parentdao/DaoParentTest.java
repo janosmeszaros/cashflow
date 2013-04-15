@@ -24,8 +24,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -33,12 +31,10 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.cashflow.database.DatabaseContracts.AbstractStatement;
 import com.cashflow.database.SQLiteDbProvider;
-import com.cashflow.exceptions.IllegalTableException;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 @RunWith(RobolectricTestRunner.class)
 public class DaoParentTest {
-    private static final Logger LOG = LoggerFactory.getLogger(DaoParentTest.class);
     private static final String ID = "1";
     private static final String EQUALS = " = ?";
 
@@ -61,43 +57,17 @@ public class DaoParentTest {
         when(provider.getWritableDb()).thenReturn(databaseMock);
         when(provider.getReadableDb()).thenReturn(databaseMock);
 
-        underTest = new DaoParent(provider, AbstractStatement.class);
+        underTest = new DaoParent(provider, new AbstractStatement());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWhenProviderIsNullThenShouldThrowException() {
-        underTest = new DaoParent(null, AbstractStatement.class);
+        underTest = new DaoParent(null, new AbstractStatement());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWhenClazzIsNullThenShouldThrowException() {
         underTest = new DaoParent(provider, null);
-    }
-
-    @Test(expected = IllegalTableException.class)
-    public void testConstructorWhenPROJECTIONFieldIsNotExistsInClassThenShouldThrowException() {
-        //        try {
-        //            when(table.getClass().getField("PROJECTION")).thenThrow(new NoSuchFieldException());
-        //        } catch (final NoSuchFieldException e) {
-        //            LOG.debug("Exception handling!");
-        //        }
-        final Tables clazz = new Tables() {
-            //            public static final String PROJECTION = "name";
-            //            private static final String TABLE_NAME = "12";
-        };
-
-        underTest = new DaoParent(provider, clazz.getClass());
-    }
-
-    @Test(expected = IllegalTableException.class)
-    public void testConstructorWhenTABLENAMEFieldIsNotExistsInClassThenShouldThrowException() {
-        try {
-            when(table.getClass().getField("TABLE_NAME")).thenThrow(new NoSuchFieldException());
-        } catch (final NoSuchFieldException e) {
-            LOG.debug("Exception handling2!");
-        }
-
-        underTest = new DaoParent(provider, table.getClass());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -107,6 +77,11 @@ public class DaoParentTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testSaveWhenParamIsContainsWrongColumnNamesThenShouldThrowException() {
+        underTest.save(values);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testSaveWhenContentValuesNotConsistentWithDatabaseThenShouldThrowException() {
         underTest.save(values);
     }
 
@@ -123,7 +98,7 @@ public class DaoParentTest {
     }
 
     @Test
-    public void testSaveWhenSomethinWrongWithDatabaseThenShouldReturnFalse() {
+    public void testSaveWhenSomethingWrongWithDatabaseThenShouldReturnFalse() {
         when(databaseMock.insert(anyString(), anyString(), (ContentValues) anyObject())).thenReturn(-1L);
         setKeySet(AbstractStatement.class);
 

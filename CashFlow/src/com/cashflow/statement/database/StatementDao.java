@@ -36,7 +36,7 @@ public class StatementDao extends DaoParent {
      */
     @Inject
     public StatementDao(final SQLiteDbProvider provider) {
-        super(provider, AbstractStatement.class);
+        super(provider, new AbstractStatement());
         nullCheck(provider);
         this.provider = provider;
     }

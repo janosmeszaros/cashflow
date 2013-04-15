@@ -1,8 +1,20 @@
 package com.cashflow.database;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+
+import org.apache.commons.collections.CollectionUtils;
+
 import android.provider.BaseColumns;
 
 import com.cashflow.R;
+import com.cashflow.database.parentdao.ColumnPredicate;
+import com.cashflow.database.parentdao.FieldToStringTransformer;
 import com.cashflow.database.parentdao.Tables;
 
 /**
@@ -32,11 +44,20 @@ public abstract class DatabaseContracts {
     private static final String WHERE = " WHERE ";
     private static final String PRIMARY_KEY = " PRIMARY KEY";
 
+    @SuppressWarnings("unchecked")
+    private static Set<String> collectColumnNames(final Class<? extends Tables> clazz) {
+        final Field[] fields = clazz.getFields();
+        final List<Field> listOfFields = new ArrayList<Field>(Arrays.asList(fields));
+        CollectionUtils.filter(listOfFields, new ColumnPredicate());
+        final Collection<String> stringListOfFields = CollectionUtils.collect(listOfFields, new FieldToStringTransformer());
+        return new TreeSet<String>(stringListOfFields);
+    }
+
     /**
      * Category table.
      * @author Kornel_Refi
      */
-    public abstract static class AbstractCategory implements BaseColumns, Tables {
+    public static final class AbstractCategory implements BaseColumns, Tables {
         public static final String NULLABLE = null;
         public static final String TABLE_NAME = "category";
         public static final String COLUMN_NAME_CATEGORY_NAME = "name";
@@ -47,7 +68,25 @@ public abstract class DatabaseContracts {
 
         static final String SQL_DELETE_ENTRIES = DROP_TABLE + TABLE_NAME;
 
-        private AbstractCategory() {
+        /**
+         * Constructor
+         */
+        public AbstractCategory() {
+        }
+
+        @Override
+        public String getTableName() {
+            return TABLE_NAME;
+        }
+
+        @Override
+        public String[] getProjection() {
+            return PROJECTION;
+        }
+
+        @Override
+        public Set<String> getColumns() {
+            return collectColumnNames(this.getClass());
         }
     }
 
@@ -100,9 +139,26 @@ public abstract class DatabaseContracts {
 
         static final String SQL_DELETE_ENTRIES = DROP_TABLE + TABLE_NAME;
 
-        private AbstractStatement() {
+        /**
+         * Constructor
+         */
+        public AbstractStatement() {
         }
 
+        @Override
+        public String getTableName() {
+            return TABLE_NAME;
+        }
+
+        @Override
+        public String[] getProjection() {
+            return PROJECTION;
+        }
+
+        @Override
+        public Set<String> getColumns() {
+            return collectColumnNames(this.getClass());
+        }
     }
 
     /**
@@ -110,7 +166,7 @@ public abstract class DatabaseContracts {
      * @author Janos_Gyula_Meszaros
      *
      */
-    public abstract static class AbstractBill implements BaseColumns, Tables {
+    public static final class AbstractBill implements BaseColumns, Tables {
         public static final String NULLABLE = null;
         public static final String TABLE_NAME = "bill";
         public static final String COLUMN_NAME_AMOUNT = "amount";
@@ -132,7 +188,26 @@ public abstract class DatabaseContracts {
 
         static final String SQL_DELETE_ENTRIES = DROP_TABLE + TABLE_NAME;
 
-        private AbstractBill() {
+        /**
+         * Constructor
+         */
+        public AbstractBill() {
+        }
+
+        @Override
+        public String getTableName() {
+            return TABLE_NAME;
+        }
+
+        @Override
+        public String[] getProjection() {
+            return PROJECTION;
+        }
+
+        @Override
+        public Set<String> getColumns() {
+            return collectColumnNames(this.getClass());
         }
     }
+
 }

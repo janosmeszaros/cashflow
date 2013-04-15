@@ -19,7 +19,7 @@ public class CategoryDao extends DaoParent {
      */
     @Inject
     public CategoryDao(final SQLiteDbProvider provider) {
-        super(provider, AbstractCategory.class);
+        super(provider, new AbstractCategory());
     }
 
 }
