@@ -1,4 +1,4 @@
-package com.cashflow.statement.database;
+package com.cashflow.service;
 
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.CATEGORY_ID_ALIAS;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
@@ -26,7 +26,9 @@ import com.cashflow.constants.RecurringInterval;
 import com.cashflow.database.DatabaseContracts.AbstractCategory;
 import com.cashflow.domain.Category;
 import com.cashflow.domain.Statement;
+import com.cashflow.domain.StatementType;
 import com.cashflow.exceptions.IllegalStatementIdException;
+import com.cashflow.statement.database.AndroidStatementDAO;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -41,15 +43,15 @@ public class StatementPersistenceService {
     private static final Logger LOG = LoggerFactory.getLogger(StatementPersistenceService.class);
     private static final int TRUE = 1;
     private static final int FALSE = 0;
-    private final StatementDao dao;
+    private final AndroidStatementDAO dao;
 
     /**
      * Default constructor which gets a DAO.
-     * @param dao {@link StatementDao} to use to save data. Can't be <code>null</code>.
+     * @param dao {@link AndroidStatementDAO} to use to save data. Can't be <code>null</code>.
      * @throws IllegalArgumentException when DAO is <code>null</code>.
      */
     @Inject
-    public StatementPersistenceService(final StatementDao dao) {
+    public StatementPersistenceService(final AndroidStatementDAO dao) {
         validateObjectsNotNull(dao);
         this.dao = dao;
     }

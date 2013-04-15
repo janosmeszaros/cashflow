@@ -10,18 +10,17 @@ import org.slf4j.LoggerFactory;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
+import com.cashflow.dao.ParentDAO;
 import com.cashflow.database.SQLiteDbProvider;
 
 /**
  * Parent class for all dao. It contains the basic functions, such as insert, update and getValues;
  * @author Janos_Gyula_Meszaros
  */
-public class DaoParent {
+public class AndroidParentDAO implements ParentDAO {
     private static final String EQUALS = " = ?";
-    private static final Logger LOG = LoggerFactory.getLogger(DaoParent.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AndroidParentDAO.class);
     private final SQLiteDbProvider provider;
     private String tableName;
     private String[] projection;
@@ -33,8 +32,7 @@ public class DaoParent {
      * @param table table. Can't be <code>null</code>.
      * @throws IllegalArgumentException when <code>provider</code> or <code>table</code> is <code>null</code>.
      */
-
-    public DaoParent(final SQLiteDbProvider provider, final Tables table) {
+    public AndroidParentDAO(final SQLiteDbProvider provider, final Tables table) {
         nullCheck(provider);
         nullCheck(table);
         this.provider = provider;
@@ -48,6 +46,7 @@ public class DaoParent {
      * @throws IllegalArgumentException when <code>values</code> is <code>null</code>.  Or <code>values</code> is <code>null</code> or do not contains proper column names.
      * @return <code>true</code> if save was successful, <code>false</code> otherwise.
      */
+    @Override
     public boolean save(final ContentValues values) {
         validateContentValues(values);
 
@@ -70,6 +69,7 @@ public class DaoParent {
      * @throws IllegalArgumentException if <code>id</code> is empty or <code>null</code>.  Or <code>values</code> is <code>null</code> or do not contains proper column names. 
      * @return <code>true</code> if one or more records updated, otherwise <code>false</code>
      */
+    @Override
     public boolean update(final ContentValues values, final String id) {
         validateUpdateParams(values, id);
 
@@ -82,15 +82,6 @@ public class DaoParent {
 
         LOG.debug("Num of rows updated: " + update);
         return isSuccessful;
-    }
-
-    /**
-     * Returns all of the values in the given table.
-     * @return Cursor which contains the data.
-     */
-    public Cursor getValues() {
-        final SQLiteDatabase database = provider.getReadableDb();
-        return database.query(tableName, projection, null, null, null, null, null);
     }
 
     private void setFields(final Tables table) {

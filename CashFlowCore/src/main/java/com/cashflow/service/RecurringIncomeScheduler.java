@@ -1,4 +1,4 @@
-package com.cashflow.statement.database;
+package com.cashflow.service;
 
 import java.util.List;
 import java.util.Locale;
@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import com.cashflow.constants.RecurringInterval;
 import com.cashflow.domain.Statement;
+import com.cashflow.domain.StatementType;
 import com.google.inject.Inject;
 
 /**

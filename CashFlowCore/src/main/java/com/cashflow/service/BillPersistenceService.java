@@ -1,4 +1,4 @@
-package com.cashflow.bill.database;
+package com.cashflow.service;
 
 import static com.cashflow.database.DatabaseContracts.AbstractBill.COLUMN_NAME_AMOUNT;
 import static com.cashflow.database.DatabaseContracts.AbstractBill.COLUMN_NAME_CATEGORY;
@@ -14,11 +14,12 @@ import org.apache.commons.lang.Validate;
 import android.content.ContentValues;
 
 import com.cashflow.domain.Bill;
+import com.cashflow.service.AndroidBillDAO;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Class to create {@link ContentValues} to {@link BillDao}.
+ * Class to create {@link ContentValues} to {@link AndroidBillDAO}.
  * @author Janos_Gyula_Meszaros
  *
  */
@@ -26,14 +27,14 @@ import com.google.inject.Singleton;
 public class BillPersistenceService {
     private static final String TRUE = "1";
     private static final String FALSE = "0";
-    private final BillDao dao;
+    private final AndroidBillDAO dao;
 
     /**
      * Constructor which gets a dao to save {@link Bill}.
-     * @param dao {@link BillDao} class.
+     * @param dao {@link AndroidBillDAO} class.
      */
     @Inject
-    public BillPersistenceService(final BillDao dao) {
+    public BillPersistenceService(final AndroidBillDAO dao) {
         nullCheck(dao);
         this.dao = dao;
     }

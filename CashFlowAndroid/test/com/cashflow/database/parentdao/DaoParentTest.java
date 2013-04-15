@@ -29,6 +29,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.cashflow.dao.ParentDAO;
 import com.cashflow.database.DatabaseContracts.AbstractStatement;
 import com.cashflow.database.SQLiteDbProvider;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
@@ -38,7 +39,7 @@ public class DaoParentTest {
     private static final String ID = "1";
     private static final String EQUALS = " = ?";
 
-    private DaoParent underTest;
+    private ParentDAO underTest;
     @Mock
     private SQLiteDbProvider provider;
     @Mock
@@ -57,17 +58,17 @@ public class DaoParentTest {
         when(provider.getWritableDb()).thenReturn(databaseMock);
         when(provider.getReadableDb()).thenReturn(databaseMock);
 
-        underTest = new DaoParent(provider, new AbstractStatement());
+        underTest = new AndroidParentDAO(provider, new AbstractStatement());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWhenProviderIsNullThenShouldThrowException() {
-        underTest = new DaoParent(null, new AbstractStatement());
+        underTest = new AndroidParentDAO(null, new AbstractStatement());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWhenClazzIsNullThenShouldThrowException() {
-        underTest = new DaoParent(provider, null);
+        underTest = new AndroidParentDAO(provider, null);
     }
 
     @Test(expected = IllegalArgumentException.class)

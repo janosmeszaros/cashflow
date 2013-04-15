@@ -13,8 +13,8 @@ import org.mockito.MockitoAnnotations;
 
 import android.database.MatrixCursor;
 
-import com.cashflow.statement.database.StatementPersistenceService;
-import com.cashflow.statement.database.StatementType;
+import com.cashflow.domain.StatementType;
+import com.cashflow.service.StatementPersistenceService;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 /**

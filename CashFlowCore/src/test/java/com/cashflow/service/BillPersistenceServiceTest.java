@@ -1,4 +1,4 @@
-package com.cashflow.bill.database;
+package com.cashflow.service;
 
 import static com.cashflow.database.DatabaseContracts.AbstractBill.COLUMN_NAME_AMOUNT;
 import static com.cashflow.database.DatabaseContracts.AbstractBill.COLUMN_NAME_CATEGORY;
@@ -29,6 +29,7 @@ import android.content.ContentValues;
 import com.cashflow.constants.RecurringInterval;
 import com.cashflow.domain.Bill;
 import com.cashflow.domain.Category;
+import com.cashflow.service.BillPersistenceService;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 /**
@@ -41,7 +42,7 @@ public class BillPersistenceServiceTest {
     private static final Category CATEGORY = new Category("2", "category");
     private BillPersistenceService underTest;
     @Mock
-    private BillDao dao;
+    private AndroidBillDAO dao;
 
     @Before
     public void setUp() {

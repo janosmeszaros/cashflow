@@ -13,7 +13,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.cashflow.R;
-import com.cashflow.category.database.CategoryPersistenceService;
+import com.cashflow.service.CategoryPersistenceService;
 import com.google.inject.Inject;
 
 /**

@@ -10,8 +10,8 @@ import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_N
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_INTERVAL;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_NOTE;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.TABLE_NAME;
-import static com.cashflow.statement.database.StatementType.Expense;
-import static com.cashflow.statement.database.StatementType.Income;
+import static com.cashflow.domain.StatementType.Expense;
+import static com.cashflow.domain.StatementType.Income;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -35,7 +35,7 @@ import com.cashflow.activity.ListActivity;
 import com.cashflow.activity.testutil.ActivityModule;
 import com.cashflow.activity.testutil.ListStatementActivityProvider;
 import com.cashflow.database.DatabaseContracts.AbstractCategory;
-import com.cashflow.statement.database.StatementPersistenceService;
+import com.cashflow.service.StatementPersistenceService;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 /**

@@ -5,7 +5,6 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 import com.cashflow.constants.RecurringInterval;
-import com.cashflow.statement.database.StatementType;
 
 /**
  * Simple class for statement. This will hold data for one statement.
@@ -22,13 +21,13 @@ public final class Statement {
     private final RecurringInterval recurringInterval;
 
     private Statement(final Builder builder) {
-        this.id = builder.id;
-        this.amount = builder.amount;
-        this.category = builder.category;
-        this.date = builder.date;
-        this.note = builder.note;
-        this.recurringInterval = builder.recurringInterval;
-        this.type = builder.type;
+        id = builder.id;
+        amount = builder.amount;
+        category = builder.category;
+        date = builder.date;
+        note = builder.note;
+        recurringInterval = builder.recurringInterval;
+        type = builder.type;
     }
 
     public String getId() {
@@ -137,7 +136,7 @@ public final class Statement {
          * @return {@link Builder}
          */
         public Builder setId(final String statementId) {
-            this.id = statementId;
+            id = statementId;
             return this;
         }
 

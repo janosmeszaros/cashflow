@@ -31,12 +31,12 @@ import android.widget.Toast;
 import com.cashflow.R;
 import com.cashflow.activity.components.DateButtonOnClickListener;
 import com.cashflow.activity.components.RecurringCheckBoxOnClickListener;
-import com.cashflow.bill.database.BillPersistenceService;
 import com.cashflow.category.activity.CreateCategoryActivity;
-import com.cashflow.category.database.CategoryPersistenceService;
 import com.cashflow.constants.RecurringInterval;
 import com.cashflow.domain.Bill;
 import com.cashflow.domain.Category;
+import com.cashflow.service.BillPersistenceService;
+import com.cashflow.service.CategoryPersistenceService;
 import com.google.inject.Inject;
 
 /**

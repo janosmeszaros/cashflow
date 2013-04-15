@@ -1,4 +1,4 @@
-package com.cashflow.category.database;
+package com.cashflow.service;
 
 import static android.provider.BaseColumns._ID;
 import static com.cashflow.database.DatabaseContracts.AbstractCategory.COLUMN_NAME_CATEGORY_NAME;
@@ -24,6 +24,7 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 
 import com.cashflow.domain.Category;
+import com.cashflow.service.CategoryPersistenceService;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 /**
@@ -39,7 +40,7 @@ public class CategoryPersistenceServiceTest {
     private static final String EMPTY_STR = "";
     private CategoryPersistenceService underTest;
     @Mock
-    private CategoryDao dao;
+    private AndroidCategoryDAO dao;
     @Mock
     private Cursor cursor;
 

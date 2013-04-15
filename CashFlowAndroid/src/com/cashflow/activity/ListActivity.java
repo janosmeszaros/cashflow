@@ -18,8 +18,8 @@ import android.widget.TabWidget;
 
 import com.actionbarsherlock.view.Window;
 import com.cashflow.R;
+import com.cashflow.domain.StatementType;
 import com.cashflow.statement.activity.ListStatementFragment;
-import com.cashflow.statement.database.StatementType;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
 
 /**

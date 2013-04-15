@@ -21,18 +21,19 @@ import org.mockito.MockitoAnnotations;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.cashflow.dao.StatementDAO;
 import com.cashflow.database.SQLiteDbProvider;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 /**
- * {@link StatementDao} test class.
+ * {@link AndroidStatementDAO} test class.
  * @author Janos_Gyula_Meszaros
  */
 @RunWith(RobolectricTestRunner.class)
 public class StatementDaoTest {
     private static final String STATEMENT_ID = "1";
 
-    private StatementDao underTest;
+    private StatementDAO underTest;
     @Mock
     private SQLiteDbProvider provider;
     @Mock
@@ -47,12 +48,12 @@ public class StatementDaoTest {
         when(provider.getWritableDb()).thenReturn(database);
         when(provider.getReadableDb()).thenReturn(database);
 
-        underTest = new StatementDao(provider);
+        underTest = new AndroidStatementDAO(provider);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testWhenConstructorGetsNullThenThrowsIllegalArgumentException() {
-        underTest = new StatementDao(null);
+        underTest = new AndroidStatementDAO(null);
     }
 
     @Test

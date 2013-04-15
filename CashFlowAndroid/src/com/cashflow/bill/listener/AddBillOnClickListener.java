@@ -15,10 +15,10 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.cashflow.R;
-import com.cashflow.bill.database.BillPersistenceService;
 import com.cashflow.constants.RecurringInterval;
 import com.cashflow.domain.Bill;
 import com.cashflow.domain.Category;
+import com.cashflow.service.BillPersistenceService;
 import com.google.inject.Inject;
 
 /**

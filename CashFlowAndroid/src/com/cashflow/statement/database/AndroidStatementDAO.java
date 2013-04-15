@@ -8,72 +8,72 @@ import static com.cashflow.database.DatabaseContracts.AbstractStatement.RECURRIN
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.SELECT_STATEMENT_BY_ID;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.STATEMENT_INNER_JOINED_CATEGORY;
 
+import java.util.List;
+
 import org.apache.commons.lang.Validate;
 
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.cashflow.dao.StatementDAO;
 import com.cashflow.database.DatabaseContracts.AbstractStatement;
 import com.cashflow.database.SQLiteDbProvider;
-import com.cashflow.database.parentdao.DaoParent;
+import com.cashflow.database.parentdao.AndroidParentDAO;
+import com.cashflow.domain.Statement;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Basic dao for the statements.
+ * Basic DAO for the statements.
  * @author Kornel_Refi
  * @author Janos_Gyula_Meszaros
  */
 @Singleton
-public class StatementDao extends DaoParent {
+public class AndroidStatementDAO extends AndroidParentDAO implements StatementDAO {
     private final SQLiteDbProvider provider;
 
     /**
-     * Default constructor which gets a Provider. Can't be null.
-     * @throws IllegalArgumentException when provider is null.
+     * Default constructor which gets a Provider. Can't be <code>null</code>.
+     * @throws IllegalArgumentException when provider is <code>null</code>.
      * @param provider
      *            Provider to get database.
      */
     @Inject
-    public StatementDao(final SQLiteDbProvider provider) {
+    public AndroidStatementDAO(final SQLiteDbProvider provider) {
         super(provider, new AbstractStatement());
         nullCheck(provider);
         this.provider = provider;
     }
 
     /**
-     * Returns all of the expenses.
+     * Returns all of the values in the given table.
      * @return Cursor which contains the data.
      */
-    public Cursor getExpenses() {
+    @Override
+    public List<Statement> getAllStatements() {
+        final SQLiteDatabase database = provider.getReadableDb();
+        return database.query(tableName, projection, null, null, null, null, null);
+    }
+
+    @Override
+    public List<Statement> getExpenses() {
         final SQLiteDatabase dataBase = provider.getReadableDb();
         return dataBase.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION, EXPENSE_SELECTION, null, null, null, null);
     }
 
-    /**
-     * Returns all of the incomes.
-     * @return Cursor which contains the data.
-     */
-    public Cursor getIncomes() {
+    @Override
+    public List<Statement> getIncomes() {
         final SQLiteDatabase dataBase = provider.getReadableDb();
         return dataBase.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION, INCOME_SELECTION, null, null, null, null);
     }
 
-    /**
-     * Returns recurring incomes.
-     * @return Cursor which contains the data.
-     */
-    public Cursor getRecurringIncomes() {
+    @Override
+    public List<Statement> getRecurringIncomes() {
         final SQLiteDatabase dataBase = provider.getReadableDb();
         return dataBase.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION_WITH_ALIAS, RECURRING_INCOME_SELECTION, null, null, null, null);
     }
 
-    /**
-     * Get Statement by id.
-     * @param statementId of statement
-     * @return statement
-     */
-    public Cursor getStatementById(final String statementId) {
+    @Override
+    public Statement getStatementById(final String statementId) {
         idCheck(statementId);
 
         final SQLiteDatabase dataBase = provider.getReadableDb();

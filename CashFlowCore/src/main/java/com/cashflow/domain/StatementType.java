@@ -1,4 +1,4 @@
-package com.cashflow.statement.database;
+package com.cashflow.domain;
 
 /**
  * Enumerate the statement types. <code>RecurringIncome</code> is a subtype of <code>Income</code>

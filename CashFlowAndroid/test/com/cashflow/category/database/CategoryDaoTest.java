@@ -6,7 +6,7 @@ import org.junit.runner.RunWith;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 /**
- * {@link CategoryDao} test.
+ * {@link AndroidCategoryDAO} test.
  * @author Kornel_Refi
  *
  */
@@ -15,7 +15,7 @@ public class CategoryDaoTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testWhenConstructorGetsNullThenThrowsIllegalArgumentException() {
-        new CategoryDao(null);
+        new AndroidCategoryDAO(null);
     }
 
 }

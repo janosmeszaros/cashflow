@@ -1,4 +1,4 @@
-package com.cashflow.statement.database;
+package com.cashflow.service;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -19,6 +19,9 @@ import org.mockito.MockitoAnnotations;
 import com.cashflow.constants.RecurringInterval;
 import com.cashflow.domain.Category;
 import com.cashflow.domain.Statement;
+import com.cashflow.domain.StatementType;
+import com.cashflow.service.RecurringIncomeScheduler;
+import com.cashflow.service.StatementPersistenceService;
 
 public class RecurringIncomeSchedulerTest {
 

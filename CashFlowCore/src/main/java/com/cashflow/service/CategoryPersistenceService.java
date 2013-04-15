@@ -1,4 +1,4 @@
-package com.cashflow.category.database;
+package com.cashflow.service;
 
 import static android.provider.BaseColumns._ID;
 import static com.cashflow.database.DatabaseContracts.AbstractCategory.COLUMN_NAME_CATEGORY_NAME;
@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import com.cashflow.category.database.AndroidCategoryDAO;
 import com.cashflow.domain.Category;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -26,17 +27,17 @@ import com.google.inject.Singleton;
 public class CategoryPersistenceService {
     private static final String EMPTY_STRING = "";
     private static final Logger LOG = LoggerFactory.getLogger(CategoryPersistenceService.class);
-    private final CategoryDao dao;
+    private final AndroidCategoryDAO dao;
 
     /**
      * Default constructor which gets a context for DbHelper.
      * @param dao
-     *            {@link CategoryDao} to use to save data. Can't be <code>null</code>
+     *            {@link AndroidCategoryDAO} to use to save data. Can't be <code>null</code>
      * @throws IllegalArgumentException
      *             when DAO is <code>null</code>
      */
     @Inject
-    public CategoryPersistenceService(final CategoryDao dao) {
+    public CategoryPersistenceService(final AndroidCategoryDAO dao) {
         validateInput(dao);
         this.dao = dao;
     }

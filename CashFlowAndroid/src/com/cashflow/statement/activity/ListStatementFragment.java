@@ -32,8 +32,8 @@ import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.cashflow.R;
-import com.cashflow.statement.database.StatementPersistenceService;
-import com.cashflow.statement.database.StatementType;
+import com.cashflow.domain.StatementType;
+import com.cashflow.service.StatementPersistenceService;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.inject.Inject;
 

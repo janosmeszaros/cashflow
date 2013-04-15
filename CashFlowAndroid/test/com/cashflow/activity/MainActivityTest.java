@@ -1,8 +1,8 @@
 package com.cashflow.activity;
 
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
-import static com.cashflow.statement.database.StatementType.Expense;
-import static com.cashflow.statement.database.StatementType.Income;
+import static com.cashflow.domain.StatementType.Expense;
+import static com.cashflow.domain.StatementType.Income;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyInt;
@@ -32,7 +32,7 @@ import com.cashflow.activity.testutil.ListStatementActivityProvider;
 import com.cashflow.activity.testutil.TestGuiceModule;
 import com.cashflow.activity.testutil.shadows.ActionBarSherlockRobolectric;
 import com.cashflow.database.balance.Balance;
-import com.cashflow.statement.database.StatementPersistenceService;
+import com.cashflow.service.StatementPersistenceService;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 /**

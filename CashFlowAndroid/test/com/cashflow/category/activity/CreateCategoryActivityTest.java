@@ -19,7 +19,7 @@ import com.cashflow.R;
 import com.cashflow.activity.testutil.ActivityModule;
 import com.cashflow.activity.testutil.CreateCategoryActivityProvider;
 import com.cashflow.activity.testutil.TestGuiceModule;
-import com.cashflow.category.database.CategoryPersistenceService;
+import com.cashflow.service.CategoryPersistenceService;
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 import com.xtremelabs.robolectric.shadows.ShadowButton;

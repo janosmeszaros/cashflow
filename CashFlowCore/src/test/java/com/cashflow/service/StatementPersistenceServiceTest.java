@@ -1,4 +1,4 @@
-package com.cashflow.statement.database;
+package com.cashflow.service;
 
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.CATEGORY_ID_ALIAS;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
@@ -8,8 +8,8 @@ import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_N
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_IS_INCOME;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_NOTE;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.STATEMENT_ID_ALIAS;
-import static com.cashflow.statement.database.StatementType.Expense;
-import static com.cashflow.statement.database.StatementType.Income;
+import static com.cashflow.domain.StatementType.Expense;
+import static com.cashflow.domain.StatementType.Income;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
@@ -37,7 +37,9 @@ import com.cashflow.constants.RecurringInterval;
 import com.cashflow.database.DatabaseContracts.AbstractCategory;
 import com.cashflow.domain.Category;
 import com.cashflow.domain.Statement;
+import com.cashflow.domain.StatementType;
 import com.cashflow.exceptions.IllegalStatementIdException;
+import com.cashflow.service.StatementPersistenceService;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 @RunWith(RobolectricTestRunner.class)
@@ -56,7 +58,7 @@ public class StatementPersistenceServiceTest {
     private static final String ILLEGAL_ID = "3";
     private StatementPersistenceService underTest;
     @Mock
-    private StatementDao dao;
+    private AndroidStatementDAO dao;
     @Mock
     private Cursor expenseCursor;
     @Mock

@@ -26,12 +26,12 @@ import android.widget.Toast;
 import com.cashflow.R;
 import com.cashflow.activity.components.DateButtonOnClickListener;
 import com.cashflow.category.activity.CreateCategoryActivity;
-import com.cashflow.category.database.CategoryPersistenceService;
 import com.cashflow.domain.Category;
 import com.cashflow.domain.Statement;
+import com.cashflow.domain.StatementType;
 import com.cashflow.domain.Statement.Builder;
-import com.cashflow.statement.database.StatementPersistenceService;
-import com.cashflow.statement.database.StatementType;
+import com.cashflow.service.CategoryPersistenceService;
+import com.cashflow.service.StatementPersistenceService;
 import com.google.inject.Inject;
 
 /**

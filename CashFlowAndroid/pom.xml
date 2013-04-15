@@ -12,7 +12,6 @@
 	<packaging>apk</packaging>
 	<name>CashFlowAndroid</name>
 
-
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<plugins>
@@ -31,7 +30,7 @@
 					<resourceDirectory>${project.basedir}/res</resourceDirectory>
 					<nativeLibrariesDirectory>${project.basedir}/src/main/native</nativeLibrariesDirectory>
 					<sdk>
-<!-- 						<path>${env.ANDROID_HOME}</path> -->
+						<!-- <path>${env.ANDROID_HOME}</path> -->
 						<platform>17</platform>
 					</sdk>
 					<undeployBeforeDeploy>true</undeployBeforeDeploy>
@@ -43,6 +42,12 @@
 
 	<dependencies>
 		<!-- Android -->
+
+		<dependency>
+			<groupId>com.cashflow</groupId>
+			<artifactId>CashFlowCore</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
 		<dependency>
 			<groupId>com.google.android</groupId>
 			<artifactId>android</artifactId>
@@ -77,18 +82,6 @@
 			<groupId>org.roboguice</groupId>
 			<artifactId>roboguice</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>joda-time</groupId>
-			<artifactId>joda-time</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>commons-lang</groupId>
-			<artifactId>commons-lang</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>commons-collections</groupId>
-			<artifactId>commons-collections</artifactId>
-			<version>3.2.1</version>
-		</dependency>
+
 	</dependencies>
 </project>
