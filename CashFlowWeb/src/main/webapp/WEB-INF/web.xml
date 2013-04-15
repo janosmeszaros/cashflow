@@ -31,10 +31,28 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
+
 	<servlet-mapping>
 		<servlet-name>appServlet</servlet-name>
-		<url-pattern>/spring/*</url-pattern>
+		<url-pattern>/</url-pattern>
 	</servlet-mapping>
+
+	<jsp-config>
+		<jsp-property-group>
+			<url-pattern>*.jsp</url-pattern>
+			<include-prelude>/WEB-INF/boot-head.jsp</include-prelude>
+			<include-coda>/WEB-INF/boot-foot.jsp</include-coda>
+		</jsp-property-group>
+	</jsp-config>
+
+	<error-page>
+		<error-code>404</error-code>
+		<location>/WEB-INF/views/error404.jsp</location>
+	</error-page>
+
+	<welcome-file-list>
+		<welcome-file>home.jsp</welcome-file>
+	</welcome-file-list>
 
 
 
