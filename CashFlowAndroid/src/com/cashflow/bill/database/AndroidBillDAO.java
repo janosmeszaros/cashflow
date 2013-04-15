@@ -13,7 +13,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Dao class for bills.
+ * DAO class for bills.
  * @author Janos_Gyula_Meszaros
  *
  */
@@ -29,14 +29,22 @@ public class AndroidBillDAO extends AndroidParentDAO implements BillDAO {
         super(provider, new AbstractBill());
     }
 
-    /**
-     * Returns all of the values in the given table.
-     * @return Cursor which contains the data.
-     */
     @Override
     public List<Bill> getAllBills() {
         final SQLiteDatabase database = provider.getReadableDb();
         return database.query(tableName, projection, null, null, null, null, null);
+    }
+
+    @Override
+    public boolean update(final Bill bill, final String id) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean save(final Bill bill) {
+        // TODO Auto-generated method stub
+        return false;
     }
 
 }

@@ -34,8 +34,8 @@ public class BalanceTest {
 
         MockitoAnnotations.initMocks(this);
 
-        when(statementPersistentServiceMock.getStatement(StatementType.Expense)).thenReturn(matrixCursorMock);
-        when(statementPersistentServiceMock.getStatement(StatementType.Income)).thenReturn(matrixCursorMock);
+        when(statementPersistentServiceMock.getAllStatementsByType(StatementType.Expense)).thenReturn(matrixCursorMock);
+        when(statementPersistentServiceMock.getAllStatementsByType(StatementType.Income)).thenReturn(matrixCursorMock);
 
         when(matrixCursorMock.getColumnIndex(COLUMN_NAME_AMOUNT)).thenReturn(0);
         when(matrixCursorMock.isAfterLast()).thenReturn(false, true, false, true);

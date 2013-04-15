@@ -8,10 +8,12 @@ import static com.cashflow.database.DatabaseContracts.AbstractStatement.RECURRIN
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.SELECT_STATEMENT_BY_ID;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.STATEMENT_INNER_JOINED_CATEGORY;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.Validate;
 
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.cashflow.dao.StatementDAO;
@@ -45,13 +47,16 @@ public class AndroidStatementDAO extends AndroidParentDAO implements StatementDA
     }
 
     /**
-     * Returns all of the values in the given table.
-     * @return Cursor which contains the data.
+     * Returns all the {@link Statement}.
+     * @return {@link List} of {@link Statement} which contains the data.
      */
     @Override
     public List<Statement> getAllStatements() {
         final SQLiteDatabase database = provider.getReadableDb();
-        return database.query(tableName, projection, null, null, null, null, null);
+        final Cursor query = database.query(tableName, PROJECTION, null, null, null, null, null);
+
+        final List<Statement> statements = new ArrayList<Statement>();
+        return statements;
     }
 
     @Override

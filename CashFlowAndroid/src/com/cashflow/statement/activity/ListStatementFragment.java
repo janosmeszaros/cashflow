@@ -162,7 +162,7 @@ public class ListStatementFragment extends RoboSherlockFragment implements OnChe
     private void getDataFromDatabase() {
         LOG.debug("Starting query for type: " + type);
 
-        final Cursor cursor = statementService.getStatement(type);
+        final Cursor cursor = statementService.getAllStatementsByType(type);
 
         final SimpleCursorAdapter adapter = new SimpleCursorAdapter(getActivity(), R.layout.list_statements_row, cursor, PROJECTION, TO_VIEWS) {
             @Override

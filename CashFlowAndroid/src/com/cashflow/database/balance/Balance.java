@@ -56,8 +56,8 @@ public final class Balance {
      * Calculates the current balance.
      */
     public void countBalance() {
-        expenses = countSumOfStatement(service.getStatement(StatementType.Expense));
-        incomes = countSumOfStatement(service.getStatement(StatementType.Income));
+        expenses = countSumOfStatement(service.getAllStatementsByType(StatementType.Expense));
+        incomes = countSumOfStatement(service.getAllStatementsByType(StatementType.Income));
 
         amountBalance = incomes.subtract(expenses);
         LOG.debug("Balance is: " + amountBalance.doubleValue());

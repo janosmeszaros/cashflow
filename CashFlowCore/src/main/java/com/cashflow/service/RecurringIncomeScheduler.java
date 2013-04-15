@@ -36,7 +36,7 @@ public class RecurringIncomeScheduler {
     }
 
     private Statement buildStatement(final Statement recurringStatement, final String dateTime) {
-        return new Statement.Builder(recurringStatement.getAmount(), dateTime).setNote(recurringStatement.getNote())
+        return Statement.builder(recurringStatement.getAmount(), dateTime).setNote(recurringStatement.getNote())
                 .setCategory(recurringStatement.getCategory()).setRecurringInterval(RecurringInterval.none).setType(StatementType.Income).build();
 
     }
@@ -79,7 +79,7 @@ public class RecurringIncomeScheduler {
     }
 
     private void interateThrough(final List<Statement> list) {
-        for (Statement statement : list) {
+        for (final Statement statement : list) {
             final int periods = countPeriods(statement);
 
             final String newDate = saveNewStatements(statement, periods);
@@ -117,7 +117,7 @@ public class RecurringIncomeScheduler {
     private void updateRecurringStatement(final Statement recurringStatement, final String newDate) {
         if (!recurringStatement.getDate().equals(newDate)) {
 
-            final Statement statement = new Statement.Builder(recurringStatement.getAmount(), newDate).setId(recurringStatement.getId())
+            final Statement statement = Statement.builder(recurringStatement.getAmount(), newDate).setId(recurringStatement.getId())
                     .setNote(recurringStatement.getNote()).setCategory(recurringStatement.getCategory())
                     .setRecurringInterval(recurringStatement.getRecurringInterval()).setType(StatementType.Income).build();
 

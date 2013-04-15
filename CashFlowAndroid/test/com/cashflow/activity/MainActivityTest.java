@@ -141,8 +141,8 @@ public class MainActivityTest {
     }
 
     private void setUpMocks() {
-        when(service.getStatement(Expense)).thenReturn(matrixCursorMock);
-        when(service.getStatement(Income)).thenReturn(matrixCursorMock);
+        when(service.getAllStatementsByType(Expense)).thenReturn(matrixCursorMock);
+        when(service.getAllStatementsByType(Income)).thenReturn(matrixCursorMock);
 
         when(matrixCursorMock.getColumnIndex(COLUMN_NAME_AMOUNT)).thenReturn(0);
         when(matrixCursorMock.isAfterLast()).thenReturn(false, true, false, true);

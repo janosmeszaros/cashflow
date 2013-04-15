@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 
-import com.cashflow.dao.ParentDAO;
 import com.cashflow.database.SQLiteDbProvider;
 
 /**
@@ -22,9 +21,9 @@ public class AndroidParentDAO implements ParentDAO {
     private static final String EQUALS = " = ?";
     private static final Logger LOG = LoggerFactory.getLogger(AndroidParentDAO.class);
     private final SQLiteDbProvider provider;
-    private String tableName;
     private String[] projection;
     private Set<String> columnNames;
+    protected String tableName;
 
     /**
      * Default constructor which gets a Provider.

@@ -73,6 +73,10 @@ public final class Statement {
         return ToStringBuilder.reflectionToString(this);
     }
 
+    public static Builder builder(final String a, final String b) {
+        return new Builder(a, b);
+    }
+
     /**
      * Builder for statement class. Required parameters are <code>amount</code> and <code>date</code>.
      * Default statement type is {@link StatementType.Income}.
@@ -96,6 +100,7 @@ public final class Statement {
          * @param date the date of {@link Statement}
          */
         public Builder(final String amount, final String date) {
+
             this.amount = amount;
             this.date = date;
         }

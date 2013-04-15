@@ -28,8 +28,8 @@ import com.cashflow.activity.components.DateButtonOnClickListener;
 import com.cashflow.category.activity.CreateCategoryActivity;
 import com.cashflow.domain.Category;
 import com.cashflow.domain.Statement;
-import com.cashflow.domain.StatementType;
 import com.cashflow.domain.Statement.Builder;
+import com.cashflow.domain.StatementType;
 import com.cashflow.service.CategoryPersistenceService;
 import com.cashflow.service.StatementPersistenceService;
 import com.google.inject.Inject;
@@ -82,7 +82,7 @@ public class AddStatementFragment extends RoboFragment {
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        if (requestCode == CREATE_CATEGORY_ACTIVITY_ID && resultCode == Activity.RESULT_OK) {
+        if ((requestCode == CREATE_CATEGORY_ACTIVITY_ID) && (resultCode == Activity.RESULT_OK)) {
             setCategorySpinner();
             categorySpinner.setSelection(categorySpinner.getAdapter().getCount() - 1);
         }
@@ -96,7 +96,7 @@ public class AddStatementFragment extends RoboFragment {
     private void setCategorySpinner() {
         final List<Category> list = categoryService.getCategories();
 
-        final ArrayAdapter<Category> adapter = new ArrayAdapter<Category>(this.getActivity(), android.R.layout.simple_spinner_dropdown_item, list);
+        final ArrayAdapter<Category> adapter = new ArrayAdapter<Category>(getActivity(), android.R.layout.simple_spinner_dropdown_item, list);
         categorySpinner.setAdapter(adapter);
     }
 
@@ -114,7 +114,7 @@ public class AddStatementFragment extends RoboFragment {
         final String note = notesText.getText().toString();
         final Category category = (Category) categorySpinner.getSelectedItem();
 
-        final Builder builder = new Statement.Builder(amountStr, date);
+        final Builder builder = Statement.builder(amountStr, date);
         builder.setNote(note).setType(type).setCategory(category);
 
         return builder.build();

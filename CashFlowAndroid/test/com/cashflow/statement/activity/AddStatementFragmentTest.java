@@ -74,10 +74,10 @@ public class AddStatementFragmentTest {
     private static final String AMOUNT = "1234";
     private static final String INVALID_AMOUNT = "12";
     private static final Category CATEGORY = new Category("3", "category");
-    private static final Statement VALID_STATEMENT = new Statement.Builder(AMOUNT, DATE).setCategory(CATEGORY).setNote(NOTES).setType(Expense)
+    private static final Statement VALID_STATEMENT = Statement.builder(AMOUNT, DATE).setCategory(CATEGORY).setNote(NOTES).setType(Expense)
             .setRecurringInterval(RecurringInterval.none).build();
-    private static final Statement INVALID_STATEMENT = new Statement.Builder(INVALID_AMOUNT, DATE).setCategory(CATEGORY).setNote(NOTES)
-            .setType(Income).setRecurringInterval(RecurringInterval.none).build();
+    private static final Statement INVALID_STATEMENT = Statement.builder(INVALID_AMOUNT, DATE).setCategory(CATEGORY).setNote(NOTES).setType(Income)
+            .setRecurringInterval(RecurringInterval.none).build();
 
     private final String[] fromColumns = {AbstractStatement._ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE, COLUMN_NAME_NOTE};
     private final Object[] values = new Object[]{1, 1234L, "2012", "note"};
@@ -270,7 +270,7 @@ public class AddStatementFragmentTest {
         final MatrixCursor cursor = new MatrixCursor(fromColumns);
         cursor.addRow(values);
 
-        when(statementPersistentService.getStatement(StatementType.Expense)).thenReturn(cursor);
-        when(statementPersistentService.getStatement(StatementType.Income)).thenReturn(cursor);
+        when(statementPersistentService.getAllStatementsByType(StatementType.Expense)).thenReturn(cursor);
+        when(statementPersistentService.getAllStatementsByType(StatementType.Income)).thenReturn(cursor);
     }
 }

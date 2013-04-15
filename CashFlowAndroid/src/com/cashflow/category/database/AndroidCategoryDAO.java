@@ -37,4 +37,16 @@ public class AndroidCategoryDAO extends AndroidParentDAO implements CategoryDAO 
         final SQLiteDatabase database = provider.getReadableDb();
         return database.query(tableName, projection, null, null, null, null, null);
     }
+
+    @Override
+    public boolean save(final Category category) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean update(final Category category, final String id) {
+        // TODO Auto-generated method stub
+        return false;
+    }
 }

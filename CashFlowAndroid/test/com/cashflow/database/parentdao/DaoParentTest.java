@@ -29,7 +29,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.cashflow.dao.ParentDAO;
 import com.cashflow.database.DatabaseContracts.AbstractStatement;
 import com.cashflow.database.SQLiteDbProvider;
 import com.xtremelabs.robolectric.RobolectricTestRunner;

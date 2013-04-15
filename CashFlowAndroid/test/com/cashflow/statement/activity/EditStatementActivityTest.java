@@ -78,7 +78,7 @@ public class EditStatementActivityTest {
     private static final RecurringInterval NONE_INTERVAL = RecurringInterval.none;
     private static final Category CATEGORY = new Category(CATEGORY_ID, "category");
     private static final Category CHANGED_CATEGORY = new Category("4", "changed_category");
-    private static final Statement EXPENSE_STATEMENT = new Statement.Builder(AMOUNT, DATE).setNote(NOTE).setType(Expense).setId(EXPENSE_ID)
+    private static final Statement EXPENSE_STATEMENT = Statement.builder(AMOUNT, DATE).setNote(NOTE).setType(Expense).setId(EXPENSE_ID)
             .setCategory(CATEGORY).setRecurringInterval(NONE_INTERVAL).build();
 
     private final List<Category> categories = new ArrayList<Category>() {
@@ -151,7 +151,7 @@ public class EditStatementActivityTest {
     public void testSubmitWhenAmountHasChangedThenShouldCallProperFunctionAndResultCodeShouldBeOK() {
         final ShadowFragmentActivity shadowFragmentActivity = Robolectric.shadowOf(underTest);
         final Button submit = (Button) underTest.findViewById(R.id.submitButton);
-        final Statement expenseStatement = new Statement.Builder(CHANGED_AMOUNT, DATE).setNote(NOTE).setType(Expense).setId(EXPENSE_ID)
+        final Statement expenseStatement = Statement.builder(CHANGED_AMOUNT, DATE).setNote(NOTE).setType(Expense).setId(EXPENSE_ID)
                 .setRecurringInterval(NONE_INTERVAL).setCategory(CATEGORY).build();
         setViewsValues(expenseStatement);
 
@@ -167,7 +167,7 @@ public class EditStatementActivityTest {
         final ShadowFragmentActivity shadowFragmentActivity = Robolectric.shadowOf(underTest);
         final Button submit = (Button) underTest.findViewById(R.id.submitButton);
         setViewsValues(EXPENSE_STATEMENT);
-        final Statement changedStatement = new Statement.Builder(AMOUNT, DATE).setNote(NOTE).setType(Expense).setId(EXPENSE_ID)
+        final Statement changedStatement = Statement.builder(AMOUNT, DATE).setNote(NOTE).setType(Expense).setId(EXPENSE_ID)
                 .setRecurringInterval(NONE_INTERVAL).setCategory(CATEGORY).build();
         setViewsValues(changedStatement);
 
@@ -181,7 +181,7 @@ public class EditStatementActivityTest {
     public void testSubmitWhenDateHasChangedThenShouldCallProperFunctionAndResultCodeShouldBeOK() {
         final ShadowFragmentActivity shadowFragmentActivity = Robolectric.shadowOf(underTest);
         final Button submit = (Button) underTest.findViewById(R.id.submitButton);
-        final Statement changedDateStatement = new Statement.Builder(AMOUNT, CHANGED_DATE).setNote(NOTE).setType(Expense).setId(EXPENSE_ID)
+        final Statement changedDateStatement = Statement.builder(AMOUNT, CHANGED_DATE).setNote(NOTE).setType(Expense).setId(EXPENSE_ID)
                 .setRecurringInterval(NONE_INTERVAL).setCategory(CATEGORY).build();
         setViewsValues(changedDateStatement);
 
@@ -196,7 +196,7 @@ public class EditStatementActivityTest {
     public void testSubmitWhenNoteHasChangedThenShouldCallProperFunctionAndResultCodeShouldBeOK() {
         final ShadowFragmentActivity shadowFragmentActivity = Robolectric.shadowOf(underTest);
         final Button submit = (Button) underTest.findViewById(R.id.submitButton);
-        final Statement changedNoteStatement = new Statement.Builder(AMOUNT, DATE).setNote(CHANGED_NOTE).setType(Expense).setId(EXPENSE_ID)
+        final Statement changedNoteStatement = Statement.builder(AMOUNT, DATE).setNote(CHANGED_NOTE).setType(Expense).setId(EXPENSE_ID)
                 .setRecurringInterval(NONE_INTERVAL).setCategory(CATEGORY).build();
         setViewsValues(changedNoteStatement);
 
@@ -211,7 +211,7 @@ public class EditStatementActivityTest {
     public void testSubmitWhenCategoryHasChangedThenShouldCallProperFunctionAndResultCodeShouldBeOK() {
         final ShadowFragmentActivity shadowFragmentActivity = Robolectric.shadowOf(underTest);
         final Button submit = (Button) underTest.findViewById(R.id.submitButton);
-        final Statement changedNoteStatement = new Statement.Builder(AMOUNT, DATE).setNote(NOTE).setType(Expense).setId(EXPENSE_ID)
+        final Statement changedNoteStatement = Statement.builder(AMOUNT, DATE).setNote(NOTE).setType(Expense).setId(EXPENSE_ID)
                 .setRecurringInterval(NONE_INTERVAL).setCategory(CHANGED_CATEGORY).build();
         setViewsValues(changedNoteStatement);
 
@@ -227,7 +227,7 @@ public class EditStatementActivityTest {
         final ShadowFragmentActivity shadowFragmentActivity = Robolectric.shadowOf(underTest);
         when(statementPersistentService.updateStatement((Statement) anyObject())).thenReturn(false);
         final Button submit = (Button) underTest.findViewById(R.id.submitButton);
-        final Statement changedNoteStatement = new Statement.Builder(AMOUNT, DATE).setNote(CHANGED_NOTE).setType(Expense).setId(EXPENSE_ID)
+        final Statement changedNoteStatement = Statement.builder(AMOUNT, DATE).setNote(CHANGED_NOTE).setType(Expense).setId(EXPENSE_ID)
                 .setRecurringInterval(NONE_INTERVAL).setCategory(CHANGED_CATEGORY).build();
         setViewsValues(changedNoteStatement);
 
@@ -255,7 +255,7 @@ public class EditStatementActivityTest {
     @Test
     public void testSubmitWhenCategoryHasChangedButUpdateStatementThrowExceptionThenShouldShowToast() {
         final Button submit = (Button) underTest.findViewById(R.id.submitButton);
-        final Statement changedNoteStatement = new Statement.Builder(AMOUNT, DATE).setNote(NOTE).setType(Expense).setId(EXPENSE_ID)
+        final Statement changedNoteStatement = Statement.builder(AMOUNT, DATE).setNote(NOTE).setType(Expense).setId(EXPENSE_ID)
                 .setRecurringInterval(NONE_INTERVAL).setCategory(CHANGED_CATEGORY).build();
         setViewsValues(changedNoteStatement);
         when(statementPersistentService.updateStatement(changedNoteStatement)).thenThrow(new IllegalArgumentException(ERROR));
@@ -349,8 +349,8 @@ public class EditStatementActivityTest {
         final MatrixCursor cursor = new MatrixCursor(fromColumns);
         cursor.addRow(values);
         when(statementPersistentService.getStatementById(EXPENSE_ID)).thenReturn(EXPENSE_STATEMENT);
-        when(statementPersistentService.getStatement(Expense)).thenReturn(cursor);
-        when(statementPersistentService.getStatement(StatementType.Income)).thenReturn(cursor);
+        when(statementPersistentService.getAllStatementsByType(Expense)).thenReturn(cursor);
+        when(statementPersistentService.getAllStatementsByType(StatementType.Income)).thenReturn(cursor);
         when(statementPersistentService.saveStatement((Statement) anyObject())).thenReturn(true);
         when(statementPersistentService.updateStatement((Statement) anyObject())).thenReturn(true);
 

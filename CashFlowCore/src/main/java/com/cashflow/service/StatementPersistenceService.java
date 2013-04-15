@@ -1,36 +1,18 @@
 package com.cashflow.service;
 
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.CATEGORY_ID_ALIAS;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_CATEGORY;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_DATE;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_INTERVAL;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_IS_INCOME;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_NOTE;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.STATEMENT_ID_ALIAS;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.apache.commons.lang.Validate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import android.content.ContentValues;
-import android.database.Cursor;
 
 import com.cashflow.constants.RecurringInterval;
-import com.cashflow.database.DatabaseContracts.AbstractCategory;
 import com.cashflow.domain.Category;
 import com.cashflow.domain.Statement;
 import com.cashflow.domain.StatementType;
-import com.cashflow.exceptions.IllegalStatementIdException;
-import com.cashflow.statement.database.AndroidStatementDAO;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 /**
  * Class to create statement for DAO.
@@ -85,10 +67,10 @@ public class StatementPersistenceService {
      * @throws IllegalArgumentException when parameter is null.
      * @return a {@link Cursor} which contains the values.
      */
-    public Cursor getStatement(final StatementType type) {
+    public List<Statement> getAllStatementsByType(final StatementType type) {
         validateObjectsNotNull(type);
 
-        Cursor result = null;
+        List<Statement> result = new ArrayList<Statement>();
         if (type.isIncome()) {
             result = dao.getIncomes();
         } else {

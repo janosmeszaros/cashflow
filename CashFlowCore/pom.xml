@@ -21,6 +21,12 @@
 	<artifactId>CashFlowCore</artifactId>
 
 	<dependencies>
+	    <dependency>
+            <groupId>com.cashflow</groupId>
+            <artifactId>CashFlowAndroid</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        
 		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>

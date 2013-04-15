@@ -4,6 +4,11 @@ import java.util.List;
 
 import com.cashflow.domain.Bill;
 
+/**
+ * DAO for {@link Bill}.
+ * @author Kornel_Refi
+ *
+ */
 public interface BillDAO {
 
     /**
@@ -19,8 +24,8 @@ public interface BillDAO {
     public boolean update(Bill bill, String id);
 
     /**
-     * Returns all of the values in the given table.
-     * @return Cursor which contains the data.
+     * Returns all {@link Bill}.
+     * @return {@link List} of all {@link Bill}.
      */
     public List<Bill> getAllBills();
 

@@ -27,7 +27,6 @@ import com.cashflow.category.activity.CreateCategoryActivity;
 import com.cashflow.domain.Category;
 import com.cashflow.domain.Statement;
 import com.cashflow.domain.StatementType;
-import com.cashflow.domain.Statement.Builder;
 import com.cashflow.service.CategoryPersistenceService;
 import com.cashflow.service.StatementPersistenceService;
 import com.google.inject.Inject;
@@ -144,10 +143,7 @@ public class EditStatementActivity extends RoboFragmentActivity {
         final Category category = (Category) categorySpinner.getSelectedItem();
         final String statementId = originalStatement.getId();
 
-        final Builder builder = new Statement.Builder(amountStr, date);
-        builder.setNote(note).setType(type).setId(statementId).setCategory(category);
-
-        return builder.build();
+        return Statement.builder(amountStr, date).setNote(note).setType(type).setId(statementId).setCategory(category).build();
     }
 
     private void getOriginalData() {
@@ -158,7 +154,7 @@ public class EditStatementActivity extends RoboFragmentActivity {
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        if (requestCode == REQUEST_CODE_FOR_CATEGORY && resultCode == RESULT_OK) {
+        if ((requestCode == REQUEST_CODE_FOR_CATEGORY) && (resultCode == RESULT_OK)) {
             final ArrayAdapter<Category> adapter = setCategorySpinner();
             categorySpinner.setSelection(adapter.getCount() - 1);
         }

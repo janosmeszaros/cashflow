@@ -74,8 +74,8 @@ public class EditIncomeActivity extends EditStatementActivity {
     @Override
     protected Statement createStatement() {
         final Statement expense = super.createStatement();
-        final Statement income = new Statement.Builder(expense.getAmount(), expense.getDate()).setNote(expense.getNote())
-                .setType(StatementType.Income).setId(expense.getId()).setCategory(expense.getCategory())
+        final Statement income = Statement.builder(expense.getAmount(), expense.getDate()).setNote(expense.getNote()).setType(StatementType.Income)
+                .setId(expense.getId()).setCategory(expense.getCategory())
                 .setRecurringInterval((RecurringInterval) recurringSpinner.getSelectedItem()).build();
         return income;
     }

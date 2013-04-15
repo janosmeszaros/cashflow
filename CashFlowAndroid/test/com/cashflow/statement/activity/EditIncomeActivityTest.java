@@ -1,7 +1,7 @@
 package com.cashflow.statement.activity;
 
-import static android.app.Activity.RESULT_OK;
 import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
 import static com.cashflow.constants.Constants.ID_EXTRA;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_DATE;
@@ -63,7 +63,7 @@ public class EditIncomeActivityTest {
     private static final RecurringInterval NONE_INTERVAL = RecurringInterval.none;
     private static final Category CATEGORY = new Category(CATEGORY_ID, "category");
     private static final Category CHANGED_CATEGORY = new Category("4", "changed_category");
-    private static final Statement INCOME_STATEMENT = new Statement.Builder(AMOUNT, DATE).setNote(NOTE).setType(Income).setId(INCOME_ID)
+    private static final Statement INCOME_STATEMENT = Statement.builder(AMOUNT, DATE).setNote(NOTE).setType(Income).setId(INCOME_ID)
             .setCategory(CATEGORY).setRecurringInterval(NONE_INTERVAL).build();
 
     private final String[] fromColumns = {AbstractStatement._ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE, COLUMN_NAME_NOTE};
@@ -135,8 +135,8 @@ public class EditIncomeActivityTest {
 
     @Test
     public void testOnCreateWhenRecurringIsOtherThenNoneThenRecurringCheckBoxShouldBeCheckedAndSpinnerValueIsSettedToCorrectValue() {
-        final Statement statement = new Statement.Builder(AMOUNT, DATE).setId("12").setCategory(CATEGORY).setNote(NOTE)
-                .setRecurringInterval(INTERVAL).setType(Income).build();
+        final Statement statement = Statement.builder(AMOUNT, DATE).setId("12").setCategory(CATEGORY).setNote(NOTE).setRecurringInterval(INTERVAL)
+                .setType(Income).build();
         underTest.setIntent(setUpIntentData(statement));
         when(statementPersistentService.getStatementById("12")).thenReturn(statement);
         underTest.onCreate(null);
@@ -152,7 +152,7 @@ public class EditIncomeActivityTest {
     public void testSubmitWhenRecurringIntervalHasChangedThenShouldCallProperFunctionAndResultCodeShouldBeOK() {
         final ShadowFragmentActivity shadowFragmentActivity = shadowOf(underTest);
         final Button submit = (Button) underTest.findViewById(R.id.submitButton);
-        final Statement changedStatement = new Statement.Builder(AMOUNT, DATE).setNote(NOTE).setType(Income).setId(INCOME_ID)
+        final Statement changedStatement = Statement.builder(AMOUNT, DATE).setNote(NOTE).setType(Income).setId(INCOME_ID)
                 .setRecurringInterval(INTERVAL).setCategory(CATEGORY).build();
         setViewsValues(changedStatement);
 
@@ -179,7 +179,7 @@ public class EditIncomeActivityTest {
     public void testSubmitWhenRecurringIntervalAndDateHasChangedThenShouldCallProperFunctionAndResultCodeShouldBeOK() {
         final ShadowFragmentActivity shadowFragmentActivity = shadowOf(underTest);
         final Button submit = (Button) underTest.findViewById(R.id.submitButton);
-        final Statement changedStatement = new Statement.Builder(AMOUNT, CHANGED_DATE).setNote(NOTE).setType(Income).setId(INCOME_ID)
+        final Statement changedStatement = Statement.builder(AMOUNT, CHANGED_DATE).setNote(NOTE).setType(Income).setId(INCOME_ID)
                 .setRecurringInterval(INTERVAL).setCategory(CATEGORY).build();
         setViewsValues(changedStatement);
 
@@ -194,7 +194,7 @@ public class EditIncomeActivityTest {
     public void testSubmitWhenCategoryHasChangedThenShouldCallProperFunctionAndResultCodeShouldBeOK() {
         final ShadowFragmentActivity shadowFragmentActivity = shadowOf(underTest);
         final Button submit = (Button) underTest.findViewById(R.id.submitButton);
-        final Statement changedNoteStatement = new Statement.Builder(AMOUNT, DATE).setNote(NOTE).setType(Income).setId(INCOME_ID)
+        final Statement changedNoteStatement = Statement.builder(AMOUNT, DATE).setNote(NOTE).setType(Income).setId(INCOME_ID)
                 .setRecurringInterval(NONE_INTERVAL).setCategory(CHANGED_CATEGORY).build();
         setViewsValues(changedNoteStatement);
 
@@ -252,8 +252,8 @@ public class EditIncomeActivityTest {
         cursor.addRow(values);
         when(statementPersistentService.getStatementById(INCOME_ID)).thenReturn(INCOME_STATEMENT);
         //        when(statementPersistentService.getStatementById(EXPENSE_ID)).thenReturn(EXPENSE_STATEMENT);
-        when(statementPersistentService.getStatement(StatementType.Expense)).thenReturn(cursor);
-        when(statementPersistentService.getStatement(Income)).thenReturn(cursor);
+        when(statementPersistentService.getAllStatementsByType(StatementType.Expense)).thenReturn(cursor);
+        when(statementPersistentService.getAllStatementsByType(Income)).thenReturn(cursor);
         when(statementPersistentService.saveStatement((Statement) anyObject())).thenReturn(true);
         when(statementPersistentService.updateStatement((Statement) anyObject())).thenReturn(true);
 

@@ -133,7 +133,7 @@ public class ListStatementActivityTest {
 
         // Needed 3 times because it gets invoked on test start when the application 
         // counting the Balance and when fills up the list at first time. The third one is the tested one.
-        verify(statementPersistentService, times(3)).getStatement(Expense);
+        verify(statementPersistentService, times(3)).getAllStatementsByType(Expense);
     }
 
     @Test
@@ -144,7 +144,7 @@ public class ListStatementActivityTest {
         // Needed 2 times because it gets invoked on test start when the application 
         // counting the Balance and when fills up the list at first time. 
         // It should'nt invoked in third time.
-        verify(statementPersistentService, times(2)).getStatement(Expense);
+        verify(statementPersistentService, times(2)).getAllStatementsByType(Expense);
     }
 
     @Test
@@ -155,7 +155,7 @@ public class ListStatementActivityTest {
         // Needed 2 times because it gets invoked on test start when the application 
         // counting the Balance and when fills up the list at first time. 
         // It should'nt invoked in third time.
-        verify(statementPersistentService, times(2)).getStatement(Expense);
+        verify(statementPersistentService, times(2)).getAllStatementsByType(Expense);
     }
 
     //    @Test
@@ -182,8 +182,8 @@ public class ListStatementActivityTest {
     private void setUpPersistentService() {
         final MatrixCursor matrixCursor = new MatrixCursor(PROJECTION);
         matrixCursor.addRow(values);
-        when(statementPersistentService.getStatement(Expense)).thenReturn(matrixCursor);
-        when(statementPersistentService.getStatement(Income)).thenReturn(matrixCursor);
+        when(statementPersistentService.getAllStatementsByType(Expense)).thenReturn(matrixCursor);
+        when(statementPersistentService.getAllStatementsByType(Income)).thenReturn(matrixCursor);
     }
 
     //    private void setViewsValues(Statement statement) {

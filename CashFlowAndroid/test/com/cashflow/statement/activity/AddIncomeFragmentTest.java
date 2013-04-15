@@ -109,7 +109,7 @@ public class AddIncomeFragmentTest {
         final Button submit = (Button) underTest.getView().findViewById(R.id.submitButton);
         final ShadowButton shadowButton = (ShadowButton) Robolectric.shadowOf(submit);
         final ShadowFragmentActivity shadowActivity = Robolectric.shadowOf(underTest.getActivity());
-        final Statement statement = new Statement.Builder(AMOUNT, DATE).setNote(NOTES).setType(Income).setCategory(CATEGORY)
+        final Statement statement = Statement.builder(AMOUNT, DATE).setNote(NOTES).setType(Income).setCategory(CATEGORY)
                 .setRecurringInterval(RecurringInterval.none).build();
         setViewsValues(statement);
         when(statementPersistentService.saveStatement(statement)).thenReturn(true);
@@ -126,7 +126,7 @@ public class AddIncomeFragmentTest {
         final Button submit = (Button) underTest.getView().findViewById(R.id.submitButton);
         final ShadowButton shadowButton = (ShadowButton) Robolectric.shadowOf(submit);
         final ShadowFragmentActivity shadowActivity = Robolectric.shadowOf(underTest.getActivity());
-        final Statement statement = new Statement.Builder(AMOUNT, DATE).setCategory(CATEGORY).setNote(NOTES).setType(Income)
+        final Statement statement = Statement.builder(AMOUNT, DATE).setCategory(CATEGORY).setNote(NOTES).setType(Income)
                 .setRecurringInterval(RecurringInterval.biweekly).build();
         setViewsValues(statement);
         when(statementPersistentService.saveStatement(statement)).thenReturn(true);
@@ -142,7 +142,7 @@ public class AddIncomeFragmentTest {
     public void testSubmitWhenSomethingWentWrongThenShouldSetTheResultToCanceledAndCloseTheActivity() {
         final Button submit = (Button) underTest.getView().findViewById(R.id.submitButton);
         final ShadowButton shadowButton = (ShadowButton) Robolectric.shadowOf(submit);
-        final Statement statement = new Statement.Builder(INVALID_AMOUNT, DATE).setCategory(CATEGORY).setNote(NOTES).setType(Income)
+        final Statement statement = Statement.builder(INVALID_AMOUNT, DATE).setCategory(CATEGORY).setNote(NOTES).setType(Income)
                 .setRecurringInterval(RecurringInterval.none).build();
         setViewsValues(statement);
         when(statementPersistentService.saveStatement(statement)).thenReturn(false);
@@ -214,7 +214,7 @@ public class AddIncomeFragmentTest {
         final MatrixCursor cursor = new MatrixCursor(fromColumns);
         cursor.addRow(values);
 
-        when(statementPersistentService.getStatement(StatementType.Expense)).thenReturn(cursor);
-        when(statementPersistentService.getStatement(StatementType.Income)).thenReturn(cursor);
+        when(statementPersistentService.getAllStatementsByType(StatementType.Expense)).thenReturn(cursor);
+        when(statementPersistentService.getAllStatementsByType(StatementType.Income)).thenReturn(cursor);
     }
 }

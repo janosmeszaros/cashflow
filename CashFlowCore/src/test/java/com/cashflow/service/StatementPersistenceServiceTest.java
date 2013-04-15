@@ -10,25 +10,8 @@ import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_N
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.STATEMENT_ID_ALIAS;
 import static com.cashflow.domain.StatementType.Expense;
 import static com.cashflow.domain.StatementType.Income;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import java.util.List;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -39,8 +22,7 @@ import com.cashflow.domain.Category;
 import com.cashflow.domain.Statement;
 import com.cashflow.domain.StatementType;
 import com.cashflow.exceptions.IllegalStatementIdException;
-import com.cashflow.service.StatementPersistenceService;
-import com.xtremelabs.robolectric.RobolectricTestRunner;
+import com.cashflow.statement.database.AndroidStatementDAO;
 
 @RunWith(RobolectricTestRunner.class)
 public class StatementPersistenceServiceTest {
@@ -85,7 +67,7 @@ public class StatementPersistenceServiceTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testSaveStatementWhenAmountStrIsEmptyThenShouldThrowException() {
-        final Statement statement = new Statement.Builder(EMPTY_STR, DATE_STR).setNote(NOTE).setType(Expense)
+        final Statement statement = Statement.builder(EMPTY_STR, DATE_STR).setNote(NOTE).setType(Expense)
                 .setCategory(new Category(CATEGORY_ID, CATEGORY_NAME)).build();
 
         underTest.saveStatement(statement);
@@ -93,7 +75,7 @@ public class StatementPersistenceServiceTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testSaveStatementWhenDateIsEmptyThenShouldThrowException() {
-        final Statement statement = new Statement.Builder(AMOUNT_STR, EMPTY_STR).setNote(NOTE).setType(Expense)
+        final Statement statement = Statement.builder(AMOUNT_STR, EMPTY_STR).setNote(NOTE).setType(Expense)
                 .setCategory(new Category(CATEGORY_ID, CATEGORY_NAME)).build();
 
         underTest.saveStatement(statement);
@@ -101,7 +83,7 @@ public class StatementPersistenceServiceTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testSaveStatementWhenStatementTypeIsEmptyThenShouldThrowException() {
-        final Statement statement = new Statement.Builder(AMOUNT_STR, DATE_STR).setNote(EMPTY_STR).setType(null)
+        final Statement statement = Statement.builder(AMOUNT_STR, DATE_STR).setNote(EMPTY_STR).setType(null)
                 .setCategory(new Category(CATEGORY_ID, CATEGORY_NAME)).build();
 
         underTest.saveStatement(statement);
@@ -109,7 +91,7 @@ public class StatementPersistenceServiceTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testSaveStatementWhenAmountIsNotANumberStringIsEmptyThenShouldThrowException() {
-        final Statement statement = new Statement.Builder(WRONG_AMOUNT_FORMAT, DATE_STR).setNote(NOTE).setType(Expense)
+        final Statement statement = Statement.builder(WRONG_AMOUNT_FORMAT, DATE_STR).setNote(NOTE).setType(Expense)
                 .setCategory(new Category(CATEGORY_ID, CATEGORY_NAME)).build();
 
         underTest.saveStatement(statement);
@@ -117,14 +99,14 @@ public class StatementPersistenceServiceTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testSaveStatementWhenCategoryIsEmptyThenShouldThrowException() {
-        final Statement statement = new Statement.Builder(WRONG_AMOUNT_FORMAT, DATE_STR).setNote(NOTE).setType(Expense).setCategory(null).build();
+        final Statement statement = Statement.builder(WRONG_AMOUNT_FORMAT, DATE_STR).setNote(NOTE).setType(Expense).setCategory(null).build();
 
         underTest.saveStatement(statement);
     }
 
     @Test
     public void testSaveStatementWhenAmountIsZeroStringThenShouldReturnFalse() {
-        final Statement statement = new Statement.Builder(ZERO_AMOUNT, DATE_STR).setNote(NOTE).setType(Expense)
+        final Statement statement = Statement.builder(ZERO_AMOUNT, DATE_STR).setNote(NOTE).setType(Expense)
                 .setCategory(new Category(CATEGORY_ID, CATEGORY_NAME)).build();
 
         final boolean result = underTest.saveStatement(statement);
@@ -134,7 +116,7 @@ public class StatementPersistenceServiceTest {
 
     @Test
     public void testSaveStatementWhenEveryParameterIsFineThenShouldCallDaosSaveMethodAndReturnTrue() {
-        final Statement statement = new Statement.Builder(AMOUNT_STR, DATE_STR).setNote(NOTE).setType(Expense)
+        final Statement statement = Statement.builder(AMOUNT_STR, DATE_STR).setNote(NOTE).setType(Expense)
                 .setCategory(new Category(CATEGORY_ID, CATEGORY_NAME)).build();
 
         final boolean result = underTest.saveStatement(statement);
@@ -153,7 +135,7 @@ public class StatementPersistenceServiceTest {
 
     @Test
     public void testSaveStatementWhenIncomeThenShouldCallDaosSaveMethodAndReturnTrue() {
-        final Statement statement = new Statement.Builder(AMOUNT_STR, DATE_STR).setNote(NOTE).setType(Income)
+        final Statement statement = Statement.builder(AMOUNT_STR, DATE_STR).setNote(NOTE).setType(Income)
                 .setCategory(new Category(CATEGORY_ID, CATEGORY_NAME)).build();
 
         final boolean result = underTest.saveStatement(statement);
@@ -172,12 +154,12 @@ public class StatementPersistenceServiceTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testGetStatementWhenTypeIsNullThenShouldThrowException() {
-        underTest.getStatement(null);
+        underTest.getAllStatementsByType(null);
     }
 
     @Test
     public void testGetStatementWhenTypeIsExpenseThenShouldReturnCursorWithExpenses() {
-        final Cursor statement = underTest.getStatement(Expense);
+        final Cursor statement = underTest.getAllStatementsByType(Expense);
 
         verify(dao).getExpenses();
         assertThat(statement, equalTo(expenseCursor));
@@ -185,7 +167,7 @@ public class StatementPersistenceServiceTest {
 
     @Test
     public void testGetStatementWhenTypeIsIncomesThenShouldReturnCursorWithIncomes() {
-        final Cursor statement = underTest.getStatement(Income);
+        final Cursor statement = underTest.getAllStatementsByType(Income);
 
         verify(dao).getIncomes();
         assertThat(statement, equalTo(incomeCursor));
@@ -193,7 +175,7 @@ public class StatementPersistenceServiceTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testUpdateStatementWhenAmountStrIsEmptyThenShouldThrowException() {
-        final Statement statement = new Statement.Builder(EMPTY_STR, DATE_STR).setNote(NOTE).setType(Expense).setId(ID_STR)
+        final Statement statement = Statement.builder(EMPTY_STR, DATE_STR).setNote(NOTE).setType(Expense).setId(ID_STR)
                 .setCategory(new Category(CATEGORY_ID, CATEGORY_NAME)).build();
 
         underTest.updateStatement(statement);
@@ -201,7 +183,7 @@ public class StatementPersistenceServiceTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testUpdateStatementWhenDateIsEmptyThenShouldThrowException() {
-        final Statement statement = new Statement.Builder(AMOUNT_STR, EMPTY_STR).setNote(NOTE).setType(Expense).setId(ID_STR)
+        final Statement statement = Statement.builder(AMOUNT_STR, EMPTY_STR).setNote(NOTE).setType(Expense).setId(ID_STR)
                 .setCategory(new Category(CATEGORY_ID, CATEGORY_NAME)).build();
 
         underTest.updateStatement(statement);
@@ -209,7 +191,7 @@ public class StatementPersistenceServiceTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testUpdateStatementWhenStatementTypeIsEmptyThenShouldThrowException() {
-        final Statement statement = new Statement.Builder(AMOUNT_STR, DATE_STR).setNote(NOTE).setType(null).setId(ID_STR)
+        final Statement statement = Statement.builder(AMOUNT_STR, DATE_STR).setNote(NOTE).setType(null).setId(ID_STR)
                 .setCategory(new Category(CATEGORY_ID, CATEGORY_NAME)).build();
 
         underTest.updateStatement(statement);
@@ -217,7 +199,7 @@ public class StatementPersistenceServiceTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testUpdateStatementWhenAmountIsNotANumberThenShouldThrowException() {
-        final Statement statement = new Statement.Builder(WRONG_AMOUNT_FORMAT, DATE_STR).setNote(NOTE).setType(Expense).setId(ID_STR)
+        final Statement statement = Statement.builder(WRONG_AMOUNT_FORMAT, DATE_STR).setNote(NOTE).setType(Expense).setId(ID_STR)
                 .setCategory(new Category(CATEGORY_ID, CATEGORY_NAME)).build();
 
         underTest.updateStatement(statement);
@@ -225,7 +207,7 @@ public class StatementPersistenceServiceTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testUpdateStatementWhenIdStrIsEmptyThenShouldThrowException() {
-        final Statement statement = new Statement.Builder(AMOUNT_STR, DATE_STR).setNote(NOTE).setType(Expense).setId(EMPTY_STR)
+        final Statement statement = Statement.builder(AMOUNT_STR, DATE_STR).setNote(NOTE).setType(Expense).setId(EMPTY_STR)
                 .setCategory(new Category(CATEGORY_ID, CATEGORY_NAME)).build();
 
         underTest.updateStatement(statement);
@@ -233,7 +215,7 @@ public class StatementPersistenceServiceTest {
 
     @Test
     public void testUpdateStatementWhenSomethingWentWrongOnSaveingThenShouldReturnFalse() {
-        final Statement statement = new Statement.Builder(AMOUNT_STR, DATE_STR).setNote(NOTE).setType(Expense).setId(ID_STR)
+        final Statement statement = Statement.builder(AMOUNT_STR, DATE_STR).setNote(NOTE).setType(Expense).setId(ID_STR)
                 .setCategory(new Category(CATEGORY_ID, CATEGORY_NAME)).build();
         when(dao.update((ContentValues) anyObject(), eq(ID_STR))).thenReturn(false);
 
@@ -244,7 +226,7 @@ public class StatementPersistenceServiceTest {
 
     @Test
     public void testUpdateStatementWhenEveryParameterIsFineThenShouldCallDaosUpdateMethodAndReturnTrue() {
-        final Statement statement = new Statement.Builder(AMOUNT_STR, DATE_STR).setNote(NOTE).setType(Expense).setId(ID_STR)
+        final Statement statement = Statement.builder(AMOUNT_STR, DATE_STR).setNote(NOTE).setType(Expense).setId(ID_STR)
                 .setCategory(new Category(CATEGORY_ID, CATEGORY_NAME)).setRecurringInterval(RecurringInterval.monthly).build();
         when(dao.update((ContentValues) anyObject(), eq(ID_STR))).thenReturn(true);
 
@@ -356,8 +338,7 @@ public class StatementPersistenceServiceTest {
     }
 
     private Statement createStatement(final StatementType type) {
-        final Statement statement = new Statement.Builder(AMOUNT_STR, DATE_STR).setRecurringInterval(RecurringInterval.valueOf(INTERVAL_STR))
-                .setType(type).setNote(NOTE).setId(ID_STR).setCategory(new Category(CATEGORY_ID, CATEGORY_NAME)).build();
-        return statement;
+        return Statement.builder(AMOUNT_STR, DATE_STR).setRecurringInterval(RecurringInterval.valueOf(INTERVAL_STR)).setType(type).setNote(NOTE)
+                .setId(ID_STR).setCategory(new Category(CATEGORY_ID, CATEGORY_NAME)).build();
     }
 }
