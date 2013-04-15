@@ -5,18 +5,22 @@
 /*/target
 /*/.settings/*
 /*/tmp/
+/*/project.properties
 
 actionbarsherlock/*
 
-/CashFlow/bin
-/CashFlow/gen
-/CashFlow/libs
-/CashFlow/layout
-/CashFlow/reports
-/CashFlow/*.tmp
-/CashFlow/lint.xml
+/CashFlowAndroid/bin
+/CashFlowAndroid/gen
+/CashFlowAndroid/libs
+/CashFlowAndroid/layout
+/CashFlowAndroid/reports
+/CashFlowAndroid/*.tmp
+/CashFlowAndroid/lint.xml
+
 
 /CashFlowTest/AndroidManifest.xml
 /CashFlowTest/test
 /CashFlowTest/test-output/*
 /CashFlowTest/res
+
+/CashFlowWeb/src/main/resources/rebel.xml

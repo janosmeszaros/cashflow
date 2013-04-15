@@ -22,7 +22,7 @@
 	</reporting>
 
 	<build>
-		<testSourceDirectory>../CashFlow/test</testSourceDirectory>
+		<testSourceDirectory>../CashFlowAndroid/test</testSourceDirectory>
 		<plugins>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -42,7 +42,7 @@
 							<outputDirectory>${basedir}/res</outputDirectory>
 							<resources>
 								<resource>
-									<directory>../CashFlow/res/</directory>
+									<directory>../CashFlowAndroid/res/</directory>
 									<includes>
 										<include>values/</include>
 										<include>layout/</include>
@@ -62,7 +62,7 @@
 							<resources>
 
 								<resource>
-									<directory>../CashFlow/</directory>
+									<directory>../CashFlowAndroid/</directory>
 									<includes>
 										<include>AndroidManifest.xml</include>
 									</includes>
@@ -99,7 +99,7 @@
 							<outputDirectory>${basedir}/target/classes/</outputDirectory>
 							<resources>
 								<resource>
-									<directory>${basedir}/../CashFlow/target/classes</directory>
+									<directory>${basedir}/../CashFlowAndroid/target/classes</directory>
 									<includes>
 										<include>**</include>
 									</includes>
@@ -144,7 +144,7 @@
 
 		<dependency>
 			<groupId>com.cashflow</groupId>
-			<artifactId>CashFlow</artifactId>
+			<artifactId>CashFlowAndroid</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
 			<exclusions>
 				<exclusion>
@@ -173,7 +173,6 @@
 		<dependency>
 			<groupId>com.actionbarsherlock</groupId>
 			<artifactId>actionbarsherlock</artifactId>
-			<version>4.2.0</version>
 			<type>jar</type>
 		</dependency>
 		<dependency>

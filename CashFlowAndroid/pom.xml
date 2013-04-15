@@ -8,9 +8,9 @@
 		<version>1.0.0-SNAPSHOT</version>
 		<relativePath>../CashFlowParent/pom.xml</relativePath>
 	</parent>
-	<artifactId>CashFlow</artifactId>
+	<artifactId>CashFlowAndroid</artifactId>
 	<packaging>apk</packaging>
-	<name>CashFlow</name>
+	<name>CashFlowAndroid</name>
 
 
 	<build>
