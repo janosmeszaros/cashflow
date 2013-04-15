@@ -63,16 +63,10 @@ public abstract class DatabaseContracts {
         public static final String COLUMN_NAME_CATEGORY_NAME = "name";
         public static final String[] PROJECTION = new String[]{_ID, COLUMN_NAME_CATEGORY_NAME};
 
-        static final String SQL_CREATE_ENTRIES = CREATE_TABLE + TABLE_NAME + OPEN_PARENTHESIS + _ID + INTEGER_TYPE + PRIMARY_KEY + COMMA_SEP
+        public static final String SQL_CREATE_ENTRIES = CREATE_TABLE + TABLE_NAME + OPEN_PARENTHESIS + _ID + INTEGER_TYPE + PRIMARY_KEY + COMMA_SEP
                 + COLUMN_NAME_CATEGORY_NAME + REAL_TYPE + CLOSE_PARENTHESIS;
 
-        static final String SQL_DELETE_ENTRIES = DROP_TABLE + TABLE_NAME;
-
-        /**
-         * Constructor
-         */
-        public AbstractCategory() {
-        }
+        public static final String SQL_DELETE_ENTRIES = DROP_TABLE + TABLE_NAME;
 
         @Override
         public String getTableName() {
@@ -131,19 +125,13 @@ public abstract class DatabaseContracts {
                 + COLUMN_NAME_INTERVAL + COMMA_SEP + COLUMN_NAME_IS_INCOME + FROM + AbstractCategory.TABLE_NAME + COMMA_SEP
                 + AbstractStatement.TABLE_NAME + WHERE + SELECTION_BY_ID;
 
-        static final String SQL_CREATE_ENTRIES = CREATE_TABLE + TABLE_NAME + OPEN_PARENTHESIS + _ID + " INTEGER PRIMARY KEY" + COMMA_SEP
+        public static final String SQL_CREATE_ENTRIES = CREATE_TABLE + TABLE_NAME + OPEN_PARENTHESIS + _ID + " INTEGER PRIMARY KEY" + COMMA_SEP
                 + COLUMN_NAME_CATEGORY + INTEGER_TYPE + COMMA_SEP + COLUMN_NAME_AMOUNT + REAL_TYPE + COMMA_SEP + COLUMN_NAME_IS_INCOME + INTEGER_TYPE
                 + COMMA_SEP + COLUMN_NAME_DATE + TEXT_TYPE + COMMA_SEP + COLUMN_NAME_INTERVAL + TEXT_TYPE + COMMA_SEP + COLUMN_NAME_NOTE + TEXT_TYPE
                 + COMMA_SEP + "FOREIGN KEY" + OPEN_PARENTHESIS + COLUMN_NAME_CATEGORY + CLOSE_PARENTHESIS + "REFERENCES "
                 + AbstractCategory.TABLE_NAME + OPEN_PARENTHESIS + AbstractCategory._ID + CLOSE_PARENTHESIS + CLOSE_PARENTHESIS;
 
-        static final String SQL_DELETE_ENTRIES = DROP_TABLE + TABLE_NAME;
-
-        /**
-         * Constructor
-         */
-        public AbstractStatement() {
-        }
+        public static final String SQL_DELETE_ENTRIES = DROP_TABLE + TABLE_NAME;
 
         @Override
         public String getTableName() {
@@ -181,18 +169,13 @@ public abstract class DatabaseContracts {
         public static final String[] PROJECTION = new String[]{_ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE_ADDED, COLUMN_NAME_DATE_PAYED,
             COLUMN_NAME_DATE_DEADLINE, COLUMN_NAME_NOTE, COLUMN_NAME_IS_PAYED};
 
-        static final String SQL_CREATE_ENTRIES = CREATE_TABLE + TABLE_NAME + OPEN_PARENTHESIS + _ID + " INTEGER PRIMARY KEY," + COLUMN_NAME_AMOUNT
-                + INTEGER_TYPE + COMMA_SEP + COLUMN_NAME_DATE_ADDED + TEXT_TYPE + COMMA_SEP + COLUMN_NAME_DATE_DEADLINE + TEXT_TYPE + COMMA_SEP
-                + COLUMN_NAME_DATE_PAYED + TEXT_TYPE + COMMA_SEP + COLUMN_NAME_CATEGORY + TEXT_TYPE + COMMA_SEP + COLUMN_NAME_IS_PAYED + INTEGER_TYPE
-                + COMMA_SEP + COLUMN_NAME_NOTE + TEXT_TYPE + COMMA_SEP + COLUMN_NAME_INTERVAL + TEXT_TYPE + CLOSE_PARENTHESIS;
+        public static final String SQL_CREATE_ENTRIES = CREATE_TABLE + TABLE_NAME + OPEN_PARENTHESIS + _ID + " INTEGER PRIMARY KEY,"
+                + COLUMN_NAME_AMOUNT + INTEGER_TYPE + COMMA_SEP + COLUMN_NAME_DATE_ADDED + TEXT_TYPE + COMMA_SEP + COLUMN_NAME_DATE_DEADLINE
+                + TEXT_TYPE + COMMA_SEP + COLUMN_NAME_DATE_PAYED + TEXT_TYPE + COMMA_SEP + COLUMN_NAME_CATEGORY + TEXT_TYPE + COMMA_SEP
+                + COLUMN_NAME_IS_PAYED + INTEGER_TYPE + COMMA_SEP + COLUMN_NAME_NOTE + TEXT_TYPE + COMMA_SEP + COLUMN_NAME_INTERVAL + TEXT_TYPE
+                + CLOSE_PARENTHESIS;
 
-        static final String SQL_DELETE_ENTRIES = DROP_TABLE + TABLE_NAME;
-
-        /**
-         * Constructor
-         */
-        public AbstractBill() {
-        }
+        public static final String SQL_DELETE_ENTRIES = DROP_TABLE + TABLE_NAME;
 
         @Override
         public String getTableName() {
