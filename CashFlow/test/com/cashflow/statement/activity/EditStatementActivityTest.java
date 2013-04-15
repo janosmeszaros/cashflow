@@ -9,6 +9,7 @@ import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_N
 import static com.cashflow.statement.database.StatementType.Expense;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -30,6 +31,7 @@ import android.database.MatrixCursor;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -37,18 +39,23 @@ import com.cashflow.R;
 import com.cashflow.activity.components.DateButtonOnClickListener;
 import com.cashflow.activity.testutil.ActivityModule;
 import com.cashflow.activity.testutil.EditStatementActivityProvider;
+import com.cashflow.category.activity.CreateCategoryActivity;
 import com.cashflow.category.database.CategoryPersistenceService;
 import com.cashflow.constants.RecurringInterval;
 import com.cashflow.database.DatabaseContracts.AbstractStatement;
 import com.cashflow.domain.Category;
 import com.cashflow.domain.Statement;
+import com.cashflow.statement.activity.EditStatementActivity.CreateCategoryOnClickListener;
+import com.cashflow.statement.activity.EditStatementActivity.SubmitButtonOnClickListener;
 import com.cashflow.statement.database.StatementPersistenceService;
 import com.cashflow.statement.database.StatementType;
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
+import com.xtremelabs.robolectric.shadows.ShadowActivity;
 import com.xtremelabs.robolectric.shadows.ShadowButton;
 import com.xtremelabs.robolectric.shadows.ShadowFragmentActivity;
-import com.xtremelabs.robolectric.shadows.ShadowHandler;
+import com.xtremelabs.robolectric.shadows.ShadowImageView;
+import com.xtremelabs.robolectric.shadows.ShadowIntent;
 import com.xtremelabs.robolectric.shadows.ShadowTextView;
 import com.xtremelabs.robolectric.shadows.ShadowToast;
 
@@ -59,6 +66,7 @@ import com.xtremelabs.robolectric.shadows.ShadowToast;
  */
 @RunWith(RobolectricTestRunner.class)
 public class EditStatementActivityTest {
+    private static final String ERROR = "Error";
     private static final String CHANGED_NOTE = "changedNote";
     private static final String CHANGED_DATE = "2012";
     private static final String CHANGED_AMOUNT = "123";
@@ -73,6 +81,11 @@ public class EditStatementActivityTest {
     private static final Statement EXPENSE_STATEMENT = new Statement.Builder(AMOUNT, DATE).setNote(NOTE).setType(Expense).setId(EXPENSE_ID)
             .setCategory(CATEGORY).setRecurringInterval(NONE_INTERVAL).build();
 
+    private final List<Category> categories = new ArrayList<Category>() {
+        {
+            add(CATEGORY);
+        }
+    };
     private final String[] fromColumns = {AbstractStatement._ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE, COLUMN_NAME_NOTE};
     private final Object[] values = new Object[]{1, 1234L, CHANGED_DATE, "note"};
     private EditStatementActivity underTest;
@@ -95,6 +108,8 @@ public class EditStatementActivityTest {
         ActivityModule.setUp(this, module);
 
         underTest = new EditStatementActivity();
+        underTest.setIntent(setUpIntentData(EXPENSE_STATEMENT));
+        underTest.onCreate(null);
     }
 
     @After
@@ -104,162 +119,129 @@ public class EditStatementActivityTest {
 
     @Test
     public void testOnCreateWhenEditExpenseActivityThenTitleShouldBeEditExpense() {
-        underTest.setIntent(setUpIntentData(EXPENSE_STATEMENT));
-
-        underTest.onCreate(null);
-
         assertThat((String) underTest.getTitle(), equalTo(underTest.getString(R.string.title_activity_edit_expenses)));
     }
 
     @Test
-    public void testOnCreateWhenCalledThenShouldSetTheListenerClassToTheDateButton() {
-        underTest.setIntent(setUpIntentData(EXPENSE_STATEMENT));
-
-        underTest.onCreate(null);
-
+    public void testOnCreateWhenCalledThenShouldSetTheListenerClassesToButtons() {
         final Button button = (Button) underTest.findViewById(R.id.dateButton);
         final ShadowTextView shadowButton = Robolectric.shadowOf(button);
+        final ImageButton createCategoryButton = (ImageButton) underTest.findViewById(R.id.createCategoryButton);
+        final ShadowImageView shadowCreateCategoryButton = Robolectric.shadowOf(createCategoryButton);
+        final Button submitButton = (Button) underTest.findViewById(R.id.submitButton);
+        final ShadowTextView shadowSubmitButton = Robolectric.shadowOf(submitButton);
         assertThat((DateButtonOnClickListener) shadowButton.getOnClickListener(), equalTo(listener));
+        assertThat(shadowCreateCategoryButton.getOnClickListener(), instanceOf(CreateCategoryOnClickListener.class));
+        assertThat(shadowSubmitButton.getOnClickListener(), instanceOf(SubmitButtonOnClickListener.class));
     }
 
     @Test
     public void testOnCreateShouldFillUpViewsWithDataFromIntent() {
-        final Statement statement = new Statement.Builder(AMOUNT, DATE).setId(EXPENSE_ID).setCategory(CATEGORY).setNote(NOTE)
-                .setRecurringInterval(NONE_INTERVAL).setType(Expense).build();
-        underTest.setIntent(setUpIntentData(statement));
-
-        underTest.onCreate(null);
-
         final TextView amount = (TextView) underTest.findViewById(R.id.amountText);
-        final ShadowTextView shadowAmount = Robolectric.shadowOf(amount);
         final TextView note = (TextView) underTest.findViewById(R.id.notesText);
-        final ShadowTextView shadowNote = Robolectric.shadowOf(note);
         final Button date = (Button) underTest.findViewById(R.id.dateButton);
-        final ShadowButton shadowDate = (ShadowButton) Robolectric.shadowOf(date);
-        assertThat(shadowAmount.getText().toString(), equalTo(AMOUNT));
-        assertThat(shadowNote.getText().toString(), equalTo(NOTE));
-        assertThat(shadowDate.getText().toString(), equalTo(DATE));
+        final Spinner categorySpinner = (Spinner) underTest.findViewById(R.id.categorySpinner);
+        assertThat(amount.getText().toString(), equalTo(AMOUNT));
+        assertThat(note.getText().toString(), equalTo(NOTE));
+        assertThat(date.getText().toString(), equalTo(DATE));
+        assertThat((Category) categorySpinner.getSelectedItem(), equalTo(CATEGORY));
     }
 
     @Test
     public void testSubmitWhenAmountHasChangedThenShouldCallProperFunctionAndResultCodeShouldBeOK() {
-        underTest.setIntent(setUpIntentData(EXPENSE_STATEMENT));
-        underTest.onCreate(null);
         final ShadowFragmentActivity shadowFragmentActivity = Robolectric.shadowOf(underTest);
         final Button submit = (Button) underTest.findViewById(R.id.submitButton);
-        final ShadowButton shadowButton = (ShadowButton) Robolectric.shadowOf(submit);
         final Statement expenseStatement = new Statement.Builder(CHANGED_AMOUNT, DATE).setNote(NOTE).setType(Expense).setId(EXPENSE_ID)
                 .setRecurringInterval(NONE_INTERVAL).setCategory(CATEGORY).build();
         setViewsValues(expenseStatement);
 
-        shadowButton.performClick();
+        submit.performClick();
 
         verify(statementPersistentService, times(1)).updateStatement(expenseStatement);
         assertThat(shadowFragmentActivity.getResultCode(), equalTo(RESULT_OK));
-        assertThat(shadowFragmentActivity.isFinishing(), equalTo(true));
+        assertThat(underTest.isFinishing(), equalTo(true));
     }
 
     @Test
     public void testSubmitExpenseWhenNothingWasChangedThenShouldCallProperFunctionAndResultCodeShouldBeCanceled() {
         final ShadowFragmentActivity shadowFragmentActivity = Robolectric.shadowOf(underTest);
-        underTest.setIntent(setUpIntentData(EXPENSE_STATEMENT));
-        underTest.onCreate(null);
         final Button submit = (Button) underTest.findViewById(R.id.submitButton);
-        final ShadowButton shadowButton = (ShadowButton) Robolectric.shadowOf(submit);
         setViewsValues(EXPENSE_STATEMENT);
         final Statement changedStatement = new Statement.Builder(AMOUNT, DATE).setNote(NOTE).setType(Expense).setId(EXPENSE_ID)
                 .setRecurringInterval(NONE_INTERVAL).setCategory(CATEGORY).build();
         setViewsValues(changedStatement);
 
-        shadowButton.performClick();
+        submit.performClick();
 
         assertThat(shadowFragmentActivity.getResultCode(), equalTo(RESULT_CANCELED));
-        assertThat(shadowFragmentActivity.isFinishing(), equalTo(true));
+        assertThat(underTest.isFinishing(), equalTo(true));
     }
 
     @Test
     public void testSubmitWhenDateHasChangedThenShouldCallProperFunctionAndResultCodeShouldBeOK() {
         final ShadowFragmentActivity shadowFragmentActivity = Robolectric.shadowOf(underTest);
-        underTest.setIntent(setUpIntentData(EXPENSE_STATEMENT));
-        underTest.onCreate(null);
         final Button submit = (Button) underTest.findViewById(R.id.submitButton);
-        final ShadowButton shadowButton = (ShadowButton) Robolectric.shadowOf(submit);
         final Statement changedDateStatement = new Statement.Builder(AMOUNT, CHANGED_DATE).setNote(NOTE).setType(Expense).setId(EXPENSE_ID)
                 .setRecurringInterval(NONE_INTERVAL).setCategory(CATEGORY).build();
         setViewsValues(changedDateStatement);
 
-        shadowButton.performClick();
+        submit.performClick();
 
         verify(statementPersistentService, times(1)).updateStatement(changedDateStatement);
         assertThat(shadowFragmentActivity.getResultCode(), equalTo(RESULT_OK));
-        assertThat(shadowFragmentActivity.isFinishing(), equalTo(true));
+        assertThat(underTest.isFinishing(), equalTo(true));
     }
 
     @Test
     public void testSubmitWhenNoteHasChangedThenShouldCallProperFunctionAndResultCodeShouldBeOK() {
         final ShadowFragmentActivity shadowFragmentActivity = Robolectric.shadowOf(underTest);
-        underTest.setIntent(setUpIntentData(EXPENSE_STATEMENT));
-        underTest.onCreate(null);
         final Button submit = (Button) underTest.findViewById(R.id.submitButton);
-        final ShadowButton shadowButton = (ShadowButton) Robolectric.shadowOf(submit);
-
         final Statement changedNoteStatement = new Statement.Builder(AMOUNT, DATE).setNote(CHANGED_NOTE).setType(Expense).setId(EXPENSE_ID)
                 .setRecurringInterval(NONE_INTERVAL).setCategory(CATEGORY).build();
         setViewsValues(changedNoteStatement);
 
-        shadowButton.performClick();
+        submit.performClick();
 
         verify(statementPersistentService, times(1)).updateStatement(changedNoteStatement);
         assertThat(shadowFragmentActivity.getResultCode(), equalTo(RESULT_OK));
-        assertThat(shadowFragmentActivity.isFinishing(), equalTo(true));
+        assertThat(underTest.isFinishing(), equalTo(true));
     }
 
     @Test
     public void testSubmitWhenCategoryHasChangedThenShouldCallProperFunctionAndResultCodeShouldBeOK() {
         final ShadowFragmentActivity shadowFragmentActivity = Robolectric.shadowOf(underTest);
-        underTest.setIntent(setUpIntentData(EXPENSE_STATEMENT));
-        underTest.onCreate(null);
         final Button submit = (Button) underTest.findViewById(R.id.submitButton);
-        final ShadowButton shadowButton = (ShadowButton) Robolectric.shadowOf(submit);
-
         final Statement changedNoteStatement = new Statement.Builder(AMOUNT, DATE).setNote(NOTE).setType(Expense).setId(EXPENSE_ID)
                 .setRecurringInterval(NONE_INTERVAL).setCategory(CHANGED_CATEGORY).build();
         setViewsValues(changedNoteStatement);
 
-        shadowButton.performClick();
+        submit.performClick();
 
         verify(statementPersistentService, times(1)).updateStatement(changedNoteStatement);
         assertThat(shadowFragmentActivity.getResultCode(), equalTo(RESULT_OK));
-        assertThat(shadowFragmentActivity.isFinishing(), equalTo(true));
+        assertThat(underTest.isFinishing(), equalTo(true));
     }
 
     @Test
     public void testSubmitWhenCategoryHasChangedButTheSaveFailedThenResultCodeShouldBeCanceled() {
         final ShadowFragmentActivity shadowFragmentActivity = Robolectric.shadowOf(underTest);
-        underTest.setIntent(setUpIntentData(EXPENSE_STATEMENT));
-        underTest.onCreate(null);
         when(statementPersistentService.updateStatement((Statement) anyObject())).thenReturn(false);
         final Button submit = (Button) underTest.findViewById(R.id.submitButton);
-        final ShadowButton shadowButton = (ShadowButton) Robolectric.shadowOf(submit);
         final Statement changedNoteStatement = new Statement.Builder(AMOUNT, DATE).setNote(CHANGED_NOTE).setType(Expense).setId(EXPENSE_ID)
                 .setRecurringInterval(NONE_INTERVAL).setCategory(CHANGED_CATEGORY).build();
         setViewsValues(changedNoteStatement);
 
-        shadowButton.performClick();
+        submit.performClick();
 
         verify(statementPersistentService, times(1)).updateStatement(changedNoteStatement);
         assertThat(shadowFragmentActivity.getResultCode(), equalTo(RESULT_CANCELED));
-        final Activity activity = new Activity();
-        final String toastText = activity.getResources().getString(R.string.database_error);
-        ShadowHandler.idleMainLooper();
+        final String toastText = underTest.getResources().getString(R.string.database_error);
         assertThat(ShadowToast.getTextOfLatestToast(), equalTo(toastText));
     }
 
     @Test
     public void testSubmitWhenNothingHasChangedThenCallProperFunctionAndResultCodeShouldBeCanceled() {
         final ShadowFragmentActivity shadowFragmentActivity = Robolectric.shadowOf(underTest);
-        underTest.setIntent(setUpIntentData(EXPENSE_STATEMENT));
-        underTest.onCreate(null);
         final Button submit = (Button) underTest.findViewById(R.id.submitButton);
         final ShadowButton shadowButton = (ShadowButton) Robolectric.shadowOf(submit);
         setViewsValues(EXPENSE_STATEMENT);
@@ -268,6 +250,70 @@ public class EditStatementActivityTest {
 
         assertThat(shadowFragmentActivity.getResultCode(), equalTo(RESULT_CANCELED));
         assertThat(shadowFragmentActivity.isFinishing(), equalTo(true));
+    }
+
+    @Test
+    public void testSubmitWhenCategoryHasChangedButUpdateStatementThrowExceptionThenShouldShowToast() {
+        final Button submit = (Button) underTest.findViewById(R.id.submitButton);
+        final Statement changedNoteStatement = new Statement.Builder(AMOUNT, DATE).setNote(NOTE).setType(Expense).setId(EXPENSE_ID)
+                .setRecurringInterval(NONE_INTERVAL).setCategory(CHANGED_CATEGORY).build();
+        setViewsValues(changedNoteStatement);
+        when(statementPersistentService.updateStatement(changedNoteStatement)).thenThrow(new IllegalArgumentException(ERROR));
+
+        submit.performClick();
+
+        verify(statementPersistentService, times(1)).updateStatement(changedNoteStatement);
+        assertThat(ShadowToast.getTextOfLatestToast(), equalTo(ERROR));
+    }
+
+    @Test
+    public void testCreateCategoryWhenButtonPressedThenStartNewCreateCategoryActivity() {
+        final ImageButton createCategoryButton = (ImageButton) underTest.findViewById(R.id.createCategoryButton);
+        final ShadowActivity shadowActivity = Robolectric.shadowOf(underTest);
+
+        createCategoryButton.performClick();
+
+        final Intent intent = shadowActivity.getNextStartedActivityForResult().intent;
+        final ShadowIntent shadowIntent = Robolectric.shadowOf(intent);
+        assertThat(shadowIntent.getComponent().getClassName(), equalTo(CreateCategoryActivity.class.getName()));
+    }
+
+    @Test
+    public void testOnActivityResultWhenRequestIdIsCorrectThenRefreshSpinner() {
+        final Spinner categorySpinner = (Spinner) underTest.findViewById(R.id.categorySpinner);
+        final Category addedCat = new Category("1", "cat2");
+        final List<Category> extendedList = new ArrayList<Category>(categories);
+        extendedList.add(addedCat);
+        when(categoryPersistenceService.getCategories()).thenReturn(extendedList);
+
+        underTest.onActivityResult(1, Activity.RESULT_OK, null);
+
+        verify(categoryPersistenceService, times(2)).getCategories();
+        assertThat((Category) categorySpinner.getSelectedItem(), equalTo(addedCat));
+    }
+
+    @Test
+    public void testOnActivityResultWhenRequestIdIsNotCorrectThenShouldNotRefreshSpinner() {
+        underTest.onActivityResult(0, Activity.RESULT_OK, null);
+
+        // once, on creation
+        verify(categoryPersistenceService, times(1)).getCategories();
+    }
+
+    @Test
+    public void testOnActivityResultWhenResultCodeIsNotCorrectThenShouldNotRefreshSpinner() {
+        underTest.onActivityResult(1, Activity.RESULT_CANCELED, null);
+
+        // once, on creation
+        verify(categoryPersistenceService, times(1)).getCategories();
+    }
+
+    @Test
+    public void testOnActivityResultWhenResultCodeAndRequestIdAreNotCorrectThenShouldNotRefreshSpinner() {
+        underTest.onActivityResult(0, Activity.RESULT_CANCELED, null);
+
+        // once, on creation
+        verify(categoryPersistenceService, times(1)).getCategories();
     }
 
     private void setViewsValues(final Statement statement) {
@@ -285,18 +331,6 @@ public class EditStatementActivityTest {
         categorySpinner.setAdapter(categoryArrayAdapter);
         final int categoryPos = categoryArrayAdapter.getPosition(statement.getCategory());
         categorySpinner.setSelection(categoryPos);
-        //
-        //        final Spinner recurringSpinner = (Spinner) underTest.findViewById(R.id.recurring_spinner);
-        //        recurringSpinner.setAdapter(intervalArrayAdapter);
-        //        final int intervalPos = intervalArrayAdapter.getPosition(statement.getRecurringInterval());
-        //        recurringSpinner.setSelection(intervalPos);
-
-        //        final CheckBox checkBox = (CheckBox) underTest.findViewById(R.id.recurring_checkbox_income);
-        //        checkBox.setSelected(false);
-        //        if (intervalPos != intervalArrayAdapter.getPosition(RecurringInterval.none)) {
-        //            checkBox.setChecked(true);
-        //        }
-
     }
 
     private Intent setUpIntentData(final Statement statement) {
@@ -306,24 +340,19 @@ public class EditStatementActivityTest {
     }
 
     private void addBindings(final ActivityModule module) {
-        //        final Balance balance = Balance.getInstance(statementPersistentService);
-        //        module.addBinding(Balance.class, balance);
         module.addBinding(DateButtonOnClickListener.class, listener);
         module.addBinding(StatementPersistenceService.class, statementPersistentService);
+        module.addBinding(CategoryPersistenceService.class, categoryPersistenceService);
     }
 
     private void setUpPersistentService() {
         final MatrixCursor cursor = new MatrixCursor(fromColumns);
         cursor.addRow(values);
-        //        when(statementPersistentService.getStatementById(INCOME_ID)).thenReturn(INCOME_STATEMENT);
         when(statementPersistentService.getStatementById(EXPENSE_ID)).thenReturn(EXPENSE_STATEMENT);
         when(statementPersistentService.getStatement(Expense)).thenReturn(cursor);
         when(statementPersistentService.getStatement(StatementType.Income)).thenReturn(cursor);
         when(statementPersistentService.saveStatement((Statement) anyObject())).thenReturn(true);
         when(statementPersistentService.updateStatement((Statement) anyObject())).thenReturn(true);
-
-        final List<Category> categories = new ArrayList<Category>();
-        categories.add(CATEGORY);
 
         when(categoryPersistenceService.getCategories()).thenReturn(categories);
     }
