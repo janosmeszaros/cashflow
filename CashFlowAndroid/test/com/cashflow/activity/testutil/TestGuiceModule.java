@@ -27,12 +27,12 @@ public class TestGuiceModule extends AbstractModule {
      * @param testObject underTest
      * @param module Guice module
      */
-    public static void setUp(Object testObject, TestGuiceModule module) {
-        Module roboGuiceModule = RoboGuice.newDefaultRoboModule(Robolectric.application);
-        Module productionModule = Modules.override(roboGuiceModule).with(new AppModule());
-        Module testModule = Modules.override(productionModule).with(module);
+    public static void setUp(final Object testObject, final TestGuiceModule module) {
+        final Module roboGuiceModule = RoboGuice.newDefaultRoboModule(Robolectric.application);
+        final Module productionModule = Modules.override(roboGuiceModule).with(new AppModule());
+        final Module testModule = Modules.override(productionModule).with(module);
         RoboGuice.setBaseApplicationInjector(Robolectric.application, RoboGuice.DEFAULT_STAGE, testModule);
-        RoboInjector injector = RoboGuice.getInjector(Robolectric.application);
+        final RoboInjector injector = RoboGuice.getInjector(Robolectric.application);
         injector.injectMembers(testObject);
     }
 
@@ -41,8 +41,9 @@ public class TestGuiceModule extends AbstractModule {
      */
     public static void tearDown() {
         RoboGuice.util.reset();
-        Application app = Robolectric.application;
-        DefaultRoboModule defaultModule = RoboGuice.newDefaultRoboModule(app);
+        final Application app = Robolectric.application;
+        final DefaultRoboModule defaultModule = RoboGuice.newDefaultRoboModule(app);
         RoboGuice.setBaseApplicationInjector(app, RoboGuice.DEFAULT_STAGE, defaultModule);
     }
+
 }

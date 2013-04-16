@@ -30,8 +30,6 @@ import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmen
 public class ListActivity extends RoboSherlockFragmentActivity {
 
     private TabHost mTabHost;
-    private ViewPager mViewPager;
-    private TabsAdapter mTabsAdapter;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -42,9 +40,9 @@ public class ListActivity extends RoboSherlockFragmentActivity {
         mTabHost = (TabHost) findViewById(android.R.id.tabhost);
         mTabHost.setup();
 
-        mViewPager = (ViewPager) findViewById(R.id.pager);
+        final ViewPager mViewPager = (ViewPager) findViewById(R.id.pager);
 
-        mTabsAdapter = new TabsAdapter(this, mTabHost, mViewPager);
+        final TabsAdapter mTabsAdapter = new TabsAdapter(this, mTabHost, mViewPager);
 
         Bundle bundle = new Bundle();
         bundle.putString(STATEMENT_TYPE_EXTRA, StatementType.Income.toString());

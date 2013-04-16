@@ -63,7 +63,7 @@ public class EditIncomeActivityTest {
     private static final RecurringInterval NONE_INTERVAL = RecurringInterval.none;
     private static final Category CATEGORY = new Category(CATEGORY_ID, "category");
     private static final Category CHANGED_CATEGORY = new Category("4", "changed_category");
-    private static final Statement INCOME_STATEMENT = Statement.builder(AMOUNT, DATE).note(NOTE).type(Income).id(INCOME_ID)
+    private static final Statement INCOME_STATEMENT = Statement.builder(AMOUNT, DATE).note(NOTE).type(Income).statementId(INCOME_ID)
             .category(CATEGORY).recurringInterval(NONE_INTERVAL).build();
 
     private final String[] fromColumns = {AbstractStatement._ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE, COLUMN_NAME_NOTE};
@@ -135,7 +135,7 @@ public class EditIncomeActivityTest {
 
     @Test
     public void testOnCreateWhenRecurringIsOtherThenNoneThenRecurringCheckBoxShouldBeCheckedAndSpinnerValueIsSettedToCorrectValue() {
-        final Statement statement = Statement.builder(AMOUNT, DATE).id("12").category(CATEGORY).note(NOTE).recurringInterval(INTERVAL)
+        final Statement statement = Statement.builder(AMOUNT, DATE).statementId("12").category(CATEGORY).note(NOTE).recurringInterval(INTERVAL)
                 .type(Income).build();
         underTest.setIntent(setUpIntentData(statement));
         when(statementPersistentService.getStatementById("12")).thenReturn(statement);
@@ -152,7 +152,7 @@ public class EditIncomeActivityTest {
     public void testSubmitWhenRecurringIntervalHasChangedThenShouldCallProperFunctionAndResultCodeShouldBeOK() {
         final ShadowFragmentActivity shadowFragmentActivity = shadowOf(underTest);
         final Button submit = (Button) underTest.findViewById(R.id.submitButton);
-        final Statement changedStatement = Statement.builder(AMOUNT, DATE).note(NOTE).type(Income).id(INCOME_ID)
+        final Statement changedStatement = Statement.builder(AMOUNT, DATE).note(NOTE).type(Income).statementId(INCOME_ID)
                 .recurringInterval(INTERVAL).category(CATEGORY).build();
         setViewsValues(changedStatement);
 
@@ -179,7 +179,7 @@ public class EditIncomeActivityTest {
     public void testSubmitWhenRecurringIntervalAndDateHasChangedThenShouldCallProperFunctionAndResultCodeShouldBeOK() {
         final ShadowFragmentActivity shadowFragmentActivity = shadowOf(underTest);
         final Button submit = (Button) underTest.findViewById(R.id.submitButton);
-        final Statement changedStatement = Statement.builder(AMOUNT, CHANGED_DATE).note(NOTE).type(Income).id(INCOME_ID)
+        final Statement changedStatement = Statement.builder(AMOUNT, CHANGED_DATE).note(NOTE).type(Income).statementId(INCOME_ID)
                 .recurringInterval(INTERVAL).category(CATEGORY).build();
         setViewsValues(changedStatement);
 
@@ -194,7 +194,7 @@ public class EditIncomeActivityTest {
     public void testSubmitWhenCategoryHasChangedThenShouldCallProperFunctionAndResultCodeShouldBeOK() {
         final ShadowFragmentActivity shadowFragmentActivity = shadowOf(underTest);
         final Button submit = (Button) underTest.findViewById(R.id.submitButton);
-        final Statement changedNoteStatement = Statement.builder(AMOUNT, DATE).note(NOTE).type(Income).id(INCOME_ID)
+        final Statement changedNoteStatement = Statement.builder(AMOUNT, DATE).note(NOTE).type(Income).statementId(INCOME_ID)
                 .recurringInterval(NONE_INTERVAL).category(CHANGED_CATEGORY).build();
         setViewsValues(changedNoteStatement);
 

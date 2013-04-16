@@ -23,7 +23,6 @@ import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmen
  */
 public class ActionsActivity extends RoboSherlockFragmentActivity implements ActionBar.TabListener {
 
-    private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
 
     @Override
@@ -36,7 +35,7 @@ public class ActionsActivity extends RoboSherlockFragmentActivity implements Act
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayShowHomeEnabled(false);
 
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        final SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);

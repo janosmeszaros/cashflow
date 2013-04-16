@@ -42,7 +42,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Basic DAO for the statements.
+ * DAO based on Android for {@link Statement}.
  * @author Kornel_Refi
  * @author Janos_Gyula_Meszaros
  */
@@ -60,9 +60,9 @@ public class AndroidStatementDAO implements StatementDAO {
     /**
      * Default constructor which gets a Provider. Can't be <code>null</code>.
      * @throws IllegalArgumentException
-     *             when provider is <code>null</code>.
+     *             when Provider is <code>null</code>.
      * @param provider
-     *            Provider to get database.
+     *            {@link SQLiteDbProvider} to get database.
      */
     @Inject
     public AndroidStatementDAO(final SQLiteDbProvider provider) {
@@ -155,7 +155,7 @@ public class AndroidStatementDAO implements StatementDAO {
 
         final Builder builder = Statement.builder(cursor.getString(amountIndex), cursor.getString(dateIndex));
         builder.category(category);
-        builder.id(cursor.getString(idIndex));
+        builder.statementId(cursor.getString(idIndex));
         builder.note(cursor.getString(noteIndex));
         builder.recurringInterval(RecurringInterval.valueOf(cursor.getString(intervalIndex)));
         builder.type(type);

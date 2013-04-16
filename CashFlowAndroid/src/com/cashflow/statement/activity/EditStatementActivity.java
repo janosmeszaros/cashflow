@@ -143,7 +143,7 @@ public class EditStatementActivity extends RoboFragmentActivity {
         final Category category = (Category) categorySpinner.getSelectedItem();
         final String statementId = originalStatement.getId();
 
-        return Statement.builder(amountStr, date).note(note).type(type).id(statementId).category(category).build();
+        return Statement.builder(amountStr, date).note(note).type(type).statementId(statementId).category(category).build();
     }
 
     private void getOriginalData() {

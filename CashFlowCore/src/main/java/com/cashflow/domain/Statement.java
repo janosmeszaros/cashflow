@@ -11,7 +11,7 @@ import com.cashflow.constants.RecurringInterval;
  * @author Janos_Gyula_Meszaros
  */
 public final class Statement {
-    private final String id;
+    private final String statementId;
     private final String amount;
     private final Category category;
     private final String note;
@@ -20,7 +20,7 @@ public final class Statement {
     private final RecurringInterval recurringInterval;
 
     private Statement(final Builder builder) {
-        id = builder.id;
+        statementId = builder.statementId;
         amount = builder.amount;
         category = builder.category;
         date = builder.date;
@@ -30,7 +30,7 @@ public final class Statement {
     }
 
     public String getId() {
-        return id;
+        return statementId;
     }
 
     public String getAmount() {
@@ -93,7 +93,7 @@ public final class Statement {
         private final String amount;
         private final String date;
 
-        private String id = "";
+        private String statementId = "";
         private String note = "";
         private StatementType type = StatementType.Income;
         private RecurringInterval recurringInterval = RecurringInterval.none;
@@ -151,8 +151,8 @@ public final class Statement {
          *            is the ID of the {@link Statement}
          * @return {@link Builder}
          */
-        public Builder id(final String statementId) {
-            id = statementId;
+        public Builder statementId(final String statementId) {
+            this.statementId = statementId;
             return this;
         }
 

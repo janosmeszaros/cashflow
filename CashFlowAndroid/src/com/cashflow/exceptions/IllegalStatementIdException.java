@@ -11,10 +11,10 @@ public class IllegalStatementIdException extends RuntimeException {
 
     /**
      * Constructor which gets the id which is not exist.
-     * @param id id.
+     * @param statementId id.
      */
-    public IllegalStatementIdException(final String id) {
-        super("The statement for the " + id + " can't find in the database.");
+    public IllegalStatementIdException(final String statementId) {
+        super("The statement for the " + statementId + " can't find in the database.");
     }
 
 }

@@ -107,7 +107,7 @@ public class RecurringIncomeSchedulerTest {
         underTest.schedule();
 
         verify(dao).update(
-                Statement.builder(AMOUNT, formatter.print(FOUR_WEEKS_BEFORE.plusWeeks(4))).id(INCOME_ID).note(NOTE)
+                Statement.builder(AMOUNT, formatter.print(FOUR_WEEKS_BEFORE.plusWeeks(4))).statementId(INCOME_ID).note(NOTE)
                         .recurringInterval(RecurringInterval.biweekly).category(CATEGORY).type(StatementType.Income).build(), INCOME_ID);
 
     }
@@ -146,6 +146,6 @@ public class RecurringIncomeSchedulerTest {
 
     private Statement createStatement(final DateTime time, final RecurringInterval interval) {
         return Statement.builder(AMOUNT, formatter.print(time)).recurringInterval(interval).type(StatementType.Income).note(NOTE).category(CATEGORY)
-                .id(INCOME_ID).build();
+                .statementId(INCOME_ID).build();
     }
 }

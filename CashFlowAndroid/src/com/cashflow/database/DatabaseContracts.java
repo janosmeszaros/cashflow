@@ -37,7 +37,7 @@ public abstract class DatabaseContracts {
     private static final String EQUALS_INCOME = " = 1";
     private static final String EQUALS_EXPENSE = " = 0";
     private static final String AND = " AND ";
-    private static final String AS = " AS ";
+    private static final String AS_STR = " AS ";
     private static final String DOT = ".";
     private static final String SELECT = "SELECT ";
     private static final String FROM = " FROM ";
@@ -103,8 +103,8 @@ public abstract class DatabaseContracts {
         public static final String[] PROJECTION = new String[]{TABLE_NAME + DOT + _ID, COLUMN_NAME_AMOUNT,
             AbstractCategory.COLUMN_NAME_CATEGORY_NAME, COLUMN_NAME_DATE, COLUMN_NAME_NOTE, COLUMN_NAME_INTERVAL};
 
-        public static final String[] PROJECTION_WITH_ALIAS = new String[]{TABLE_NAME + DOT + _ID + AS + STATEMENT_ID_ALIAS,
-            AbstractCategory.TABLE_NAME + DOT + _ID + AS + CATEGORY_ID_ALIAS, COLUMN_NAME_AMOUNT, AbstractCategory.COLUMN_NAME_CATEGORY_NAME,
+        public static final String[] PROJECTION_WITH_ALIAS = new String[]{TABLE_NAME + DOT + _ID + AS_STR + STATEMENT_ID_ALIAS,
+            AbstractCategory.TABLE_NAME + DOT + _ID + AS_STR + CATEGORY_ID_ALIAS, COLUMN_NAME_AMOUNT, AbstractCategory.COLUMN_NAME_CATEGORY_NAME,
             COLUMN_NAME_DATE, COLUMN_NAME_NOTE, COLUMN_NAME_INTERVAL, COLUMN_NAME_IS_INCOME};
 
         public static final int[] TO_VIEWS = {R.id.row_id, R.id.row_amount, R.id.row_category, R.id.row_date, R.id.row_note, R.id.row_interval};
@@ -119,8 +119,8 @@ public abstract class DatabaseContracts {
         public static final String RECURRING_INCOME_SELECTION = OPEN_PARENTHESIS + COLUMN_NAME_IS_INCOME + EQUALS_INCOME + AND + COLUMN_NAME_INTERVAL
                 + " != 'none'" + CLOSE_PARENTHESIS;
 
-        public static final String SELECT_STATEMENT_BY_ID = SELECT + TABLE_NAME + DOT + _ID + AS + STATEMENT_ID_ALIAS + COMMA_SEP
-                + AbstractCategory.TABLE_NAME + DOT + _ID + AS + CATEGORY_ID_ALIAS + COMMA_SEP + COLUMN_NAME_AMOUNT + COMMA_SEP
+        public static final String SELECT_STATEMENT_BY_ID = SELECT + TABLE_NAME + DOT + _ID + AS_STR + STATEMENT_ID_ALIAS + COMMA_SEP
+                + AbstractCategory.TABLE_NAME + DOT + _ID + AS_STR + CATEGORY_ID_ALIAS + COMMA_SEP + COLUMN_NAME_AMOUNT + COMMA_SEP
                 + AbstractCategory.COLUMN_NAME_CATEGORY_NAME + COMMA_SEP + COLUMN_NAME_DATE + COMMA_SEP + COLUMN_NAME_NOTE + COMMA_SEP
                 + COLUMN_NAME_INTERVAL + COMMA_SEP + COLUMN_NAME_IS_INCOME + FROM + AbstractCategory.TABLE_NAME + COMMA_SEP
                 + AbstractStatement.TABLE_NAME + WHERE + SELECTION_BY_ID;

@@ -31,7 +31,7 @@ public class BalanceTest {
     private List<Statement> expenseList;
 
     @Before
-    public void setup() {
+    public void setUp() {
         MockitoAnnotations.initMocks(this);
         incomeList = new ArrayList<Statement>();
         expenseList = new ArrayList<Statement>();

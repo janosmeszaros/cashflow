@@ -24,21 +24,21 @@ public class ActionBarSherlockRobolectric extends ActionBarSherlockCompat {
      * @param activity activity.
      * @param flags flags.
      */
-    public ActionBarSherlockRobolectric(Activity activity, int flags) {
+    public ActionBarSherlockRobolectric(final Activity activity, final int flags) {
         super(activity, flags);
         actionBar = new MockActionBar(activity);
     }
 
     @Override
-    public void setContentView(int layoutResId) {
-        LayoutInflater layoutInflater = LayoutInflater.from(mActivity);
-        View contentView = layoutInflater.inflate(layoutResId, null);
+    public void setContentView(final int layoutResId) {
+        final LayoutInflater layoutInflater = LayoutInflater.from(mActivity);
+        final View contentView = layoutInflater.inflate(layoutResId, null);
 
         shadowOf(mActivity).setContentView(contentView);
     }
 
     @Override
-    public void setContentView(View view) {
+    public void setContentView(final View view) {
         shadowOf(mActivity).setContentView(view);
     }
 
@@ -51,4 +51,5 @@ public class ActionBarSherlockRobolectric extends ActionBarSherlockCompat {
     protected Context getThemedContext() {
         return mActivity;
     }
+
 }

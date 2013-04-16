@@ -35,7 +35,7 @@ import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 @RunWith(RobolectricTestRunner.class)
 public class DaoParentTest {
-    private static final String ID = "1";
+    private static final String ID_STRING = "1";
     private static final String EQUALS = " = ?";
 
     private ParentDAO underTest;
@@ -117,12 +117,12 @@ public class DaoParentTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testUpdateWhenParamValuesIsNullThenThrowException() {
-        underTest.update(null, ID);
+        underTest.update(null, ID_STRING);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testUpdateWhenParamIsContainsWrongColumnNamesThenShouldThrowException() {
-        underTest.update(values, ID);
+        underTest.update(values, ID_STRING);
     }
 
     @Test

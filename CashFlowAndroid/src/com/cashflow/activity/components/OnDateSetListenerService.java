@@ -29,7 +29,7 @@ public class OnDateSetListenerService implements OnDateSetListener {
     }
 
     @Override
-    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+    public void onDateSet(final DatePicker view, final int year, final int monthOfYear, final int dayOfMonth) {
         final Button dateButton = (Button) activity.findViewById(R.id.dateButton);
         final Date setDate = getDateForYearMonthDay(year, monthOfYear, dayOfMonth);
         updateButtonTextToDate(dateButton, setDate);
@@ -46,4 +46,5 @@ public class OnDateSetListenerService implements OnDateSetListener {
         final DateFormat fmtDateAndTime = DateFormat.getDateInstance(DateFormat.MEDIUM);
         dateButton.setText(fmtDateAndTime.format(setDate));
     }
+
 }

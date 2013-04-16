@@ -14,31 +14,32 @@ import com.google.inject.MembersInjector;
  * @param <T>
  */
 public class TestViewMembersInjector<T> implements MembersInjector<T> {
-    private SparseArray<Object> viewBindings;
-    private Field field;
+    private final SparseArray<Object> viewBindings;
+    private final Field field;
 
     /**
      * Constructor.
      * @param viewBindings view bindings.
      * @param field field to bind to.
      */
-    public TestViewMembersInjector(SparseArray<Object> viewBindings, Field field) {
+    public TestViewMembersInjector(final SparseArray<Object> viewBindings, final Field field) {
         this.viewBindings = viewBindings;
         this.field = field;
     }
 
     @Override
-    public void injectMembers(T instance) {
-        InjectView injectView = field.getAnnotation(InjectView.class);
-        final int id = injectView.value();
+    public void injectMembers(final T instance) {
+        final InjectView injectView = field.getAnnotation(InjectView.class);
+        final int viewId = injectView.value();
         field.setAccessible(true);
-        Object view = viewBindings.get(id);
+        final Object view = viewBindings.get(viewId);
         if (view != null) {
             try {
                 field.set(instance, view);
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 throw new IllegalStateException(e);
             }
         }
     }
+
 }

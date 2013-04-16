@@ -75,7 +75,7 @@ public class EditIncomeActivity extends EditStatementActivity {
     protected Statement createStatement() {
         final Statement expense = super.createStatement();
         final Statement income = Statement.builder(expense.getAmount(), expense.getDate()).note(expense.getNote()).type(StatementType.Income)
-                .id(expense.getId()).category(expense.getCategory())
+                .statementId(expense.getId()).category(expense.getCategory())
                 .recurringInterval((RecurringInterval) recurringSpinner.getSelectedItem()).build();
         return income;
     }

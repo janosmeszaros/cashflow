@@ -14,46 +14,46 @@ public class MockActionBar extends ActionBar {
     private View customView;
     private final Context realContext;
 
-    public MockActionBar(Context context) {
+    public MockActionBar(final Context context) {
         realContext = context;
     }
 
     @Override
-    public void setCustomView(View view) {
+    public void setCustomView(final View view) {
         setCustomView(view, null);
     }
 
     @Override
-    public void setCustomView(View view, LayoutParams layoutParams) {
-        this.customView = view;
+    public void setCustomView(final View view, final LayoutParams layoutParams) {
+        customView = view;
     }
 
     @Override
-    public void setCustomView(int resId) {
+    public void setCustomView(final int resId) {
     }
 
     @Override
-    public void setIcon(int resId) {
+    public void setIcon(final int resId) {
     }
 
     @Override
-    public void setIcon(Drawable icon) {
+    public void setIcon(final Drawable icon) {
     }
 
     @Override
-    public void setLogo(int resId) {
+    public void setLogo(final int resId) {
     }
 
     @Override
-    public void setLogo(Drawable logo) {
+    public void setLogo(final Drawable logo) {
     }
 
     @Override
-    public void setListNavigationCallbacks(SpinnerAdapter adapter, OnNavigationListener callback) {
+    public void setListNavigationCallbacks(final SpinnerAdapter adapter, final OnNavigationListener callback) {
     }
 
     @Override
-    public void setSelectedNavigationItem(int position) {
+    public void setSelectedNavigationItem(final int position) {
     }
 
     @Override
@@ -67,55 +67,55 @@ public class MockActionBar extends ActionBar {
     }
 
     @Override
-    public void setTitle(CharSequence title) {
+    public void setTitle(final CharSequence title) {
         this.title = (String) title;
     }
 
     @Override
-    public void setTitle(int resId) {
+    public void setTitle(final int resId) {
         title = realContext.getString(resId);
     }
 
     @Override
-    public void setSubtitle(CharSequence newSubtitle) {
+    public void setSubtitle(final CharSequence newSubtitle) {
         subtitle = (String) newSubtitle;
     }
 
     @Override
-    public void setSubtitle(int resId) {
+    public void setSubtitle(final int resId) {
         subtitle = realContext.getString(resId);
     }
 
     @Override
-    public void setDisplayOptions(int options) {
+    public void setDisplayOptions(final int options) {
     }
 
     @Override
-    public void setDisplayOptions(int options, int mask) {
+    public void setDisplayOptions(final int options, final int mask) {
     }
 
     @Override
-    public void setDisplayUseLogoEnabled(boolean useLogo) {
+    public void setDisplayUseLogoEnabled(final boolean useLogo) {
     }
 
     @Override
-    public void setDisplayShowHomeEnabled(boolean showHome) {
+    public void setDisplayShowHomeEnabled(final boolean showHome) {
     }
 
     @Override
-    public void setDisplayHomeAsUpEnabled(boolean showHomeAsUp) {
+    public void setDisplayHomeAsUpEnabled(final boolean showHomeAsUp) {
     }
 
     @Override
-    public void setDisplayShowTitleEnabled(boolean showTitle) {
+    public void setDisplayShowTitleEnabled(final boolean showTitle) {
     }
 
     @Override
-    public void setDisplayShowCustomEnabled(boolean showCustom) {
+    public void setDisplayShowCustomEnabled(final boolean showCustom) {
     }
 
     @Override
-    public void setBackgroundDrawable(Drawable d) {
+    public void setBackgroundDrawable(final Drawable d) {
     }
 
     @Override
@@ -139,7 +139,7 @@ public class MockActionBar extends ActionBar {
     }
 
     @Override
-    public void setNavigationMode(int mode) {
+    public void setNavigationMode(final int mode) {
     }
 
     @Override
@@ -153,27 +153,27 @@ public class MockActionBar extends ActionBar {
     }
 
     @Override
-    public void addTab(Tab tab) {
+    public void addTab(final Tab tab) {
     }
 
     @Override
-    public void addTab(Tab tab, boolean setSelected) {
+    public void addTab(final Tab tab, final boolean setSelected) {
     }
 
     @Override
-    public void addTab(Tab tab, int position) {
+    public void addTab(final Tab tab, final int position) {
     }
 
     @Override
-    public void addTab(Tab tab, int position, boolean setSelected) {
+    public void addTab(final Tab tab, final int position, final boolean setSelected) {
     }
 
     @Override
-    public void removeTab(Tab tab) {
+    public void removeTab(final Tab tab) {
     }
 
     @Override
-    public void removeTabAt(int position) {
+    public void removeTabAt(final int position) {
     }
 
     @Override
@@ -181,7 +181,7 @@ public class MockActionBar extends ActionBar {
     }
 
     @Override
-    public void selectTab(Tab tab) {
+    public void selectTab(final Tab tab) {
     }
 
     @Override
@@ -190,7 +190,7 @@ public class MockActionBar extends ActionBar {
     }
 
     @Override
-    public Tab getTabAt(int index) {
+    public Tab getTabAt(final int index) {
         return null;
     }
 
@@ -218,10 +218,10 @@ public class MockActionBar extends ActionBar {
     }
 
     @Override
-    public void addOnMenuVisibilityListener(OnMenuVisibilityListener listener) {
+    public void addOnMenuVisibilityListener(final OnMenuVisibilityListener listener) {
     }
 
     @Override
-    public void removeOnMenuVisibilityListener(OnMenuVisibilityListener listener) {
+    public void removeOnMenuVisibilityListener(final OnMenuVisibilityListener listener) {
     }
 }

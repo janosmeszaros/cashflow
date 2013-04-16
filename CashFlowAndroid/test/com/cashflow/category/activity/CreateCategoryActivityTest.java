@@ -19,7 +19,6 @@ import com.cashflow.R;
 import com.cashflow.activity.testutil.ActivityModule;
 import com.cashflow.activity.testutil.CreateCategoryActivityProvider;
 import com.cashflow.activity.testutil.TestGuiceModule;
-import com.cashflow.service.CategoryPersistenceService;
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 import com.xtremelabs.robolectric.shadows.ShadowButton;
@@ -43,7 +42,7 @@ public class CreateCategoryActivityTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        ActivityModule module = new ActivityModule(new CreateCategoryActivityProvider());
+        final ActivityModule module = new ActivityModule(new CreateCategoryActivityProvider());
 
         module.addBinding(CategoryPersistenceService.class, categoryPersistenceService);
         ActivityModule.setUp(this, module);
@@ -59,7 +58,7 @@ public class CreateCategoryActivityTest {
 
     @Test
     public void testCreateCategoryIsSuccessful() {
-        EditText categoryName = (EditText) underTest.findViewById(R.id.categoryNameText);
+        final EditText categoryName = (EditText) underTest.findViewById(R.id.categoryNameText);
         categoryName.setText(CATEGORY_NAME);
         final Button submit = (Button) underTest.findViewById(R.id.createCategoryButton);
         final ShadowButton shadowButton = (ShadowButton) Robolectric.shadowOf(submit);
@@ -73,7 +72,7 @@ public class CreateCategoryActivityTest {
 
     @Test
     public void testCreateCategoryIsNotSuccessful() {
-        EditText categoryName = (EditText) underTest.findViewById(R.id.categoryNameText);
+        final EditText categoryName = (EditText) underTest.findViewById(R.id.categoryNameText);
         categoryName.setText(EMPTY_STRING);
         final Button submit = (Button) underTest.findViewById(R.id.createCategoryButton);
         final ShadowButton shadowButton = (ShadowButton) Robolectric.shadowOf(submit);

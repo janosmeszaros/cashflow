@@ -116,7 +116,7 @@ public class RecurringIncomeScheduler {
     private void updateRecurringStatement(final Statement recurringStatement, final String newDate) {
         if (!recurringStatement.getDate().equals(newDate)) {
 
-            final Statement statement = Statement.builder(recurringStatement.getAmount(), newDate).id(recurringStatement.getId())
+            final Statement statement = Statement.builder(recurringStatement.getAmount(), newDate).statementId(recurringStatement.getId())
                     .note(recurringStatement.getNote()).category(recurringStatement.getCategory())
                     .recurringInterval(recurringStatement.getRecurringInterval()).type(StatementType.Income).build();
 
