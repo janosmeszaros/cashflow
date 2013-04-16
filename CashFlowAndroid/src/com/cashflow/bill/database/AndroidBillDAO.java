@@ -123,6 +123,7 @@ public class AndroidBillDAO implements BillDAO {
 
         while (!cursor.isAfterLast()) {
 
+            final String billId = cursor.getString(cursor.getColumnIndexOrThrow(_ID));
             final String amount = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_AMOUNT));
             final String date = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_DATE_ADDED));
             final String deadline = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_DATE_DEADLINE));
@@ -135,7 +136,7 @@ public class AndroidBillDAO implements BillDAO {
             }
             final String note = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_NOTE));
 
-            final Bill bill = Bill.builder(amount, date, deadline).isPayed(isPayed).note(note).build();
+            final Bill bill = Bill.builder(amount, date, deadline).isPayed(isPayed).note(note).billId(billId).build();
             result.add(bill);
         }
         return result;
