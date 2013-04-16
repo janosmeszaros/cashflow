@@ -103,7 +103,7 @@ public class AndroidStatementDAO implements StatementDAO {
 
     private boolean updateStatement(final String id, final ContentValues values) {
         final SQLiteDatabase database = provider.getWritableDb();
-        final int updatedRows = database.update(TABLE_NAME, values, _ID + EQUALS, new String[] { id });
+        final int updatedRows = database.update(TABLE_NAME, values, _ID + EQUALS, new String[]{id});
 
         LOG.debug("Num of rows updated: " + updatedRows);
         return isUpdateSuccessed(updatedRows);
@@ -150,7 +150,7 @@ public class AndroidStatementDAO implements StatementDAO {
         final int categoryIndex = cursor.getColumnIndexOrThrow(AbstractCategory.COLUMN_NAME_CATEGORY_NAME);
         final int isIncomeIndex = cursor.getColumnIndexOrThrow(COLUMN_NAME_IS_INCOME);
 
-        final Category category = Category.builder(cursor.getString(categoryIdIndex), cursor.getString(categoryIndex)).build();
+        final Category category = Category.builder(cursor.getString(categoryIndex)).categoryId(cursor.getString(categoryIdIndex)).build();
         final StatementType type = INCOME_TYPE.equals(cursor.getInt(isIncomeIndex)) ? StatementType.Income : StatementType.Expense;
 
         final Builder builder = Statement.builder(cursor.getString(amountIndex), cursor.getString(dateIndex));
@@ -197,8 +197,8 @@ public class AndroidStatementDAO implements StatementDAO {
 
     private Cursor queryRecurringIncomes() {
         final SQLiteDatabase dataBase = provider.getReadableDb();
-        final Cursor cursor =
-                dataBase.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION_WITH_ALIAS, RECURRING_INCOME_SELECTION, null, null, null, null);
+        final Cursor cursor = dataBase.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION_WITH_ALIAS, RECURRING_INCOME_SELECTION, null, null, null,
+                null);
         return cursor;
     }
 
@@ -223,7 +223,7 @@ public class AndroidStatementDAO implements StatementDAO {
 
     private Cursor queryStatementById(final String statementId) {
         final SQLiteDatabase dataBase = provider.getReadableDb();
-        return dataBase.rawQuery(SELECT_STATEMENT_BY_ID, new String[] { statementId });
+        return dataBase.rawQuery(SELECT_STATEMENT_BY_ID, new String[]{statementId});
     }
 
     private void idCheck(final String statementId) {

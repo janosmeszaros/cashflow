@@ -34,7 +34,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.cashflow.R;
 import com.cashflow.domain.Statement;
 import com.cashflow.domain.StatementType;
-import com.cashflow.service.StatementPersistenceService;
+import com.cashflow.statement.database.AndroidStatementDAO;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.inject.Inject;
 
@@ -57,7 +57,7 @@ public class ListStatementFragment extends RoboSherlockFragment implements OnChe
     private ActionMode actionMode;
 
     @Inject
-    private StatementPersistenceService statementService;
+    private AndroidStatementDAO statementDAO;
 
     @InjectView(R.id.list_statement)
     private ListView list;
@@ -163,7 +163,7 @@ public class ListStatementFragment extends RoboSherlockFragment implements OnChe
     private void getDataFromDatabase() {
         LOG.debug("Starting query for type: " + type);
 
-        final List<Statement> statementList = statementService.getAllStatementsByType(type);
+        final List<Statement> statementList = statementDAO.getAllStatementsByType(type);
 
         final MatrixCursor cursor = new MatrixCursor(PROJECTION);
         for (final Statement statement : statementList) {
