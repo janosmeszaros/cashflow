@@ -13,7 +13,7 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.cashflow.R;
-import com.cashflow.database.balance.Balance;
+import com.cashflow.service.Balance;
 import com.cashflow.service.RecurringIncomeScheduler;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
 import com.google.inject.Inject;

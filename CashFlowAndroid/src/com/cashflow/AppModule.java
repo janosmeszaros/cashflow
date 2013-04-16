@@ -9,7 +9,7 @@ import com.cashflow.bill.database.AndroidBillDAO;
 import com.cashflow.category.database.AndroidCategoryDAO;
 import com.cashflow.database.DbHelperSQLiteDbProvider;
 import com.cashflow.database.SQLiteDbProvider;
-import com.cashflow.database.balance.Balance;
+import com.cashflow.service.Balance;
 import com.cashflow.service.BillPersistenceService;
 import com.cashflow.service.CategoryPersistenceService;
 import com.cashflow.service.RecurringIncomeScheduler;

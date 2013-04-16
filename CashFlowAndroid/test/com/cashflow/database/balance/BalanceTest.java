@@ -14,6 +14,7 @@ import org.mockito.MockitoAnnotations;
 import android.database.MatrixCursor;
 
 import com.cashflow.domain.StatementType;
+import com.cashflow.service.Balance;
 import com.cashflow.service.StatementPersistenceService;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 

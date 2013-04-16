@@ -31,7 +31,7 @@ import com.cashflow.activity.testutil.ActivityModule;
 import com.cashflow.activity.testutil.ListStatementActivityProvider;
 import com.cashflow.activity.testutil.TestGuiceModule;
 import com.cashflow.activity.testutil.shadows.ActionBarSherlockRobolectric;
-import com.cashflow.database.balance.Balance;
+import com.cashflow.service.Balance;
 import com.cashflow.service.StatementPersistenceService;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
