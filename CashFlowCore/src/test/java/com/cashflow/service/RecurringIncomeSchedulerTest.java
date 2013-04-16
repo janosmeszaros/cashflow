@@ -65,12 +65,12 @@ public class RecurringIncomeSchedulerTest {
         underTest.schedule();
 
         verify(dao).save(
-                Statement.builder(AMOUNT, formatter.print(FOUR_WEEKS_BEFORE.plus(interval.getPeriod()))).setNote(NOTE)
-                        .setRecurringInterval(RecurringInterval.none).setCategory(CATEGORY).setType(StatementType.Income).build());
+                Statement.builder(AMOUNT, formatter.print(FOUR_WEEKS_BEFORE.plus(interval.getPeriod()))).note(NOTE)
+                        .recurringInterval(RecurringInterval.none).category(CATEGORY).type(StatementType.Income).build());
         verify(dao).save(
-                Statement.builder(AMOUNT, formatter.print(FOUR_WEEKS_BEFORE.plusWeeks(4))).setNote(NOTE)
-                        .setRecurringInterval(RecurringInterval.none)
-                        .setCategory(CATEGORY).setType(StatementType.Income).build());
+                Statement.builder(AMOUNT, formatter.print(FOUR_WEEKS_BEFORE.plusWeeks(4))).note(NOTE)
+                        .recurringInterval(RecurringInterval.none)
+                        .category(CATEGORY).type(StatementType.Income).build());
     }
 
     @Test
@@ -82,8 +82,8 @@ public class RecurringIncomeSchedulerTest {
         underTest.schedule();
 
         verify(dao).save(
-                Statement.builder(AMOUNT, formatter.print(ONE_MONTH_BEFORE.plus(interval.getPeriod()))).setNote(NOTE)
-                        .setRecurringInterval(RecurringInterval.none).setCategory(CATEGORY).setType(StatementType.Income).build());
+                Statement.builder(AMOUNT, formatter.print(ONE_MONTH_BEFORE.plus(interval.getPeriod()))).note(NOTE)
+                        .recurringInterval(RecurringInterval.none).category(CATEGORY).type(StatementType.Income).build());
     }
 
     @Test
@@ -95,8 +95,8 @@ public class RecurringIncomeSchedulerTest {
         underTest.schedule();
 
         verify(dao, times(0)).save(
-                Statement.builder(AMOUNT, formatter.print(ONE_MONTH_BEFORE.plus(interval.getPeriod()))).setNote(NOTE)
-                        .setRecurringInterval(RecurringInterval.none).setCategory(CATEGORY).setType(StatementType.Income).build());
+                Statement.builder(AMOUNT, formatter.print(ONE_MONTH_BEFORE.plus(interval.getPeriod()))).note(NOTE)
+                        .recurringInterval(RecurringInterval.none).category(CATEGORY).type(StatementType.Income).build());
     }
 
     @Test
@@ -108,8 +108,8 @@ public class RecurringIncomeSchedulerTest {
         underTest.schedule();
 
         verify(dao).update(
-                Statement.builder(AMOUNT, formatter.print(FOUR_WEEKS_BEFORE.plusWeeks(4))).setId(INCOME_ID).setNote(NOTE)
-                        .setRecurringInterval(RecurringInterval.biweekly).setCategory(CATEGORY).setType(StatementType.Income).build(),
+                Statement.builder(AMOUNT, formatter.print(FOUR_WEEKS_BEFORE.plusWeeks(4))).id(INCOME_ID).note(NOTE)
+                        .recurringInterval(RecurringInterval.biweekly).category(CATEGORY).type(StatementType.Income).build(),
                 INCOME_ID);
 
     }
@@ -123,8 +123,8 @@ public class RecurringIncomeSchedulerTest {
         underTest.schedule();
 
         verify(dao).save(
-                Statement.builder(AMOUNT, formatter.print(DateTime.now())).setCategory(CATEGORY).setNote(NOTE)
-                        .setRecurringInterval(RecurringInterval.none).setType(StatementType.Income).build());
+                Statement.builder(AMOUNT, formatter.print(DateTime.now())).category(CATEGORY).note(NOTE)
+                        .recurringInterval(RecurringInterval.none).type(StatementType.Income).build());
     }
 
     @Test
@@ -136,18 +136,18 @@ public class RecurringIncomeSchedulerTest {
         underTest.schedule();
 
         verify(dao).save(
-                Statement.builder(AMOUNT, formatter.print(THREE_MONTHS_BEFORE.plusMonths(1))).setNote(NOTE)
-                        .setRecurringInterval(RecurringInterval.none).setCategory(CATEGORY).setType(StatementType.Income).build());
+                Statement.builder(AMOUNT, formatter.print(THREE_MONTHS_BEFORE.plusMonths(1))).note(NOTE)
+                        .recurringInterval(RecurringInterval.none).category(CATEGORY).type(StatementType.Income).build());
         verify(dao).save(
-                Statement.builder(AMOUNT, formatter.print(THREE_MONTHS_BEFORE.plusMonths(2))).setNote(NOTE)
-                        .setRecurringInterval(RecurringInterval.none).setCategory(CATEGORY).setType(StatementType.Income).build());
+                Statement.builder(AMOUNT, formatter.print(THREE_MONTHS_BEFORE.plusMonths(2))).note(NOTE)
+                        .recurringInterval(RecurringInterval.none).category(CATEGORY).type(StatementType.Income).build());
         verify(dao).save(
-                Statement.builder(AMOUNT, formatter.print(THREE_MONTHS_BEFORE.plusMonths(3))).setNote(NOTE)
-                        .setRecurringInterval(RecurringInterval.none).setCategory(CATEGORY).setType(StatementType.Income).build());
+                Statement.builder(AMOUNT, formatter.print(THREE_MONTHS_BEFORE.plusMonths(3))).note(NOTE)
+                        .recurringInterval(RecurringInterval.none).category(CATEGORY).type(StatementType.Income).build());
     }
 
     private Statement createStatement(final DateTime time, final RecurringInterval interval) {
-        return Statement.builder(AMOUNT, formatter.print(time)).setRecurringInterval(interval).setType(StatementType.Income).setNote(NOTE)
-                .setCategory(CATEGORY).setId(INCOME_ID).build();
+        return Statement.builder(AMOUNT, formatter.print(time)).recurringInterval(interval).type(StatementType.Income).note(NOTE)
+                .category(CATEGORY).id(INCOME_ID).build();
     }
 }

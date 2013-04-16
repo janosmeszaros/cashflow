@@ -58,8 +58,8 @@ public class RecurringIncomeScheduler {
     }
 
     private Statement buildStatement(final Statement recurringStatement, final String dateTime) {
-        return Statement.builder(recurringStatement.getAmount(), dateTime).setNote(recurringStatement.getNote())
-                .setCategory(recurringStatement.getCategory()).setRecurringInterval(RecurringInterval.none).setType(StatementType.Income)
+        return Statement.builder(recurringStatement.getAmount(), dateTime).note(recurringStatement.getNote())
+                .category(recurringStatement.getCategory()).recurringInterval(RecurringInterval.none).type(StatementType.Income)
                 .build();
 
     }
@@ -116,9 +116,9 @@ public class RecurringIncomeScheduler {
     private void updateRecurringStatement(final Statement recurringStatement, final String newDate) {
         if (!recurringStatement.getDate().equals(newDate)) {
 
-            final Statement statement = Statement.builder(recurringStatement.getAmount(), newDate).setId(recurringStatement.getId())
-                    .setNote(recurringStatement.getNote()).setCategory(recurringStatement.getCategory())
-                    .setRecurringInterval(recurringStatement.getRecurringInterval()).setType(StatementType.Income).build();
+            final Statement statement = Statement.builder(recurringStatement.getAmount(), newDate).id(recurringStatement.getId())
+                    .note(recurringStatement.getNote()).category(recurringStatement.getCategory())
+                    .recurringInterval(recurringStatement.getRecurringInterval()).type(StatementType.Income).build();
 
             LOG.debug("Update recurring statement's date to " + newDate);
             dao.update(statement, statement.getId());

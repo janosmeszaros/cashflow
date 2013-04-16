@@ -118,7 +118,7 @@ public final class Statement {
          *            note for the {@link Statement}
          * @return {@link Builder}
          */
-        public Builder setNote(final String note) {
+        public Builder note(final String note) {
             this.note = note;
             return this;
         }
@@ -129,7 +129,7 @@ public final class Statement {
          *            type for the {@link Statement}
          * @return {@link Builder}
          */
-        public Builder setType(final StatementType type) {
+        public Builder type(final StatementType type) {
             this.type = type;
             return this;
         }
@@ -140,7 +140,7 @@ public final class Statement {
          *            interval for the {@link Statement}
          * @return {@link Builder}
          */
-        public Builder setRecurringInterval(final RecurringInterval interval) {
+        public Builder recurringInterval(final RecurringInterval interval) {
             recurringInterval = interval;
             return this;
         }
@@ -151,7 +151,7 @@ public final class Statement {
          *            is the ID of the {@link Statement}
          * @return {@link Builder}
          */
-        public Builder setId(final String statementId) {
+        public Builder id(final String statementId) {
             id = statementId;
             return this;
         }
@@ -162,7 +162,7 @@ public final class Statement {
          *            category for statement.
          * @return {@link Builder}
          */
-        public Builder setCategory(final Category category) {
+        public Builder category(final Category category) {
             this.category = category;
             return this;
         }

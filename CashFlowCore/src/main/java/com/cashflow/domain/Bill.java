@@ -128,7 +128,7 @@ public final class Bill {
          *            date.
          * @return {@link Builder}
          */
-        public Builder setPayedDate(final String payedDate) {
+        public Builder payedDate(final String payedDate) {
             this.payedDate = payedDate;
             return this;
         }
@@ -139,7 +139,7 @@ public final class Bill {
          *            note.
          * @return {@link Builder}
          */
-        public Builder setNote(final String note) {
+        public Builder note(final String note) {
             this.note = note;
             return this;
         }
@@ -150,7 +150,7 @@ public final class Bill {
          *            category.
          * @return {@link Builder}
          */
-        public Builder setCategory(final Category category) {
+        public Builder category(final Category category) {
             this.category = category;
             return this;
         }
@@ -161,7 +161,7 @@ public final class Bill {
          *            is payed.
          * @return {@link Builder}
          */
-        public Builder setPayed(final boolean payed) {
+        public Builder isPayed(final boolean payed) {
             this.payed = payed;
             return this;
         }
@@ -172,7 +172,7 @@ public final class Bill {
          *            {@link RecurringInterval}
          * @return {@link Builder}
          */
-        public Builder setInterval(final RecurringInterval interval) {
+        public Builder interval(final RecurringInterval interval) {
             this.interval = interval;
             return this;
         }
