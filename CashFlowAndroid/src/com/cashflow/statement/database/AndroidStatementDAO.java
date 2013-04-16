@@ -92,18 +92,18 @@ public class AndroidStatementDAO implements StatementDAO {
     }
 
     @Override
-    public boolean update(final Statement statement, final String id) {
+    public boolean update(final Statement statement, final String statementId) {
         nullCheck(statement);
-        idCheck(id);
+        idCheck(statementId);
 
         final ContentValues values = createContentValue(statement);
 
-        return updateStatement(id, values);
+        return updateStatement(statementId, values);
     }
 
-    private boolean updateStatement(final String id, final ContentValues values) {
+    private boolean updateStatement(final String statementId, final ContentValues values) {
         final SQLiteDatabase database = provider.getWritableDb();
-        final int updatedRows = database.update(TABLE_NAME, values, _ID + EQUALS, new String[] { id });
+        final int updatedRows = database.update(TABLE_NAME, values, _ID + EQUALS, new String[]{statementId});
 
         LOG.debug("Num of rows updated: " + updatedRows);
         return isUpdateSuccessed(updatedRows);
@@ -184,8 +184,7 @@ public class AndroidStatementDAO implements StatementDAO {
 
     private Cursor queryIncomes() {
         final SQLiteDatabase dataBase = provider.getReadableDb();
-        final Cursor cursor = dataBase.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION, INCOME_SELECTION, null, null, null, null);
-        return cursor;
+        return dataBase.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION, INCOME_SELECTION, null, null, null, null);
     }
 
     @Override
@@ -197,8 +196,8 @@ public class AndroidStatementDAO implements StatementDAO {
 
     private Cursor queryRecurringIncomes() {
         final SQLiteDatabase dataBase = provider.getReadableDb();
-        final Cursor cursor =
-                dataBase.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION_WITH_ALIAS, RECURRING_INCOME_SELECTION, null, null, null, null);
+        final Cursor cursor = dataBase.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION_WITH_ALIAS, RECURRING_INCOME_SELECTION, null, null, null,
+                null);
         return cursor;
     }
 
@@ -223,7 +222,7 @@ public class AndroidStatementDAO implements StatementDAO {
 
     private Cursor queryStatementById(final String statementId) {
         final SQLiteDatabase dataBase = provider.getReadableDb();
-        return dataBase.rawQuery(SELECT_STATEMENT_BY_ID, new String[] { statementId });
+        return dataBase.rawQuery(SELECT_STATEMENT_BY_ID, new String[]{statementId});
     }
 
     private void idCheck(final String statementId) {

@@ -22,11 +22,11 @@ public interface StatementDAO {
      * Updates a {@link Statement} with specified id.
      * @param statement
      *            updated {@link Statement}
-     * @param id
+     * @param statementId
      *            Updatable {@link Statement}'s id.
      * @return <code>true</code> if one or more records updated, otherwise <code>false</code>
      */
-    boolean update(Statement statement, String id);
+    boolean update(Statement statement, String statementId);
 
     /**
      * Returns all the {@link Statement}.
