@@ -180,13 +180,13 @@ public class AddBillFragment extends RoboFragment {
 
             final Bill billToSave = new Bill(amountText.getText().toString(), dateFormatter.format(myCalendar.getTime()), deadLineDateButton
                     .getText().toString());
-            billToSave.setCategory((Category) categorySpinner.getSelectedItem());
-            billToSave.setNote(notesText.getText().toString());
-            billToSave.setPayed(false);
-            billToSave.setPayedDate("");
+            billToSave.category((Category) categorySpinner.getSelectedItem());
+            billToSave.note(notesText.getText().toString());
+            billToSave.isPayed(false);
+            billToSave.payedDate("");
 
             if (recurringCheckBox.isChecked()) {
-                billToSave.setInterval((RecurringInterval) recurringSpinner.getSelectedItem());
+                billToSave.interval((RecurringInterval) recurringSpinner.getSelectedItem());
             }
 
             return billToSave;

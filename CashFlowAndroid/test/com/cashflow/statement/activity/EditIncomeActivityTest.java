@@ -63,8 +63,8 @@ public class EditIncomeActivityTest {
     private static final RecurringInterval NONE_INTERVAL = RecurringInterval.none;
     private static final Category CATEGORY = new Category(CATEGORY_ID, "category");
     private static final Category CHANGED_CATEGORY = new Category("4", "changed_category");
-    private static final Statement INCOME_STATEMENT = Statement.builder(AMOUNT, DATE).setNote(NOTE).setType(Income).setId(INCOME_ID)
-            .setCategory(CATEGORY).setRecurringInterval(NONE_INTERVAL).build();
+    private static final Statement INCOME_STATEMENT = Statement.builder(AMOUNT, DATE).note(NOTE).type(Income).id(INCOME_ID)
+            .category(CATEGORY).recurringInterval(NONE_INTERVAL).build();
 
     private final String[] fromColumns = {AbstractStatement._ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE, COLUMN_NAME_NOTE};
     private final Object[] values = new Object[]{1, 1234L, CHANGED_DATE, "note"};
@@ -135,8 +135,8 @@ public class EditIncomeActivityTest {
 
     @Test
     public void testOnCreateWhenRecurringIsOtherThenNoneThenRecurringCheckBoxShouldBeCheckedAndSpinnerValueIsSettedToCorrectValue() {
-        final Statement statement = Statement.builder(AMOUNT, DATE).setId("12").setCategory(CATEGORY).setNote(NOTE).setRecurringInterval(INTERVAL)
-                .setType(Income).build();
+        final Statement statement = Statement.builder(AMOUNT, DATE).id("12").category(CATEGORY).note(NOTE).recurringInterval(INTERVAL)
+                .type(Income).build();
         underTest.setIntent(setUpIntentData(statement));
         when(statementPersistentService.getStatementById("12")).thenReturn(statement);
         underTest.onCreate(null);
@@ -152,8 +152,8 @@ public class EditIncomeActivityTest {
     public void testSubmitWhenRecurringIntervalHasChangedThenShouldCallProperFunctionAndResultCodeShouldBeOK() {
         final ShadowFragmentActivity shadowFragmentActivity = shadowOf(underTest);
         final Button submit = (Button) underTest.findViewById(R.id.submitButton);
-        final Statement changedStatement = Statement.builder(AMOUNT, DATE).setNote(NOTE).setType(Income).setId(INCOME_ID)
-                .setRecurringInterval(INTERVAL).setCategory(CATEGORY).build();
+        final Statement changedStatement = Statement.builder(AMOUNT, DATE).note(NOTE).type(Income).id(INCOME_ID)
+                .recurringInterval(INTERVAL).category(CATEGORY).build();
         setViewsValues(changedStatement);
 
         submit.performClick();
@@ -179,8 +179,8 @@ public class EditIncomeActivityTest {
     public void testSubmitWhenRecurringIntervalAndDateHasChangedThenShouldCallProperFunctionAndResultCodeShouldBeOK() {
         final ShadowFragmentActivity shadowFragmentActivity = shadowOf(underTest);
         final Button submit = (Button) underTest.findViewById(R.id.submitButton);
-        final Statement changedStatement = Statement.builder(AMOUNT, CHANGED_DATE).setNote(NOTE).setType(Income).setId(INCOME_ID)
-                .setRecurringInterval(INTERVAL).setCategory(CATEGORY).build();
+        final Statement changedStatement = Statement.builder(AMOUNT, CHANGED_DATE).note(NOTE).type(Income).id(INCOME_ID)
+                .recurringInterval(INTERVAL).category(CATEGORY).build();
         setViewsValues(changedStatement);
 
         submit.performClick();
@@ -194,8 +194,8 @@ public class EditIncomeActivityTest {
     public void testSubmitWhenCategoryHasChangedThenShouldCallProperFunctionAndResultCodeShouldBeOK() {
         final ShadowFragmentActivity shadowFragmentActivity = shadowOf(underTest);
         final Button submit = (Button) underTest.findViewById(R.id.submitButton);
-        final Statement changedNoteStatement = Statement.builder(AMOUNT, DATE).setNote(NOTE).setType(Income).setId(INCOME_ID)
-                .setRecurringInterval(NONE_INTERVAL).setCategory(CHANGED_CATEGORY).build();
+        final Statement changedNoteStatement = Statement.builder(AMOUNT, DATE).note(NOTE).type(Income).id(INCOME_ID)
+                .recurringInterval(NONE_INTERVAL).category(CHANGED_CATEGORY).build();
         setViewsValues(changedNoteStatement);
 
         submit.performClick();

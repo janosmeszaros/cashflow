@@ -115,7 +115,7 @@ public class AddStatementFragment extends RoboFragment {
         final Category category = (Category) categorySpinner.getSelectedItem();
 
         final Builder builder = Statement.builder(amountStr, date);
-        builder.setNote(note).setType(type).setCategory(category);
+        builder.note(note).type(type).category(category);
 
         return builder.build();
     }

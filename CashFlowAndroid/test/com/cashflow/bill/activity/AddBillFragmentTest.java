@@ -233,13 +233,13 @@ public class AddBillFragmentTest {
 
     private Bill createTestBill(final boolean isRecurring) {
         final Bill billToSave = new Bill("1234", date, "deadLine");
-        billToSave.setCategory(CATEGORY);
-        billToSave.setNote("Note");
-        billToSave.setPayed(false);
-        billToSave.setPayedDate("");
+        billToSave.category(CATEGORY);
+        billToSave.note("Note");
+        billToSave.isPayed(false);
+        billToSave.payedDate("");
 
         if (isRecurring) {
-            billToSave.setInterval(RecurringInterval.annually);
+            billToSave.interval(RecurringInterval.annually);
         }
         return billToSave;
     }
