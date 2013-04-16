@@ -13,8 +13,8 @@ public final class Category {
     private final String name;
 
     private Category(final Builder builder) {
-        this.categoryId = builder.categoryId;
-        this.name = builder.name;
+        categoryId = builder.categoryId;
+        name = builder.name;
     }
 
     public String getId() {
@@ -42,35 +42,40 @@ public final class Category {
 
     /**
      * Returns a builder for category.
-     * @param categoryId
-     *            id
      * @param name
      *            name
      * @return {@link Builder}
      */
-    public static Builder builder(final String categoryId, final String name) {
-        return new Builder(categoryId, name);
+    public static Builder builder(final String name) {
+        return new Builder(name);
     }
 
     /**
      * Builder class for category.
      * @author Janos_Gyula_Meszaros
      */
-    public static class Builder {
-        private final String categoryId;
+    public static final class Builder {
+        private String categoryId;
         private final String name;
 
         /**
-         * Constructor with mandatory params.
-         * @param categoryId
-         *            id
+         * Constructor with mandatory parameters.
          * @param name
          *            name
          */
-        public Builder(final String categoryId, final String name) {
-            super();
-            this.categoryId = categoryId;
+        private Builder(final String name) {
             this.name = name;
+        }
+
+        /**
+         * Set ID for category.
+         * @param categoryId
+         *            ID of {@link Category}.
+         * @return {@link Builder}
+         */
+        public Builder categoryId(final String categoryId) {
+            this.categoryId = categoryId;
+            return this;
         }
 
         /**

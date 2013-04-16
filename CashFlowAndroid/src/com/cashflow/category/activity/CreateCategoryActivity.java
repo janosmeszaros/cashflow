@@ -13,7 +13,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.cashflow.R;
-import com.cashflow.service.CategoryPersistenceService;
+import com.cashflow.category.database.AndroidCategoryDAO;
+import com.cashflow.domain.Category;
 import com.google.inject.Inject;
 
 /**
@@ -24,7 +25,7 @@ import com.google.inject.Inject;
 public class CreateCategoryActivity extends RoboActivity {
     private static final Logger LOG = LoggerFactory.getLogger(CreateCategoryActivity.class);
     @Inject
-    private CategoryPersistenceService service;
+    private AndroidCategoryDAO categoryDAO;
 
     @InjectView(R.id.categoryNameText)
     private EditText nameText;
@@ -51,7 +52,7 @@ public class CreateCategoryActivity extends RoboActivity {
             LOG.debug("Creating category: " + nameText.getText());
             final String name = nameText.getText().toString();
 
-            if (service.saveCategory(name)) {
+            if (categoryDAO.save(Category.builder(name).build())) {
                 setResult(RESULT_OK);
                 finish();
             } else {

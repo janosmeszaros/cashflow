@@ -30,9 +30,9 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * DAO class for bills.
+ * DAO based on Android for {@link Bill}.
  * @author Janos_Gyula_Meszaros
- *
+ * @author Kornel_Refi
  */
 @Singleton
 public class AndroidBillDAO implements BillDAO {
