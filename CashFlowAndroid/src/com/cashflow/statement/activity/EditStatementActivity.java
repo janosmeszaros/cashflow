@@ -24,11 +24,11 @@ import android.widget.Toast;
 import com.cashflow.R;
 import com.cashflow.activity.components.DateButtonOnClickListener;
 import com.cashflow.category.activity.CreateCategoryActivity;
+import com.cashflow.category.database.AndroidCategoryDAO;
 import com.cashflow.domain.Category;
 import com.cashflow.domain.Statement;
 import com.cashflow.domain.StatementType;
-import com.cashflow.service.CategoryPersistenceService;
-import com.cashflow.service.StatementPersistenceService;
+import com.cashflow.statement.database.AndroidStatementDAO;
 import com.google.inject.Inject;
 
 /**
@@ -61,9 +61,9 @@ public class EditStatementActivity extends RoboFragmentActivity {
     @InjectView(R.id.submitButton)
     private Button submit;
     @Inject
-    private StatementPersistenceService statementService;
+    private AndroidStatementDAO statementDAO;
     @Inject
-    private CategoryPersistenceService categoryService;
+    private AndroidCategoryDAO categoryDAO;
     @Inject
     private DateButtonOnClickListener listener;
 
@@ -129,7 +129,7 @@ public class EditStatementActivity extends RoboFragmentActivity {
     }
 
     private ArrayAdapter<Category> setCategorySpinner() {
-        final List<Category> list = categoryService.getCategories();
+        final List<Category> list = categoryDAO.getAllCategories();
         final ArrayAdapter<Category> adapter = new ArrayAdapter<Category>(this, android.R.layout.simple_spinner_dropdown_item, list);
 
         categorySpinner.setAdapter(adapter);
@@ -149,7 +149,7 @@ public class EditStatementActivity extends RoboFragmentActivity {
     private void getOriginalData() {
         final Intent intent = getIntent();
         final String statementId = intent.getStringExtra(ID_EXTRA);
-        originalStatement = statementService.getStatementById(statementId);
+        originalStatement = statementDAO.getStatementById(statementId);
     }
 
     @Override
@@ -186,7 +186,7 @@ public class EditStatementActivity extends RoboFragmentActivity {
 
                     final Statement statement = createStatement();
 
-                    if (statementService.updateStatement(statement)) {
+                    if (statementDAO.update(statement, originalStatement.getId())) {
                         LOG.debug("Statement saved: " + statement.toString());
                         setResult(Activity.RESULT_OK);
                         finish();
