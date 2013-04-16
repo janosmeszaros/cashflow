@@ -34,6 +34,10 @@ public final class Bill {
         interval = builder.interval;
     }
 
+    public String getBillId() {
+        return billId;
+    }
+
     public String getAmount() {
         return amount;
     }
