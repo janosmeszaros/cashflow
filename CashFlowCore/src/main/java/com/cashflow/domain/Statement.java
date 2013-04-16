@@ -89,7 +89,7 @@ public final class Statement {
      * {@link StatementType.Income}. Default {@link RecurringInterval} is none.
      * @author Janos_Gyula_Meszaros
      */
-    public static class Builder {
+    public static final class Builder {
         private final String amount;
         private final String date;
 
@@ -106,7 +106,7 @@ public final class Statement {
          * @param date
          *            the date of {@link Statement}
          */
-        public Builder(final String amount, final String date) {
+        private Builder(final String amount, final String date) {
 
             this.amount = amount;
             this.date = date;

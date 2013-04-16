@@ -97,7 +97,7 @@ public final class Bill {
      * Builder class for bill.
      * @author Janos_Gyula_Meszaros
      */
-    public static class Builder {
+    public static final class Builder {
         private final String amount;
         private final String date;
         private String payedDate;
@@ -116,7 +116,7 @@ public final class Bill {
          * @param deadlineDate
          *            deadline
          */
-        public Builder(final String amount, final String date, final String deadlineDate) {
+        private Builder(final String amount, final String date, final String deadlineDate) {
             this.amount = amount;
             this.date = date;
             this.deadlineDate = deadlineDate;

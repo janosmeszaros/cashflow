@@ -56,7 +56,7 @@ public final class Category {
      * Builder class for category.
      * @author Janos_Gyula_Meszaros
      */
-    public static class Builder {
+    public static final class Builder {
         private final String categoryId;
         private final String name;
 
@@ -67,7 +67,7 @@ public final class Category {
          * @param name
          *            name
          */
-        public Builder(final String categoryId, final String name) {
+        private Builder(final String categoryId, final String name) {
             super();
             this.categoryId = categoryId;
             this.name = name;
