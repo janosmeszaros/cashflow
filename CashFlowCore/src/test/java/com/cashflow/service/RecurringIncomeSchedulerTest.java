@@ -7,6 +7,9 @@ import java.util.Locale;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.MockitoAnnotations;
 
 import com.cashflow.constants.RecurringInterval;
 import com.cashflow.domain.Category;
@@ -59,7 +62,8 @@ public class RecurringIncomeSchedulerTest {
                 Statement.builder(AMOUNT, formatter.print(FOUR_WEEKS_BEFORE.plus(interval.getPeriod()))).setNote(NOTE)
                         .setRecurringInterval(RecurringInterval.none).setCategory(CATEGORY).setType(StatementType.Income).build());
         verify(service).saveStatement(
-                Statement.builder(AMOUNT, formatter.print(FOUR_WEEKS_BEFORE.plusWeeks(4))).setNote(NOTE).setRecurringInterval(RecurringInterval.none)
+                Statement.builder(AMOUNT, formatter.print(FOUR_WEEKS_BEFORE.plusWeeks(4))).setNote(NOTE)
+                        .setRecurringInterval(RecurringInterval.none)
                         .setCategory(CATEGORY).setType(StatementType.Income).build());
     }
 

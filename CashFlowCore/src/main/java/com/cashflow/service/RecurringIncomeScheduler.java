@@ -11,33 +11,56 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.cashflow.constants.RecurringInterval;
+import com.cashflow.dao.StatementDAO;
 import com.cashflow.domain.Statement;
 import com.cashflow.domain.StatementType;
-import com.google.inject.Inject;
 
 /**
  * Schedule recurring incomes.
  * @author Janos_Gyula_Meszaros
- *
  */
 public class RecurringIncomeScheduler {
     private static final Logger LOG = LoggerFactory.getLogger(RecurringIncomeScheduler.class);
     private final DateTimeFormatter formatter = DateTimeFormat.mediumDate().withLocale(Locale.getDefault());
-    private final StatementPersistenceService statementPersistenceService;
+    private final StatementDAO dao;
 
     /**
      * Constructor.
-     * @param statementPersistenceService service.
+     * @param dao
+     *            {@link StatementDAO}.
      */
-    @Inject
-    public RecurringIncomeScheduler(final StatementPersistenceService statementPersistenceService) {
-        nullChecK(statementPersistenceService);
-        this.statementPersistenceService = statementPersistenceService;
+    public RecurringIncomeScheduler(final StatementDAO dao) {
+        nullChecK(dao);
+        this.dao = dao;
+    }
+
+    /**
+     * Add actual statements to database if needed. It also update the recurring statement entry to the last occurred statement date to not
+     * get multiple statement on one date.
+     */
+    public void schedule() {
+        final List<Statement> list = getRecurringStatements();
+        interateThrough(list);
+    }
+
+    private List<Statement> getRecurringStatements() {
+        return dao.getRecurringIncomes();
+    }
+
+    private void interateThrough(final List<Statement> list) {
+        for (final Statement statement : list) {
+            final int periods = countPeriods(statement);
+
+            final String newDate = saveNewStatements(statement, periods);
+            updateRecurringStatement(statement, newDate);
+
+        }
     }
 
     private Statement buildStatement(final Statement recurringStatement, final String dateTime) {
         return Statement.builder(recurringStatement.getAmount(), dateTime).setNote(recurringStatement.getNote())
-                .setCategory(recurringStatement.getCategory()).setRecurringInterval(RecurringInterval.none).setType(StatementType.Income).build();
+                .setCategory(recurringStatement.getCategory()).setRecurringInterval(RecurringInterval.none).setType(StatementType.Income)
+                .build();
 
     }
 
@@ -74,22 +97,8 @@ public class RecurringIncomeScheduler {
         return buildStatement(recurringStatement, dateTime.toString(formatter));
     }
 
-    private List<Statement> getRecurringStatements() {
-        return statementPersistenceService.getRecurringIncomes();
-    }
-
-    private void interateThrough(final List<Statement> list) {
-        for (final Statement statement : list) {
-            final int periods = countPeriods(statement);
-
-            final String newDate = saveNewStatements(statement, periods);
-            updateRecurringStatement(statement, newDate);
-
-        }
-    }
-
-    private void nullChecK(final StatementPersistenceService statementPersistenceService) {
-        Validate.notNull(statementPersistenceService, "Constructor argument can't be null.");
+    private void nullChecK(final StatementDAO dao) {
+        Validate.notNull(dao, "Constructor argument can't be null.");
     }
 
     private String saveNewStatements(final Statement recurringStatement, final int periods) {
@@ -97,21 +106,11 @@ public class RecurringIncomeScheduler {
 
         for (int i = 1; i <= periods; i++) {
             final Statement statement = createStatement(recurringStatement, i);
-            statementPersistenceService.saveStatement(statement);
+            dao.save(statement);
             result = statement.getDate();
         }
 
         return result;
-    }
-
-    /**
-     * Add actual statements to database if needed. It also update the recurring statement entry to the 
-     * last occurred statement date to not get multiple statement on one date.  
-     */
-    public void schedule() {
-        final List<Statement> list = getRecurringStatements();
-
-        interateThrough(list);
     }
 
     private void updateRecurringStatement(final Statement recurringStatement, final String newDate) {
@@ -122,7 +121,7 @@ public class RecurringIncomeScheduler {
                     .setRecurringInterval(recurringStatement.getRecurringInterval()).setType(StatementType.Income).build();
 
             LOG.debug("Update recurring statement's date to " + newDate);
-            statementPersistenceService.updateStatement(statement);
+            dao.update(statement, statement.getId());
         }
     }
 }

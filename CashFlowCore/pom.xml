@@ -10,7 +10,7 @@
 			</plugin>
 		</plugins>
 	</build>
-	
+
 	<parent>
 		<groupId>com.cashflow</groupId>
 		<artifactId>CashFlowParent</artifactId>
@@ -33,12 +33,30 @@
 			<groupId>commons-collections</groupId>
 			<artifactId>commons-collections</artifactId>
 		</dependency>
-		
-		      <!-- Logger -->
-        <dependency>
-                <groupId>${logback.groupid}</groupId>
-                <artifactId>logback-classic</artifactId>
-                <version>${ch.qos.logback.version}</version>
-            </dependency>
+
+		<!-- Logger -->
+		<dependency>
+			<groupId>${logback.groupid}</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${ch.qos.logback.version}</version>
+		</dependency>
+
+		<!-- Test -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit-dep</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-library</artifactId>
+		</dependency>
 	</dependencies>
 </project>

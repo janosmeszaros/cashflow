@@ -1,29 +1,28 @@
 package com.cashflow.service;
 
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
-
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import android.database.Cursor;
-
-import com.cashflow.domain.StatementType;
+import com.cashflow.dao.StatementDAO;
+import com.cashflow.domain.Statement;
 
 /**
- * Class to keep the actual balance. Thread safe access to the balance field.
+ * Class to keep the actual balance.
  * @author Janos_Gyula_Meszaros
  */
 public final class Balance {
     private static final Logger LOG = LoggerFactory.getLogger(Balance.class);
+    private final StatementDAO dao;
+
     private BigDecimal amountBalance = BigDecimal.ZERO;
-    private final StatementPersistenceService service;
     private BigDecimal expenses;
     private BigDecimal incomes;
 
-    private Balance(final StatementPersistenceService service) {
-        this.service = service;
+    private Balance(final StatementDAO dao) {
+        this.dao = dao;
     }
 
     public BigDecimal getExpenses() {
@@ -39,13 +38,13 @@ public final class Balance {
     }
 
     /**
-     * Static factory method which gets the {@link StatementPersistenceService} to help count the balance.
-     * @param service
-     *            {@link StatementPersistenceService}
+     * Static factory method which gets the {@link StatementDAO} to help count the balance.
+     * @param dao
+     *            {@link StatementDAO}
      * @return the Balance instance.
      */
-    public static Balance getInstance(final StatementPersistenceService service) {
-        final Balance balance = new Balance(service);
+    public static Balance getInstance(final StatementDAO dao) {
+        final Balance balance = new Balance(dao);
         balance.countBalance();
 
         return balance;
@@ -55,22 +54,19 @@ public final class Balance {
      * Calculates the current balance.
      */
     public void countBalance() {
-        expenses = countSumOfStatement(service.getAllStatementsByType(StatementType.Expense));
-        incomes = countSumOfStatement(service.getAllStatementsByType(StatementType.Income));
+        expenses = countSumOfStatement(dao.getExpenses());
+        incomes = countSumOfStatement(dao.getIncomes());
 
         amountBalance = incomes.subtract(expenses);
         LOG.debug("Balance is: " + amountBalance.doubleValue());
     }
 
-    private BigDecimal countSumOfStatement(final Cursor cursor) {
-        final int index = cursor.getColumnIndex(COLUMN_NAME_AMOUNT);
+    private BigDecimal countSumOfStatement(final List<Statement> statements) {
         BigDecimal amount = BigDecimal.ZERO;
 
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            final double value = cursor.getDouble(index);
+        for (final Statement statement : statements) {
+            final double value = Double.valueOf(statement.getAmount());
             amount = amount.add(BigDecimal.valueOf(value));
-            cursor.moveToNext();
         }
 
         return amount;
