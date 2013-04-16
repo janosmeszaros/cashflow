@@ -11,6 +11,7 @@ import com.cashflow.constants.RecurringInterval;
  * @author Janos_Gyula_Meszaros
  */
 public final class Bill {
+    private final String billId;
     private final String amount;
     private final String date;
     private final String payedDate;
@@ -22,14 +23,15 @@ public final class Bill {
 
     private Bill(final Builder builder) {
         super();
-        this.amount = builder.amount;
-        this.date = builder.date;
-        this.payedDate = builder.payedDate;
-        this.deadlineDate = builder.deadlineDate;
-        this.note = builder.note;
-        this.category = builder.category;
-        this.payed = builder.payed;
-        this.interval = builder.interval;
+        billId = builder.billId;
+        amount = builder.amount;
+        date = builder.date;
+        payedDate = builder.payedDate;
+        deadlineDate = builder.deadlineDate;
+        note = builder.note;
+        category = builder.category;
+        payed = builder.payed;
+        interval = builder.interval;
     }
 
     public String getAmount() {
@@ -98,6 +100,7 @@ public final class Bill {
      * @author Janos_Gyula_Meszaros
      */
     public static final class Builder {
+        private String billId;
         private final String amount;
         private final String date;
         private String payedDate;
@@ -120,6 +123,17 @@ public final class Bill {
             this.amount = amount;
             this.date = date;
             this.deadlineDate = deadlineDate;
+        }
+
+        /**
+         * Set ID for bill.
+         * @param billId
+         *            Bill id.
+         * @return {@link Builder}
+         */
+        public Builder billId(final String billId) {
+            this.billId = billId;
+            return this;
         }
 
         /**

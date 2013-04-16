@@ -120,11 +120,11 @@ public class AddBillOnClickListenerTest {
         final Calendar calendar = Calendar.getInstance();
 
         final Bill billToSave = new Bill("123", dateFormatter.format(calendar.getTime()), dateFormatter.format(calendar.getTime()));
-        billToSave.setCategory(new Category("1", "category"));
-        billToSave.setInterval(RecurringInterval.none);
-        billToSave.setNote("note");
-        billToSave.setPayed(isSaved);
-        billToSave.setPayedDate("");
+        billToSave.category(new Category("1", "category"));
+        billToSave.interval(RecurringInterval.none);
+        billToSave.note("note");
+        billToSave.isPayed(isSaved);
+        billToSave.payedDate("");
 
         return billToSave;
     }

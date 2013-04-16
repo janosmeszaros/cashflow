@@ -61,11 +61,11 @@ public class AddIncomeFragment extends AddStatementFragment {
     @Override
     protected Statement createStatement() {
         final Statement statement = super.createStatement();
-        final Statement.Builder builder = Statement.builder(statement.getAmount(), statement.getDate()).setNote(statement.getNote())
-                .setType(StatementType.Income).setCategory(statement.getCategory());
+        final Statement.Builder builder = Statement.builder(statement.getAmount(), statement.getDate()).note(statement.getNote())
+                .type(StatementType.Income).category(statement.getCategory());
 
         if (recurringCheckBox.isChecked()) {
-            builder.setRecurringInterval((RecurringInterval) recurringSpinner.getSelectedItem());
+            builder.recurringInterval((RecurringInterval) recurringSpinner.getSelectedItem());
         }
 
         return builder.build();

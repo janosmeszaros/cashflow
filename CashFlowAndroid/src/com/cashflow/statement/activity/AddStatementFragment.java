@@ -26,12 +26,12 @@ import android.widget.Toast;
 import com.cashflow.R;
 import com.cashflow.activity.components.DateButtonOnClickListener;
 import com.cashflow.category.activity.CreateCategoryActivity;
+import com.cashflow.category.database.AndroidCategoryDAO;
 import com.cashflow.domain.Category;
 import com.cashflow.domain.Statement;
 import com.cashflow.domain.Statement.Builder;
 import com.cashflow.domain.StatementType;
-import com.cashflow.service.CategoryPersistenceService;
-import com.cashflow.service.StatementPersistenceService;
+import com.cashflow.statement.database.AndroidStatementDAO;
 import com.google.inject.Inject;
 
 /**
@@ -44,11 +44,11 @@ public class AddStatementFragment extends RoboFragment {
     private static final int CREATE_CATEGORY_ACTIVITY_ID = 1;
 
     @Inject
-    private CategoryPersistenceService categoryService;
+    private AndroidCategoryDAO categoryDAO;
     @Inject
     private DateButtonOnClickListener dateListener;
     @Inject
-    private StatementPersistenceService statementService;
+    private AndroidStatementDAO statementDAO;
 
     @InjectView(R.id.amountText)
     private EditText amountText;
@@ -94,7 +94,7 @@ public class AddStatementFragment extends RoboFragment {
     }
 
     private void setCategorySpinner() {
-        final List<Category> list = categoryService.getCategories();
+        final List<Category> list = categoryDAO.getAllCategories();
 
         final ArrayAdapter<Category> adapter = new ArrayAdapter<Category>(getActivity(), android.R.layout.simple_spinner_dropdown_item, list);
         categorySpinner.setAdapter(adapter);
@@ -115,7 +115,7 @@ public class AddStatementFragment extends RoboFragment {
         final Category category = (Category) categorySpinner.getSelectedItem();
 
         final Builder builder = Statement.builder(amountStr, date);
-        builder.setNote(note).setType(type).setCategory(category);
+        builder.note(note).type(type).category(category);
 
         return builder.build();
     }
@@ -142,7 +142,7 @@ public class AddStatementFragment extends RoboFragment {
             final Activity activity = getActivity();
 
             try {
-                if (statementService.saveStatement(statement)) {
+                if (statementDAO.save(statement)) {
                     LOG.debug("Statement saved: " + statement.toString());
                     activity.setResult(Activity.RESULT_OK);
                     activity.finish();

@@ -31,7 +31,7 @@ public class RecurringIncomeSchedulerTest {
     private static final DateTime ONE_MONTH_BEFORE = DateTime.now().minusMonths(1);
     private static final DateTime THREE_MONTHS_BEFORE = DateTime.now().minusMonths(3);
     private static final DateTime ONE_YEAR_BEFORE = DateTime.now().minusYears(1);
-    private static final Category CATEGORY = Category.builder("2", "cat").build();
+    private static final Category CATEGORY = Category.builder("cat").categoryId("2").build();
 
     private final DateTimeFormatter formatter = DateTimeFormat.mediumDate().withLocale(Locale.getDefault());
 
@@ -68,8 +68,7 @@ public class RecurringIncomeSchedulerTest {
                 Statement.builder(AMOUNT, formatter.print(FOUR_WEEKS_BEFORE.plus(interval.getPeriod()))).note(NOTE)
                         .recurringInterval(RecurringInterval.none).category(CATEGORY).type(StatementType.Income).build());
         verify(dao).save(
-                Statement.builder(AMOUNT, formatter.print(FOUR_WEEKS_BEFORE.plusWeeks(4))).note(NOTE)
-                        .recurringInterval(RecurringInterval.none)
+                Statement.builder(AMOUNT, formatter.print(FOUR_WEEKS_BEFORE.plusWeeks(4))).note(NOTE).recurringInterval(RecurringInterval.none)
                         .category(CATEGORY).type(StatementType.Income).build());
     }
 
@@ -109,8 +108,7 @@ public class RecurringIncomeSchedulerTest {
 
         verify(dao).update(
                 Statement.builder(AMOUNT, formatter.print(FOUR_WEEKS_BEFORE.plusWeeks(4))).id(INCOME_ID).note(NOTE)
-                        .recurringInterval(RecurringInterval.biweekly).category(CATEGORY).type(StatementType.Income).build(),
-                INCOME_ID);
+                        .recurringInterval(RecurringInterval.biweekly).category(CATEGORY).type(StatementType.Income).build(), INCOME_ID);
 
     }
 
@@ -123,8 +121,8 @@ public class RecurringIncomeSchedulerTest {
         underTest.schedule();
 
         verify(dao).save(
-                Statement.builder(AMOUNT, formatter.print(DateTime.now())).category(CATEGORY).note(NOTE)
-                        .recurringInterval(RecurringInterval.none).type(StatementType.Income).build());
+                Statement.builder(AMOUNT, formatter.print(DateTime.now())).category(CATEGORY).note(NOTE).recurringInterval(RecurringInterval.none)
+                        .type(StatementType.Income).build());
     }
 
     @Test
@@ -136,18 +134,18 @@ public class RecurringIncomeSchedulerTest {
         underTest.schedule();
 
         verify(dao).save(
-                Statement.builder(AMOUNT, formatter.print(THREE_MONTHS_BEFORE.plusMonths(1))).note(NOTE)
-                        .recurringInterval(RecurringInterval.none).category(CATEGORY).type(StatementType.Income).build());
+                Statement.builder(AMOUNT, formatter.print(THREE_MONTHS_BEFORE.plusMonths(1))).note(NOTE).recurringInterval(RecurringInterval.none)
+                        .category(CATEGORY).type(StatementType.Income).build());
         verify(dao).save(
-                Statement.builder(AMOUNT, formatter.print(THREE_MONTHS_BEFORE.plusMonths(2))).note(NOTE)
-                        .recurringInterval(RecurringInterval.none).category(CATEGORY).type(StatementType.Income).build());
+                Statement.builder(AMOUNT, formatter.print(THREE_MONTHS_BEFORE.plusMonths(2))).note(NOTE).recurringInterval(RecurringInterval.none)
+                        .category(CATEGORY).type(StatementType.Income).build());
         verify(dao).save(
-                Statement.builder(AMOUNT, formatter.print(THREE_MONTHS_BEFORE.plusMonths(3))).note(NOTE)
-                        .recurringInterval(RecurringInterval.none).category(CATEGORY).type(StatementType.Income).build());
+                Statement.builder(AMOUNT, formatter.print(THREE_MONTHS_BEFORE.plusMonths(3))).note(NOTE).recurringInterval(RecurringInterval.none)
+                        .category(CATEGORY).type(StatementType.Income).build());
     }
 
     private Statement createStatement(final DateTime time, final RecurringInterval interval) {
-        return Statement.builder(AMOUNT, formatter.print(time)).recurringInterval(interval).type(StatementType.Income).note(NOTE)
-                .category(CATEGORY).id(INCOME_ID).build();
+        return Statement.builder(AMOUNT, formatter.print(time)).recurringInterval(interval).type(StatementType.Income).note(NOTE).category(CATEGORY)
+                .id(INCOME_ID).build();
     }
 }
