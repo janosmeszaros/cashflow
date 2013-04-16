@@ -9,48 +9,27 @@ import com.cashflow.constants.RecurringInterval;
 /**
  * Bill class.
  * @author Janos_Gyula_Meszaros
- *
  */
-public class Bill {
+public final class Bill {
     private final String amount;
     private final String date;
-    private String payedDate;
+    private final String payedDate;
     private final String deadlineDate;
-    private String note;
-    private Category category;
-    private boolean payed;
-    private RecurringInterval interval;
+    private final String note;
+    private final Category category;
+    private final boolean payed;
+    private final RecurringInterval interval;
 
-    /**
-     * Create a Bill.
-     * @param amount amount
-     * @param date creation date
-     * @param deadlineDate deadline date
-     */
-    public Bill(final String amount, final String date, final String deadlineDate) {
-        this.amount = amount;
-        this.date = date;
-        this.deadlineDate = deadlineDate;
-    }
-
-    public void setPayedDate(final String payedDate) {
-        this.payedDate = payedDate;
-    }
-
-    public void setNote(final String note) {
-        this.note = note;
-    }
-
-    public void setCategory(final Category category) {
-        this.category = category;
-    }
-
-    public void setPayed(final boolean payed) {
-        this.payed = payed;
-    }
-
-    public void setInterval(final RecurringInterval interval) {
-        this.interval = interval;
+    private Bill(final Builder builder) {
+        super();
+        this.amount = builder.amount;
+        this.date = builder.date;
+        this.payedDate = builder.payedDate;
+        this.deadlineDate = builder.deadlineDate;
+        this.note = builder.note;
+        this.category = builder.category;
+        this.payed = builder.payed;
+        this.interval = builder.interval;
     }
 
     public String getAmount() {
@@ -98,5 +77,113 @@ public class Bill {
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
+    }
+
+    /**
+     * Returns a builder for {@link Bill}.
+     * @param amount
+     *            amount of bill.
+     * @param date
+     *            date of bill.
+     * @param deadlineDate
+     *            deadline for the bill.
+     * @return {@link Builder}.
+     */
+    public static Builder builder(final String amount, final String date, final String deadlineDate) {
+        return new Builder(amount, date, deadlineDate);
+    }
+
+    /**
+     * Builder class for bill.
+     * @author Janos_Gyula_Meszaros
+     */
+    public static class Builder {
+        private final String amount;
+        private final String date;
+        private String payedDate;
+        private final String deadlineDate;
+        private String note;
+        private Category category;
+        private boolean payed;
+        private RecurringInterval interval;
+
+        /**
+         * Constructor.
+         * @param amount
+         *            amount
+         * @param date
+         *            date
+         * @param deadlineDate
+         *            deadline
+         */
+        public Builder(final String amount, final String date, final String deadlineDate) {
+            this.amount = amount;
+            this.date = date;
+            this.deadlineDate = deadlineDate;
+        }
+
+        /**
+         * Set payed date for bill.
+         * @param payedDate
+         *            date.
+         * @return {@link Builder}
+         */
+        public Builder setPayedDate(final String payedDate) {
+            this.payedDate = payedDate;
+            return this;
+        }
+
+        /**
+         * Set note for bill.
+         * @param note
+         *            note.
+         * @return {@link Builder}
+         */
+        public Builder setNote(final String note) {
+            this.note = note;
+            return this;
+        }
+
+        /**
+         * Set category for bill.
+         * @param category
+         *            category.
+         * @return {@link Builder}
+         */
+        public Builder setCategory(final Category category) {
+            this.category = category;
+            return this;
+        }
+
+        /**
+         * Set is payed for bill.
+         * @param payed
+         *            is payed.
+         * @return {@link Builder}
+         */
+        public Builder setPayed(final boolean payed) {
+            this.payed = payed;
+            return this;
+        }
+
+        /**
+         * Set interval for bill.
+         * @param interval
+         *            {@link RecurringInterval}
+         * @return {@link Builder}
+         */
+        public Builder setInterval(final RecurringInterval interval) {
+            this.interval = interval;
+            return this;
+        }
+
+        /**
+         * Builds the bill.
+         * @return {@link Bill}
+         */
+        public Bill build() {
+            return new Bill(this);
+        }
+
     }
 }

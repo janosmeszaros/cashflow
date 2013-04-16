@@ -6,21 +6,15 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 /**
  * Category.
  * @author Kornel_Refi
- *
  */
-public class Category {
+public final class Category {
 
     private final String categoryId;
     private final String name;
 
-    /**
-     * Constructor.
-     * @param categoryId of {@link Category}
-     * @param name of {@link Category}
-     */
-    public Category(final String categoryId, final String name) {
-        this.categoryId = categoryId;
-        this.name = name;
+    private Category(final Builder builder) {
+        this.categoryId = builder.categoryId;
+        this.name = builder.name;
     }
 
     public String getId() {
@@ -46,4 +40,46 @@ public class Category {
         return EqualsBuilder.reflectionEquals(this, obj);
     }
 
+    /**
+     * Returns a builder for category.
+     * @param categoryId
+     *            id
+     * @param name
+     *            name
+     * @return {@link Builder}
+     */
+    public static Builder builder(final String categoryId, final String name) {
+        return new Builder(categoryId, name);
+    }
+
+    /**
+     * Builder class for category.
+     * @author Janos_Gyula_Meszaros
+     */
+    public static class Builder {
+        private final String categoryId;
+        private final String name;
+
+        /**
+         * Constructor with mandatory params.
+         * @param categoryId
+         *            id
+         * @param name
+         *            name
+         */
+        public Builder(final String categoryId, final String name) {
+            super();
+            this.categoryId = categoryId;
+            this.name = name;
+        }
+
+        /**
+         * Builds the category.
+         * @return {@link Category}
+         */
+        public Category build() {
+            return new Category(this);
+        }
+
+    }
 }

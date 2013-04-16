@@ -9,7 +9,6 @@ import com.cashflow.constants.RecurringInterval;
 /**
  * Simple class for statement. This will hold data for one statement.
  * @author Janos_Gyula_Meszaros
- *
  */
 public final class Statement {
     private final String id;
@@ -73,16 +72,22 @@ public final class Statement {
         return ToStringBuilder.reflectionToString(this);
     }
 
-    public static Builder builder(final String a, final String b) {
-        return new Builder(a, b);
+    /**
+     * Returns the builder for the statement.
+     * @param amount
+     *            amount of the statement.
+     * @param date
+     *            date for the statement.
+     * @return builder.
+     */
+    public static Builder builder(final String amount, final String date) {
+        return new Builder(amount, date);
     }
 
     /**
-     * Builder for statement class. Required parameters are <code>amount</code> and <code>date</code>.
-     * Default statement type is {@link StatementType.Income}.
-     * Default {@link RecurringInterval} is none.
+     * Builder for statement class. Required parameters are <code>amount</code> and <code>date</code>. Default statement type is
+     * {@link StatementType.Income}. Default {@link RecurringInterval} is none.
      * @author Janos_Gyula_Meszaros
-     *
      */
     public static class Builder {
         private final String amount;
@@ -96,8 +101,10 @@ public final class Statement {
 
         /**
          * Create builder for {@link Statement} with required values <code>amount</code> and <code>date</code>.
-         * @param amount the amount of {@link Statement}
-         * @param date the date of {@link Statement}
+         * @param amount
+         *            the amount of {@link Statement}
+         * @param date
+         *            the date of {@link Statement}
          */
         public Builder(final String amount, final String date) {
 
@@ -107,7 +114,8 @@ public final class Statement {
 
         /**
          * Set the note for the {@link Statement}.
-         * @param note note for the {@link Statement}
+         * @param note
+         *            note for the {@link Statement}
          * @return {@link Builder}
          */
         public Builder setNote(final String note) {
@@ -117,7 +125,8 @@ public final class Statement {
 
         /**
          * Set type for the {@link Statement}.
-         * @param type type for the {@link Statement}
+         * @param type
+         *            type for the {@link Statement}
          * @return {@link Builder}
          */
         public Builder setType(final StatementType type) {
@@ -126,8 +135,9 @@ public final class Statement {
         }
 
         /**
-         * Set interval for the {@link Statement}. 
-         * @param interval interval for the {@link Statement}
+         * Set interval for the {@link Statement}.
+         * @param interval
+         *            interval for the {@link Statement}
          * @return {@link Builder}
          */
         public Builder setRecurringInterval(final RecurringInterval interval) {
@@ -137,7 +147,8 @@ public final class Statement {
 
         /**
          * Set id for the {@link Statement}.
-         * @param statementId is the ID of the {@link Statement}
+         * @param statementId
+         *            is the ID of the {@link Statement}
          * @return {@link Builder}
          */
         public Builder setId(final String statementId) {
@@ -147,7 +158,8 @@ public final class Statement {
 
         /**
          * Set category for the {@link Statement}.
-         * @param category 
+         * @param category
+         *            category for statement.
          * @return {@link Builder}
          */
         public Builder setCategory(final Category category) {
