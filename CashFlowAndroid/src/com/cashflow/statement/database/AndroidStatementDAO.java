@@ -46,6 +46,18 @@ public class AndroidStatementDAO extends AndroidParentDAO implements StatementDA
         this.provider = provider;
     }
 
+    @Override
+    public boolean save(final Statement statement) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean update(final Statement statement, final String id) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
     /**
      * Returns all the {@link Statement}.
      * @return {@link List} of {@link Statement} which contains the data.

@@ -14,7 +14,7 @@ import android.content.ContentValues;
 import com.cashflow.database.SQLiteDbProvider;
 
 /**
- * Parent class for all dao. It contains the basic functions, such as insert, update and getValues;
+ * Parent class for all DAO. It contains the basic functions, such as insert, update and getValues;
  * @author Janos_Gyula_Meszaros
  */
 public class AndroidParentDAO implements ParentDAO {

@@ -16,7 +16,7 @@ import roboguice.inject.InjectView;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
+import android.database.MatrixCursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +32,7 @@ import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.cashflow.R;
+import com.cashflow.domain.Statement;
 import com.cashflow.domain.StatementType;
 import com.cashflow.service.StatementPersistenceService;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
@@ -162,7 +163,13 @@ public class ListStatementFragment extends RoboSherlockFragment implements OnChe
     private void getDataFromDatabase() {
         LOG.debug("Starting query for type: " + type);
 
-        final Cursor cursor = statementService.getAllStatementsByType(type);
+        final List<Statement> statementList = statementService.getAllStatementsByType(type);
+
+        final MatrixCursor cursor = new MatrixCursor(PROJECTION);
+        for (final Statement statement : statementList) {
+            cursor.addRow(new String[]{statement.getId(), statement.getAmount(), statement.getCategory().getName(), statement.getDate(),
+                statement.getNote(), statement.getRecurringInterval().toString(), statement.getType().toString()});
+        }
 
         final SimpleCursorAdapter adapter = new SimpleCursorAdapter(getActivity(), R.layout.list_statements_row, cursor, PROJECTION, TO_VIEWS) {
             @Override
