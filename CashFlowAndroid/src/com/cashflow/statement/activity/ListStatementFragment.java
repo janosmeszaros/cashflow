@@ -40,7 +40,7 @@ import com.google.inject.Inject;
 
 /**
  * Basic class to list statements. The type is setted from intent's <code>STATEMENT_TYPE_EXTRA</code> extra.
- * @author Janos_Gyula_Meszaros 
+ * @author Janos_Gyula_Meszaros
  */
 public class ListStatementFragment extends RoboSherlockFragment implements OnCheckedChangeListener {
     private static final int EDIT_ID = 1;
@@ -81,8 +81,7 @@ public class ListStatementFragment extends RoboSherlockFragment implements OnChe
     }
 
     /**
-     * Starts the edit statement interface. Add actual values to the {@link EditStatementActivity}'s 
-     * intent under the proper extra.
+     * Starts the edit statement interface. Add actual values to the {@link EditStatementActivity}'s intent under the proper extra.
      */
     private void editButtonOnClick() {
         LOG.debug("Edit button clicked");
@@ -173,21 +172,22 @@ public class ListStatementFragment extends RoboSherlockFragment implements OnChe
 
         final MatrixCursor cursor = new MatrixCursor(PROJECTION);
         for (final Statement statement : statementList) {
-            cursor.addRow(new String[]{statement.getId(), statement.getAmount(), statement.getCategory().getName(), statement.getDate(),
-                statement.getNote(), statement.getRecurringInterval().toString(), statement.getType().toString()});
+            cursor.addRow(new String[] { statement.getId(), statement.getAmount(), statement.getCategory().getName(), statement.getDate(),
+                statement.getNote(), statement.getRecurringInterval().toString() });
         }
 
-        final SimpleCursorAdapter adapter = new SimpleCursorAdapter(getActivity(), R.layout.list_statements_row, cursor, PROJECTION, TO_VIEWS) {
-            @Override
-            public View getView(final int position, final View convertView, final ViewGroup parent) {
-                final View view = super.getView(position, convertView, parent);
+        final SimpleCursorAdapter adapter =
+                new SimpleCursorAdapter(getActivity(), R.layout.list_statements_row, cursor, PROJECTION, TO_VIEWS) {
+                    @Override
+                    public View getView(final int position, final View convertView, final ViewGroup parent) {
+                        final View view = super.getView(position, convertView, parent);
 
-                final CheckBox checkBox = (CheckBox) view.findViewById(R.id.selectedCheckbox);
-                checkBox.setOnCheckedChangeListener(ListStatementFragment.this);
+                        final CheckBox checkBox = (CheckBox) view.findViewById(R.id.selectedCheckbox);
+                        checkBox.setOnCheckedChangeListener(ListStatementFragment.this);
 
-                return view;
-            }
-        };
+                        return view;
+                    }
+                };
 
         list.setAdapter(adapter);
 
