@@ -1,4 +1,4 @@
-package com.cashflow.database.balance;
+package com.cashflow.service;
 
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
 
@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import android.database.Cursor;
 
 import com.cashflow.domain.StatementType;
-import com.cashflow.service.StatementPersistenceService;
 
 /**
  * Class to keep the actual balance. Thread safe access to the balance field.

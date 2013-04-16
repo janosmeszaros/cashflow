@@ -21,12 +21,6 @@
 	<artifactId>CashFlowCore</artifactId>
 
 	<dependencies>
-	    <dependency>
-            <groupId>com.cashflow</groupId>
-            <artifactId>CashFlowAndroid</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-        </dependency>
-        
 		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
@@ -39,5 +33,12 @@
 			<groupId>commons-collections</groupId>
 			<artifactId>commons-collections</artifactId>
 		</dependency>
+		
+		      <!-- Logger -->
+        <dependency>
+                <groupId>${logback.groupid}</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${ch.qos.logback.version}</version>
+            </dependency>
 	</dependencies>
 </project>
