@@ -163,7 +163,13 @@ public class ListStatementFragment extends RoboSherlockFragment implements OnChe
     private void getDataFromDatabase() {
         LOG.debug("Starting query for type: " + type);
 
-        final List<Statement> statementList = statementDAO.getAllStatementsByType(type);
+        List<Statement> statementList;
+
+        if (type.isIncome()) {
+            statementList = statementDAO.getIncomes();
+        } else {
+            statementList = statementDAO.getExpenses();
+        }
 
         final MatrixCursor cursor = new MatrixCursor(PROJECTION);
         for (final Statement statement : statementList) {
