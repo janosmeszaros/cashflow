@@ -52,10 +52,10 @@ public class StatementDaoTest {
     private static final String DATE_STR = "2012.01.01";
     private static final String INTERVAL_STR = "daily";
     private final Statement expenseStatement = Statement.builder(AMOUNT_STR, DATE_STR).note(NOTE).type(StatementType.Expense)
-            .category(Category.builder(CATEGORY_ID, CATEGORY_NAME).build()).id(ID_STR).build();
+            .category(Category.builder(CATEGORY_NAME).categoryId(CATEGORY_ID).build()).id(ID_STR).build();
     private final Statement incomeStatement = Statement.builder(AMOUNT_STR, DATE_STR).note(NOTE).type(StatementType.Income)
-            .category(Category.builder(CATEGORY_ID, CATEGORY_NAME).build()).id(ID_STR).recurringInterval(RecurringInterval.valueOf(INTERVAL_STR))
-            .build();
+            .category(Category.builder(CATEGORY_NAME).categoryId(CATEGORY_ID).build()).id(ID_STR)
+            .recurringInterval(RecurringInterval.valueOf(INTERVAL_STR)).build();
 
     private StatementDAO underTest;
     @Mock
