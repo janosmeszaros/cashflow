@@ -10,7 +10,6 @@ import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_N
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_NOTE;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.EXPENSE_SELECTION;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.INCOME_SELECTION;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.PROJECTION;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.PROJECTION_WITH_ALIAS;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.RECURRING_INCOME_SELECTION;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.SELECT_STATEMENT_BY_ID;
@@ -126,7 +125,7 @@ public class AndroidStatementDAO implements StatementDAO {
 
     private Cursor queryAllStatements() {
         final SQLiteDatabase database = provider.getReadableDb();
-        return database.query(TABLE_NAME, PROJECTION, null, null, null, null, null);
+        return database.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION_WITH_ALIAS, null, null, null, null, null);
     }
 
     private List<Statement> createStatements(final Cursor cursor) {
@@ -145,10 +144,10 @@ public class AndroidStatementDAO implements StatementDAO {
         final int amountIndex = cursor.getColumnIndexOrThrow(COLUMN_NAME_AMOUNT);
         final int intervalIndex = cursor.getColumnIndexOrThrow(COLUMN_NAME_INTERVAL);
         final int noteIndex = cursor.getColumnIndexOrThrow(COLUMN_NAME_NOTE);
+        final int isIncomeIndex = cursor.getColumnIndexOrThrow(COLUMN_NAME_IS_INCOME);
         final int idIndex = cursor.getColumnIndexOrThrow(STATEMENT_ID_ALIAS);
         final int categoryIdIndex = cursor.getColumnIndexOrThrow(CATEGORY_ID_ALIAS);
         final int categoryIndex = cursor.getColumnIndexOrThrow(AbstractCategory.COLUMN_NAME_CATEGORY_NAME);
-        final int isIncomeIndex = cursor.getColumnIndexOrThrow(COLUMN_NAME_IS_INCOME);
 
         final Category category = Category.builder(cursor.getString(categoryIndex)).categoryId(cursor.getString(categoryIdIndex)).build();
         final StatementType type = INCOME_TYPE.equals(cursor.getInt(isIncomeIndex)) ? StatementType.Income : StatementType.Expense;
@@ -171,7 +170,7 @@ public class AndroidStatementDAO implements StatementDAO {
 
     private Cursor queryExpenses() {
         final SQLiteDatabase dataBase = provider.getReadableDb();
-        return dataBase.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION, EXPENSE_SELECTION, null, null, null, null);
+        return dataBase.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION_WITH_ALIAS, EXPENSE_SELECTION, null, null, null, null);
 
     }
 
@@ -184,7 +183,7 @@ public class AndroidStatementDAO implements StatementDAO {
 
     private Cursor queryIncomes() {
         final SQLiteDatabase dataBase = provider.getReadableDb();
-        return dataBase.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION, INCOME_SELECTION, null, null, null, null);
+        return dataBase.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION_WITH_ALIAS, INCOME_SELECTION, null, null, null, null);
     }
 
     @Override
@@ -196,9 +195,7 @@ public class AndroidStatementDAO implements StatementDAO {
 
     private Cursor queryRecurringIncomes() {
         final SQLiteDatabase dataBase = provider.getReadableDb();
-        final Cursor cursor = dataBase.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION_WITH_ALIAS, RECURRING_INCOME_SELECTION, null, null, null,
-                null);
-        return cursor;
+        return dataBase.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION_WITH_ALIAS, RECURRING_INCOME_SELECTION, null, null, null, null);
     }
 
     @Override

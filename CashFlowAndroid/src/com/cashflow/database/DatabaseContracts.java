@@ -85,9 +85,9 @@ public abstract class DatabaseContracts {
     }
 
     /**
-      * Statement table.
-      * @author Kornel_Refi
-      */
+     * Statement table.
+     * @author Kornel_Refi
+     */
     public static final class AbstractStatement implements BaseColumns, Tables {
         public static final String NULLABLE = null;
         public static final String STATEMENT_ID_ALIAS = "statementId";
@@ -100,8 +100,8 @@ public abstract class DatabaseContracts {
         public static final String COLUMN_NAME_NOTE = "note";
         public static final String COLUMN_NAME_INTERVAL = "interval";
 
-        public static final String[] PROJECTION = new String[]{TABLE_NAME + DOT + _ID, COLUMN_NAME_AMOUNT,
-            AbstractCategory.COLUMN_NAME_CATEGORY_NAME, COLUMN_NAME_DATE, COLUMN_NAME_NOTE, COLUMN_NAME_INTERVAL};
+        public static final String[] PROJECTION = new String[]{_ID, COLUMN_NAME_AMOUNT, AbstractCategory.COLUMN_NAME_CATEGORY_NAME, COLUMN_NAME_DATE,
+            COLUMN_NAME_NOTE, COLUMN_NAME_INTERVAL};
 
         public static final String[] PROJECTION_WITH_ALIAS = new String[]{TABLE_NAME + DOT + _ID + AS_STR + STATEMENT_ID_ALIAS,
             AbstractCategory.TABLE_NAME + DOT + _ID + AS_STR + CATEGORY_ID_ALIAS, COLUMN_NAME_AMOUNT, AbstractCategory.COLUMN_NAME_CATEGORY_NAME,
@@ -152,7 +152,6 @@ public abstract class DatabaseContracts {
     /**
      * Database Table for bills.
      * @author Janos_Gyula_Meszaros
-     *
      */
     public static final class AbstractBill implements BaseColumns, Tables {
         public static final String NULLABLE = null;

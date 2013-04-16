@@ -70,7 +70,7 @@ public class AndroidCategoryDAO implements CategoryDAO {
         values.put(_ID, categoryId);
 
         boolean isSuccessful;
-        final int update = provider.getWritableDb().update(TABLE_NAME, values, _ID + EQUALS, new String[]{categoryId});
+        final int update = provider.getWritableDb().update(TABLE_NAME, values, _ID + EQUALS, new String[] { categoryId });
 
         if (update > 0) {
             isSuccessful = true;
@@ -102,10 +102,7 @@ public class AndroidCategoryDAO implements CategoryDAO {
     private List<Category> createListFromCursor(final Cursor cursor) {
         final List<Category> result = new ArrayList<Category>();
 
-        cursor.moveToFirst();
-
-        while (!cursor.isAfterLast()) {
-
+        while (cursor.moveToNext()) {
             final String categoryId = cursor.getString(cursor.getColumnIndexOrThrow(_ID));
             final String categoryName = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_CATEGORY_NAME));
 
