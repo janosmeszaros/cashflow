@@ -31,12 +31,12 @@ import android.widget.Toast;
 import com.cashflow.R;
 import com.cashflow.activity.components.DateButtonOnClickListener;
 import com.cashflow.activity.components.RecurringCheckBoxOnClickListener;
+import com.cashflow.bill.database.AndroidBillDAO;
 import com.cashflow.category.activity.CreateCategoryActivity;
+import com.cashflow.category.database.AndroidCategoryDAO;
 import com.cashflow.constants.RecurringInterval;
 import com.cashflow.domain.Bill;
 import com.cashflow.domain.Category;
-import com.cashflow.service.BillPersistenceService;
-import com.cashflow.service.CategoryPersistenceService;
 import com.google.inject.Inject;
 
 /**
@@ -75,9 +75,9 @@ public class AddBillFragment extends RoboFragment {
     @Inject
     private SpinnerAdapter spinnerAdapter;
     @Inject
-    private CategoryPersistenceService categoryService;
+    private AndroidCategoryDAO categoryDAO;
     @Inject
-    private BillPersistenceService persistenceService;
+    private AndroidBillDAO billDAO;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
@@ -114,7 +114,7 @@ public class AddBillFragment extends RoboFragment {
     }
 
     private void setCategorySpinner() {
-        final List<Category> list = categoryService.getCategories();
+        final List<Category> list = categoryDAO.getAllCategories();
 
         final ArrayAdapter<Category> adapter = new ArrayAdapter<Category>(getActivity(), android.R.layout.simple_spinner_dropdown_item, list);
         categorySpinner.setAdapter(adapter);
@@ -157,7 +157,7 @@ public class AddBillFragment extends RoboFragment {
             final Activity parent = (Activity) view.getContext();
 
             try {
-                if (persistenceService.saveBill(billToSave)) {
+                if (billDAO.save(billToSave)) {
                     parent.setResult(Activity.RESULT_OK);
                     parent.finish();
                 } else {
@@ -178,8 +178,8 @@ public class AddBillFragment extends RoboFragment {
             final DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM);
             final Calendar myCalendar = Calendar.getInstance();
 
-            final Bill billToSave = new Bill(amountText.getText().toString(), dateFormatter.format(myCalendar.getTime()), deadLineDateButton
-                    .getText().toString());
+            final Bill.Builder billToSave = Bill.builder(amountText.getText().toString(), dateFormatter.format(myCalendar.getTime()),
+                    deadLineDateButton.getText().toString());
             billToSave.category((Category) categorySpinner.getSelectedItem());
             billToSave.note(notesText.getText().toString());
             billToSave.isPayed(false);
@@ -189,7 +189,7 @@ public class AddBillFragment extends RoboFragment {
                 billToSave.interval((RecurringInterval) recurringSpinner.getSelectedItem());
             }
 
-            return billToSave;
+            return billToSave.build();
         }
     }
 }
