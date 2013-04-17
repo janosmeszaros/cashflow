@@ -211,12 +211,20 @@ public class AddBillFragmentTest {
         assertThat(ShadowToast.getTextOfLatestToast(), equalTo(EXCEPTION));
     }
 
+    @Test
+    public void testSubmitButtonOnClickWhenSomethingMissingFromBillsMandatoryFieldsThenShouldShowAToast() {
+        final Button submitButton = (Button) underTest.getView().findViewById(R.id.submitButton);
+
+        submitButton.performClick();
+
+        assertThat(ShadowToast.shownToastCount(), equalTo(1));
+    }
+
     private void fillViewsWithData(final Bill testBill) {
         final EditText amountText = (EditText) underTest.getView().findViewById(R.id.amountText);
         final EditText notesText = (EditText) underTest.getView().findViewById(R.id.notesText);
         final Spinner categorySpinner = (Spinner) underTest.getView().findViewById(R.id.categorySpinner);
         final Button deadLineDateButton = (Button) underTest.getView().findViewById(R.id.dateButton);
-        final Spinner recurringSpinner = (Spinner) underTest.getView().findViewById(R.id.recurring_spinner);
         final CheckBox recurringCheckBox = (CheckBox) underTest.getView().findViewById(R.id.recurring_checkbox_bill);
 
         amountText.setText(testBill.getAmount());
@@ -226,6 +234,7 @@ public class AddBillFragmentTest {
             recurringCheckBox.setChecked(false);
         } else {
             recurringCheckBox.setChecked(true);
+            final Spinner recurringSpinner = (Spinner) underTest.getView().findViewById(R.id.recurring_spinner);
             final int position = arrayAdapter.getPosition(testBill.getInterval());
             recurringSpinner.setSelection(position);
         }

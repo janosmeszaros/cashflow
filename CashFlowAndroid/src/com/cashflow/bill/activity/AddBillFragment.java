@@ -152,10 +152,10 @@ public class AddBillFragment extends RoboFragment {
     public class AddBillOnClickListener implements OnClickListener {
         @Override
         public void onClick(final View view) {
-            final Bill billToSave = createBill();
             final Activity parent = (Activity) view.getContext();
 
             try {
+                final Bill billToSave = createBill();
                 if (billDAO.save(billToSave)) {
                     parent.setResult(Activity.RESULT_OK);
                     parent.finish();
