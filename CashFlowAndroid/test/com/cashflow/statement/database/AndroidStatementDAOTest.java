@@ -1,5 +1,6 @@
 package com.cashflow.statement.database;
 
+import static android.provider.BaseColumns._ID;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.CATEGORY_ID_ALIAS;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_DATE;
@@ -8,14 +9,16 @@ import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_N
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_NOTE;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.EXPENSE_SELECTION;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.INCOME_SELECTION;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.PROJECTION;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.PROJECTION_WITH_ALIAS;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.RECURRING_INCOME_SELECTION;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.SELECT_STATEMENT_BY_ID;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.STATEMENT_ID_ALIAS;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.STATEMENT_INNER_JOINED_CATEGORY;
+import static com.cashflow.database.DatabaseContracts.AbstractStatement.TABLE_NAME;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -24,9 +27,11 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -37,12 +42,15 @@ import com.cashflow.database.SQLiteDbProvider;
 import com.cashflow.domain.Category;
 import com.cashflow.domain.Statement;
 import com.cashflow.domain.StatementType;
+import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 /**
  * {@link AndroidStatementDAO} test class.
  * @author Janos_Gyula_Meszaros
  */
-public class StatementDaoTest {
+@RunWith(RobolectricTestRunner.class)
+public class AndroidStatementDAOTest {
+    private static final String EQUALS = " = ?";
     private static final String STATEMENT_ID = "1";
     private static final String ID_STR = "0";
     private static final String AMOUNT_STR = "1234";
@@ -64,6 +72,8 @@ public class StatementDaoTest {
     private SQLiteDatabase database;
     @Mock
     private Cursor cursorMock;
+    @Mock
+    private ContentValues values;
 
     @Before
     public void setUp() {
@@ -80,37 +90,134 @@ public class StatementDaoTest {
         underTest = new AndroidStatementDAO(null);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testSaveWhenParamIsNullThenShouldThrowException() {
+        underTest.save(null);
+    }
+
     @Test
-    public void testGetExpensesWhenEverythingIsOkThenCallProperFunctionAndReturnCursor() {
-        when(database.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION, EXPENSE_SELECTION, null, null, null, null)).thenReturn(cursorMock);
+    public void testSaveWhenStatementIsIncomeThenShouldSaveToDatabase() {
+        when(database.insert(eq(TABLE_NAME), (String) eq(null), (ContentValues) anyObject())).thenReturn(1L);
+
+        final boolean saved = underTest.save(incomeStatement);
+
+        verify(provider).getWritableDb();
+        assertThat(saved, equalTo(true));
+    }
+
+    @Test
+    public void testSaveWhenStatementIsExpenseThenShouldSaveToDatabase() {
+        when(database.insert(eq(TABLE_NAME), (String) eq(null), (ContentValues) anyObject())).thenReturn(1L);
+
+        final boolean saved = underTest.save(expenseStatement);
+
+        verify(provider).getWritableDb();
+        assertThat(saved, equalTo(true));
+    }
+
+    @Test
+    public void testSaveWhenStatementIsOkButSomethingHappensInInsertionThenShouldReturnFalse() {
+        when(database.insert(eq(TABLE_NAME), (String) eq(null), (ContentValues) anyObject())).thenReturn(-1L);
+
+        final boolean saved = underTest.save(incomeStatement);
+
+        verify(provider).getWritableDb();
+        assertThat(saved, equalTo(false));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testUpdateWhenParamIsNullThenShouldThrowException() {
+        underTest.update(null, "1");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testUpdateWhenIdIsEmptyThenShouldThrowException() {
+        underTest.update(incomeStatement, "");
+    }
+
+    @Test
+    public void testUpdateWhenStatementIsIncomeThenShouldUpdateAndReturnTrue() {
+        when(database.update(eq(TABLE_NAME), (ContentValues) anyObject(), eq(_ID + EQUALS), eq(new String[]{incomeStatement.getId()}))).thenReturn(1);
+
+        final boolean updated = underTest.update(incomeStatement, incomeStatement.getId());
+
+        verify(provider).getWritableDb();
+        assertThat(updated, equalTo(true));
+    }
+
+    @Test
+    public void testUpdateWhenStatementIsExpenseThenShouldUpdateAndReturnTrue() {
+        when(database.update(eq(TABLE_NAME), (ContentValues) anyObject(), eq(_ID + EQUALS), eq(new String[]{incomeStatement.getId()}))).thenReturn(1);
+
+        final boolean updated = underTest.update(incomeStatement, expenseStatement.getId());
+
+        verify(provider).getWritableDb();
+        assertThat(updated, equalTo(true));
+    }
+
+    @Test
+    public void testUpdateWhenStatementIsExpenseButSomethingHappensInInsertionThenShouldReturnFalse() {
+        when(database.update(eq(TABLE_NAME), (ContentValues) anyObject(), eq(_ID + EQUALS), eq(new String[]{incomeStatement.getId()})))
+                .thenReturn(-1);
+
+        final boolean updated = underTest.update(incomeStatement, expenseStatement.getId());
+
+        verify(provider).getWritableDb();
+        assertThat(updated, equalTo(false));
+    }
+
+    @Test
+    public void testGetAllStatementsWhenCalledThenReturnListOfStatement() {
+        when(database.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION_WITH_ALIAS, null, null, null, null, null)).thenReturn(cursorMock);
+        setupCursorMock(1);
+        final List<Statement> list = new ArrayList<Statement>();
+        list.add(incomeStatement);
+
+        final List<Statement> statements = underTest.getAllStatements();
+
+        verify(provider).getReadableDb();
+        assertThat(list, equalTo(statements));
+    }
+
+    @Test
+    public void testGetAllStatementsWithExpensesWhenCalledThenReturnListOfStatement() {
+        when(database.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION_WITH_ALIAS, null, null, null, null, null)).thenReturn(cursorMock);
         setupCursorMock(0);
-        final List<Statement> list = new ArrayList<Statement>() {
-            {
-                add(expenseStatement);
-            }
-        };
+        final List<Statement> list = new ArrayList<Statement>();
+        list.add(expenseStatement);
+
+        final List<Statement> statements = underTest.getAllStatements();
+
+        verify(provider).getReadableDb();
+        assertThat(list, equalTo(statements));
+    }
+
+    @Test
+    public void testGetExpensesWhenEverythingIsOkThenCallProperFunctionAndReturnList() {
+        when(database.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION_WITH_ALIAS, EXPENSE_SELECTION, null, null, null, null))
+                .thenReturn(cursorMock);
+        setupCursorMock(0);
+        final List<Statement> list = new ArrayList<Statement>();
+        list.add(expenseStatement);
 
         final List<Statement> expenses = underTest.getExpenses();
 
         verify(provider).getReadableDb();
-        verify(database).query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION, EXPENSE_SELECTION, null, null, null, null);
+        verify(database).query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION_WITH_ALIAS, EXPENSE_SELECTION, null, null, null, null);
         assertThat(expenses, equalTo(list));
     }
 
     @Test
     public void testGetIncomesWhenEverythingIsOkThenCallProperFunctionAndReturnCursor() {
-        when(database.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION, INCOME_SELECTION, null, null, null, null)).thenReturn(cursorMock);
+        when(database.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION_WITH_ALIAS, INCOME_SELECTION, null, null, null, null)).thenReturn(cursorMock);
         setupCursorMock(1);
-        final List<Statement> list = new ArrayList<Statement>() {
-            {
-                add(incomeStatement);
-            }
-        };
+        final List<Statement> list = new ArrayList<Statement>();
+        list.add(incomeStatement);
 
         final List<Statement> incomes = underTest.getIncomes();
 
         verify(provider).getReadableDb();
-        verify(database).query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION, INCOME_SELECTION, null, null, null, null);
+        verify(database).query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION_WITH_ALIAS, INCOME_SELECTION, null, null, null, null);
         assertThat(incomes, equalTo(list));
     }
 
@@ -119,11 +226,8 @@ public class StatementDaoTest {
         when(database.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION_WITH_ALIAS, RECURRING_INCOME_SELECTION, null, null, null, null)).thenReturn(
                 cursorMock);
         setupCursorMock(1);
-        final List<Statement> list = new ArrayList<Statement>() {
-            {
-                add(incomeStatement);
-            }
-        };
+        final List<Statement> list = new ArrayList<Statement>();
+        list.add(incomeStatement);
 
         final List<Statement> incomes = underTest.getRecurringIncomes();
 
@@ -150,6 +254,8 @@ public class StatementDaoTest {
     }
 
     private void setupCursorMock(final int statementType) {
+        when(cursorMock.moveToNext()).thenReturn(true, false);
+
         when(cursorMock.getColumnIndexOrThrow(COLUMN_NAME_AMOUNT)).thenReturn(0);
         when(cursorMock.getColumnIndexOrThrow(COLUMN_NAME_DATE)).thenReturn(1);
         when(cursorMock.getColumnIndexOrThrow(COLUMN_NAME_INTERVAL)).thenReturn(2);
@@ -164,7 +270,7 @@ public class StatementDaoTest {
         if (statementType == 1) {
             when(cursorMock.getString(2)).thenReturn(INTERVAL_STR);
         } else {
-            when(cursorMock.getString(2)).thenReturn("");
+            when(cursorMock.getString(2)).thenReturn(RecurringInterval.none.toString());
         }
         when(cursorMock.getString(3)).thenReturn(NOTE);
         when(cursorMock.getString(4)).thenReturn(ID_STR);
@@ -172,4 +278,5 @@ public class StatementDaoTest {
         when(cursorMock.getString(6)).thenReturn(CATEGORY_NAME);
         when(cursorMock.getInt(7)).thenReturn(statementType);
     }
+
 }

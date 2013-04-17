@@ -52,8 +52,8 @@ public class AndroidStatementDAO implements StatementDAO {
     private static final String EQUALS = " = ?";
     private static final String TRUE = "1";
     private static final String FALSE = "0";
-
     private static final Integer INCOME_TYPE = 1;
+
     private final SQLiteDbProvider provider;
 
     /**
