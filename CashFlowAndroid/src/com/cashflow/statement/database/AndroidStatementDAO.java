@@ -74,7 +74,6 @@ public class AndroidStatementDAO implements StatementDAO {
         nullCheck(statement);
         final ContentValues values = createContentValue(statement);
         return persistStatement(values);
-
     }
 
     private boolean persistStatement(final ContentValues values) {
@@ -96,7 +95,6 @@ public class AndroidStatementDAO implements StatementDAO {
         idCheck(id);
 
         final ContentValues values = createContentValue(statement);
-
         return updateStatement(id, values);
     }
 
