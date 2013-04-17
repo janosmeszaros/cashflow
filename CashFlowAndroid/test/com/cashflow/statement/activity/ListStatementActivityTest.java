@@ -16,6 +16,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,7 +28,6 @@ import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import android.database.MatrixCursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -34,8 +36,11 @@ import com.cashflow.R;
 import com.cashflow.activity.ListActivity;
 import com.cashflow.activity.testutil.ActivityModule;
 import com.cashflow.activity.testutil.ListStatementActivityProvider;
+import com.cashflow.constants.RecurringInterval;
+import com.cashflow.dao.StatementDAO;
 import com.cashflow.database.DatabaseContracts.AbstractCategory;
-import com.cashflow.service.StatementPersistenceService;
+import com.cashflow.domain.Category;
+import com.cashflow.domain.Statement;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 /**
@@ -50,17 +55,15 @@ public class ListStatementActivityTest {
     public static final int[] TO_VIEWS = {R.id.row_id, R.id.row_amount, R.id.row_category, R.id.row_date, R.id.row_note, R.id.row_interval};
     private static final Logger LOG = LoggerFactory.getLogger(ListStatementActivityTest.class);
     private static final int BAD_REQUEST_CODE = 1;
-    //    private static final String ID = "2";
-    //    private static final String NOTES = "notes2";
-    //    private static final Category CATEGORY = new Category("1", "category2");
-    //    private static final String DATE = "2013";
-    //    private static final String AMOUNT = "12345678";
-    //    private static final RecurringInterval INTERVAL = RecurringInterval.biweekly;
+    private static final String CATEGORY_ID = "3";
+    private static final String NOTE = "notes";
+    private static final String DATE = "2013";
+    private static final String AMOUNT = "1234";
+    private static final Category CATEGORY = Category.builder("category").categoryId(CATEGORY_ID).build();
 
-    private final Object[] values = new Object[]{1, 1, 1234L, "category", "2012", "note", "none"};
     private Fragment underTest;
     @Mock
-    private StatementPersistenceService statementPersistentService;
+    private StatementDAO statementDAO;
 
     @Before
     public void setUp() {
@@ -87,16 +90,16 @@ public class ListStatementActivityTest {
         transaction.commit();
     }
 
-    private void setIncomeIntent() {
-        final Bundle bundle = new Bundle();
-        bundle.putString(STATEMENT_TYPE_EXTRA, Income.toString());
-        underTest.setArguments(bundle);
-
-        final ListActivity listActivity = new ListActivity();
-        final FragmentTransaction transaction = listActivity.getSupportFragmentManager().beginTransaction();
-        transaction.add(underTest, Expense.toString());
-        transaction.commit();
-    }
+    //    private void setIncomeIntent() {
+    //        final Bundle bundle = new Bundle();
+    //        bundle.putString(STATEMENT_TYPE_EXTRA, Income.toString());
+    //        underTest.setArguments(bundle);
+    //
+    //        final ListActivity listActivity = new ListActivity();
+    //        final FragmentTransaction transaction = listActivity.getSupportFragmentManager().beginTransaction();
+    //        transaction.add(underTest, Expense.toString());
+    //        transaction.commit();
+    //    }
 
     @After
     public void tearDown() {
@@ -133,7 +136,7 @@ public class ListStatementActivityTest {
 
         // Needed 3 times because it gets invoked on test start when the application 
         // counting the Balance and when fills up the list at first time. The third one is the tested one.
-        verify(statementPersistentService, times(3)).getAllStatementsByType(Expense);
+        verify(statementDAO, times(3)).getExpenses();
     }
 
     @Test
@@ -144,7 +147,7 @@ public class ListStatementActivityTest {
         // Needed 2 times because it gets invoked on test start when the application 
         // counting the Balance and when fills up the list at first time. 
         // It should'nt invoked in third time.
-        verify(statementPersistentService, times(2)).getAllStatementsByType(Expense);
+        verify(statementDAO, times(2)).getExpenses();
     }
 
     @Test
@@ -155,7 +158,7 @@ public class ListStatementActivityTest {
         // Needed 2 times because it gets invoked on test start when the application 
         // counting the Balance and when fills up the list at first time. 
         // It should'nt invoked in third time.
-        verify(statementPersistentService, times(2)).getAllStatementsByType(Expense);
+        verify(statementDAO, times(2)).getExpenses();
     }
 
     //    @Test
@@ -176,14 +179,22 @@ public class ListStatementActivityTest {
     //    }
 
     private void addBindings(final ActivityModule module) {
-        module.addBinding(StatementPersistenceService.class, statementPersistentService);
+        module.addBinding(StatementDAO.class, statementDAO);
     }
 
     private void setUpPersistentService() {
-        final MatrixCursor matrixCursor = new MatrixCursor(PROJECTION);
-        matrixCursor.addRow(values);
-        when(statementPersistentService.getAllStatementsByType(Expense)).thenReturn(matrixCursor);
-        when(statementPersistentService.getAllStatementsByType(Income)).thenReturn(matrixCursor);
+        final Statement income = Statement.builder(AMOUNT, DATE).note(NOTE).type(Income).category(CATEGORY).recurringInterval(RecurringInterval.none)
+                .build();
+        final Statement expense = Statement.builder(AMOUNT, DATE).note(NOTE).type(Expense).category(CATEGORY)
+                .recurringInterval(RecurringInterval.none).build();
+
+        final List<Statement> expenses = new ArrayList<Statement>();
+        expenses.add(expense);
+        final List<Statement> incomes = new ArrayList<Statement>();
+        incomes.add(income);
+
+        when(statementDAO.getExpenses()).thenReturn(expenses);
+        when(statementDAO.getIncomes()).thenReturn(incomes);
     }
 
     //    private void setViewsValues(Statement statement) {
