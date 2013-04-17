@@ -1,5 +1,6 @@
 package com.cashflow.domain;
 
+import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -124,9 +125,17 @@ public final class Bill {
          *            deadline
          */
         private Builder(final String amount, final String date, final String deadlineDate) {
+            validateInputs(amount, date, deadlineDate);
+
             this.amount = amount;
             this.date = date;
             this.deadlineDate = deadlineDate;
+        }
+
+        private void validateInputs(final String amount, final String date, final String deadlineDate) {
+            Validate.notEmpty(amount);
+            Validate.notEmpty(date);
+            Validate.notEmpty(deadlineDate);
         }
 
         /**

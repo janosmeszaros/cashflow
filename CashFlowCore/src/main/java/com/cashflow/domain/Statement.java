@@ -1,5 +1,6 @@
 package com.cashflow.domain;
 
+import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -107,9 +108,15 @@ public final class Statement {
          *            the date of {@link Statement}
          */
         private Builder(final String amount, final String date) {
+            validateInputs(amount, date);
 
             this.amount = amount;
             this.date = date;
+        }
+
+        private void validateInputs(final String amount, final String date) {
+            Validate.notEmpty(amount);
+            Validate.notEmpty(date);
         }
 
         /**
