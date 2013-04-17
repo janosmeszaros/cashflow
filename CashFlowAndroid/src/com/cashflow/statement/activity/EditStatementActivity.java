@@ -175,7 +175,6 @@ public class EditStatementActivity extends RoboFragmentActivity {
 
         @Override
         public void onClick(final View view) {
-
             try {
                 if (isValuesChanged()) {
                     final Statement statement = createStatement();
