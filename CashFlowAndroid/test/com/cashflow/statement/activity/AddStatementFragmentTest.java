@@ -266,16 +266,10 @@ public class AddStatementFragmentTest {
         final Statement expense = Statement.builder(AMOUNT, DATE).note(NOTES).type(Expense).category(CATEGORY)
                 .recurringInterval(RecurringInterval.none).build();
 
-        final List<Statement> expenses = new ArrayList<Statement>() {
-            {
-                add(expense);
-            }
-        };
-        final List<Statement> incomes = new ArrayList<Statement>() {
-            {
-                add(income);
-            }
-        };
+        final List<Statement> expenses = new ArrayList<Statement>();
+        expenses.add(expense);
+        final List<Statement> incomes = new ArrayList<Statement>();
+        incomes.add(income);
 
         when(statementDAO.getExpenses()).thenReturn(expenses);
         when(statementDAO.getIncomes()).thenReturn(incomes);

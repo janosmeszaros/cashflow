@@ -24,23 +24,21 @@ import android.widget.Toast;
 import com.cashflow.R;
 import com.cashflow.activity.components.DateButtonOnClickListener;
 import com.cashflow.category.activity.CreateCategoryActivity;
-import com.cashflow.category.database.AndroidCategoryDAO;
+import com.cashflow.dao.CategoryDAO;
+import com.cashflow.dao.StatementDAO;
 import com.cashflow.domain.Category;
 import com.cashflow.domain.Statement;
 import com.cashflow.domain.StatementType;
-import com.cashflow.statement.database.AndroidStatementDAO;
 import com.google.inject.Inject;
 
 /**
- * Activity for editing statements. It gets the previous values through the intent. 
- * 
+ * Activity for editing statements. It gets the previous values through the intent.
  * <p>
  * Extras' names used to get original values: <br/>
- *  <ul> 
- *      <li>ID:      <code>ID_EXTRA</code></li>
- *  </ul>
+ * <ul>
+ * <li>ID: <code>ID_EXTRA</code></li>
+ * </ul>
  * </p>
- * 
  * @author Janos_Gyula_Meszaros
  */
 public class EditStatementActivity extends RoboFragmentActivity {
@@ -61,9 +59,9 @@ public class EditStatementActivity extends RoboFragmentActivity {
     @InjectView(R.id.submitButton)
     private Button submit;
     @Inject
-    private AndroidStatementDAO statementDAO;
+    private StatementDAO statementDAO;
     @Inject
-    private AndroidCategoryDAO categoryDAO;
+    private CategoryDAO categoryDAO;
     @Inject
     private DateButtonOnClickListener listener;
 
@@ -97,20 +95,18 @@ public class EditStatementActivity extends RoboFragmentActivity {
     }
 
     protected boolean isValuesChanged() {
-        boolean result;
         final String amount = amountText.getText().toString();
         final String date = dateButton.getText().toString();
         final String note = notesText.getText().toString();
         final Category category = (Category) categorySpinner.getSelectedItem();
 
-        if (amount.equals(originalStatement.getAmount()) && date.equals(originalStatement.getDate()) && note.equals(originalStatement.getNote())
-                && category.equals(originalStatement.getCategory())) {
-            result = false;
-        } else {
-            result = true;
-        }
+        return isSomeThingChanged(amount, date, note, category);
+    }
 
-        return result;
+    private boolean isSomeThingChanged(final String amount, final String date, final String note, final Category category) {
+        return !amount.equals(originalStatement.getAmount()) || !date.equals(originalStatement.getDate())
+                || !note.equals(originalStatement.getNote())
+                || !category.equals(originalStatement.getCategory());
     }
 
     protected void setTitle() {
@@ -171,10 +167,9 @@ public class EditStatementActivity extends RoboFragmentActivity {
     }
 
     /**
-     * Submit onClick method. Save the statement to database. If the save was successful then refresh the balance 
-     * and set the result to <code>RESULT_OK</code> then close the activity.
+     * Submit onClick method. Save the statement to database. If the save was successful then refresh the balance and set the result to
+     * <code>RESULT_OK</code> then close the activity.
      * @author Janos_Gyula_Meszaros
-     *
      */
     protected class SubmitButtonOnClickListener implements OnClickListener {
 
@@ -183,7 +178,6 @@ public class EditStatementActivity extends RoboFragmentActivity {
 
             try {
                 if (isValuesChanged()) {
-
                     final Statement statement = createStatement();
 
                     if (statementDAO.update(statement, originalStatement.getId())) {

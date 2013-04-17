@@ -204,22 +204,15 @@ public class AddIncomeFragmentTest {
     }
 
     private void setUpMocks() {
-        final Statement statement = Statement.builder(AMOUNT, DATE).note(NOTES).type(Income).category(CATEGORY)
+        final Statement income = Statement.builder(AMOUNT, DATE).note(NOTES).type(Income).category(CATEGORY)
                 .recurringInterval(RecurringInterval.none).build();
         final Statement expense = Statement.builder(AMOUNT, DATE).note(NOTES).type(Expense).category(CATEGORY)
                 .recurringInterval(RecurringInterval.none).build();
 
-        final List<Statement> expenses = new ArrayList<Statement>() {
-            {
-                add(expense);
-            }
-        };
-        final List<Statement> incomes = new ArrayList<Statement>() {
-            {
-                add(statement);
-            }
-        };
-
+        final List<Statement> expenses = new ArrayList<Statement>();
+        expenses.add(expense);
+        final List<Statement> incomes = new ArrayList<Statement>();
+        incomes.add(income);
         when(statementDAO.getExpenses()).thenReturn(expenses);
         when(statementDAO.getIncomes()).thenReturn(incomes);
     }
