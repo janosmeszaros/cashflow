@@ -1,8 +1,6 @@
 package com.cashflow.statement.activity;
 
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_DATE;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_NOTE;
+import static com.cashflow.domain.StatementType.Expense;
 import static com.cashflow.domain.StatementType.Income;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -20,7 +18,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import android.app.Activity;
-import android.database.MatrixCursor;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -37,11 +34,9 @@ import com.cashflow.activity.components.RecurringCheckBoxOnClickListener;
 import com.cashflow.activity.testutil.ActivityModule;
 import com.cashflow.activity.testutil.FragmentProviderWithRoboFragmentActivity;
 import com.cashflow.constants.RecurringInterval;
-import com.cashflow.database.DatabaseContracts.AbstractStatement;
+import com.cashflow.dao.StatementDAO;
 import com.cashflow.domain.Category;
 import com.cashflow.domain.Statement;
-import com.cashflow.domain.StatementType;
-import com.cashflow.service.StatementPersistenceService;
 import com.google.inject.Inject;
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
@@ -57,16 +52,14 @@ public class AddIncomeFragmentTest {
     private static final String DATE = "2013";
     private static final String AMOUNT = "1234";
     private static final String INVALID_AMOUNT = "12";
-    private static final Category CATEGORY = new Category("3", "category");
-    private final String[] fromColumns = {AbstractStatement._ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE, COLUMN_NAME_NOTE};
-    private final Object[] values = new Object[]{1, 1234L, "2012", "note"};
+    private static final Category CATEGORY = Category.builder("category").categoryId("3").build();
     private final ArrayAdapter<RecurringInterval> arrayAdapter = new ArrayAdapter<RecurringInterval>(new ActionsActivity(),
             android.R.layout.simple_spinner_dropdown_item, RecurringInterval.values());
 
     @Inject
     private Activity activity;
     @Mock
-    private StatementPersistenceService statementPersistentService;
+    private StatementDAO statementDAO;
     @Mock
     private RecurringCheckBoxOnClickListener checkBoxListener;
     private AddIncomeFragment underTest;
@@ -112,11 +105,11 @@ public class AddIncomeFragmentTest {
         final Statement statement = Statement.builder(AMOUNT, DATE).note(NOTES).type(Income).category(CATEGORY)
                 .recurringInterval(RecurringInterval.none).build();
         setViewsValues(statement);
-        when(statementPersistentService.saveStatement(statement)).thenReturn(true);
+        when(statementDAO.save(statement)).thenReturn(true);
 
         shadowButton.performClick();
 
-        verify(statementPersistentService).saveStatement(statement);
+        verify(statementDAO).save(statement);
         assertThat(shadowActivity.getResultCode(), equalTo(Activity.RESULT_OK));
         assertThat(shadowActivity.isFinishing(), equalTo(true));
     }
@@ -129,11 +122,11 @@ public class AddIncomeFragmentTest {
         final Statement statement = Statement.builder(AMOUNT, DATE).category(CATEGORY).note(NOTES).type(Income)
                 .recurringInterval(RecurringInterval.biweekly).build();
         setViewsValues(statement);
-        when(statementPersistentService.saveStatement(statement)).thenReturn(true);
+        when(statementDAO.save(statement)).thenReturn(true);
 
         shadowButton.performClick();
 
-        verify(statementPersistentService).saveStatement(statement);
+        verify(statementDAO).save(statement);
         assertThat(shadowActivity.getResultCode(), equalTo(Activity.RESULT_OK));
         assertThat(shadowActivity.isFinishing(), equalTo(true));
     }
@@ -145,7 +138,7 @@ public class AddIncomeFragmentTest {
         final Statement statement = Statement.builder(INVALID_AMOUNT, DATE).category(CATEGORY).note(NOTES).type(Income)
                 .recurringInterval(RecurringInterval.none).build();
         setViewsValues(statement);
-        when(statementPersistentService.saveStatement(statement)).thenReturn(false);
+        when(statementDAO.save(statement)).thenReturn(false);
 
         shadowButton.performClick();
 
@@ -205,16 +198,29 @@ public class AddIncomeFragmentTest {
     }
 
     private void addBindings(final ActivityModule module) {
-        module.addBinding(StatementPersistenceService.class, statementPersistentService);
+        module.addBinding(StatementDAO.class, statementDAO);
         module.addBinding(SpinnerAdapter.class, arrayAdapter);
         module.addBinding(RecurringCheckBoxOnClickListener.class, checkBoxListener);
     }
 
     private void setUpMocks() {
-        final MatrixCursor cursor = new MatrixCursor(fromColumns);
-        cursor.addRow(values);
+        final Statement statement = Statement.builder(AMOUNT, DATE).note(NOTES).type(Income).category(CATEGORY)
+                .recurringInterval(RecurringInterval.none).build();
+        final Statement expense = Statement.builder(AMOUNT, DATE).note(NOTES).type(Expense).category(CATEGORY)
+                .recurringInterval(RecurringInterval.none).build();
 
-        when(statementPersistentService.getAllStatementsByType(StatementType.Expense)).thenReturn(cursor);
-        when(statementPersistentService.getAllStatementsByType(StatementType.Income)).thenReturn(cursor);
+        final List<Statement> expenses = new ArrayList<Statement>() {
+            {
+                add(expense);
+            }
+        };
+        final List<Statement> incomes = new ArrayList<Statement>() {
+            {
+                add(statement);
+            }
+        };
+
+        when(statementDAO.getExpenses()).thenReturn(expenses);
+        when(statementDAO.getIncomes()).thenReturn(incomes);
     }
 }
