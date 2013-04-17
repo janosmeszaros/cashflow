@@ -31,10 +31,10 @@ import android.widget.Toast;
 import com.cashflow.R;
 import com.cashflow.activity.components.DateButtonOnClickListener;
 import com.cashflow.activity.components.RecurringCheckBoxOnClickListener;
-import com.cashflow.bill.database.AndroidBillDAO;
 import com.cashflow.category.activity.CreateCategoryActivity;
-import com.cashflow.category.database.AndroidCategoryDAO;
 import com.cashflow.constants.RecurringInterval;
+import com.cashflow.dao.BillDAO;
+import com.cashflow.dao.CategoryDAO;
 import com.cashflow.domain.Bill;
 import com.cashflow.domain.Category;
 import com.google.inject.Inject;
@@ -42,7 +42,6 @@ import com.google.inject.Inject;
 /**
  * Add bills.
  * @author Janos_Gyula_Meszaros
- *
  */
 public class AddBillFragment extends RoboFragment {
     private static final Logger LOG = LoggerFactory.getLogger(AddBillFragment.class);
@@ -75,9 +74,9 @@ public class AddBillFragment extends RoboFragment {
     @Inject
     private SpinnerAdapter spinnerAdapter;
     @Inject
-    private AndroidCategoryDAO categoryDAO;
+    private CategoryDAO categoryDAO;
     @Inject
-    private AndroidBillDAO billDAO;
+    private BillDAO billDAO;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
@@ -116,7 +115,8 @@ public class AddBillFragment extends RoboFragment {
     private void setCategorySpinner() {
         final List<Category> list = categoryDAO.getAllCategories();
 
-        final ArrayAdapter<Category> adapter = new ArrayAdapter<Category>(getActivity(), android.R.layout.simple_spinner_dropdown_item, list);
+        final ArrayAdapter<Category> adapter =
+                new ArrayAdapter<Category>(getActivity(), android.R.layout.simple_spinner_dropdown_item, list);
         categorySpinner.setAdapter(adapter);
     }
 
@@ -148,7 +148,6 @@ public class AddBillFragment extends RoboFragment {
     /**
      * {@link OnClickListener} for AddBillActivity's submit button.
      * @author Janos_Gyula_Meszaros
-     *
      */
     public class AddBillOnClickListener implements OnClickListener {
         @Override
