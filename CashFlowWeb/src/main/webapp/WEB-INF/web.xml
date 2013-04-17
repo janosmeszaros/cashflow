@@ -31,15 +31,22 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
-
 	<servlet-mapping>
 		<servlet-name>appServlet</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
 
+	
+<!-- 	The url-pattern specification: -->
+
+<!-- A string beginning with a ‘/’ character and ending with a ‘/*’ suffix is used for path mapping. -->
+<!-- A string beginning with a ‘*.’ prefix is used as an extension mapping. -->
+<!-- A string containing only the ’/’ character indicates the "default" servlet of the application. In this case the servlet path is the request URI minus the context path and the path info is null. -->
+<!-- All other strings are used for exact matches only. -->
+
 	<jsp-config>
 		<jsp-property-group>
-			<url-pattern>*.jsp</url-pattern>
+			 <url-pattern>/views/*</url-pattern>
 			<include-prelude>/WEB-INF/boot-head.jsp</include-prelude>
 			<include-coda>/WEB-INF/boot-foot.jsp</include-coda>
 		</jsp-property-group>
@@ -47,7 +54,12 @@
 
 	<error-page>
 		<error-code>404</error-code>
-		<location>/WEB-INF/views/error404.jsp</location>
+		<location>/WEB-INF/errors/404.jsp</location>
+	</error-page>
+
+	<error-page>
+		<exception-type>java.lang.Throwable</exception-type>
+		<location>/WEB-INF/errors/404.jsp</location>
 	</error-page>
 
 	<welcome-file-list>
