@@ -1,6 +1,7 @@
 package com.cashflow.bill.database;
 
 import static android.provider.BaseColumns._ID;
+import static com.cashflow.database.DatabaseContracts.AbstractBill.BILL_ID_ALIAS;
 import static com.cashflow.database.DatabaseContracts.AbstractBill.COLUMN_NAME_AMOUNT;
 import static com.cashflow.database.DatabaseContracts.AbstractBill.COLUMN_NAME_CATEGORY;
 import static com.cashflow.database.DatabaseContracts.AbstractBill.COLUMN_NAME_DATE_ADDED;
@@ -119,7 +120,7 @@ public class AndroidBillDAO implements BillDAO {
 
     private List<Bill> createListFromCursor(final Cursor cursor) {
         final List<Bill> result = new ArrayList<Bill>();
-        final int idIndex = cursor.getColumnIndexOrThrow(_ID);
+        final int idIndex = cursor.getColumnIndexOrThrow(BILL_ID_ALIAS);
         final int amountIndex = cursor.getColumnIndexOrThrow(COLUMN_NAME_AMOUNT);
         final int addedDateIndex = cursor.getColumnIndexOrThrow(COLUMN_NAME_DATE_ADDED);
         final int deadLineDateIndex = cursor.getColumnIndexOrThrow(COLUMN_NAME_DATE_DEADLINE);

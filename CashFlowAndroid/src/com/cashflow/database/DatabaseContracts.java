@@ -123,7 +123,7 @@ public abstract class DatabaseContracts {
         public static final String COLUMN_NAME_CATEGORY = "category";
         public static final String COLUMN_NAME_IS_PAYED = "payed";
         public static final String COLUMN_NAME_INTERVAL = "interval";
-        private static final String BILL_ID_ALIAS = "billId";
+        public static final String BILL_ID_ALIAS = "billId";
 
         public static final String STATEMENT_INNER_JOINED_CATEGORY = TABLE_NAME + " LEFT JOIN " + AbstractCategory.TABLE_NAME + " ON "
                 + TABLE_NAME

@@ -1,7 +1,6 @@
 package com.cashflow.statement.database;
 
 import static android.provider.BaseColumns._ID;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.CATEGORY_ID_ALIAS;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_DATE;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_INTERVAL;
@@ -261,7 +260,7 @@ public class AndroidStatementDAOTest {
         when(cursorMock.getColumnIndexOrThrow(COLUMN_NAME_INTERVAL)).thenReturn(2);
         when(cursorMock.getColumnIndexOrThrow(COLUMN_NAME_NOTE)).thenReturn(3);
         when(cursorMock.getColumnIndexOrThrow(STATEMENT_ID_ALIAS)).thenReturn(4);
-        when(cursorMock.getColumnIndexOrThrow(CATEGORY_ID_ALIAS)).thenReturn(5);
+        when(cursorMock.getColumnIndexOrThrow(AbstractCategory.CATEGORY_ID_ALIAS)).thenReturn(5);
         when(cursorMock.getColumnIndexOrThrow(AbstractCategory.COLUMN_NAME_CATEGORY_NAME)).thenReturn(6);
         when(cursorMock.getColumnIndexOrThrow(COLUMN_NAME_IS_INCOME)).thenReturn(7);
 
