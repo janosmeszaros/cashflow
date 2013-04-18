@@ -157,10 +157,19 @@ public class AddBillFragmentTest {
     }
 
     @Test
-    public void testOnActivityResultwhenNotProperThenShouldNotDoAnithing() {
+    public void testOnActivityResultWhenNotProperThenShouldNotDoAnything() {
         when(categoryDAO.getAllCategories()).thenReturn(categoryList);
 
         underTest.onActivityResult(0, Activity.RESULT_OK, null);
+
+        verify(categoryDAO, times(1)).getAllCategories();
+    }
+
+    @Test
+    public void testOnActivityResultWhenCanceledThenShouldNotDoAnything() {
+        when(categoryDAO.getAllCategories()).thenReturn(categoryList);
+
+        underTest.onActivityResult(1, Activity.RESULT_CANCELED, null);
 
         verify(categoryDAO, times(1)).getAllCategories();
     }
@@ -267,7 +276,7 @@ public class AddBillFragmentTest {
         amountText.setText(testBill.getAmount());
         notesText.setText(testBill.getNote());
         deadLineDateButton.setText(testBill.getDeadlineDate());
-        if (testBill.getInterval() == null) {
+        if (RecurringInterval.none.equals(testBill.getInterval())) {
             recurringCheckBox.setChecked(false);
         } else {
             recurringCheckBox.setChecked(true);
