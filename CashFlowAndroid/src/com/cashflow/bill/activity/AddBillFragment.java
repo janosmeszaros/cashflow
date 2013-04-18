@@ -92,6 +92,10 @@ public class AddBillFragment extends RoboFragment {
         setUpDateButton();
         activateRecurringArea();
         setCategorySpinner();
+        setOnClickListenersToButtons();
+    }
+
+    private void setOnClickListenersToButtons() {
         submitButton.setOnClickListener(new AddBillOnClickListener());
         createCategory.setOnClickListener(new CreateCategoryOnClickListener());
     }

@@ -208,7 +208,7 @@ public class AndroidStatementDAO implements StatementDAO {
     }
 
     private void cursorHasStatement(final String statementId, final Cursor cursor) {
-        if (cursor.getCount() > 0) {
+        if (cursor.getCount() <= 0) {
             throw new IllegalStatementIdException(statementId);
         }
     }

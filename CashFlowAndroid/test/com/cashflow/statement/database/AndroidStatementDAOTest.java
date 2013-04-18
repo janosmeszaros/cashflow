@@ -41,6 +41,7 @@ import com.cashflow.database.SQLiteDbProvider;
 import com.cashflow.domain.Category;
 import com.cashflow.domain.Statement;
 import com.cashflow.domain.StatementType;
+import com.cashflow.exceptions.IllegalStatementIdException;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 /**
@@ -71,8 +72,6 @@ public class AndroidStatementDAOTest {
     private SQLiteDatabase database;
     @Mock
     private Cursor cursorMock;
-    @Mock
-    private ContentValues values;
 
     @Before
     public void setUp() {
@@ -207,7 +206,7 @@ public class AndroidStatementDAOTest {
     }
 
     @Test
-    public void testGetIncomesWhenEverythingIsOkThenCallProperFunctionAndReturnCursor() {
+    public void testGetIncomesWhenEverythingIsOkThenCallProperFunctionAndReturnList() {
         when(database.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION_WITH_ALIAS, INCOME_SELECTION, null, null, null, null)).thenReturn(cursorMock);
         setupCursorMock(1);
         final List<Statement> list = new ArrayList<Statement>();
@@ -221,7 +220,7 @@ public class AndroidStatementDAOTest {
     }
 
     @Test
-    public void testGetRecurringIncomesWhenEverythingIsOkThenCallProperFunctionAndReturnCursor() {
+    public void testGetRecurringIncomesWhenEverythingIsOkThenCallProperFunctionAndReturnList() {
         when(database.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION_WITH_ALIAS, RECURRING_INCOME_SELECTION, null, null, null, null)).thenReturn(
                 cursorMock);
         setupCursorMock(1);
@@ -241,7 +240,7 @@ public class AndroidStatementDAOTest {
     }
 
     @Test
-    public void testGetStatementByIdWhenParamIdIsOkThenShouldCallProperFunctionAndReturnCursor() {
+    public void testGetStatementByIdWhenParamIdIsOkThenShouldCallProperFunctionAndReturnStatement() {
         when(database.rawQuery(SELECT_STATEMENT_BY_ID, new String[]{STATEMENT_ID})).thenReturn(cursorMock);
         setupCursorMock(1);
 
@@ -252,8 +251,17 @@ public class AndroidStatementDAOTest {
         assertThat(statement, equalTo(incomeStatement));
     }
 
+    @Test(expected = IllegalStatementIdException.class)
+    public void testGetStatementByIdWhenCursorHasNoStatementThenShouldThrowException() {
+        when(cursorMock.getCount()).thenReturn(0);
+        when(database.rawQuery(SELECT_STATEMENT_BY_ID, new String[]{STATEMENT_ID})).thenReturn(cursorMock);
+
+        underTest.getStatementById(STATEMENT_ID);
+    }
+
     private void setupCursorMock(final int statementType) {
         when(cursorMock.moveToNext()).thenReturn(true, false);
+        when(cursorMock.getCount()).thenReturn(1);
 
         when(cursorMock.getColumnIndexOrThrow(COLUMN_NAME_AMOUNT)).thenReturn(0);
         when(cursorMock.getColumnIndexOrThrow(COLUMN_NAME_DATE)).thenReturn(1);

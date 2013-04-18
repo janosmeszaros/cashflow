@@ -18,12 +18,14 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
@@ -34,6 +36,7 @@ import com.cashflow.activity.components.RecurringCheckBoxOnClickListener;
 import com.cashflow.activity.testutil.ActivityModule;
 import com.cashflow.activity.testutil.FragmentProviderWithRoboFragmentActivity;
 import com.cashflow.bill.database.AndroidBillDAO;
+import com.cashflow.category.activity.CreateCategoryActivity;
 import com.cashflow.category.database.AndroidCategoryDAO;
 import com.cashflow.constants.RecurringInterval;
 import com.cashflow.dao.BillDAO;
@@ -45,6 +48,7 @@ import com.google.inject.Inject;
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 import com.xtremelabs.robolectric.shadows.ShadowActivity;
+import com.xtremelabs.robolectric.shadows.ShadowIntent;
 import com.xtremelabs.robolectric.shadows.ShadowTextView;
 import com.xtremelabs.robolectric.shadows.ShadowToast;
 
@@ -95,7 +99,7 @@ public class AddBillFragmentTest {
     }
 
     @Test
-    public void testOnViewCreatedWhenCalledShoudlSetDateButton() {
+    public void testOnViewCreatedWhenCalledShouldSetDateButton() {
         final Button dateButton = (Button) underTest.getView().findViewById(R.id.dateButton);
 
         underTest.onViewCreated(underTest.getView(), null);
@@ -119,6 +123,18 @@ public class AddBillFragmentTest {
     }
 
     @Test
+    public void testCreateCategoryOnClickWhenClickedThenStartCreateCategoryActivity() {
+        final ShadowActivity shadowActivity = Robolectric.shadowOf(activity);
+        final ImageButton createCategoryButton = (ImageButton) underTest.getView().findViewById(R.id.createCategoryButton);
+
+        createCategoryButton.performClick();
+
+        final Intent intent = shadowActivity.getNextStartedActivityForResult().intent;
+        final ShadowIntent shadowIntent = Robolectric.shadowOf(intent);
+        assertThat(shadowIntent.getComponent().getClassName(), equalTo(CreateCategoryActivity.class.getName()));
+    }
+
+    @Test
     public void testOnViewCreatedwhenCalledThenShouldSetUpCategorySpinner() {
         final Spinner categorySpinner = (Spinner) underTest.getView().findViewById(R.id.categorySpinner);
         when(categoryDAO.getAllCategories()).thenReturn(categoryList);
@@ -126,6 +142,16 @@ public class AddBillFragmentTest {
         underTest.onViewCreated(underTest.getView(), null);
 
         assertThat((Category) categorySpinner.getAdapter().getItem(0), equalTo(categoryAdapter.getItem(0)));
+    }
+
+    @Test
+    public void testOnActivityResultwhenCalledThenShouldSetUpCategorySpinner() {
+        final Spinner categorySpinner = (Spinner) underTest.getView().findViewById(R.id.categorySpinner);
+        when(categoryDAO.getAllCategories()).thenReturn(categoryList);
+
+        underTest.onViewCreated(underTest.getView(), null);
+
+        assertThat((Category) categorySpinner.getSelectedItem(), equalTo(categoryAdapter.getItem(0)));
     }
 
     @Test
