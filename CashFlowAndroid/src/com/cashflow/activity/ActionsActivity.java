@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.Tab;
 import com.cashflow.R;
 import com.cashflow.bill.activity.AddBillFragment;
 import com.cashflow.statement.activity.AddIncomeFragment;
@@ -19,19 +20,19 @@ import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmen
 /**
  * List the actions in tabbed form.
  * @author Janos_Gyula_Meszaros
- *
  */
-public class ActionsActivity extends RoboSherlockFragmentActivity implements ActionBar.TabListener {
+public class ActionsActivity extends RoboSherlockFragmentActivity implements ActionBar.TabListener, ViewPager.OnPageChangeListener {
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
+    private ActionBar actionBar;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tabbed_actions);
 
-        final ActionBar actionBar = getSupportActionBar();
+        actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayShowHomeEnabled(false);
@@ -41,15 +42,14 @@ public class ActionsActivity extends RoboSherlockFragmentActivity implements Act
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(final int position) {
-                actionBar.setSelectedNavigationItem(position);
-            }
-        });
+        mViewPager.setOnPageChangeListener(this);
 
         for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
-            actionBar.addTab(actionBar.newTab().setText(mSectionsPagerAdapter.getPageTitle(i)).setTabListener(this));
+            final CharSequence title = mSectionsPagerAdapter.getPageTitle(i);
+            final Tab tab = actionBar.newTab();
+            tab.setText(title);
+            tab.setTabListener(this);
+            actionBar.addTab(tab);
         }
     }
 
@@ -67,14 +67,14 @@ public class ActionsActivity extends RoboSherlockFragmentActivity implements Act
     }
 
     /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
+     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to one of the sections/tabs/pages.
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         /**
          * Constructor
-         * @param manager {@link FragmentManager}
+         * @param manager
+         *            {@link FragmentManager}
          */
         public SectionsPagerAdapter(final FragmentManager manager) {
             super(manager);
@@ -123,6 +123,19 @@ public class ActionsActivity extends RoboSherlockFragmentActivity implements Act
             }
             return name;
         }
+    }
+
+    @Override
+    public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
+    }
+
+    @Override
+    public void onPageSelected(final int position) {
+        actionBar.setSelectedNavigationItem(position);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(final int state) {
     }
 
 }
