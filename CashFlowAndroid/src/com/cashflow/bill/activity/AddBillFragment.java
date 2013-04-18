@@ -45,6 +45,7 @@ import com.google.inject.Inject;
  */
 public class AddBillFragment extends RoboFragment {
     private static final Logger LOG = LoggerFactory.getLogger(AddBillFragment.class);
+    private static final int REQUEST_CODE = 1;
 
     @InjectView(R.id.amountText)
     private EditText amountText;
@@ -104,8 +105,14 @@ public class AddBillFragment extends RoboFragment {
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        setCategorySpinner();
-        categorySpinner.setSelection(categorySpinner.getAdapter().getCount() - 1);
+        if (isProperResult(requestCode, resultCode)) {
+            setCategorySpinner();
+            categorySpinner.setSelection(categorySpinner.getAdapter().getCount() - 1);
+        }
+    }
+
+    private boolean isProperResult(final int requestCode, final int resultCode) {
+        return REQUEST_CODE == requestCode && resultCode == Activity.RESULT_OK;
     }
 
     @Override
@@ -144,7 +151,7 @@ public class AddBillFragment extends RoboFragment {
         @Override
         public void onClick(final View view) {
             final Intent intent = new Intent(getActivity(), CreateCategoryActivity.class);
-            startActivityForResult(intent, 1);
+            startActivityForResult(intent, REQUEST_CODE);
         }
 
     }

@@ -3,6 +3,7 @@ package com.cashflow.bill.activity;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -149,9 +150,19 @@ public class AddBillFragmentTest {
         final Spinner categorySpinner = (Spinner) underTest.getView().findViewById(R.id.categorySpinner);
         when(categoryDAO.getAllCategories()).thenReturn(categoryList);
 
-        underTest.onViewCreated(underTest.getView(), null);
+        underTest.onActivityResult(1, Activity.RESULT_OK, null);
 
+        verify(categoryDAO, times(2)).getAllCategories();
         assertThat((Category) categorySpinner.getSelectedItem(), equalTo(categoryAdapter.getItem(0)));
+    }
+
+    @Test
+    public void testOnActivityResultwhenNotProperThenShouldNotDoAnithing() {
+        when(categoryDAO.getAllCategories()).thenReturn(categoryList);
+
+        underTest.onActivityResult(0, Activity.RESULT_OK, null);
+
+        verify(categoryDAO, times(1)).getAllCategories();
     }
 
     @Test
