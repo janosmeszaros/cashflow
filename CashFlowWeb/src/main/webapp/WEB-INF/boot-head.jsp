@@ -25,6 +25,7 @@
     </style>
     <link href="${url}css/bootstrap-responsive.min.css" rel="stylesheet">
     <link href="${url}css/font-awesome.min.css" rel="stylesheet" >
+    <link href="${url}css/datepicker.css" rel="stylesheet" >
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -68,8 +69,8 @@
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Actions <b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                  <li><span class="add-on"><i class="icon-plus"></i></span><a href="add_income">Add Income</a></li>
-                  <li><a href="#">Add Expense</a></li>
+                  <li><a href="add_statement">Add Income</a></li>
+                  <li><a href="add_statement">Add Expense</a></li>
                   <li><a href="add_bill">Add Bill</a></li>
                   <li class="divider"></li>
                   <li class="nav-header">Others</li>

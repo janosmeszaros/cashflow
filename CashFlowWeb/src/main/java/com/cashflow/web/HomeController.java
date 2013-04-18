@@ -35,4 +35,46 @@ public class HomeController {
         return "register";
     }
 
+    /**
+     * Selects the register page.
+     */
+    @RequestMapping(value = "/add_user", method = RequestMethod.GET)
+    public String registerPost(final Model model) {
+        LOGGER.info("Register");
+        model.addAttribute("controllerMessage", "muhaha");
+
+        return "redirect:/";
+    }
+
+    /**
+     * Selects the register page.
+     */
+    @RequestMapping(value = "/add_statement", method = RequestMethod.GET)
+    public String addIncome(final Model model) {
+        LOGGER.info("Register");
+        model.addAttribute("controllerMessage", "Add Income:");
+
+        return "add_statement";
+    }
+
+    /**
+     * Selects the register page.
+     */
+    @RequestMapping(value = "/add_bill", method = RequestMethod.GET)
+    public String addBill(final Model model) {
+        LOGGER.info("Register");
+        model.addAttribute("controllerMessage", "Add Income:");
+
+        return "add_bill";
+    }
+
+    /**
+     * Selects the list page.
+     */
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    public String list(final Model model) {
+        LOGGER.info("Register");
+        model.addAttribute("controllerMessage", "List:");
+        return "list";
+    }
 }

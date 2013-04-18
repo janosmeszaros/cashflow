@@ -1,6 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ page session="false"%>
-<c:url var="url" value="/resources/" />
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ page session="false" %>
+<%-- <c:url var="url" value="/resources/" /> --%>
 
     <div class="container">
 
@@ -19,7 +20,7 @@
           <p><a class="btn" href="#">View details &raquo;</a></p>
         </div>
         <div class="span4">
-          <h2>Heading</h2>
+          <h2><spring:message code="label.valami"/></h2>
           <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
           <p><a class="btn" href="#">View details &raquo;</a></p>
        </div>
