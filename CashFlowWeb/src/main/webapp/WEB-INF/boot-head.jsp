@@ -24,6 +24,7 @@
       }
     </style>
     <link href="${url}css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="${url}css/font-awesome.min.css" rel="stylesheet" >
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -56,7 +57,7 @@
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">List <b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                  <li><a href="#">Incomes</a></li>
+                  <li><a href="list">Incomes</a></li>
                   <li><a href="#">Expenses</a></li>
                   <li class="divider"></li>
                   <li class="nav-header">Recurring</li>
@@ -67,9 +68,9 @@
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Actions <b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                  <li><a href="#">Add Income</a></li>
+                  <li><span class="add-on"><i class="icon-plus"></i></span><a href="add_income">Add Income</a></li>
                   <li><a href="#">Add Expense</a></li>
-                  <li><a href="#">Add Bill</a></li>
+                  <li><a href="add_bill">Add Bill</a></li>
                   <li class="divider"></li>
                   <li class="nav-header">Others</li>
                   <li><a href="#">Add Category</a></li>
@@ -77,7 +78,7 @@
               </li>
             </ul>
             <form class="navbar-form pull-right">
-              <input class="span2" type="text" placeholder="Email">
+              <input class="span2"  type="text" placeholder="Email" >
               <input class="span2" type="password" placeholder="Password">
               <button type="submit" class="btn">Sign in</button>
             </form>
