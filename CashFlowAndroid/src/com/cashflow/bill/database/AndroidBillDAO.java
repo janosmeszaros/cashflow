@@ -10,6 +10,7 @@ import static com.cashflow.database.DatabaseContracts.AbstractBill.COLUMN_NAME_I
 import static com.cashflow.database.DatabaseContracts.AbstractBill.COLUMN_NAME_IS_PAYED;
 import static com.cashflow.database.DatabaseContracts.AbstractBill.COLUMN_NAME_NOTE;
 import static com.cashflow.database.DatabaseContracts.AbstractBill.PROJECTION;
+import static com.cashflow.database.DatabaseContracts.AbstractBill.STATEMENT_INNER_JOINED_CATEGORY;
 import static com.cashflow.database.DatabaseContracts.AbstractBill.TABLE_NAME;
 
 import java.util.ArrayList;
@@ -24,8 +25,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.cashflow.dao.BillDAO;
+import com.cashflow.database.DatabaseContracts.AbstractCategory;
 import com.cashflow.database.SQLiteDbProvider;
 import com.cashflow.domain.Bill;
+import com.cashflow.domain.Category;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -43,8 +46,9 @@ public class AndroidBillDAO implements BillDAO {
     private final SQLiteDbProvider provider;
 
     /**
-     * Constructor which gets a provider.    
-     * @param provider {@link SQLiteDbProvider} to get database.
+     * Constructor which gets a provider.
+     * @param provider
+     *            {@link SQLiteDbProvider} to get database.
      */
     @Inject
     public AndroidBillDAO(final SQLiteDbProvider provider) {
@@ -55,19 +59,19 @@ public class AndroidBillDAO implements BillDAO {
     @Override
     public boolean save(final Bill bill) {
         Validate.notNull(bill);
+        final ContentValues valuesToSave = createContentValues(bill);
+        return persistBill(valuesToSave);
+    }
 
-        boolean isSuccessful;
+    private boolean persistBill(final ContentValues values) {
+        final SQLiteDatabase database = provider.getWritableDb();
+        final long newRowId = database.insert(TABLE_NAME, null, values);
+        LOG.debug("New row created with row ID: " + newRowId);
+        return isSuccesfulSave(newRowId);
+    }
 
-        final long newRowId = provider.getWritableDb().insert(TABLE_NAME, null, createContentValues(bill));
-
-        if (newRowId >= 0) {
-            isSuccessful = true;
-            LOG.debug("New row created with row ID: " + newRowId);
-        } else {
-            isSuccessful = false;
-        }
-
-        return isSuccessful;
+    private boolean isSuccesfulSave(final long newRowId) {
+        return newRowId >= 0;
     }
 
     @Override
@@ -76,28 +80,25 @@ public class AndroidBillDAO implements BillDAO {
         Validate.notEmpty(billId);
 
         final ContentValues values = createContentValues(bill);
-        values.put(_ID, billId);
+        return persistUpdate(billId, values);
+    }
 
-        boolean isSuccessful;
-        final int update = provider.getWritableDb().update(TABLE_NAME, values, _ID + EQUALS, new String[]{billId});
+    private boolean persistUpdate(final String billId, final ContentValues values) {
+        final SQLiteDatabase database = provider.getWritableDb();
+        final int updatedRows = database.update(TABLE_NAME, values, _ID + EQUALS, new String[] { billId });
+        LOG.debug("Num of rows updated: " + updatedRows);
+        return isSuccessfulUpdate(updatedRows);
+    }
 
-        if (update > 0) {
-            isSuccessful = true;
-        } else {
-            isSuccessful = false;
-        }
-
-        LOG.debug("Num of rows updated: " + update);
-        return isSuccessful;
+    private boolean isSuccessfulUpdate(final int updatedRows) {
+        return updatedRows > 0;
     }
 
     @Override
     public List<Bill> getAllBills() {
-
         final SQLiteDatabase database = provider.getReadableDb();
-        //TODO Bill PROJECTION has too few column.
-        final Cursor query = database.query(TABLE_NAME, PROJECTION, null, null, null, null, null);
-
+        // TODO Bill PROJECTION has too few column.
+        final Cursor query = database.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION, null, null, null, null, null);
         return createListFromCursor(query);
     }
 
@@ -118,25 +119,33 @@ public class AndroidBillDAO implements BillDAO {
 
     private List<Bill> createListFromCursor(final Cursor cursor) {
         final List<Bill> result = new ArrayList<Bill>();
+        final int idIndex = cursor.getColumnIndexOrThrow(_ID);
+        final int amountIndex = cursor.getColumnIndexOrThrow(COLUMN_NAME_AMOUNT);
+        final int addedDateIndex = cursor.getColumnIndexOrThrow(COLUMN_NAME_DATE_ADDED);
+        final int deadLineDateIndex = cursor.getColumnIndexOrThrow(COLUMN_NAME_DATE_DEADLINE);
+        final int isPayedIndex = cursor.getColumnIndexOrThrow(COLUMN_NAME_IS_PAYED);
+        final int payedDateIndex = cursor.getColumnIndexOrThrow(COLUMN_NAME_DATE_PAYED);
+        final int noteIndex = cursor.getColumnIndexOrThrow(COLUMN_NAME_NOTE);
+        final int categoryNameIndex = cursor.getColumnIndexOrThrow(AbstractCategory.COLUMN_NAME_CATEGORY_NAME);
+        final int categoryIdIndex = cursor.getColumnIndexOrThrow(AbstractCategory.CATEGORY_ID_ALIAS);
 
-        cursor.moveToFirst();
+        while (cursor.moveToNext()) {
+            final String billId = cursor.getString(idIndex);
+            final String amount = cursor.getString(amountIndex);
+            final String date = cursor.getString(addedDateIndex);
+            final String deadline = cursor.getString(deadLineDateIndex);
+            final String isPayedString = cursor.getString(isPayedIndex);
+            final String note = cursor.getString(noteIndex);
+            final String payedDate = cursor.getString(payedDateIndex);
+            final String categoryId = cursor.getString(categoryIdIndex);
+            final String categoryName = cursor.getString(categoryNameIndex);
 
-        while (!cursor.isAfterLast()) {
+            final boolean isPayed = TRUE.equals(isPayedString);
+            final Category cat = Category.builder(categoryName).categoryId(categoryId).build();
 
-            final String billId = cursor.getString(cursor.getColumnIndexOrThrow(_ID));
-            final String amount = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_AMOUNT));
-            final String date = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_DATE_ADDED));
-            final String deadline = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_DATE_DEADLINE));
-            final String isPayedString = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_IS_PAYED));
-            boolean isPayed;
-            if (TRUE.equals(isPayedString)) {
-                isPayed = true;
-            } else {
-                isPayed = false;
-            }
-            final String note = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_NOTE));
-
-            final Bill bill = Bill.builder(amount, date, deadline).isPayed(isPayed).note(note).billId(billId).build();
+            final Bill bill =
+                    Bill.builder(amount, date, deadline).isPayed(isPayed).payedDate(payedDate).category(cat).note(note).billId(billId)
+                            .build();
             result.add(bill);
         }
         return result;

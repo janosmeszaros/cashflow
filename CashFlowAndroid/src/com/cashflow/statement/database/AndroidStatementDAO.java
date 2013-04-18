@@ -1,7 +1,6 @@
 package com.cashflow.statement.database;
 
 import static android.provider.BaseColumns._ID;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.CATEGORY_ID_ALIAS;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_CATEGORY;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_DATE;
@@ -144,7 +143,7 @@ public class AndroidStatementDAO implements StatementDAO {
         final int noteIndex = cursor.getColumnIndexOrThrow(COLUMN_NAME_NOTE);
         final int isIncomeIndex = cursor.getColumnIndexOrThrow(COLUMN_NAME_IS_INCOME);
         final int idIndex = cursor.getColumnIndexOrThrow(STATEMENT_ID_ALIAS);
-        final int categoryIdIndex = cursor.getColumnIndexOrThrow(CATEGORY_ID_ALIAS);
+        final int categoryIdIndex = cursor.getColumnIndexOrThrow(AbstractCategory.CATEGORY_ID_ALIAS);
         final int categoryIndex = cursor.getColumnIndexOrThrow(AbstractCategory.COLUMN_NAME_CATEGORY_NAME);
 
         final Category category = Category.builder(cursor.getString(categoryIndex)).categoryId(cursor.getString(categoryIdIndex)).build();

@@ -37,6 +37,7 @@ public abstract class DatabaseContracts {
      */
     public static final class AbstractCategory implements BaseColumns {
         public static final String NULLABLE = null;
+        public static final String CATEGORY_ID_ALIAS = "categoryId";
         public static final String TABLE_NAME = "category";
         public static final String COLUMN_NAME_CATEGORY_NAME = "name";
         public static final String[] PROJECTION = new String[] { _ID, COLUMN_NAME_CATEGORY_NAME };
@@ -56,7 +57,6 @@ public abstract class DatabaseContracts {
     public static final class AbstractStatement implements BaseColumns {
         public static final String NULLABLE = null;
         public static final String STATEMENT_ID_ALIAS = "statementId";
-        public static final String CATEGORY_ID_ALIAS = "categoryId";
         public static final String TABLE_NAME = "statement";
         public static final String COLUMN_NAME_AMOUNT = "amount";
         public static final String COLUMN_NAME_CATEGORY = "category";
@@ -69,7 +69,7 @@ public abstract class DatabaseContracts {
             AbstractCategory.COLUMN_NAME_CATEGORY_NAME, COLUMN_NAME_DATE, COLUMN_NAME_NOTE, COLUMN_NAME_INTERVAL };
 
         public static final String[] PROJECTION_WITH_ALIAS = new String[] { TABLE_NAME + DOT + _ID + AS + STATEMENT_ID_ALIAS,
-            AbstractCategory.TABLE_NAME + DOT + _ID + AS + CATEGORY_ID_ALIAS, COLUMN_NAME_AMOUNT,
+            AbstractCategory.TABLE_NAME + DOT + _ID + AS + AbstractCategory.CATEGORY_ID_ALIAS, COLUMN_NAME_AMOUNT,
             AbstractCategory.COLUMN_NAME_CATEGORY_NAME,
             COLUMN_NAME_DATE, COLUMN_NAME_NOTE, COLUMN_NAME_INTERVAL, COLUMN_NAME_IS_INCOME };
 
@@ -90,7 +90,8 @@ public abstract class DatabaseContracts {
                 + " != 'none'" + CLOSE_PARENTHESIS;
 
         public static final String SELECT_STATEMENT_BY_ID = SELECT + TABLE_NAME + DOT + _ID + AS + STATEMENT_ID_ALIAS + COMMA_SEP
-                + AbstractCategory.TABLE_NAME + DOT + _ID + AS + CATEGORY_ID_ALIAS + COMMA_SEP + COLUMN_NAME_AMOUNT + COMMA_SEP
+                + AbstractCategory.TABLE_NAME + DOT + _ID + AS + AbstractCategory.CATEGORY_ID_ALIAS + COMMA_SEP + COLUMN_NAME_AMOUNT
+                + COMMA_SEP
                 + AbstractCategory.COLUMN_NAME_CATEGORY_NAME + COMMA_SEP + COLUMN_NAME_DATE + COMMA_SEP + COLUMN_NAME_NOTE + COMMA_SEP
                 + COLUMN_NAME_INTERVAL + COMMA_SEP + COLUMN_NAME_IS_INCOME + FROM + AbstractCategory.TABLE_NAME + COMMA_SEP
                 + AbstractStatement.TABLE_NAME + WHERE + SELECTION_BY_ID;
@@ -122,8 +123,14 @@ public abstract class DatabaseContracts {
         public static final String COLUMN_NAME_CATEGORY = "category";
         public static final String COLUMN_NAME_IS_PAYED = "payed";
         public static final String COLUMN_NAME_INTERVAL = "interval";
+        private static final String BILL_ID_ALIAS = "billId";
 
-        public static final String[] PROJECTION = new String[] { _ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE_ADDED, COLUMN_NAME_DATE_PAYED,
+        public static final String STATEMENT_INNER_JOINED_CATEGORY = TABLE_NAME + " LEFT JOIN " + AbstractCategory.TABLE_NAME + " ON "
+                + TABLE_NAME
+                + DOT + COLUMN_NAME_CATEGORY + "=" + AbstractCategory.TABLE_NAME + DOT + AbstractCategory._ID;
+        public static final String[] PROJECTION = new String[] { TABLE_NAME + DOT + _ID + AS + BILL_ID_ALIAS,
+            AbstractCategory.TABLE_NAME + DOT + _ID + AS + AbstractCategory.CATEGORY_ID_ALIAS, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE_ADDED,
+            COLUMN_NAME_DATE_PAYED, AbstractCategory.COLUMN_NAME_CATEGORY_NAME,
             COLUMN_NAME_DATE_DEADLINE, COLUMN_NAME_NOTE, COLUMN_NAME_IS_PAYED };
 
         public static final String SQL_CREATE_ENTRIES = CREATE_TABLE + TABLE_NAME + OPEN_PARENTHESIS + _ID + " INTEGER PRIMARY KEY,"
