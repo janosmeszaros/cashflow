@@ -122,7 +122,7 @@ public class AndroidCategoryDAOTest {
     }
 
     @Test
-    public void testGetAllCategoriesWhenCalledThenReturnListOfStatement() {
+    public void testGetAllCategoriesWhenCalledThenReturnListOfCategories() {
         when(database.query(TABLE_NAME, PROJECTION, null, null, null, null, null)).thenReturn(cursorMock);
         setupCursorMock();
         final List<Category> list = new ArrayList<Category>();

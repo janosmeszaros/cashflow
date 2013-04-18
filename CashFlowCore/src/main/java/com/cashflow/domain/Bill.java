@@ -113,7 +113,7 @@ public final class Bill {
         private String note;
         private Category category;
         private boolean payed;
-        private RecurringInterval interval;
+        private RecurringInterval interval = RecurringInterval.none;
 
         /**
          * Constructor.
