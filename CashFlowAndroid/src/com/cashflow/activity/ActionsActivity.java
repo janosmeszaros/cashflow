@@ -65,6 +65,19 @@ public class ActionsActivity extends RoboSherlockFragmentActivity implements Act
     public void onTabReselected(final ActionBar.Tab tab, final FragmentTransaction transaction) {
     }
 
+    @Override
+    public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
+    }
+
+    @Override
+    public void onPageSelected(final int position) {
+        actionBar.setSelectedNavigationItem(position);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(final int state) {
+    }
+
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to one of the sections/tabs/pages.
      */
@@ -122,19 +135,6 @@ public class ActionsActivity extends RoboSherlockFragmentActivity implements Act
             }
             return name;
         }
-    }
-
-    @Override
-    public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
-    }
-
-    @Override
-    public void onPageSelected(final int position) {
-        actionBar.setSelectedNavigationItem(position);
-    }
-
-    @Override
-    public void onPageScrollStateChanged(final int state) {
     }
 
 }
