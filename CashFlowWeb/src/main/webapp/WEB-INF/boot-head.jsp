@@ -59,30 +59,30 @@
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <spring:message code="navbar.list"/> <b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                  <li><a href="list">Incomes</a></li>
-                  <li><a href="#">Expenses</a></li>
+                  <li><a href="list"> <spring:message code="navbar.incomes"/> </a></li>
+                  <li><a href="#"> <spring:message code="navbar.expenses"/> </a></li>
                   <li class="divider"></li>
-                  <li class="nav-header">Recurring</li>
-                  <li><a href="#">Incomes</a></li>
-                  <li><a href="#">Bills</a></li>
+                  <li class="nav-header"> <spring:message code="navbar.recurring"/> </li>
+                  <li><a href="#"> <spring:message code="navbar.incomes"/> </a></li>
+                  <li><a href="#"> <spring:message code="navbar.bills"/> </a></li>
                 </ul>
               </li>
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><spring:message code="navbar.actions"/><b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                  <li><a href="add_statement">Add Income</a></li>
-                  <li><a href="add_statement">Add Expense</a></li>
-                  <li><a href="add_bill">Add Bill</a></li>
+                  <li><a href="add_statement"> <spring:message code="navbar.add_income"/> </a></li>
+                  <li><a href="add_statement"> <spring:message code="navbar.add_expense"/> </a></li>
+                  <li><a href="add_bill"> <spring:message code="navbar.add_bill"/> </a></li>
                   <li class="divider"></li>
-                  <li class="nav-header">Others</li>
-                  <li><a href="#">Add Category</a></li>
+                  <li class="nav-header"> <spring:message code="navbar.others"/> </li>
+                  <li><a href="#"> <spring:message code="navbar.add_category"/> </a></li>
                 </ul>
               </li>
             </ul>
             <form class="navbar-form pull-right">
               <input class="span2"  type="text" placeholder="Email" >
-              <input class="span2" type="password" placeholder="Password">
-              <button type="submit" class="btn">Sign in</button>
+              <input class="span2" type="password" placeholder="<spring:message code="label.password"/>">
+              <button type="submit" class="btn"> <spring:message code="navbar.sing_in"/> </button>
             </form>
           </div><!--/.nav-collapse -->
         </div>
