@@ -7,11 +7,11 @@
   <c:url var="add" value="/add_user" />
   <form class="form-horizontal" action="${add}">
     <fieldset>
-      <legend>Register</legend>
+      <legend> <spring:message code="label.register"/>  </legend>
 
       <div class="control-group">
         <!-- Username -->
-        <label class="control-label" for="username">Username</label>
+        <label class="control-label" for="username"> <spring:message code="label.username"/>  </label>
         <div class="controls">
         <div class="input-prepend">
           <span class="add-on"><i class="icon-user"></i></span> <input
@@ -38,7 +38,7 @@
 
       <div class="control-group">
         <!-- Password-->
-        <label class="control-label" for="password">Password</label>
+        <label class="control-label" for="password"> <spring:message code="label.password"/>  </label>
         <div class="controls">
         <div class="input-prepend">
         <span class="add-on"><i class="icon-key"></i></span>
@@ -52,8 +52,7 @@
 
       <div class="control-group">
         <!-- Password -->
-        <label class="control-label" for="password_confirm">Password
-          (Confirm)</label>
+        <label class="control-label" for="password_confirm"> <spring:message code="label.password_confirm"/>  </label>
         <div class="controls">
         <div class="input-prepend">
         <span class="add-on"><i class="icon-key"></i></span>
@@ -67,7 +66,7 @@
       <div class="control-group">
         <!-- Button -->
         <div class="controls">
-          <button class="btn btn-success">Register</button>
+          <button class="btn btn-success"> <spring:message code="label.register"/>  </button>
         </div>
       </div>
     </fieldset>
