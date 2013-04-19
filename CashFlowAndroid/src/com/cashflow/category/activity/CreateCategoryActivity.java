@@ -13,19 +13,18 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.cashflow.R;
-import com.cashflow.category.database.AndroidCategoryDAO;
+import com.cashflow.dao.CategoryDAO;
 import com.cashflow.domain.Category;
 import com.google.inject.Inject;
 
 /**
  * Create new Category.
  * @author Kornel_Refi
- *
  */
 public class CreateCategoryActivity extends RoboActivity {
     private static final Logger LOG = LoggerFactory.getLogger(CreateCategoryActivity.class);
     @Inject
-    private AndroidCategoryDAO categoryDAO;
+    private CategoryDAO categoryDAO;
 
     @InjectView(R.id.categoryNameText)
     private EditText nameText;
@@ -43,21 +42,37 @@ public class CreateCategoryActivity extends RoboActivity {
     /**
      * Submit button onClick listener for submit button on {@link CreateCategoryActivity}.
      * @author Janos_Gyula_Meszaros
-     *
      */
-    private class SubmitButtonOnClick implements OnClickListener {
+    protected class SubmitButtonOnClick implements OnClickListener {
 
         @Override
         public void onClick(final View view) {
             LOG.debug("Creating category: " + nameText.getText());
             final String name = nameText.getText().toString();
 
-            if (categoryDAO.save(Category.builder(name).build())) {
-                setResult(RESULT_OK);
-                finish();
-            } else {
-                Toast.makeText(CreateCategoryActivity.this, getString(R.string.empty_category), Toast.LENGTH_SHORT).show();
+            try {
+                final Category category = createCategory(name);
+                if (categoryDAO.save(category)) {
+                    finishActivity();
+                } else {
+                    showToast(getString(R.string.database_error));
+                }
+            } catch (final IllegalArgumentException exception) {
+                showToast(exception.getMessage());
             }
+        }
+
+        private void showToast(final String msg) {
+            Toast.makeText(CreateCategoryActivity.this, msg, Toast.LENGTH_SHORT).show();
+        }
+
+        private void finishActivity() {
+            setResult(RESULT_OK);
+            finish();
+        }
+
+        private Category createCategory(final String name) {
+            return Category.builder(name).build();
         }
 
     }

@@ -46,19 +46,21 @@ public class AndroidCategoryDAO implements CategoryDAO {
     @Override
     public boolean save(final Category category) {
         Validate.notNull(category);
+        final ContentValues values = createContentValues(category);
+        return persistCategory(values);
+    }
 
-        boolean isSuccessful;
+    private boolean persistCategory(final ContentValues values) {
+        final SQLiteDatabase database = provider.getWritableDb();
+        final long newRowId = database.insert(TABLE_NAME, null, values);
 
-        final long newRowId = provider.getWritableDb().insert(TABLE_NAME, null, createContentValues(category.getName()));
+        LOG.debug("New row created with row ID: " + newRowId);
 
-        if (newRowId >= 0) {
-            isSuccessful = true;
-            LOG.debug("New row created with row ID: " + newRowId);
-        } else {
-            isSuccessful = false;
-        }
+        return isSuccessful(newRowId);
+    }
 
-        return isSuccessful;
+    private boolean isSuccessful(final long newRowId) {
+        return newRowId >= 0;
     }
 
     @Override
@@ -66,33 +68,36 @@ public class AndroidCategoryDAO implements CategoryDAO {
         Validate.notNull(category);
         Validate.notEmpty(categoryId);
 
-        final ContentValues values = createContentValues(category.getName());
-        values.put(_ID, categoryId);
+        final ContentValues values = createContentValues(category);
+        return persistUpdate(categoryId, values);
+    }
 
-        boolean isSuccessful;
-        final int update = provider.getWritableDb().update(TABLE_NAME, values, _ID + EQUALS, new String[] { categoryId });
-
-        if (update > 0) {
-            isSuccessful = true;
-        } else {
-            isSuccessful = false;
-        }
-
+    private boolean persistUpdate(final String categoryId, final ContentValues values) {
+        final SQLiteDatabase database = provider.getWritableDb();
+        final int update = database.update(TABLE_NAME, values, _ID + EQUALS, new String[] { categoryId });
         LOG.debug("Num of rows updated: " + update);
-        return isSuccessful;
+        return isUpdateSuccessed(update);
+    }
+
+    private boolean isUpdateSuccessed(final int update) {
+        return update > 0;
     }
 
     @Override
     public List<Category> getAllCategories() {
-        final SQLiteDatabase database = provider.getReadableDb();
-        final Cursor query = database.query(TABLE_NAME, PROJECTION, null, null, null, null, null);
-
+        final Cursor query = queryAllCategories();
         return createListFromCursor(query);
     }
 
-    private ContentValues createContentValues(final String categoryName) {
+    private Cursor queryAllCategories() {
+        final SQLiteDatabase database = provider.getReadableDb();
+        final Cursor query = database.query(TABLE_NAME, PROJECTION, null, null, null, null, null);
+        return query;
+    }
+
+    private ContentValues createContentValues(final Category category) {
         final ContentValues values = new ContentValues();
-        values.put(COLUMN_NAME_CATEGORY_NAME, categoryName);
+        values.put(COLUMN_NAME_CATEGORY_NAME, category.getName());
 
         LOG.debug("Content created: " + values);
 
@@ -102,9 +107,12 @@ public class AndroidCategoryDAO implements CategoryDAO {
     private List<Category> createListFromCursor(final Cursor cursor) {
         final List<Category> result = new ArrayList<Category>();
 
+        final int idIndex = cursor.getColumnIndexOrThrow(_ID);
+        final int nameIndex = cursor.getColumnIndexOrThrow(COLUMN_NAME_CATEGORY_NAME);
+
         while (cursor.moveToNext()) {
-            final String categoryId = cursor.getString(cursor.getColumnIndexOrThrow(_ID));
-            final String categoryName = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_CATEGORY_NAME));
+            final String categoryId = cursor.getString(idIndex);
+            final String categoryName = cursor.getString(nameIndex);
 
             final Category category = Category.builder(categoryName).categoryId(categoryId).build();
             result.add(category);

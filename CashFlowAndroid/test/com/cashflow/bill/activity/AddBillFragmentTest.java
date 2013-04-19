@@ -3,6 +3,7 @@ package com.cashflow.bill.activity;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -18,12 +19,14 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
@@ -33,15 +36,20 @@ import com.cashflow.activity.ActionsActivity;
 import com.cashflow.activity.components.RecurringCheckBoxOnClickListener;
 import com.cashflow.activity.testutil.ActivityModule;
 import com.cashflow.activity.testutil.FragmentProviderWithRoboFragmentActivity;
+import com.cashflow.bill.database.AndroidBillDAO;
+import com.cashflow.category.activity.CreateCategoryActivity;
+import com.cashflow.category.database.AndroidCategoryDAO;
 import com.cashflow.constants.RecurringInterval;
+import com.cashflow.dao.BillDAO;
+import com.cashflow.dao.CategoryDAO;
 import com.cashflow.domain.Bill;
+import com.cashflow.domain.Bill.Builder;
 import com.cashflow.domain.Category;
-import com.cashflow.service.BillPersistenceService;
-import com.cashflow.service.CategoryPersistenceService;
 import com.google.inject.Inject;
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 import com.xtremelabs.robolectric.shadows.ShadowActivity;
+import com.xtremelabs.robolectric.shadows.ShadowIntent;
 import com.xtremelabs.robolectric.shadows.ShadowTextView;
 import com.xtremelabs.robolectric.shadows.ShadowToast;
 
@@ -49,7 +57,7 @@ import com.xtremelabs.robolectric.shadows.ShadowToast;
 public class AddBillFragmentTest {
     private static final String EXCEPTION = "Exception";
 
-    private static final Category CATEGORY = new Category("0", "cat");
+    private static final Category CATEGORY = Category.builder("cat").categoryId("0").build();
 
     @Inject
     private Activity activity;
@@ -57,9 +65,9 @@ public class AddBillFragmentTest {
     @Mock
     private RecurringCheckBoxOnClickListener checkBoxListener;
     @Mock
-    private CategoryPersistenceService categoryService;
+    private AndroidCategoryDAO categoryDAO;
     @Mock
-    private BillPersistenceService billPersistenceService;
+    private AndroidBillDAO billDAO;
 
     private AddBillFragment underTest;
     private final List<Category> categoryList = new ArrayList<Category>() {
@@ -83,8 +91,8 @@ public class AddBillFragmentTest {
 
         module.addBinding(SpinnerAdapter.class, arrayAdapter);
         module.addBinding(RecurringCheckBoxOnClickListener.class, checkBoxListener);
-        module.addBinding(CategoryPersistenceService.class, categoryService);
-        module.addBinding(BillPersistenceService.class, billPersistenceService);
+        module.addBinding(CategoryDAO.class, categoryDAO);
+        module.addBinding(BillDAO.class, billDAO);
 
         ActivityModule.setUp(this, module);
 
@@ -92,7 +100,7 @@ public class AddBillFragmentTest {
     }
 
     @Test
-    public void testOnViewCreatedWhenCalledShoudlSetDateButton() {
+    public void testOnViewCreatedWhenCalledShouldSetDateButton() {
         final Button dateButton = (Button) underTest.getView().findViewById(R.id.dateButton);
 
         underTest.onViewCreated(underTest.getView(), null);
@@ -116,13 +124,54 @@ public class AddBillFragmentTest {
     }
 
     @Test
+    public void testCreateCategoryOnClickWhenClickedThenStartCreateCategoryActivity() {
+        final ShadowActivity shadowActivity = Robolectric.shadowOf(activity);
+        final ImageButton createCategoryButton = (ImageButton) underTest.getView().findViewById(R.id.createCategoryButton);
+
+        createCategoryButton.performClick();
+
+        final Intent intent = shadowActivity.getNextStartedActivityForResult().intent;
+        final ShadowIntent shadowIntent = Robolectric.shadowOf(intent);
+        assertThat(shadowIntent.getComponent().getClassName(), equalTo(CreateCategoryActivity.class.getName()));
+    }
+
+    @Test
     public void testOnViewCreatedwhenCalledThenShouldSetUpCategorySpinner() {
         final Spinner categorySpinner = (Spinner) underTest.getView().findViewById(R.id.categorySpinner);
-        when(categoryService.getCategories()).thenReturn(categoryList);
+        when(categoryDAO.getAllCategories()).thenReturn(categoryList);
 
         underTest.onViewCreated(underTest.getView(), null);
 
         assertThat((Category) categorySpinner.getAdapter().getItem(0), equalTo(categoryAdapter.getItem(0)));
+    }
+
+    @Test
+    public void testOnActivityResultwhenCalledThenShouldSetUpCategorySpinner() {
+        final Spinner categorySpinner = (Spinner) underTest.getView().findViewById(R.id.categorySpinner);
+        when(categoryDAO.getAllCategories()).thenReturn(categoryList);
+
+        underTest.onActivityResult(1, Activity.RESULT_OK, null);
+
+        verify(categoryDAO, times(2)).getAllCategories();
+        assertThat((Category) categorySpinner.getSelectedItem(), equalTo(categoryAdapter.getItem(0)));
+    }
+
+    @Test
+    public void testOnActivityResultWhenNotProperThenShouldNotDoAnything() {
+        when(categoryDAO.getAllCategories()).thenReturn(categoryList);
+
+        underTest.onActivityResult(0, Activity.RESULT_OK, null);
+
+        verify(categoryDAO, times(1)).getAllCategories();
+    }
+
+    @Test
+    public void testOnActivityResultWhenCanceledThenShouldNotDoAnything() {
+        when(categoryDAO.getAllCategories()).thenReturn(categoryList);
+
+        underTest.onActivityResult(1, Activity.RESULT_CANCELED, null);
+
+        verify(categoryDAO, times(1)).getAllCategories();
     }
 
     @Test
@@ -155,7 +204,7 @@ public class AddBillFragmentTest {
 
         submitButton.performClick();
 
-        verify(billPersistenceService).saveBill(testBill);
+        verify(billDAO).save(testBill);
     }
 
     @Test
@@ -166,7 +215,7 @@ public class AddBillFragmentTest {
 
         submitButton.performClick();
 
-        verify(billPersistenceService).saveBill(testBill);
+        verify(billDAO).save(testBill);
     }
 
     @Test
@@ -175,7 +224,7 @@ public class AddBillFragmentTest {
         final ShadowActivity shadowActivity = Robolectric.shadowOf(activity);
         final Bill testBill = createTestBill(true);
         fillViewsWithData(testBill);
-        when(billPersistenceService.saveBill((Bill) any())).thenReturn(true);
+        when(billDAO.save((Bill) any())).thenReturn(true);
 
         submitButton.performClick();
 
@@ -189,7 +238,7 @@ public class AddBillFragmentTest {
         final String toastText = activity.getResources().getString(R.string.database_error);
         final Bill testBill = createTestBill(true);
         fillViewsWithData(testBill);
-        when(billPersistenceService.saveBill((Bill) any())).thenReturn(false);
+        when(billDAO.save((Bill) any())).thenReturn(false);
 
         submitButton.performClick();
 
@@ -201,11 +250,20 @@ public class AddBillFragmentTest {
         final Button submitButton = (Button) underTest.getView().findViewById(R.id.submitButton);
         final Bill testBill = createTestBill(true);
         fillViewsWithData(testBill);
-        when(billPersistenceService.saveBill((Bill) any())).thenThrow(new IllegalArgumentException(EXCEPTION));
+        when(billDAO.save((Bill) any())).thenThrow(new IllegalArgumentException(EXCEPTION));
 
         submitButton.performClick();
 
         assertThat(ShadowToast.getTextOfLatestToast(), equalTo(EXCEPTION));
+    }
+
+    @Test
+    public void testSubmitButtonOnClickWhenSomethingMissingFromBillsMandatoryFieldsThenShouldShowAToast() {
+        final Button submitButton = (Button) underTest.getView().findViewById(R.id.submitButton);
+
+        submitButton.performClick();
+
+        assertThat(ShadowToast.shownToastCount(), equalTo(1));
     }
 
     private void fillViewsWithData(final Bill testBill) {
@@ -213,16 +271,16 @@ public class AddBillFragmentTest {
         final EditText notesText = (EditText) underTest.getView().findViewById(R.id.notesText);
         final Spinner categorySpinner = (Spinner) underTest.getView().findViewById(R.id.categorySpinner);
         final Button deadLineDateButton = (Button) underTest.getView().findViewById(R.id.dateButton);
-        final Spinner recurringSpinner = (Spinner) underTest.getView().findViewById(R.id.recurring_spinner);
         final CheckBox recurringCheckBox = (CheckBox) underTest.getView().findViewById(R.id.recurring_checkbox_bill);
 
         amountText.setText(testBill.getAmount());
         notesText.setText(testBill.getNote());
         deadLineDateButton.setText(testBill.getDeadlineDate());
-        if (testBill.getInterval() == null) {
+        if (RecurringInterval.none.equals(testBill.getInterval())) {
             recurringCheckBox.setChecked(false);
         } else {
             recurringCheckBox.setChecked(true);
+            final Spinner recurringSpinner = (Spinner) underTest.getView().findViewById(R.id.recurring_spinner);
             final int position = arrayAdapter.getPosition(testBill.getInterval());
             recurringSpinner.setSelection(position);
         }
@@ -232,15 +290,15 @@ public class AddBillFragmentTest {
     }
 
     private Bill createTestBill(final boolean isRecurring) {
-        final Bill billToSave = new Bill("1234", date, "deadLine");
-        billToSave.category(CATEGORY);
-        billToSave.note("Note");
-        billToSave.isPayed(false);
-        billToSave.payedDate("");
+        final Builder billbuilder = Bill.builder("1234", date, "deadLine");
+        billbuilder.category(CATEGORY);
+        billbuilder.note("Note");
+        billbuilder.isPayed(false);
+        billbuilder.payedDate("");
 
         if (isRecurring) {
-            billToSave.interval(RecurringInterval.annually);
+            billbuilder.interval(RecurringInterval.annually);
         }
-        return billToSave;
+        return billbuilder.build();
     }
 }

@@ -31,7 +31,11 @@ public class MockActionBar extends ActionBar {
 
     @Override
     public void setCustomView(final View view, final LayoutParams layoutParams) {
+<<<<<<< HEAD
+        customView = view;
+=======
         this.customView = view;
+>>>>>>> feature-shadowTesting
     }
 
     @Override
@@ -60,8 +64,11 @@ public class MockActionBar extends ActionBar {
 
     @Override
     public void setSelectedNavigationItem(final int position) {
+<<<<<<< HEAD
+=======
         this.position = position;
 
+>>>>>>> feature-shadowTesting
     }
 
     @Override
@@ -148,8 +155,11 @@ public class MockActionBar extends ActionBar {
 
     @Override
     public void setNavigationMode(final int mode) {
+<<<<<<< HEAD
+=======
         this.mode = mode;
 
+>>>>>>> feature-shadowTesting
     }
 
     @Override
@@ -164,8 +174,11 @@ public class MockActionBar extends ActionBar {
 
     @Override
     public void addTab(final Tab tab) {
+<<<<<<< HEAD
+=======
 
         tabs.add(tab);
+>>>>>>> feature-shadowTesting
     }
 
     @Override
@@ -203,7 +216,11 @@ public class MockActionBar extends ActionBar {
 
     @Override
     public Tab getTabAt(final int index) {
+<<<<<<< HEAD
+        return null;
+=======
         return tabs.get(index);
+>>>>>>> feature-shadowTesting
     }
 
     @Override
@@ -235,6 +252,8 @@ public class MockActionBar extends ActionBar {
 
     @Override
     public void removeOnMenuVisibilityListener(final OnMenuVisibilityListener listener) {
+<<<<<<< HEAD
+=======
     }
 
     public class MockTab extends Tab {
@@ -332,5 +351,6 @@ public class MockActionBar extends ActionBar {
             return null;
         }
 
+>>>>>>> feature-shadowTesting
     }
 }

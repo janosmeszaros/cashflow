@@ -74,10 +74,17 @@ public class EditStatementActivityTest {
     private static final String DATE = "2013";
     private static final String AMOUNT = "1234";
     private static final RecurringInterval NONE_INTERVAL = RecurringInterval.none;
-    private static final Category CATEGORY = Category.builder("category").categoryId(CATEGORY_ID).build();
-    private static final Category CHANGED_CATEGORY = Category.builder("changed_category").categoryId("4").build();
+<<<<<<< HEAD
+    private static final Category CATEGORY = new Category(CATEGORY_ID, "category");
+    private static final Category CHANGED_CATEGORY = new Category("4", "changed_category");
     private static final Statement EXPENSE_STATEMENT = Statement.builder(AMOUNT, DATE).note(NOTE).type(Expense).statementId(EXPENSE_ID)
             .category(CATEGORY).recurringInterval(NONE_INTERVAL).build();
+=======
+    private static final Category CATEGORY = Category.builder("category").categoryId(CATEGORY_ID).build();
+    private static final Category CHANGED_CATEGORY = Category.builder("changed_category").categoryId("4").build();
+    private static final Statement EXPENSE_STATEMENT = Statement.builder(AMOUNT, DATE).note(NOTE).type(Expense).id(EXPENSE_ID).category(CATEGORY)
+            .recurringInterval(NONE_INTERVAL).build();
+>>>>>>> feature-shadowTesting
 
     private final List<Category> categories = new ArrayList<Category>() {
         {
@@ -163,8 +170,13 @@ public class EditStatementActivityTest {
         final ShadowFragmentActivity shadowFragmentActivity = Robolectric.shadowOf(underTest);
         final Button submit = (Button) underTest.findViewById(R.id.submitButton);
         setViewsValues(EXPENSE_STATEMENT);
+<<<<<<< HEAD
         final Statement changedStatement = Statement.builder(AMOUNT, DATE).note(NOTE).type(Expense).statementId(EXPENSE_ID)
                 .recurringInterval(NONE_INTERVAL).category(CATEGORY).build();
+=======
+        final Statement changedStatement = Statement.builder(AMOUNT, DATE).note(NOTE).type(Expense).id(EXPENSE_ID).recurringInterval(NONE_INTERVAL)
+                .category(CATEGORY).build();
+>>>>>>> feature-shadowTesting
         setViewsValues(changedStatement);
 
         submit.performClick();

@@ -1,5 +1,6 @@
 package com.cashflow.domain;
 
+import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
@@ -64,6 +65,8 @@ public final class Category {
          *            name
          */
         private Builder(final String name) {
+            Validate.notEmpty(name);
+
             this.name = name;
         }
 

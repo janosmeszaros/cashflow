@@ -31,9 +31,12 @@ public class ListActivity extends RoboSherlockFragmentActivity {
 
     @InjectView(android.R.id.tabhost)
     private TabHost mTabHost;
+<<<<<<< HEAD
+=======
     @InjectView(R.id.pager)
     private ViewPager mViewPager;
     private TabsAdapter mTabsAdapter;
+>>>>>>> feature-shadowTesting
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -43,6 +46,11 @@ public class ListActivity extends RoboSherlockFragmentActivity {
         mTabHost.setup();
         mTabsAdapter = new TabsAdapter(this, mTabHost, mViewPager);
 
+<<<<<<< HEAD
+        final ViewPager mViewPager = (ViewPager) findViewById(R.id.pager);
+
+        final TabsAdapter mTabsAdapter = new TabsAdapter(this, mTabHost, mViewPager);
+=======
         addIncomeTab();
         addExpenseTab();
 
@@ -50,6 +58,7 @@ public class ListActivity extends RoboSherlockFragmentActivity {
             mTabHost.setCurrentTabByTag(savedInstanceState.getString("tab"));
         }
     }
+>>>>>>> feature-shadowTesting
 
     private void addIncomeTab() {
         final Bundle bundle = new Bundle();

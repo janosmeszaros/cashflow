@@ -31,10 +31,10 @@ import android.widget.Toast;
 import com.cashflow.R;
 import com.cashflow.activity.components.DateButtonOnClickListener;
 import com.cashflow.activity.components.RecurringCheckBoxOnClickListener;
-import com.cashflow.bill.database.AndroidBillDAO;
 import com.cashflow.category.activity.CreateCategoryActivity;
-import com.cashflow.category.database.AndroidCategoryDAO;
 import com.cashflow.constants.RecurringInterval;
+import com.cashflow.dao.BillDAO;
+import com.cashflow.dao.CategoryDAO;
 import com.cashflow.domain.Bill;
 import com.cashflow.domain.Category;
 import com.google.inject.Inject;
@@ -42,10 +42,10 @@ import com.google.inject.Inject;
 /**
  * Add bills.
  * @author Janos_Gyula_Meszaros
- *
  */
 public class AddBillFragment extends RoboFragment {
     private static final Logger LOG = LoggerFactory.getLogger(AddBillFragment.class);
+    private static final int REQUEST_CODE = 1;
 
     @InjectView(R.id.amountText)
     private EditText amountText;
@@ -75,9 +75,9 @@ public class AddBillFragment extends RoboFragment {
     @Inject
     private SpinnerAdapter spinnerAdapter;
     @Inject
-    private AndroidCategoryDAO categoryDAO;
+    private CategoryDAO categoryDAO;
     @Inject
-    private AndroidBillDAO billDAO;
+    private BillDAO billDAO;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
@@ -93,6 +93,10 @@ public class AddBillFragment extends RoboFragment {
         setUpDateButton();
         activateRecurringArea();
         setCategorySpinner();
+        setOnClickListenersToButtons();
+    }
+
+    private void setOnClickListenersToButtons() {
         submitButton.setOnClickListener(new AddBillOnClickListener());
         createCategory.setOnClickListener(new CreateCategoryOnClickListener());
     }
@@ -101,8 +105,14 @@ public class AddBillFragment extends RoboFragment {
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        setCategorySpinner();
-        categorySpinner.setSelection(categorySpinner.getAdapter().getCount() - 1);
+        if (isProperResult(requestCode, resultCode)) {
+            setCategorySpinner();
+            categorySpinner.setSelection(categorySpinner.getAdapter().getCount() - 1);
+        }
+    }
+
+    private boolean isProperResult(final int requestCode, final int resultCode) {
+        return REQUEST_CODE == requestCode && resultCode == Activity.RESULT_OK;
     }
 
     @Override
@@ -116,7 +126,8 @@ public class AddBillFragment extends RoboFragment {
     private void setCategorySpinner() {
         final List<Category> list = categoryDAO.getAllCategories();
 
-        final ArrayAdapter<Category> adapter = new ArrayAdapter<Category>(getActivity(), android.R.layout.simple_spinner_dropdown_item, list);
+        final ArrayAdapter<Category> adapter =
+                new ArrayAdapter<Category>(getActivity(), android.R.layout.simple_spinner_dropdown_item, list);
         categorySpinner.setAdapter(adapter);
     }
 
@@ -140,7 +151,7 @@ public class AddBillFragment extends RoboFragment {
         @Override
         public void onClick(final View view) {
             final Intent intent = new Intent(getActivity(), CreateCategoryActivity.class);
-            startActivityForResult(intent, 1);
+            startActivityForResult(intent, REQUEST_CODE);
         }
 
     }
@@ -148,15 +159,14 @@ public class AddBillFragment extends RoboFragment {
     /**
      * {@link OnClickListener} for AddBillActivity's submit button.
      * @author Janos_Gyula_Meszaros
-     *
      */
     public class AddBillOnClickListener implements OnClickListener {
         @Override
         public void onClick(final View view) {
-            final Bill billToSave = createBill();
             final Activity parent = (Activity) view.getContext();
 
             try {
+                final Bill billToSave = createBill();
                 if (billDAO.save(billToSave)) {
                     parent.setResult(Activity.RESULT_OK);
                     parent.finish();

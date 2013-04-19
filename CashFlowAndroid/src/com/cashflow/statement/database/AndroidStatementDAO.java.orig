@@ -94,7 +94,12 @@ public class AndroidStatementDAO implements StatementDAO {
         idCheck(statementId);
 
         final ContentValues values = createContentValue(statement);
+<<<<<<< HEAD
+
         return updateStatement(statementId, values);
+=======
+        return updateStatement(id, values);
+>>>>>>> feature-shadowTesting
     }
 
     private boolean updateStatement(final String statementId, final ContentValues values) {
