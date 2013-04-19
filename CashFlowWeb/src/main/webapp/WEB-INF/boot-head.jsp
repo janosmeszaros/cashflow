@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+    <%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ page session="false"%>
 <c:url var="url" value="/resources/" />
 <c:url var="home" value="/" />
@@ -53,10 +54,10 @@
           <a class="brand" href="${home}">CashFlow</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li class="active"><a href="#">Home</a></li>
-              <li><a href="#about">About</a></li>
+              <li class="active"><a href="#"><spring:message code="navbar.home"/></a></li>
+              <li><a href="#about"><spring:message code="navbar.about"/></a></li>
               <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">List <b class="caret"></b></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <spring:message code="navbar.list"/> <b class="caret"></b></a>
                 <ul class="dropdown-menu">
                   <li><a href="list">Incomes</a></li>
                   <li><a href="#">Expenses</a></li>
@@ -67,7 +68,7 @@
                 </ul>
               </li>
               <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Actions <b class="caret"></b></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><spring:message code="navbar.actions"/><b class="caret"></b></a>
                 <ul class="dropdown-menu">
                   <li><a href="add_statement">Add Income</a></li>
                   <li><a href="add_statement">Add Expense</a></li>

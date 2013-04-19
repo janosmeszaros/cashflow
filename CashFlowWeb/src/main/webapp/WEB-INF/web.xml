@@ -46,7 +46,7 @@
 
 	<jsp-config>
 		<jsp-property-group>
-			 <url-pattern>/views/*</url-pattern>
+			 <url-pattern>/WEB-INF/views/*</url-pattern>
 			<include-prelude>/WEB-INF/boot-head.jsp</include-prelude>
 			<include-coda>/WEB-INF/boot-foot.jsp</include-coda>
 		</jsp-property-group>
