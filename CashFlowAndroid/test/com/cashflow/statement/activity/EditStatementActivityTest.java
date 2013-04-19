@@ -3,14 +3,13 @@ package com.cashflow.statement.activity;
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 import static com.cashflow.constants.Constants.ID_EXTRA;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_DATE;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_NOTE;
 import static com.cashflow.domain.StatementType.Expense;
+import static com.cashflow.domain.StatementType.Income;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -27,7 +26,6 @@ import org.mockito.MockitoAnnotations;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.database.MatrixCursor;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -40,15 +38,15 @@ import com.cashflow.activity.components.DateButtonOnClickListener;
 import com.cashflow.activity.testutil.ActivityModule;
 import com.cashflow.activity.testutil.EditStatementActivityProvider;
 import com.cashflow.category.activity.CreateCategoryActivity;
+import com.cashflow.category.database.AndroidCategoryDAO;
 import com.cashflow.constants.RecurringInterval;
-import com.cashflow.database.DatabaseContracts.AbstractStatement;
+import com.cashflow.dao.CategoryDAO;
+import com.cashflow.dao.StatementDAO;
 import com.cashflow.domain.Category;
 import com.cashflow.domain.Statement;
-import com.cashflow.domain.StatementType;
-import com.cashflow.service.CategoryPersistenceService;
-import com.cashflow.service.StatementPersistenceService;
 import com.cashflow.statement.activity.EditStatementActivity.CreateCategoryOnClickListener;
 import com.cashflow.statement.activity.EditStatementActivity.SubmitButtonOnClickListener;
+import com.cashflow.statement.database.AndroidStatementDAO;
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 import com.xtremelabs.robolectric.shadows.ShadowActivity;
@@ -76,8 +74,8 @@ public class EditStatementActivityTest {
     private static final String DATE = "2013";
     private static final String AMOUNT = "1234";
     private static final RecurringInterval NONE_INTERVAL = RecurringInterval.none;
-    private static final Category CATEGORY = new Category(CATEGORY_ID, "category");
-    private static final Category CHANGED_CATEGORY = new Category("4", "changed_category");
+    private static final Category CATEGORY = Category.builder("category").categoryId(CATEGORY_ID).build();
+    private static final Category CHANGED_CATEGORY = Category.builder("changed_category").categoryId("4").build();
     private static final Statement EXPENSE_STATEMENT = Statement.builder(AMOUNT, DATE).note(NOTE).type(Expense).statementId(EXPENSE_ID)
             .category(CATEGORY).recurringInterval(NONE_INTERVAL).build();
 
@@ -86,14 +84,12 @@ public class EditStatementActivityTest {
             add(CATEGORY);
         }
     };
-    private final String[] fromColumns = {AbstractStatement._ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE, COLUMN_NAME_NOTE};
-    private final Object[] values = new Object[]{1, 1234L, CHANGED_DATE, "note"};
     private EditStatementActivity underTest;
 
     @Mock
-    private StatementPersistenceService statementPersistentService;
+    private AndroidStatementDAO statementDAO;
     @Mock
-    private CategoryPersistenceService categoryPersistenceService;
+    private AndroidCategoryDAO categoryDAO;
     @Mock
     private DateButtonOnClickListener listener;
 
@@ -157,7 +153,7 @@ public class EditStatementActivityTest {
 
         submit.performClick();
 
-        verify(statementPersistentService, times(1)).updateStatement(expenseStatement);
+        verify(statementDAO, times(1)).update(expenseStatement, EXPENSE_ID);
         assertThat(shadowFragmentActivity.getResultCode(), equalTo(RESULT_OK));
         assertThat(underTest.isFinishing(), equalTo(true));
     }
@@ -187,7 +183,7 @@ public class EditStatementActivityTest {
 
         submit.performClick();
 
-        verify(statementPersistentService, times(1)).updateStatement(changedDateStatement);
+        verify(statementDAO, times(1)).update(changedDateStatement, EXPENSE_ID);
         assertThat(shadowFragmentActivity.getResultCode(), equalTo(RESULT_OK));
         assertThat(underTest.isFinishing(), equalTo(true));
     }
@@ -202,7 +198,7 @@ public class EditStatementActivityTest {
 
         submit.performClick();
 
-        verify(statementPersistentService, times(1)).updateStatement(changedNoteStatement);
+        verify(statementDAO, times(1)).update(changedNoteStatement, EXPENSE_ID);
         assertThat(shadowFragmentActivity.getResultCode(), equalTo(RESULT_OK));
         assertThat(underTest.isFinishing(), equalTo(true));
     }
@@ -217,7 +213,7 @@ public class EditStatementActivityTest {
 
         submit.performClick();
 
-        verify(statementPersistentService, times(1)).updateStatement(changedNoteStatement);
+        verify(statementDAO, times(1)).update(changedNoteStatement, EXPENSE_ID);
         assertThat(shadowFragmentActivity.getResultCode(), equalTo(RESULT_OK));
         assertThat(underTest.isFinishing(), equalTo(true));
     }
@@ -225,7 +221,7 @@ public class EditStatementActivityTest {
     @Test
     public void testSubmitWhenCategoryHasChangedButTheSaveFailedThenResultCodeShouldBeCanceled() {
         final ShadowFragmentActivity shadowFragmentActivity = Robolectric.shadowOf(underTest);
-        when(statementPersistentService.updateStatement((Statement) anyObject())).thenReturn(false);
+        when(statementDAO.update((Statement) anyObject(), anyString())).thenReturn(false);
         final Button submit = (Button) underTest.findViewById(R.id.submitButton);
         final Statement changedNoteStatement = Statement.builder(AMOUNT, DATE).note(CHANGED_NOTE).type(Expense).statementId(EXPENSE_ID)
                 .recurringInterval(NONE_INTERVAL).category(CHANGED_CATEGORY).build();
@@ -233,7 +229,7 @@ public class EditStatementActivityTest {
 
         submit.performClick();
 
-        verify(statementPersistentService, times(1)).updateStatement(changedNoteStatement);
+        verify(statementDAO, times(1)).update(changedNoteStatement, EXPENSE_ID);
         assertThat(shadowFragmentActivity.getResultCode(), equalTo(RESULT_CANCELED));
         final String toastText = underTest.getResources().getString(R.string.database_error);
         assertThat(ShadowToast.getTextOfLatestToast(), equalTo(toastText));
@@ -258,11 +254,11 @@ public class EditStatementActivityTest {
         final Statement changedNoteStatement = Statement.builder(AMOUNT, DATE).note(NOTE).type(Expense).statementId(EXPENSE_ID)
                 .recurringInterval(NONE_INTERVAL).category(CHANGED_CATEGORY).build();
         setViewsValues(changedNoteStatement);
-        when(statementPersistentService.updateStatement(changedNoteStatement)).thenThrow(new IllegalArgumentException(ERROR));
+        when(statementDAO.update(changedNoteStatement, EXPENSE_ID)).thenThrow(new IllegalArgumentException(ERROR));
 
         submit.performClick();
 
-        verify(statementPersistentService, times(1)).updateStatement(changedNoteStatement);
+        verify(statementDAO, times(1)).update(changedNoteStatement, EXPENSE_ID);
         assertThat(ShadowToast.getTextOfLatestToast(), equalTo(ERROR));
     }
 
@@ -281,14 +277,14 @@ public class EditStatementActivityTest {
     @Test
     public void testOnActivityResultWhenRequestIdIsCorrectThenRefreshSpinner() {
         final Spinner categorySpinner = (Spinner) underTest.findViewById(R.id.categorySpinner);
-        final Category addedCat = new Category("1", "cat2");
+        final Category addedCat = Category.builder("cat2").categoryId("1").build();
         final List<Category> extendedList = new ArrayList<Category>(categories);
         extendedList.add(addedCat);
-        when(categoryPersistenceService.getCategories()).thenReturn(extendedList);
+        when(categoryDAO.getAllCategories()).thenReturn(extendedList);
 
         underTest.onActivityResult(1, Activity.RESULT_OK, null);
 
-        verify(categoryPersistenceService, times(2)).getCategories();
+        verify(categoryDAO, times(2)).getAllCategories();
         assertThat((Category) categorySpinner.getSelectedItem(), equalTo(addedCat));
     }
 
@@ -297,7 +293,7 @@ public class EditStatementActivityTest {
         underTest.onActivityResult(0, Activity.RESULT_OK, null);
 
         // once, on creation
-        verify(categoryPersistenceService, times(1)).getCategories();
+        verify(categoryDAO, times(1)).getAllCategories();
     }
 
     @Test
@@ -305,7 +301,7 @@ public class EditStatementActivityTest {
         underTest.onActivityResult(1, Activity.RESULT_CANCELED, null);
 
         // once, on creation
-        verify(categoryPersistenceService, times(1)).getCategories();
+        verify(categoryDAO, times(1)).getAllCategories();
     }
 
     @Test
@@ -313,7 +309,7 @@ public class EditStatementActivityTest {
         underTest.onActivityResult(0, Activity.RESULT_CANCELED, null);
 
         // once, on creation
-        verify(categoryPersistenceService, times(1)).getCategories();
+        verify(categoryDAO, times(1)).getAllCategories();
     }
 
     private void setViewsValues(final Statement statement) {
@@ -341,20 +337,28 @@ public class EditStatementActivityTest {
 
     private void addBindings(final ActivityModule module) {
         module.addBinding(DateButtonOnClickListener.class, listener);
-        module.addBinding(StatementPersistenceService.class, statementPersistentService);
-        module.addBinding(CategoryPersistenceService.class, categoryPersistenceService);
+        module.addBinding(StatementDAO.class, statementDAO);
+        module.addBinding(CategoryDAO.class, categoryDAO);
     }
 
     private void setUpPersistentService() {
-        final MatrixCursor cursor = new MatrixCursor(fromColumns);
-        cursor.addRow(values);
-        when(statementPersistentService.getStatementById(EXPENSE_ID)).thenReturn(EXPENSE_STATEMENT);
-        when(statementPersistentService.getAllStatementsByType(Expense)).thenReturn(cursor);
-        when(statementPersistentService.getAllStatementsByType(StatementType.Income)).thenReturn(cursor);
-        when(statementPersistentService.saveStatement((Statement) anyObject())).thenReturn(true);
-        when(statementPersistentService.updateStatement((Statement) anyObject())).thenReturn(true);
+        final Statement income = Statement.builder(AMOUNT, DATE).note(NOTE).type(Income).category(CATEGORY).recurringInterval(RecurringInterval.none)
+                .build();
+        final Statement expense = Statement.builder(AMOUNT, DATE).note(NOTE).type(Expense).category(CATEGORY)
+                .recurringInterval(RecurringInterval.none).build();
 
-        when(categoryPersistenceService.getCategories()).thenReturn(categories);
+        final List<Statement> expenses = new ArrayList<Statement>();
+        expenses.add(expense);
+        final List<Statement> incomes = new ArrayList<Statement>();
+        incomes.add(income);
+
+        when(statementDAO.getStatementById(EXPENSE_ID)).thenReturn(EXPENSE_STATEMENT);
+        when(statementDAO.getExpenses()).thenReturn(expenses);
+        when(statementDAO.getIncomes()).thenReturn(incomes);
+        when(statementDAO.save((Statement) anyObject())).thenReturn(true);
+        when(statementDAO.update((Statement) anyObject(), anyString())).thenReturn(true);
+
+        when(categoryDAO.getAllCategories()).thenReturn(categories);
     }
 
 }

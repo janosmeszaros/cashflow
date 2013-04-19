@@ -3,14 +3,13 @@ package com.cashflow.statement.activity;
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 import static com.cashflow.constants.Constants.ID_EXTRA;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_AMOUNT;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_DATE;
-import static com.cashflow.database.DatabaseContracts.AbstractStatement.COLUMN_NAME_NOTE;
+import static com.cashflow.domain.StatementType.Expense;
 import static com.cashflow.domain.StatementType.Income;
 import static com.xtremelabs.robolectric.Robolectric.shadowOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -26,7 +25,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import android.content.Intent;
-import android.database.MatrixCursor;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -39,17 +37,17 @@ import com.cashflow.activity.components.DateButtonOnClickListener;
 import com.cashflow.activity.testutil.ActivityModule;
 import com.cashflow.activity.testutil.EditStatementActivityProvider;
 import com.cashflow.constants.RecurringInterval;
-import com.cashflow.database.DatabaseContracts.AbstractStatement;
+import com.cashflow.dao.CategoryDAO;
+import com.cashflow.dao.StatementDAO;
 import com.cashflow.domain.Category;
 import com.cashflow.domain.Statement;
-import com.cashflow.domain.StatementType;
 import com.cashflow.service.Balance;
-import com.cashflow.service.CategoryPersistenceService;
-import com.cashflow.service.StatementPersistenceService;
+import com.cashflow.statement.database.AndroidStatementDAO;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 import com.xtremelabs.robolectric.shadows.ShadowButton;
 import com.xtremelabs.robolectric.shadows.ShadowFragmentActivity;
 import com.xtremelabs.robolectric.shadows.ShadowTextView;
+import com.xtremelabs.robolectric.shadows.ShadowToast;
 
 @RunWith(RobolectricTestRunner.class)
 public class EditIncomeActivityTest {
@@ -61,21 +59,19 @@ public class EditIncomeActivityTest {
     private static final String AMOUNT = "1234";
     private static final RecurringInterval INTERVAL = RecurringInterval.biweekly;
     private static final RecurringInterval NONE_INTERVAL = RecurringInterval.none;
-    private static final Category CATEGORY = new Category(CATEGORY_ID, "category");
-    private static final Category CHANGED_CATEGORY = new Category("4", "changed_category");
+    private static final Category CATEGORY = Category.builder("category").categoryId(CATEGORY_ID).build();
+    private static final Category CHANGED_CATEGORY = Category.builder("changed_category").categoryId("4").build();
     private static final Statement INCOME_STATEMENT = Statement.builder(AMOUNT, DATE).note(NOTE).type(Income).statementId(INCOME_ID)
             .category(CATEGORY).recurringInterval(NONE_INTERVAL).build();
 
-    private final String[] fromColumns = {AbstractStatement._ID, COLUMN_NAME_AMOUNT, COLUMN_NAME_DATE, COLUMN_NAME_NOTE};
-    private final Object[] values = new Object[]{1, 1234L, CHANGED_DATE, "note"};
-    private EditStatementActivity underTest;
+    private EditIncomeActivity underTest;
     private final ArrayAdapter<RecurringInterval> intervalArrayAdapter = new ArrayAdapter<RecurringInterval>(underTest,
             android.R.layout.simple_spinner_dropdown_item, RecurringInterval.values());
 
     @Mock
-    private StatementPersistenceService statementPersistentService;
+    private AndroidStatementDAO statementDAO;
     @Mock
-    private CategoryPersistenceService categoryPersistenceService;
+    private CategoryDAO categoryDAO;
     @Mock
     private DateButtonOnClickListener listener;
 
@@ -138,7 +134,7 @@ public class EditIncomeActivityTest {
         final Statement statement = Statement.builder(AMOUNT, DATE).statementId("12").category(CATEGORY).note(NOTE).recurringInterval(INTERVAL)
                 .type(Income).build();
         underTest.setIntent(setUpIntentData(statement));
-        when(statementPersistentService.getStatementById("12")).thenReturn(statement);
+        when(statementDAO.getStatementById("12")).thenReturn(statement);
         underTest.onCreate(null);
 
         final Spinner interval = (Spinner) underTest.findViewById(R.id.recurring_spinner);
@@ -152,13 +148,13 @@ public class EditIncomeActivityTest {
     public void testSubmitWhenRecurringIntervalHasChangedThenShouldCallProperFunctionAndResultCodeShouldBeOK() {
         final ShadowFragmentActivity shadowFragmentActivity = shadowOf(underTest);
         final Button submit = (Button) underTest.findViewById(R.id.submitButton);
-        final Statement changedStatement = Statement.builder(AMOUNT, DATE).note(NOTE).type(Income).statementId(INCOME_ID)
-                .recurringInterval(INTERVAL).category(CATEGORY).build();
+        final Statement changedStatement = Statement.builder(AMOUNT, DATE).note(NOTE).type(Income).statementId(INCOME_ID).recurringInterval(INTERVAL)
+                .category(CATEGORY).build();
         setViewsValues(changedStatement);
 
         submit.performClick();
 
-        verify(statementPersistentService, times(1)).updateStatement(changedStatement);
+        verify(statementDAO, times(1)).update(changedStatement, changedStatement.getId());
         assertThat(shadowFragmentActivity.getResultCode(), equalTo(RESULT_OK));
         assertThat(shadowFragmentActivity.isFinishing(), equalTo(true));
     }
@@ -185,7 +181,7 @@ public class EditIncomeActivityTest {
 
         submit.performClick();
 
-        verify(statementPersistentService, times(1)).updateStatement(changedStatement);
+        verify(statementDAO, times(1)).update(changedStatement, changedStatement.getId());
         assertThat(shadowFragmentActivity.getResultCode(), equalTo(RESULT_OK));
         assertThat(shadowFragmentActivity.isFinishing(), equalTo(true));
     }
@@ -200,9 +196,23 @@ public class EditIncomeActivityTest {
 
         submit.performClick();
 
-        verify(statementPersistentService, times(1)).updateStatement(changedNoteStatement);
+        verify(statementDAO, times(1)).update(changedNoteStatement, changedNoteStatement.getId());
         assertThat(shadowFragmentActivity.getResultCode(), equalTo(RESULT_OK));
         assertThat(shadowFragmentActivity.isFinishing(), equalTo(true));
+    }
+
+    @Test
+    public void testSubmitWhenSomethingHappendInDBThenShouldShowToastWithDatabaseError() {
+        final Button submit = (Button) underTest.findViewById(R.id.submitButton);
+        final Statement changedNoteStatement = Statement.builder(AMOUNT, DATE).note(NOTE).type(Income).statementId(INCOME_ID)
+                .recurringInterval(NONE_INTERVAL).category(CHANGED_CATEGORY).build();
+        setViewsValues(changedNoteStatement);
+        when(statementDAO.update(changedNoteStatement, INCOME_ID)).thenReturn(false);
+
+        submit.performClick();
+
+        verify(statementDAO, times(1)).update(changedNoteStatement, changedNoteStatement.getId());
+        assertThat(ShadowToast.getTextOfLatestToast(), equalTo(underTest.getString(R.string.database_error)));
     }
 
     private void setViewsValues(final Statement statement) {
@@ -241,26 +251,31 @@ public class EditIncomeActivityTest {
     }
 
     private void addBindings(final ActivityModule module) {
-        final Balance balance = Balance.getInstance(statementPersistentService);
+        final Balance balance = Balance.getInstance(statementDAO);
         module.addBinding(Balance.class, balance);
         module.addBinding(DateButtonOnClickListener.class, listener);
-        module.addBinding(StatementPersistenceService.class, statementPersistentService);
+        module.addBinding(StatementDAO.class, statementDAO);
     }
 
     private void setUpPersistentService() {
-        final MatrixCursor cursor = new MatrixCursor(fromColumns);
-        cursor.addRow(values);
-        when(statementPersistentService.getStatementById(INCOME_ID)).thenReturn(INCOME_STATEMENT);
-        //        when(statementPersistentService.getStatementById(EXPENSE_ID)).thenReturn(EXPENSE_STATEMENT);
-        when(statementPersistentService.getAllStatementsByType(StatementType.Expense)).thenReturn(cursor);
-        when(statementPersistentService.getAllStatementsByType(Income)).thenReturn(cursor);
-        when(statementPersistentService.saveStatement((Statement) anyObject())).thenReturn(true);
-        when(statementPersistentService.updateStatement((Statement) anyObject())).thenReturn(true);
+        final Statement income = Statement.builder(AMOUNT, DATE).note(NOTE).type(Income).category(CATEGORY).recurringInterval(RecurringInterval.none)
+                .build();
+        final Statement expense = Statement.builder(AMOUNT, DATE).note(NOTE).type(Expense).category(CATEGORY)
+                .recurringInterval(RecurringInterval.none).build();
 
+        final List<Statement> expenses = new ArrayList<Statement>();
+        expenses.add(expense);
+        final List<Statement> incomes = new ArrayList<Statement>();
+        incomes.add(income);
+
+        when(statementDAO.getExpenses()).thenReturn(expenses);
+        when(statementDAO.getIncomes()).thenReturn(incomes);
+        when(statementDAO.getStatementById(INCOME_ID)).thenReturn(INCOME_STATEMENT);
+        when(statementDAO.update((Statement) anyObject(), anyString())).thenReturn(true);
         final List<Category> categories = new ArrayList<Category>();
         categories.add(CATEGORY);
 
-        when(categoryPersistenceService.getCategories()).thenReturn(categories);
+        when(categoryDAO.getAllCategories()).thenReturn(categories);
     }
 
 }

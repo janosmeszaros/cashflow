@@ -1,5 +1,8 @@
 package com.cashflow.activity.testutil.shadows;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.View;
@@ -13,6 +16,9 @@ public class MockActionBar extends ActionBar {
     private String subtitle;
     private View customView;
     private final Context realContext;
+    private int mode;
+    private final List<Tab> tabs = new ArrayList<ActionBar.Tab>();
+    private int position;
 
     public MockActionBar(final Context context) {
         realContext = context;
@@ -25,7 +31,7 @@ public class MockActionBar extends ActionBar {
 
     @Override
     public void setCustomView(final View view, final LayoutParams layoutParams) {
-        customView = view;
+        this.customView = view;
     }
 
     @Override
@@ -54,11 +60,13 @@ public class MockActionBar extends ActionBar {
 
     @Override
     public void setSelectedNavigationItem(final int position) {
+        this.position = position;
+
     }
 
     @Override
     public int getSelectedNavigationIndex() {
-        return 0;
+        return position;
     }
 
     @Override
@@ -135,11 +143,13 @@ public class MockActionBar extends ActionBar {
 
     @Override
     public int getNavigationMode() {
-        return 0;
+        return mode;
     }
 
     @Override
     public void setNavigationMode(final int mode) {
+        this.mode = mode;
+
     }
 
     @Override
@@ -149,11 +159,13 @@ public class MockActionBar extends ActionBar {
 
     @Override
     public Tab newTab() {
-        return null;
+        return new MockTab();
     }
 
     @Override
     public void addTab(final Tab tab) {
+
+        tabs.add(tab);
     }
 
     @Override
@@ -191,12 +203,12 @@ public class MockActionBar extends ActionBar {
 
     @Override
     public Tab getTabAt(final int index) {
-        return null;
+        return tabs.get(index);
     }
 
     @Override
     public int getTabCount() {
-        return 0;
+        return tabs.size();
     }
 
     @Override
@@ -223,5 +235,102 @@ public class MockActionBar extends ActionBar {
 
     @Override
     public void removeOnMenuVisibilityListener(final OnMenuVisibilityListener listener) {
+    }
+
+    public class MockTab extends Tab {
+        private TabListener tabListener;
+        private CharSequence text;
+
+        public TabListener getTabListener() {
+            return tabListener;
+        }
+
+        @Override
+        public CharSequence getContentDescription() {
+            return null;
+        }
+
+        @Override
+        public View getCustomView() {
+            return null;
+        }
+
+        @Override
+        public Drawable getIcon() {
+            return null;
+        }
+
+        @Override
+        public int getPosition() {
+            return tabs.indexOf(this);
+        }
+
+        @Override
+        public Object getTag() {
+            return null;
+        }
+
+        @Override
+        public CharSequence getText() {
+            return text;
+        }
+
+        @Override
+        public void select() {
+
+        }
+
+        @Override
+        public Tab setContentDescription(final int arg0) {
+            return null;
+        }
+
+        @Override
+        public Tab setContentDescription(final CharSequence arg0) {
+            return null;
+        }
+
+        @Override
+        public Tab setCustomView(final View arg0) {
+            return null;
+        }
+
+        @Override
+        public Tab setCustomView(final int arg0) {
+            return null;
+        }
+
+        @Override
+        public Tab setIcon(final Drawable arg0) {
+            return null;
+        }
+
+        @Override
+        public Tab setIcon(final int arg0) {
+            return null;
+        }
+
+        @Override
+        public Tab setTabListener(final TabListener arg0) {
+            this.tabListener = arg0;
+            return this;
+        }
+
+        @Override
+        public Tab setTag(final Object arg0) {
+            return null;
+        }
+
+        @Override
+        public Tab setText(final CharSequence arg0) {
+            this.text = arg0;
+            return this;
+        }
+
+        @Override
+        public Tab setText(final int arg0) {
+            return null;
+        }
+
     }
 }

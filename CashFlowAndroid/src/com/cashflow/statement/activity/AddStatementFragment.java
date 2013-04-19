@@ -26,12 +26,12 @@ import android.widget.Toast;
 import com.cashflow.R;
 import com.cashflow.activity.components.DateButtonOnClickListener;
 import com.cashflow.category.activity.CreateCategoryActivity;
-import com.cashflow.category.database.AndroidCategoryDAO;
+import com.cashflow.dao.CategoryDAO;
+import com.cashflow.dao.StatementDAO;
 import com.cashflow.domain.Category;
 import com.cashflow.domain.Statement;
 import com.cashflow.domain.Statement.Builder;
 import com.cashflow.domain.StatementType;
-import com.cashflow.statement.database.AndroidStatementDAO;
 import com.google.inject.Inject;
 
 /**
@@ -44,11 +44,11 @@ public class AddStatementFragment extends RoboFragment {
     private static final int CREATE_CATEGORY_ACTIVITY_ID = 1;
 
     @Inject
-    private AndroidCategoryDAO categoryDAO;
+    private CategoryDAO categoryDAO;
     @Inject
     private DateButtonOnClickListener dateListener;
     @Inject
-    private AndroidStatementDAO statementDAO;
+    private StatementDAO statementDAO;
 
     @InjectView(R.id.amountText)
     private EditText amountText;
@@ -96,7 +96,8 @@ public class AddStatementFragment extends RoboFragment {
     private void setCategorySpinner() {
         final List<Category> list = categoryDAO.getAllCategories();
 
-        final ArrayAdapter<Category> adapter = new ArrayAdapter<Category>(getActivity(), android.R.layout.simple_spinner_dropdown_item, list);
+        final ArrayAdapter<Category> adapter =
+                new ArrayAdapter<Category>(getActivity(), android.R.layout.simple_spinner_dropdown_item, list);
         categorySpinner.setAdapter(adapter);
     }
 
@@ -130,9 +131,8 @@ public class AddStatementFragment extends RoboFragment {
     }
 
     /**
-     * On click listener for submit button on AddStatement. 
+     * On click listener for submit button on AddStatement.
      * @author Janos_Gyula_Meszaros
-     *
      */
     class SubmitButtonOnClickListener implements OnClickListener {
 

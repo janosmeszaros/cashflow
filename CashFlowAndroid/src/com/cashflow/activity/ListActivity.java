@@ -5,6 +5,7 @@ import static com.cashflow.constants.Constants.STATEMENT_TYPE_EXTRA;
 import java.util.ArrayList;
 import java.util.List;
 
+import roboguice.inject.InjectView;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -25,37 +26,44 @@ import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmen
 /**
  * Tabbed lists for statements.
  * @author Janos_Gyula_Meszaros
- *
  */
 public class ListActivity extends RoboSherlockFragmentActivity {
 
+    @InjectView(android.R.id.tabhost)
     private TabHost mTabHost;
+    @InjectView(R.id.pager)
+    private ViewPager mViewPager;
+    private TabsAdapter mTabsAdapter;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.list_fragments);
-
-        mTabHost = (TabHost) findViewById(android.R.id.tabhost);
         mTabHost.setup();
+        mTabsAdapter = new TabsAdapter(this, mTabHost, mViewPager);
 
-        final ViewPager mViewPager = (ViewPager) findViewById(R.id.pager);
-
-        final TabsAdapter mTabsAdapter = new TabsAdapter(this, mTabHost, mViewPager);
-
-        Bundle bundle = new Bundle();
-        bundle.putString(STATEMENT_TYPE_EXTRA, StatementType.Income.toString());
-        mTabsAdapter.addTab(mTabHost.newTabSpec("income").setIndicator(getString(R.string.title_activity_list_incomes)), ListStatementFragment.class,
-                bundle);
-        bundle = new Bundle();
-        bundle.putString(STATEMENT_TYPE_EXTRA, StatementType.Expense.toString());
-        mTabsAdapter.addTab(mTabHost.newTabSpec("expense").setIndicator(getString(R.string.title_activity_list_expenses)),
-                ListStatementFragment.class, bundle);
+        addIncomeTab();
+        addExpenseTab();
 
         if (savedInstanceState != null) {
             mTabHost.setCurrentTabByTag(savedInstanceState.getString("tab"));
         }
+    }
+
+    private void addIncomeTab() {
+        final Bundle bundle = new Bundle();
+        bundle.putString(STATEMENT_TYPE_EXTRA, StatementType.Income.toString());
+        mTabsAdapter.addTab(mTabHost.newTabSpec("income").setIndicator(getString(R.string.title_activity_list_incomes)),
+                ListStatementFragment.class,
+                bundle);
+    }
+
+    private void addExpenseTab() {
+        final Bundle bundle = new Bundle();
+        bundle.putString(STATEMENT_TYPE_EXTRA, StatementType.Expense.toString());
+        mTabsAdapter.addTab(mTabHost.newTabSpec("expense").setIndicator(getString(R.string.title_activity_list_expenses)),
+                ListStatementFragment.class, bundle);
     }
 
     @Override
@@ -67,7 +75,6 @@ public class ListActivity extends RoboSherlockFragmentActivity {
     /**
      * Helper class.
      * @author Janos_Gyula_Meszaros
-     *
      */
     public static class TabsAdapter extends FragmentPagerAdapter implements TabHost.OnTabChangeListener, ViewPager.OnPageChangeListener {
         private final Context mContext;
@@ -77,15 +84,19 @@ public class ListActivity extends RoboSherlockFragmentActivity {
 
         /**
          * Constructor.
-         * @param activity activity.
-         * @param tabHost tabHost.
-         * @param pager pager.
+         * @param activity
+         *            activity.
+         * @param tabHost
+         *            tabHost.
+         * @param pager
+         *            pager.
          */
         public TabsAdapter(final FragmentActivity activity, final TabHost tabHost, final ViewPager pager) {
             super(activity.getSupportFragmentManager());
             mContext = activity;
             mTabHost = tabHost;
             mViewPager = pager;
+
             mTabHost.setOnTabChangedListener(this);
             mViewPager.setAdapter(this);
             mViewPager.setOnPageChangeListener(this);
@@ -93,9 +104,12 @@ public class ListActivity extends RoboSherlockFragmentActivity {
 
         /**
          * add tab.
-         * @param tabSpec tabSpec.
-         * @param clss class
-         * @param args args
+         * @param tabSpec
+         *            tabSpec.
+         * @param clss
+         *            class
+         * @param args
+         *            args
          */
         public void addTab(final TabHost.TabSpec tabSpec, final Class<?> clss, final Bundle args) {
             tabSpec.setContent(new DummyTabFactory(mContext));
@@ -130,11 +144,6 @@ public class ListActivity extends RoboSherlockFragmentActivity {
 
         @Override
         public void onPageSelected(final int position) {
-            // Unfortunately when TabHost changes the current tab, it kindly
-            // also takes care of putting focus on it when not in touch mode.
-            // The jerk.
-            // This hack tries to prevent this from pulling focus out of our
-            // ViewPager.
             final TabWidget widget = mTabHost.getTabWidget();
             final int oldFocusability = widget.getDescendantFocusability();
             widget.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
@@ -153,9 +162,12 @@ public class ListActivity extends RoboSherlockFragmentActivity {
 
             /**
              * Constructor.
-             * @param tag tag
-             * @param clazz class
-             * @param args arg
+             * @param tag
+             *            tag
+             * @param clazz
+             *            class
+             * @param args
+             *            arg
              */
             TabInfo(final String tag, final Class<?> clazz, final Bundle args) {
                 this.tag = tag;
