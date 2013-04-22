@@ -7,6 +7,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.cashflow.web.dto.StatementDTO;
+
 /**
  * Sample controller for going to the home page with a message
  */
@@ -29,6 +31,8 @@ public class HomeController {
 
     /**
      * Selects the register page.
+     * @param model {@link Model}
+     * @return register
      */
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public String register(final Model model) {
@@ -39,6 +43,8 @@ public class HomeController {
 
     /**
      * Selects the register page.
+     * @param model {@link Model}
+     * @return redirect to home
      */
     @RequestMapping(value = "/add_user", method = RequestMethod.GET)
     public String registerPost(final Model model) {
@@ -49,19 +55,22 @@ public class HomeController {
     }
 
     /**
-     * Selects the register page.
+     * Selects the add_statement page.
+     * @param model {@link Model}
+     * @return add_statement
      */
     @RequestMapping(value = "/add_statement", method = RequestMethod.GET)
     public String addIncome(final Model model) {
         LOGGER.info("Register");
-        model.addAttribute("controllerMessage", "Add Income:");
-        //        model.addAttribute("statement", Statement.class);
+        model.addAttribute("statement", new StatementDTO());
 
         return "add_statement";
     }
 
     /**
-     * Selects the register page.
+     * Selects the add_bill page.
+     * @param model {@link Model}
+     * @return add_bill
      */
     @RequestMapping(value = "/add_bill", method = RequestMethod.GET)
     public String addBill(final Model model) {
@@ -73,6 +82,8 @@ public class HomeController {
 
     /**
      * Selects the list page.
+     * @param model {@link Model}
+     * @return list
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public String list(final Model model) {
