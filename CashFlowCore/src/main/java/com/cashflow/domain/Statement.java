@@ -5,7 +5,6 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
-import com.cashflow.constants.RecurringInterval;
 
 /**
  * Simple class for statement. This will hold data for one statement.
@@ -30,7 +29,7 @@ public final class Statement {
         type = builder.type;
     }
 
-    public String getId() {
+    public String getStatementId() {
         return statementId;
     }
 

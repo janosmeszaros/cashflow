@@ -16,9 +16,9 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.cashflow.constants.RecurringInterval;
 import com.cashflow.dao.StatementDAO;
 import com.cashflow.domain.Category;
+import com.cashflow.domain.RecurringInterval;
 import com.cashflow.domain.Statement;
 import com.cashflow.domain.StatementType;
 

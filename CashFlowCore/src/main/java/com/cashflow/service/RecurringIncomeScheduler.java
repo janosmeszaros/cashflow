@@ -10,8 +10,8 @@ import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.cashflow.constants.RecurringInterval;
 import com.cashflow.dao.StatementDAO;
+import com.cashflow.domain.RecurringInterval;
 import com.cashflow.domain.Statement;
 import com.cashflow.domain.StatementType;
 
@@ -116,12 +116,12 @@ public class RecurringIncomeScheduler {
     private void updateRecurringStatement(final Statement recurringStatement, final String newDate) {
         if (!recurringStatement.getDate().equals(newDate)) {
 
-            final Statement statement = Statement.builder(recurringStatement.getAmount(), newDate).statementId(recurringStatement.getId())
+            final Statement statement = Statement.builder(recurringStatement.getAmount(), newDate).statementId(recurringStatement.getStatementId())
                     .note(recurringStatement.getNote()).category(recurringStatement.getCategory())
                     .recurringInterval(recurringStatement.getRecurringInterval()).type(StatementType.Income).build();
 
             LOG.debug("Update recurring statement's date to " + newDate);
-            dao.update(statement, statement.getId());
+            dao.update(statement, statement.getStatementId());
         }
     }
 }

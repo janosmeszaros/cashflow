@@ -27,11 +27,11 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.cashflow.constants.RecurringInterval;
 import com.cashflow.dao.StatementDAO;
 import com.cashflow.database.DatabaseContracts.AbstractCategory;
 import com.cashflow.database.SQLiteDbProvider;
 import com.cashflow.domain.Category;
+import com.cashflow.domain.RecurringInterval;
 import com.cashflow.domain.Statement;
 import com.cashflow.domain.Statement.Builder;
 import com.cashflow.domain.StatementType;
@@ -230,7 +230,7 @@ public class AndroidStatementDAO implements StatementDAO {
     private ContentValues createContentValue(final Statement statement) {
         final ContentValues values = new ContentValues();
         values.put(COLUMN_NAME_AMOUNT, statement.getAmount());
-        values.put(COLUMN_NAME_CATEGORY, statement.getCategory().getId());
+        values.put(COLUMN_NAME_CATEGORY, statement.getCategory().getCategoryId());
         values.put(COLUMN_NAME_DATE, statement.getDate());
         values.put(COLUMN_NAME_IS_INCOME, statement.getType().isIncome() ? TRUE : FALSE);
         values.put(COLUMN_NAME_NOTE, statement.getNote());

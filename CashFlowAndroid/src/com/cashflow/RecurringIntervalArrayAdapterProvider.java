@@ -4,7 +4,7 @@ import android.content.Context;
 import android.widget.ArrayAdapter;
 import android.widget.SpinnerAdapter;
 
-import com.cashflow.constants.RecurringInterval;
+import com.cashflow.domain.RecurringInterval;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 

@@ -103,9 +103,9 @@ public class AndroidCategoryDAOTest {
 
     @Test
     public void testUpdateWhenCategoryIsOkThenShouldUpdateAndReturnTrue() {
-        when(database.update(eq(TABLE_NAME), (ContentValues) anyObject(), eq(_ID + EQUALS), eq(new String[]{CATEGORY.getId()}))).thenReturn(1);
+        when(database.update(eq(TABLE_NAME), (ContentValues) anyObject(), eq(_ID + EQUALS), eq(new String[]{CATEGORY.getCategoryId()}))).thenReturn(1);
 
-        final boolean updated = underTest.update(CATEGORY, CATEGORY.getId());
+        final boolean updated = underTest.update(CATEGORY, CATEGORY.getCategoryId());
 
         verify(provider).getWritableDb();
         assertThat(updated, equalTo(true));
@@ -113,9 +113,9 @@ public class AndroidCategoryDAOTest {
 
     @Test
     public void testUpdateWhenSomethingHappensInInsertionThenShouldReturnFalse() {
-        when(database.update(eq(TABLE_NAME), (ContentValues) anyObject(), eq(_ID + EQUALS), eq(new String[]{CATEGORY.getId()}))).thenReturn(-1);
+        when(database.update(eq(TABLE_NAME), (ContentValues) anyObject(), eq(_ID + EQUALS), eq(new String[]{CATEGORY.getCategoryId()}))).thenReturn(-1);
 
-        final boolean updated = underTest.update(CATEGORY, CATEGORY.getId());
+        final boolean updated = underTest.update(CATEGORY, CATEGORY.getCategoryId());
 
         verify(provider).getWritableDb();
         assertThat(updated, equalTo(false));

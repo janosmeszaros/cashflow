@@ -137,7 +137,7 @@ public class EditStatementActivity extends RoboFragmentActivity {
         final String date = dateButton.getText().toString();
         final String note = notesText.getText().toString();
         final Category category = (Category) categorySpinner.getSelectedItem();
-        final String statementId = originalStatement.getId();
+        final String statementId = originalStatement.getStatementId();
 
         return Statement.builder(amountStr, date).note(note).type(type).statementId(statementId).category(category).build();
     }
@@ -179,7 +179,7 @@ public class EditStatementActivity extends RoboFragmentActivity {
                 if (isValuesChanged()) {
                     final Statement statement = createStatement();
 
-                    if (statementDAO.update(statement, originalStatement.getId())) {
+                    if (statementDAO.update(statement, originalStatement.getStatementId())) {
                         LOG.debug("Statement saved: " + statement.toString());
                         setResult(Activity.RESULT_OK);
                         finish();

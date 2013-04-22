@@ -11,7 +11,7 @@ import android.widget.SpinnerAdapter;
 
 import com.cashflow.R;
 import com.cashflow.activity.components.RecurringCheckBoxOnClickListener;
-import com.cashflow.constants.RecurringInterval;
+import com.cashflow.domain.RecurringInterval;
 import com.cashflow.domain.Statement;
 import com.cashflow.domain.StatementType;
 import com.google.inject.Inject;
@@ -75,7 +75,7 @@ public class EditIncomeActivity extends EditStatementActivity {
     protected Statement createStatement() {
         final Statement expense = super.createStatement();
         final Statement income = Statement.builder(expense.getAmount(), expense.getDate()).note(expense.getNote()).type(StatementType.Income)
-                .statementId(expense.getId()).category(expense.getCategory())
+                .statementId(expense.getStatementId()).category(expense.getCategory())
                 .recurringInterval((RecurringInterval) recurringSpinner.getSelectedItem()).build();
         return income;
     }

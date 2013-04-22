@@ -39,10 +39,10 @@ import com.cashflow.activity.testutil.ActivityModule;
 import com.cashflow.activity.testutil.EditStatementActivityProvider;
 import com.cashflow.category.activity.CreateCategoryActivity;
 import com.cashflow.category.database.AndroidCategoryDAO;
-import com.cashflow.constants.RecurringInterval;
 import com.cashflow.dao.CategoryDAO;
 import com.cashflow.dao.StatementDAO;
 import com.cashflow.domain.Category;
+import com.cashflow.domain.RecurringInterval;
 import com.cashflow.domain.Statement;
 import com.cashflow.statement.activity.EditStatementActivity.CreateCategoryOnClickListener;
 import com.cashflow.statement.activity.EditStatementActivity.SubmitButtonOnClickListener;
@@ -331,7 +331,7 @@ public class EditStatementActivityTest {
 
     private Intent setUpIntentData(final Statement statement) {
         final Intent intent = new Intent();
-        intent.putExtra(ID_EXTRA, statement.getId());
+        intent.putExtra(ID_EXTRA, statement.getStatementId());
         return intent;
     }
 

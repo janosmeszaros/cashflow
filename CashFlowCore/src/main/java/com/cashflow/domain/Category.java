@@ -18,7 +18,7 @@ public final class Category {
         this.name = builder.name;
     }
 
-    public String getId() {
+    public String getCategoryId() {
         return categoryId;
     }
 

@@ -172,7 +172,7 @@ public class ListStatementFragment extends RoboSherlockFragment implements OnChe
 
         final MatrixCursor cursor = new MatrixCursor(PROJECTION);
         for (final Statement statement : statementList) {
-            cursor.addRow(new String[] { statement.getId(), statement.getAmount(), statement.getCategory().getName(), statement.getDate(),
+            cursor.addRow(new String[] { statement.getStatementId(), statement.getAmount(), statement.getCategory().getName(), statement.getDate(),
                 statement.getNote(), statement.getRecurringInterval().toString() });
         }
 

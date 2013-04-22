@@ -27,10 +27,10 @@ import org.slf4j.LoggerFactory;
 import com.cashflow.R;
 import com.cashflow.activity.testutil.ActivityModule;
 import com.cashflow.activity.testutil.ListStatementActivityProvider;
-import com.cashflow.constants.RecurringInterval;
 import com.cashflow.dao.StatementDAO;
 import com.cashflow.database.DatabaseContracts.AbstractCategory;
 import com.cashflow.domain.Category;
+import com.cashflow.domain.RecurringInterval;
 import com.cashflow.domain.Statement;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 

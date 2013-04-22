@@ -34,11 +34,11 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.cashflow.constants.RecurringInterval;
 import com.cashflow.dao.StatementDAO;
 import com.cashflow.database.DatabaseContracts.AbstractCategory;
 import com.cashflow.database.SQLiteDbProvider;
 import com.cashflow.domain.Category;
+import com.cashflow.domain.RecurringInterval;
 import com.cashflow.domain.Statement;
 import com.cashflow.domain.StatementType;
 import com.cashflow.exceptions.IllegalStatementIdException;
@@ -135,9 +135,9 @@ public class AndroidStatementDAOTest {
 
     @Test
     public void testUpdateWhenStatementIsIncomeThenShouldUpdateAndReturnTrue() {
-        when(database.update(eq(TABLE_NAME), (ContentValues) anyObject(), eq(_ID + EQUALS), eq(new String[]{incomeStatement.getId()}))).thenReturn(1);
+        when(database.update(eq(TABLE_NAME), (ContentValues) anyObject(), eq(_ID + EQUALS), eq(new String[]{incomeStatement.getStatementId()}))).thenReturn(1);
 
-        final boolean updated = underTest.update(incomeStatement, incomeStatement.getId());
+        final boolean updated = underTest.update(incomeStatement, incomeStatement.getStatementId());
 
         verify(provider).getWritableDb();
         assertThat(updated, equalTo(true));
@@ -145,9 +145,9 @@ public class AndroidStatementDAOTest {
 
     @Test
     public void testUpdateWhenStatementIsExpenseThenShouldUpdateAndReturnTrue() {
-        when(database.update(eq(TABLE_NAME), (ContentValues) anyObject(), eq(_ID + EQUALS), eq(new String[]{incomeStatement.getId()}))).thenReturn(1);
+        when(database.update(eq(TABLE_NAME), (ContentValues) anyObject(), eq(_ID + EQUALS), eq(new String[]{incomeStatement.getStatementId()}))).thenReturn(1);
 
-        final boolean updated = underTest.update(incomeStatement, expenseStatement.getId());
+        final boolean updated = underTest.update(incomeStatement, expenseStatement.getStatementId());
 
         verify(provider).getWritableDb();
         assertThat(updated, equalTo(true));
@@ -155,10 +155,10 @@ public class AndroidStatementDAOTest {
 
     @Test
     public void testUpdateWhenStatementIsExpenseButSomethingHappensInInsertionThenShouldReturnFalse() {
-        when(database.update(eq(TABLE_NAME), (ContentValues) anyObject(), eq(_ID + EQUALS), eq(new String[]{incomeStatement.getId()})))
+        when(database.update(eq(TABLE_NAME), (ContentValues) anyObject(), eq(_ID + EQUALS), eq(new String[]{incomeStatement.getStatementId()})))
                 .thenReturn(-1);
 
-        final boolean updated = underTest.update(incomeStatement, expenseStatement.getId());
+        final boolean updated = underTest.update(incomeStatement, expenseStatement.getStatementId());
 
         verify(provider).getWritableDb();
         assertThat(updated, equalTo(false));

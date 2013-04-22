@@ -17,7 +17,7 @@ import android.widget.SpinnerAdapter;
 
 import com.cashflow.R;
 import com.cashflow.activity.components.RecurringCheckBoxOnClickListener;
-import com.cashflow.constants.RecurringInterval;
+import com.cashflow.domain.RecurringInterval;
 import com.cashflow.domain.Statement;
 import com.cashflow.domain.StatementType;
 import com.google.inject.Inject;

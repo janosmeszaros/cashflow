@@ -32,11 +32,11 @@ import com.cashflow.R;
 import com.cashflow.activity.components.DateButtonOnClickListener;
 import com.cashflow.activity.components.RecurringCheckBoxOnClickListener;
 import com.cashflow.category.activity.CreateCategoryActivity;
-import com.cashflow.constants.RecurringInterval;
 import com.cashflow.dao.BillDAO;
 import com.cashflow.dao.CategoryDAO;
 import com.cashflow.domain.Bill;
 import com.cashflow.domain.Category;
+import com.cashflow.domain.RecurringInterval;
 import com.google.inject.Inject;
 
 /**

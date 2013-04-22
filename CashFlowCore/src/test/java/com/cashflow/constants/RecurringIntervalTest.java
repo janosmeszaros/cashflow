@@ -6,6 +6,8 @@ import static org.hamcrest.Matchers.equalTo;
 import org.joda.time.DateTime;
 import org.junit.Test;
 
+import com.cashflow.domain.RecurringInterval;
+
 public class RecurringIntervalTest {
 
     private RecurringInterval underTest;

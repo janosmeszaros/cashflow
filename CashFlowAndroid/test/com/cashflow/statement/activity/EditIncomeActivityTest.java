@@ -36,10 +36,10 @@ import com.cashflow.R;
 import com.cashflow.activity.components.DateButtonOnClickListener;
 import com.cashflow.activity.testutil.ActivityModule;
 import com.cashflow.activity.testutil.EditStatementActivityProvider;
-import com.cashflow.constants.RecurringInterval;
 import com.cashflow.dao.CategoryDAO;
 import com.cashflow.dao.StatementDAO;
 import com.cashflow.domain.Category;
+import com.cashflow.domain.RecurringInterval;
 import com.cashflow.domain.Statement;
 import com.cashflow.service.Balance;
 import com.cashflow.statement.database.AndroidStatementDAO;
@@ -154,7 +154,7 @@ public class EditIncomeActivityTest {
 
         submit.performClick();
 
-        verify(statementDAO, times(1)).update(changedStatement, changedStatement.getId());
+        verify(statementDAO, times(1)).update(changedStatement, changedStatement.getStatementId());
         assertThat(shadowFragmentActivity.getResultCode(), equalTo(RESULT_OK));
         assertThat(shadowFragmentActivity.isFinishing(), equalTo(true));
     }
@@ -181,7 +181,7 @@ public class EditIncomeActivityTest {
 
         submit.performClick();
 
-        verify(statementDAO, times(1)).update(changedStatement, changedStatement.getId());
+        verify(statementDAO, times(1)).update(changedStatement, changedStatement.getStatementId());
         assertThat(shadowFragmentActivity.getResultCode(), equalTo(RESULT_OK));
         assertThat(shadowFragmentActivity.isFinishing(), equalTo(true));
     }
@@ -196,7 +196,7 @@ public class EditIncomeActivityTest {
 
         submit.performClick();
 
-        verify(statementDAO, times(1)).update(changedNoteStatement, changedNoteStatement.getId());
+        verify(statementDAO, times(1)).update(changedNoteStatement, changedNoteStatement.getStatementId());
         assertThat(shadowFragmentActivity.getResultCode(), equalTo(RESULT_OK));
         assertThat(shadowFragmentActivity.isFinishing(), equalTo(true));
     }
@@ -211,7 +211,7 @@ public class EditIncomeActivityTest {
 
         submit.performClick();
 
-        verify(statementDAO, times(1)).update(changedNoteStatement, changedNoteStatement.getId());
+        verify(statementDAO, times(1)).update(changedNoteStatement, changedNoteStatement.getStatementId());
         assertThat(ShadowToast.getTextOfLatestToast(), equalTo(underTest.getString(R.string.database_error)));
     }
 
@@ -246,7 +246,7 @@ public class EditIncomeActivityTest {
 
     private Intent setUpIntentData(final Statement statement) {
         final Intent intent = new Intent();
-        intent.putExtra(ID_EXTRA, statement.getId());
+        intent.putExtra(ID_EXTRA, statement.getStatementId());
         return intent;
     }
 
