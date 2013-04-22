@@ -1,4 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="tag" %>
 <%@ page session="false"%>
 
 <div class="container">
@@ -7,32 +8,12 @@
     <fieldset>
 
       <!-- Form Name -->
-      <legend>Add Bill</legend>
+      <legend><spring:message code="navbar.add_bill"/></legend>
 
-      <!-- Appended Input-->
-      <div class="control-group">
-        <label class="control-label">Amount:</label>
-        <div class="controls">
-          <div class="input-append">
-            <input id="amounttext" name="amounttext" class="span2"
-              placeholder="0.00" type="text" required=""> <span
-              class="add-on">HUF</span>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- Select Basic -->
-      <div class="control-group">
-        <label class="control-label">Category: </label>
-        <div class="controls">
-          <select id="selectbasic" name="selectbasic"
-            class="input-xlarge">
-            <option>Option one</option>
-            <option>Option two</option>
-          </select>
-        </div>
-      </div>
+      <tag:amount_row></tag:amount_row>
+      
+      <c:set var="category"> <spring:message code="label.category"/> </c:set>
+      <tag:category_row title="${category}"></tag:category_row>
 
       <!-- Button -->
       <div class="control-group">
@@ -70,14 +51,8 @@
         </div>
       </div>
 
-      <!-- Button -->
-      <div class="control-group">
-        <label class="control-label"></label>
-        <div class="controls">
-          <button id="submitbutton" name="submitbutton"
-            class="btn btn-success">Submit</button>
-        </div>
-      </div>
+      <c:set var="submit"> <spring:message code="label.submit"/> </c:set>
+      <tag:button title="${submit}"> </tag:button>
 
     </fieldset>
   </form>
