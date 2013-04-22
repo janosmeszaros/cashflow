@@ -2,12 +2,14 @@ package com.cashflow.dao.objects;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import com.cashflow.domain.RecurringInterval;
 
@@ -16,22 +18,23 @@ import com.cashflow.domain.RecurringInterval;
  * @author Janos_Gyula_Meszaros
  */
 @Entity
+@Table(name = "bill")
 public class BillEntity {
     @Id
     @GeneratedValue
-    private String billId;
+    private int billId;
     private String amount;
     private Date date;
     private Date payedDate;
     private Date deadlineDate;
     private String note;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private CategoryEntity category;
     private boolean payed;
     @Enumerated(EnumType.STRING)
     private RecurringInterval interval;
 
-    public void setBillId(final String billId) {
+    public void setBillId(final int billId) {
         this.billId = billId;
     }
 
@@ -67,7 +70,7 @@ public class BillEntity {
         this.interval = interval;
     }
 
-    public String getBillId() {
+    public int getBillId() {
         return billId;
     }
 

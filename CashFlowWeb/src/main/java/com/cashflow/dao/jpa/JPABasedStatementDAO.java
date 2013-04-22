@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.cashflow.dao.StatementDAO;
 import com.cashflow.dao.objects.StatementEntity;
@@ -40,6 +41,7 @@ public class JPABasedStatementDAO implements StatementDAO {
     }
 
     @Override
+    @Transactional
     public boolean save(final Statement statement) {
         Validate.notNull(statement);
 

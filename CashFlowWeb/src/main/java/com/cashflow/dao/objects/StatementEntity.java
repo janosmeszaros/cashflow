@@ -1,5 +1,6 @@
 package com.cashflow.dao.objects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -27,9 +28,9 @@ import com.cashflow.domain.StatementType;
 public class StatementEntity {
     @Id
     @GeneratedValue
-    private String statementId;
+    private int statementId;
     private String amount;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private CategoryEntity category;
     private String note;
     private String date;
@@ -38,7 +39,7 @@ public class StatementEntity {
     @Enumerated(EnumType.STRING)
     private RecurringInterval recurringInterval;
 
-    public void setStatementId(final String statementId) {
+    public void setStatementId(final int statementId) {
         this.statementId = statementId;
     }
 
@@ -66,7 +67,7 @@ public class StatementEntity {
         this.recurringInterval = recurringInterval;
     }
 
-    public String getStatementId() {
+    public int getStatementId() {
         return statementId;
     }
 

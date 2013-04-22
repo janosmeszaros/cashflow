@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -17,10 +18,11 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  * @author Janos_Gyula_Meszaros
  */
 @Entity
+@Table(name = "category")
 public class CategoryEntity {
     @Id
     @GeneratedValue
-    private String categoryId;
+    private int categoryId;
     private String name;
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<StatementEntity> statements;
@@ -35,7 +37,7 @@ public class CategoryEntity {
         this.bills = bills;
     }
 
-    public String getCategoryId() {
+    public int getCategoryId() {
         return categoryId;
     }
 
@@ -51,7 +53,7 @@ public class CategoryEntity {
         this.statements = statements;
     }
 
-    public void setCategoryId(final String categoryId) {
+    public void setCategoryId(final int categoryId) {
         this.categoryId = categoryId;
     }
 

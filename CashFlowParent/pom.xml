@@ -41,7 +41,8 @@
 		<joda-time.version>2.1</joda-time.version>
 		<actionbarsherlock.version>4.2.0</actionbarsherlock.version>
 		<roboguice-sherlock.version>1.5</roboguice-sherlock.version>
-		<spring.version>3.1.0.RELEASE</spring.version>
+		<spring.version>3.2.0.RELEASE</spring.version>
+		<postgres.version>9.1-901.jdbc4</postgres.version>
 	</properties>
 
 
@@ -165,6 +166,12 @@
 				<groupId>com.github.rtyley</groupId>
 				<artifactId>roboguice-sherlock</artifactId>
 				<version>${roboguice-sherlock.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>postgresql</groupId>
+				<artifactId>postgresql</artifactId>
+				<version>${postgres.version}</version>
 			</dependency>
 			<!-- Tests -->
 

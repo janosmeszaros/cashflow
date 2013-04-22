@@ -1,9 +1,11 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ page session="false"%>
 
+<c:url value="/add_statement" var="addUrl" />
 <div class="container">
 
-  <form class="form-horizontal">
+  <form:form class="form-horizontal" modelAttribute="statement" action="${addUrl}" method="post">
     <fieldset>
 
       <!-- Form Name -->
@@ -14,8 +16,8 @@
         <label class="control-label">Amount:</label>
         <div class="controls">
           <div class="input-append">
-            <input id="amounttext" name="amounttext" class="span2"
-              placeholder="0.00" type="text" required="required">
+            <form:input path="amount" id="amounttext" name="amounttext" class="span2"
+              placeholder="0.00" type="text" required="required" />
             <span class="add-on">HUF</span>
           </div>
 
@@ -41,8 +43,8 @@
           <!--           <button id="datebutton" name="datebutton" class="btn btn-info">2013.04.18</button> -->
           <div class="input-append date" id="datepicker" data-date="12-02-2013"
             data-date-format="dd-mm-yyyy">
-            <input class="span2" size="16" type="text"
-              value="12-02-2013"> <span class="add-on"><i
+            <form:input path="date" class="span2" size="16" type="text"
+              value="12-02-2013" /> <span class="add-on"><i
               class="icon-calendar"></i></span>
           </div>
         </div>
@@ -81,13 +83,13 @@
       <div class="control-group">
         <label class="control-label"></label>
         <div class="controls">
-          <button id="submitbutton" name="submitbutton"
-            class="btn btn-success">Submit</button>
+          <form:button id="submitbutton" name="submitbutton"
+            class="btn btn-success">Submit</form:button>
         </div>
       </div>
 
     </fieldset>
-  </form>
+  </form:form>
 
 
 </div>
