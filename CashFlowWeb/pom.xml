@@ -79,6 +79,12 @@
 			<scope>compile</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+		</dependency>
+
+
 		<!-- Spring Dependencies -->
 
 		<dependency>
