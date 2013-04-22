@@ -1,4 +1,4 @@
-package com.cashflow.constants;
+package com.cashflow.domain;
 
 import org.joda.time.DateTime;
 import org.joda.time.Period;
