@@ -1,6 +1,5 @@
 package com.cashflow.domain;
 
-import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
@@ -56,29 +55,40 @@ public final class Category {
      * @author Janos_Gyula_Meszaros
      */
     public static final class Builder {
-        private String categoryId;
-        private final String name;
+        private static final String DEFAULT_NAME = "uncategorized";
+        private String categoryId = "0";
+        private String name = DEFAULT_NAME;
 
         /**
-         * Constructor with mandatory parameters.
+         * Constructor with mandatory parameters. If empty then set to <code>DEFAULT_NAME</code>.
          * @param name
          *            name
          */
         private Builder(final String name) {
-            Validate.notEmpty(name);
+            if (validateName(name)) {
+                this.name = name;
+            }
+        }
 
-            this.name = name;
+        private boolean validateName(final String name) {
+            return name.isEmpty();
         }
 
         /**
-         * Set ID for category.
+         * Set ID for category if name is not default.
          * @param categoryId
          *            ID of {@link Category}.
          * @return {@link Builder}
          */
         public Builder categoryId(final String categoryId) {
-            this.categoryId = categoryId;
+            if (isNameNotDefault()) {
+                this.categoryId = categoryId;
+            }
             return this;
+        }
+
+        private boolean isNameNotDefault() {
+            return !DEFAULT_NAME.equals(name);
         }
 
         /**
