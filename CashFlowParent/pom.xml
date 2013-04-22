@@ -25,6 +25,7 @@
 		<android.support.version>r7</android.support.version>
 		<android.version>4.1.1.4</android.version>
 		<apache.commons.version>2.6</apache.commons.version>
+		<apache.commons.beanutils.version>1.8.3</apache.commons.beanutils.version>
 		<cobertura.version>1.9.2</cobertura.version>
 		<com.pivotallabs.robolectric.version>1.2</com.pivotallabs.robolectric.version>
 		<commons-collections.version>3.2.1</commons-collections.version>
@@ -42,7 +43,7 @@
 		<roboguice-sherlock.version>1.5</roboguice-sherlock.version>
 		<spring.version>3.1.0.RELEASE</spring.version>
 	</properties>
-	
+
 
 	<build>
 		<pluginManagement>
@@ -137,6 +138,11 @@
 				<groupId>commons-collections</groupId>
 				<artifactId>commons-collections</artifactId>
 				<version>${commons-collections.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-beanutils</groupId>
+				<artifactId>commons-beanutils</artifactId>
+				<version>${apache.commons.beanutils.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>joda-time</groupId>
