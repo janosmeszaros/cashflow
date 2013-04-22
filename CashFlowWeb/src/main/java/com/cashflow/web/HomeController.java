@@ -17,6 +17,8 @@ public class HomeController {
 
     /**
      * Selects the home page and populates the model with a message.
+     * @param model {@link Model}
+     * @return home
      */
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String home(final Model model) {
@@ -53,6 +55,7 @@ public class HomeController {
     public String addIncome(final Model model) {
         LOGGER.info("Register");
         model.addAttribute("controllerMessage", "Add Income:");
+        //        model.addAttribute("statement", Statement.class);
 
         return "add_statement";
     }

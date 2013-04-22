@@ -12,7 +12,7 @@
 <script src="${url}js/bootstrap.min.js"></script>
 <script src="${url}js/bootstrap-datepicker.js"></script>
 <script type="text/javascript">
-	$('#datepicker').datepicker()
+    $('#datepicker').datepicker();
 </script>
 </body>
 </html>
