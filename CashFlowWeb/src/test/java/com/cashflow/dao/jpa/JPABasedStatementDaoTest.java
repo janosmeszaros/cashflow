@@ -10,8 +10,8 @@ import static org.mockito.Mockito.when;
 import org.dozer.DozerBeanMapper;
 import org.dozer.Mapper;
 import org.hibernate.HibernateException;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.classic.Session;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -58,7 +58,7 @@ public class JPABasedStatementDaoTest {
 
         final boolean isSaved = underTest.save(incomeStatement);
 
-        verify(session).save(statementEntity);
+        verify(session).persist(statementEntity);
         assertThat(isSaved, equalTo(true));
     }
 
@@ -69,7 +69,7 @@ public class JPABasedStatementDaoTest {
 
     @Test
     public void testSaveWhenEntityAlreadyExistsThenShouldReturnFalse() {
-        doThrow(HibernateException.class).when(session).save(anyObject());
+        doThrow(HibernateException.class).when(session).persist(anyObject());
 
         final boolean isSaved = underTest.save(incomeStatement);
 
@@ -109,7 +109,7 @@ public class JPABasedStatementDaoTest {
         final Category category = statement.getCategory();
         final CategoryEntity categoryEntity = new CategoryEntity();
         categoryEntity.setName(category.getName());
-        categoryEntity.setCategoryId(category.getCategoryId());
+        categoryEntity.setCategoryId(Integer.parseInt(category.getCategoryId()));
 
         final StatementEntity entity = new StatementEntity();
         entity.setAmount(statement.getAmount());
@@ -117,7 +117,7 @@ public class JPABasedStatementDaoTest {
         entity.setDate(statement.getDate());
         entity.setNote(statement.getNote());
         entity.setRecurringInterval(statement.getRecurringInterval());
-        entity.setStatementId(statement.getStatementId());
+        entity.setStatementId(Integer.parseInt(statement.getStatementId()));
         entity.setType(statement.getType());
 
         return entity;

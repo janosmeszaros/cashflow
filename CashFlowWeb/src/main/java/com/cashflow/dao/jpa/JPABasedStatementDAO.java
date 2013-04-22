@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.cashflow.dao.StatementDAO;
 import com.cashflow.dao.objects.StatementEntity;
 import com.cashflow.domain.Statement;
+import com.cashflow.domain.StatementType;
 
 /**
  * Jpa based implementation for {@link StatementDAO}.
@@ -22,6 +23,8 @@ import com.cashflow.domain.Statement;
  */
 @Component
 public class JPABasedStatementDAO implements StatementDAO {
+    private static final String TYPE = "type";
+    private static final String GET_STATEMENTS_BY_TYPE = "Statement.getStatementsByType";
     private static final Logger LOGGER = LoggerFactory.getLogger(JPABasedStatementDAO.class);
     private final SessionFactory sessionFactory;
     private final Mapper mapper;
@@ -65,6 +68,7 @@ public class JPABasedStatementDAO implements StatementDAO {
     }
 
     @Override
+    @Transactional
     public boolean update(final Statement statement, final String statementId) {
         Validate.notNull(statement);
         Validate.notEmpty(statementId);
@@ -86,32 +90,39 @@ public class JPABasedStatementDAO implements StatementDAO {
 
     @SuppressWarnings("unchecked")
     @Override
+    @Transactional
     public List<Statement> getAllStatements() {
         return sessionFactory.getCurrentSession().getNamedQuery("Statement.getAllStatements").list();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
+    @Transactional
     public List<Statement> getExpenses() {
-        // TODO Auto-generated method stub
-        return null;
+        return sessionFactory.getCurrentSession().getNamedQuery(GET_STATEMENTS_BY_TYPE)
+                .setString(TYPE, StatementType.Expense.toString()).list();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
+    @Transactional
     public List<Statement> getIncomes() {
-        // TODO Auto-generated method stub
-        return null;
+        return sessionFactory.getCurrentSession().getNamedQuery(GET_STATEMENTS_BY_TYPE)
+                .setString(TYPE, StatementType.Income.toString()).list();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
+    @Transactional
     public List<Statement> getRecurringIncomes() {
-        // TODO Auto-generated method stub
-        return null;
+        return sessionFactory.getCurrentSession().getNamedQuery("Statement.getRecurringStatements").list();
     }
 
     @Override
+    @Transactional
     public Statement getStatementById(final String statementId) {
-        // TODO Auto-generated method stub
-        return null;
+        return (Statement) sessionFactory.getCurrentSession().getNamedQuery("Statement.getStatementsById")
+                .setInteger("id", Integer.parseInt(statementId)).uniqueResult();
     }
 
 }

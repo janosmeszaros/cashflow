@@ -24,7 +24,10 @@ import com.cashflow.domain.StatementType;
  */
 @Entity
 @Table(name = "statement")
-@NamedNativeQueries({ @NamedNativeQuery(name = "Statement.getAllStatements", query = "SELECT * FROM statement") })
+@NamedNativeQueries({ @NamedNativeQuery(name = "Statement.getAllStatements", query = "SELECT * FROM statement"),
+    @NamedNativeQuery(name = "Statement.getStatementsByType", query = "SELECT * FROM statement WHERE type=:type"),
+    @NamedNativeQuery(name = "Statement.getStatementsById", query = "SELECT * FROM statement WHERE statementId=:id"),
+    @NamedNativeQuery(name = "Statement.getRecurringStatements", query = "SELECT * FROM statement WHERE NOT(recurringInterval=NONE)") })
 public class StatementEntity {
     @Id
     @GeneratedValue
