@@ -31,9 +31,9 @@ import com.cashflow.domain.StatementType;
 public class StatementEntity {
     @Id
     @GeneratedValue
-    private int statementId;
+    private long statementId;
     private String amount;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.REMOVE)
     private CategoryEntity category;
     private String note;
     private String date;
@@ -42,7 +42,7 @@ public class StatementEntity {
     @Enumerated(EnumType.STRING)
     private RecurringInterval recurringInterval;
 
-    public void setStatementId(final int statementId) {
+    public void setStatementId(final long statementId) {
         this.statementId = statementId;
     }
 
@@ -70,7 +70,7 @@ public class StatementEntity {
         this.recurringInterval = recurringInterval;
     }
 
-    public int getStatementId() {
+    public long getStatementId() {
         return statementId;
     }
 

@@ -74,7 +74,7 @@
                   <li><a href="add_bill"> <spring:message code="navbar.add_bill"/> </a></li>
                   <li class="divider"></li>
                   <li class="nav-header"> <spring:message code="navbar.others"/> </li>
-                  <li><a href="#"> <spring:message code="navbar.add_category"/> </a></li>
+                  <li><a href="add_category"> <spring:message code="navbar.add_category"/> </a></li>
                 </ul>
               </li>
             </ul>

@@ -104,7 +104,7 @@ public class GenericHibernateDAO<T> {
     @SuppressWarnings("unchecked")
     @Transactional
     public T findById(final long entityId) {
-        return (T) sessionFactory.getCurrentSession().load(persistentClass, entityId);
+        return (T) sessionFactory.getCurrentSession().get(persistentClass, entityId);
 
     }
 

@@ -69,7 +69,13 @@ public class JPABasedCategoryDAO implements CategoryDAO {
     }
 
     private Category convertToCategory(final CategoryEntity entity) {
-        return mapper.map(entity, Category.class);
+        return Category.builder(entity.getName()).categoryId(String.valueOf(entity.getCategoryId())).build();
+    }
+
+    @Override
+    public Category getCategoryById(final String categoryid) {
+        final CategoryEntity categoryEntity = dao.findById(Long.valueOf(categoryid));
+        return convertToCategory(categoryEntity);
     }
 
 }

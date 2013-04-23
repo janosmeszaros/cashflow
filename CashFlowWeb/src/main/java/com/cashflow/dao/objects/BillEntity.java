@@ -22,19 +22,19 @@ import com.cashflow.domain.RecurringInterval;
 public class BillEntity {
     @Id
     @GeneratedValue
-    private int billId;
+    private long billId;
     private String amount;
     private Date date;
     private Date payedDate;
     private Date deadlineDate;
     private String note;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.REMOVE)
     private CategoryEntity category;
     private boolean payed;
     @Enumerated(EnumType.STRING)
     private RecurringInterval interval;
 
-    public void setBillId(final int billId) {
+    public void setBillId(final long billId) {
         this.billId = billId;
     }
 
@@ -70,7 +70,7 @@ public class BillEntity {
         this.interval = interval;
     }
 
-    public int getBillId() {
+    public long getBillId() {
         return billId;
     }
 

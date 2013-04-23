@@ -22,7 +22,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 public class CategoryEntity {
     @Id
     @GeneratedValue
-    private int categoryId;
+    private long categoryId;
     private String name;
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<StatementEntity> statements;
@@ -37,7 +37,7 @@ public class CategoryEntity {
         this.bills = bills;
     }
 
-    public int getCategoryId() {
+    public long getCategoryId() {
         return categoryId;
     }
 
@@ -53,7 +53,7 @@ public class CategoryEntity {
         this.statements = statements;
     }
 
-    public void setCategoryId(final int categoryId) {
+    public void setCategoryId(final long categoryId) {
         this.categoryId = categoryId;
     }
 

@@ -11,6 +11,6 @@
 <div class="control-group">
   <label class="control-label">${categoryLabel}</label>
   <div class="controls">
-    <form:select path="category" itemLabel="name" items="${categories}" id="selectbasic" name="selectbasic" class="input-xlarge" />
+    <form:select path="category" itemLabel="name" items="${categories}" id="selectbasic" name="selectbasic" itemValue="categoryId" class="input-xlarge" />
   </div>
 </div>
