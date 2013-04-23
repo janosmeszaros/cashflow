@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 import com.cashflow.dao.CategoryDAO;
 import com.cashflow.dao.objects.CategoryEntity;
@@ -14,8 +16,8 @@ import com.cashflow.domain.Category;
  * Hibernate based category dao implementation.
  * @author Janos_Gyula_Meszaros
  */
+@Component
 public class JPABasedCategoryDAO implements CategoryDAO {
-
     private final Mapper mapper;
     private final GenericHibernateDAO<CategoryEntity> dao;
 
@@ -27,7 +29,7 @@ public class JPABasedCategoryDAO implements CategoryDAO {
      *            {@link Mapper}
      */
     @Autowired
-    public JPABasedCategoryDAO(final GenericHibernateDAO<CategoryEntity> dao, final Mapper mapper) {
+    public JPABasedCategoryDAO(@Qualifier("categoryGenericDAO") final GenericHibernateDAO<CategoryEntity> dao, final Mapper mapper) {
         super();
         this.dao = dao;
         this.mapper = mapper;

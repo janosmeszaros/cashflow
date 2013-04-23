@@ -8,6 +8,7 @@ import org.dozer.Mapper;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.SimpleExpression;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.cashflow.dao.StatementDAO;
@@ -33,7 +34,7 @@ public class JPABasedStatementDAO implements StatementDAO {
      *            dao.
      */
     @Autowired
-    public JPABasedStatementDAO(final Mapper mapper, final GenericHibernateDAO<StatementEntity> dao) {
+    public JPABasedStatementDAO(final Mapper mapper, @Qualifier("statementGenericDAO") final GenericHibernateDAO<StatementEntity> dao) {
         super();
         this.mapper = mapper;
         this.dao = dao;

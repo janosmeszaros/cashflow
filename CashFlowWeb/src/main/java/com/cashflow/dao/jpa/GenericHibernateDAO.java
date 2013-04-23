@@ -8,7 +8,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Criterion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -19,9 +18,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class GenericHibernateDAO<T> {
     private static final Logger LOGGER = LoggerFactory.getLogger(GenericHibernateDAO.class);
 
-    private final SessionFactory sessionFactory;
+    private SessionFactory sessionFactory;
+    private Class<T> persistentClass;
 
-    private final Class<T> persistentClass;
+    /**
+     * Default constructor. Needed because spring aop.
+     */
+    public GenericHibernateDAO() {
+    }
 
     /**
      * Constructor.
@@ -30,7 +34,6 @@ public class GenericHibernateDAO<T> {
      * @param persistentClass
      *            class to persist
      */
-    @Autowired
     public GenericHibernateDAO(final Class<T> persistentClass, final SessionFactory sessionFactory) {
         super();
         this.persistentClass = persistentClass;
