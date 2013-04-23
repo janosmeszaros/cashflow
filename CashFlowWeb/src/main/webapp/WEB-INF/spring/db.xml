@@ -48,7 +48,8 @@
 	<bean
 		class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
 		
-	<bean class="com.cashflow.dao.jpa.GenericHibernateDAO" c:persistentClass="com.cashflow.dao.objects.CategoryEntity" c:sessionFactory-ref="sessionFactory" autowire="byName" id="categoryGenericDAO"/>
-	<bean class="com.cashflow.dao.jpa.GenericHibernateDAO" c:persistentClass="com.cashflow.dao.objects.StatementEntity" c:sessionFactory-ref="sessionFactory" autowire="byName" id="statementGenericDAO"/>
+	<bean class="com.cashflow.dao.jpa.GenericHibernateDAO" c:persistentClass="com.cashflow.dao.objects.CategoryEntity" c:sessionFactory-ref="sessionFactory"  id="categoryGenericDAO"/>
+	<bean class="com.cashflow.dao.jpa.GenericHibernateDAO" c:persistentClass="com.cashflow.dao.objects.StatementEntity" c:sessionFactory-ref="sessionFactory" id="statementGenericDAO"/>
+	<bean class="com.cashflow.dao.jpa.GenericHibernateDAO" c:persistentClass="com.cashflow.dao.objects.BillEntity" c:sessionFactory-ref="sessionFactory" id="billGenericDAO"/>
 
 </beans>
