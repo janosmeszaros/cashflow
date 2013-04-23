@@ -1,12 +1,18 @@
 package com.cashflow.web;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.cashflow.web.dto.BillDTO;
+import com.cashflow.web.dto.CategoryDTO;
 import com.cashflow.web.dto.StatementDTO;
 
 /**
@@ -59,12 +65,46 @@ public class HomeController {
      * @param model {@link Model}
      * @return add_statement
      */
-    @RequestMapping(value = "/add_statement", method = RequestMethod.GET)
+    @RequestMapping(value = "/add_income", method = RequestMethod.GET)
     public String addIncome(final Model model) {
         LOGGER.info("Register");
         model.addAttribute("statement", new StatementDTO());
+        model.addAttribute("is_income", true);
+        final List<CategoryDTO> list = new ArrayList<CategoryDTO>();
+        final CategoryDTO category = new CategoryDTO();
+        category.setCategoryId("0");
+        category.setName("cate");
+        list.add(category);
+        model.addAttribute("categories", list);
 
         return "add_statement";
+    }
+
+    /**
+     * Selects the add_statement page.
+     * @param model {@link Model}
+     * @return add_statement
+     */
+    @RequestMapping(value = "/add_expense", method = RequestMethod.GET)
+    public String addExpense(final Model model) {
+        LOGGER.info("Register");
+        model.addAttribute("statement", new StatementDTO());
+        model.addAttribute("is_income", false);
+
+        return "add_statement";
+    }
+
+    /**
+     * Selects the add_statement page.
+     * @param statement {@link StatementDTO}
+     * @param model {@link Model}
+     * @return add_statement
+     */
+    @RequestMapping(value = "/add_statement", method = RequestMethod.POST)
+    public String addStatement(@RequestParam final StatementDTO statement, final Model model) {
+        LOGGER.debug("Persist statement: " + statement.toString());
+
+        return "redirect:/";
     }
 
     /**
@@ -75,7 +115,7 @@ public class HomeController {
     @RequestMapping(value = "/add_bill", method = RequestMethod.GET)
     public String addBill(final Model model) {
         LOGGER.info("Register");
-        model.addAttribute("controllerMessage", "Add Income:");
+        model.addAttribute("bill", new BillDTO());
 
         return "add_bill";
     }

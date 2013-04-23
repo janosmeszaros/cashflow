@@ -10,7 +10,6 @@
 
 <html lang="en">
   <head>
-    <meta charset="utf-8">
     <title>CashFlow</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -70,8 +69,8 @@
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><spring:message code="navbar.actions"/><b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                  <li><a href="add_statement"> <spring:message code="navbar.add_income"/> </a></li>
-                  <li><a href="add_statement"> <spring:message code="navbar.add_expense"/> </a></li>
+                  <li><a href="add_income"> <spring:message code="navbar.add_income"/> </a></li>
+                  <li><a href="add_expense"> <spring:message code="navbar.add_expense"/> </a></li>
                   <li><a href="add_bill"> <spring:message code="navbar.add_bill"/> </a></li>
                   <li class="divider"></li>
                   <li class="nav-header"> <spring:message code="navbar.others"/> </li>
