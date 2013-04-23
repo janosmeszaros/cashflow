@@ -1,92 +1,47 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="tag"%>
 <%@ page session="false"%>
 
 <c:url value="/add_statement" var="addUrl" />
 <div class="container">
 
-  <form:form class="form-horizontal" modelAttribute="statement" action="${addUrl}" method="post">
+  <form:form class="form-horizontal" modelAttribute="statement"
+    action="${addUrl}" method="post">
     <fieldset>
 
-      <!-- Form Name -->
-      <legend>Add Income</legend>
+      <c:choose>
+        <c:when test="${is_income}">
+          <legend>
+            <spring:message code="navbar.add_income" />
+          </legend>
+        </c:when>
+        <c:otherwise>
+          <legend>
+            <spring:message code="navbar.add_expense" />
+          </legend>
+        </c:otherwise>
+      </c:choose>
 
-      <!-- Appended Input-->
-      <div class="control-group">
-        <label class="control-label">Amount:</label>
-        <div class="controls">
-          <div class="input-append">
-            <form:input path="amount" id="amounttext" name="amounttext" class="span2"
-              placeholder="0.00" type="text" required="required" />
-            <span class="add-on">HUF</span>
-          </div>
+      <tag:amount_row currency="huf"></tag:amount_row>
 
-        </div>
-      </div>
+      <tag:category_row></tag:category_row>
 
-      <!-- Select Basic -->
-      <div class="control-group">
-        <label class="control-label">Category: </label>
-        <div class="controls">
-          <select id="selectbasic" name="selectbasic"
-            class="input-xlarge">
-            <option>Option one</option>
-            <option>Option two</option>
-          </select>
-        </div>
-      </div>
+      <c:set var="dateLabel">
+        <spring:message code="label.date" />
+      </c:set>
+      <tag:datepicker path="date" title="${dateLabel}"></tag:datepicker>
 
-      <!-- Button -->
-      <div class="control-group">
-        <label class="control-label">Date:</label>
-        <div class="controls">
-          <!--           <button id="datebutton" name="datebutton" class="btn btn-info">2013.04.18</button> -->
-          <div class="input-append date" id="datepicker" data-date="12-02-2013"
-            data-date-format="dd-mm-yyyy">
-            <form:input path="date" class="span2" size="16" type="text"
-              value="12-02-2013" /> <span class="add-on"><i
-              class="icon-calendar"></i></span>
-          </div>
-        </div>
-      </div>
+      <tag:textarea></tag:textarea>
 
 
-      <!-- Textarea -->
-      <div class="control-group">
-        <label class="control-label">Notes:</label>
-        <div class="controls">
-          <textarea id="notestextarea" name="notestextarea"></textarea>
-        </div>
-      </div>
+      <c:if test="${is_income}">
+        <tag:recurring_selector></tag:recurring_selector>
+      </c:if>
 
-      <!-- Multiple Radios (inline) -->
-      <div class="control-group">
-        <label class="control-label">Recurring type</label>
-        <div class="controls">
-          <label class="radio inline"> <input type="radio"
-            name="radios" value="None" checked="checked"> None
-          </label> <label class="radio inline"> <input type="radio"
-            name="radios" value="Daily"> Daily
-          </label> <label class="radio inline"> <input type="radio"
-            name="radios" value="Weekly"> Weekly
-          </label> <label class="radio inline"> <input type="radio"
-            name="radios" value="Biweekly"> Biweekly
-          </label> <label class="radio inline"> <input type="radio"
-            name="radios" value="Monthly"> Monthly
-          </label> <label class="radio inline"> <input type="radio"
-            name="radios" value="Annually"> Annually
-          </label>
-        </div>
-      </div>
 
-      <!-- Button -->
-      <div class="control-group">
-        <label class="control-label"></label>
-        <div class="controls">
-          <form:button id="submitbutton" name="submitbutton"
-            class="btn btn-success">Submit</form:button>
-        </div>
-      </div>
+      <tag:submit_button />
 
     </fieldset>
   </form:form>

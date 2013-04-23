@@ -1,5 +1,7 @@
 package com.cashflow.web.dto;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import com.cashflow.domain.RecurringInterval;
 import com.cashflow.domain.Statement;
 import com.cashflow.domain.StatementType;
@@ -15,15 +17,15 @@ public class StatementDTO {
     private String note;
     private String date;
     private StatementType type;
-    private RecurringInterval recurringInterval;
+    private RecurringInterval interval;
 
     /**
      * Convert DTO to statement.
      * @return {@link Statement}
      */
     public Statement convert() {
-        return Statement.builder(amount, date).category(category.convert()).note(note).recurringInterval(recurringInterval)
-                .statementId(statementId).type(type).build();
+        return Statement.builder(amount, date).category(category.convert()).note(note).recurringInterval(interval).statementId(statementId)
+                .type(type).build();
     }
 
     public String getStatementId() {
@@ -74,11 +76,17 @@ public class StatementDTO {
         this.type = type;
     }
 
-    public RecurringInterval getRecurringInterval() {
-        return recurringInterval;
+    public RecurringInterval getInterval() {
+        return interval;
     }
 
-    public void setRecurringInterval(final RecurringInterval recurringInterval) {
-        this.recurringInterval = recurringInterval;
+    public void setInterval(final RecurringInterval interval) {
+        this.interval = interval;
     }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
+    }
+
 }

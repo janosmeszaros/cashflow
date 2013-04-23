@@ -1,86 +1,44 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="tag"%>
 <%@ page session="false"%>
 
 <div class="container">
 
-  <form class="form-horizontal">
+  <form:form modelAttribute="bill" class="form-horizontal">
     <fieldset>
 
       <!-- Form Name -->
-      <legend>Add Bill</legend>
+      <legend>
+        <spring:message code="navbar.add_bill" />
+      </legend>
 
-      <!-- Appended Input-->
-      <div class="control-group">
-        <label class="control-label">Amount:</label>
-        <div class="controls">
-          <div class="input-append">
-            <input id="amounttext" name="amounttext" class="span2"
-              placeholder="0.00" type="text" required=""> <span
-              class="add-on">HUF</span>
-          </div>
+      <tag:amount_row currency="huf"></tag:amount_row>
 
-        </div>
-      </div>
+      <c:set var="category">
+        <spring:message code="label.category" />
+      </c:set>
 
-      <!-- Select Basic -->
-      <div class="control-group">
-        <label class="control-label">Category: </label>
-        <div class="controls">
-          <select id="selectbasic" name="selectbasic"
-            class="input-xlarge">
-            <option>Option one</option>
-            <option>Option two</option>
-          </select>
-        </div>
-      </div>
+      <tag:category_row></tag:category_row>
 
-      <!-- Button -->
-      <div class="control-group">
-        <label class="control-label">Deadline:</label>
-        <div class="controls">
-          <button id="datebutton" name="datebutton" class="btn btn-info">2013.04.18</button>
-        </div>
-      </div>
 
-      <!-- Textarea -->
-      <div class="control-group">
-        <label class="control-label">Notes:</label>
-        <div class="controls">
-          <textarea id="notestextarea" name="notestextarea"></textarea>
-        </div>
-      </div>
+      <c:set var="deadline">
+        <spring:message code="label.deadline" />
+      </c:set>
+      <tag:datepicker path="deadlineDate" title="${deadline}"></tag:datepicker>
 
-      <!-- Multiple Radios (inline) -->
-      <div class="control-group">
-        <label class="control-label">Recurring type</label>
-        <div class="controls">
-          <label class="radio inline"> <input type="radio"
-            name="radios" value="None" checked="checked"> None
-          </label> <label class="radio inline"> <input type="radio"
-            name="radios" value="Daily"> Daily
-          </label> <label class="radio inline"> <input type="radio"
-            name="radios" value="Weekly"> Weekly
-          </label> <label class="radio inline"> <input type="radio"
-            name="radios" value="Biweekly"> Biweekly
-          </label> <label class="radio inline"> <input type="radio"
-            name="radios" value="Monthly"> Monthly
-          </label> <label class="radio inline"> <input type="radio"
-            name="radios" value="Annually"> Annually
-          </label>
-        </div>
-      </div>
+      <tag:textarea></tag:textarea>
 
-      <!-- Button -->
-      <div class="control-group">
-        <label class="control-label"></label>
-        <div class="controls">
-          <button id="submitbutton" name="submitbutton"
-            class="btn btn-success">Submit</button>
-        </div>
-      </div>
+      <tag:recurring_selector></tag:recurring_selector>
+
+      <c:set var="submit">
+        <spring:message code="label.submit" />
+      </c:set>
+
+      <tag:submit_button />
 
     </fieldset>
-  </form>
+  </form:form>
 
 
 </div>

@@ -41,8 +41,8 @@ public class JPABasedStatementDaoTest {
     private JPABasedStatementDAO underTest;
     private final Mapper mapper = new DozerBeanMapper();
     private final Statement incomeStatement = Statement.builder(AMOUNT_STR, DATE_STR).note(NOTE).type(StatementType.Income)
-            .category(Category.builder(CATEGORY_NAME).categoryId(CATEGORY_ID).build())
-            .recurringInterval(RecurringInterval.valueOf(INTERVAL_STR)).statementId(ID_STR).build();
+            .category(Category.builder(CATEGORY_NAME).categoryId(CATEGORY_ID).build()).recurringInterval(RecurringInterval.valueOf(INTERVAL_STR))
+            .statementId(ID_STR).build();
 
     @Before
     public void setUp() {
