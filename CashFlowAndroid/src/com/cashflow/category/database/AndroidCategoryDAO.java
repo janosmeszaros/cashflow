@@ -119,4 +119,10 @@ public class AndroidCategoryDAO implements CategoryDAO {
         }
         return result;
     }
+
+    @Override
+    public Category getCategoryById(final String categoryid) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

@@ -71,7 +71,7 @@ public final class Category {
         }
 
         private boolean validateName(final String name) {
-            return name.isEmpty();
+            return !name.isEmpty();
         }
 
         /**

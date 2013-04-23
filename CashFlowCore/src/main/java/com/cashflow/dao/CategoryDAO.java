@@ -34,4 +34,12 @@ public interface CategoryDAO {
      */
     List<Category> getAllCategories();
 
+    /**
+     * Get a category for the given id.
+     * @param categoryid
+     *            id
+     * @return {@link Category}
+     */
+    Category getCategoryById(String categoryid);
+
 }
