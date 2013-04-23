@@ -3,15 +3,11 @@ package com.cashflow.dao.jpa;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Matchers.anyObject;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.dozer.DozerBeanMapper;
 import org.dozer.Mapper;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -34,31 +30,30 @@ public class JPABasedStatementDaoTest {
     private static final String INTERVAL_STR = "daily";
 
     @Mock
-    private SessionFactory sessionFactory;
-    @Mock
-    private Session session;
+    private GenericHibernateDAO<StatementEntity> dao;
 
     private JPABasedStatementDAO underTest;
     private final Mapper mapper = new DozerBeanMapper();
     private final Statement incomeStatement = Statement.builder(AMOUNT_STR, DATE_STR).note(NOTE).type(StatementType.Income)
-            .category(Category.builder(CATEGORY_NAME).categoryId(CATEGORY_ID).build()).recurringInterval(RecurringInterval.valueOf(INTERVAL_STR))
+            .category(Category.builder(CATEGORY_NAME).categoryId(CATEGORY_ID).build())
+            .recurringInterval(RecurringInterval.valueOf(INTERVAL_STR))
             .statementId(ID_STR).build();
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        when(sessionFactory.getCurrentSession()).thenReturn(session);
-        underTest = new JPABasedStatementDAO(sessionFactory, mapper);
+        underTest = new JPABasedStatementDAO(mapper, dao);
     }
 
     @Test
     public void testSaveWhenStatementIsOkThenShouldConvertToEntityThenSave() {
+        when(dao.persist((StatementEntity) anyObject())).thenReturn(true);
         final StatementEntity statementEntity = createStatementEntity(incomeStatement);
 
         final boolean isSaved = underTest.save(incomeStatement);
 
-        verify(session).persist(statementEntity);
+        verify(dao).persist(statementEntity);
         assertThat(isSaved, equalTo(true));
     }
 
@@ -69,7 +64,7 @@ public class JPABasedStatementDaoTest {
 
     @Test
     public void testSaveWhenEntityAlreadyExistsThenShouldReturnFalse() {
-        doThrow(HibernateException.class).when(session).persist(anyObject());
+        when(dao.persist((StatementEntity) anyObject())).thenReturn(false);
 
         final boolean isSaved = underTest.save(incomeStatement);
 
@@ -88,17 +83,18 @@ public class JPABasedStatementDaoTest {
 
     @Test
     public void testUpdateWhenStatementIsOkThenShouldUpdateStatement() {
+        when(dao.merge((StatementEntity) anyObject())).thenReturn(true);
         final StatementEntity statementEntity = createStatementEntity(incomeStatement);
 
         final boolean isUpdated = underTest.update(incomeStatement, incomeStatement.getStatementId());
 
-        verify(session).merge(statementEntity);
+        verify(dao).merge(statementEntity);
         assertThat(isUpdated, equalTo(true));
     }
 
     @Test
     public void testUpdateWhenStatementIsOkButExceptionIsOccuredDuringSaveingThenShouldReturnFalse() {
-        doThrow(HibernateException.class).when(session).merge(anyObject());
+        when(dao.merge((StatementEntity) anyObject())).thenReturn(false);
 
         final boolean isUpdated = underTest.update(incomeStatement, incomeStatement.getStatementId());
 
