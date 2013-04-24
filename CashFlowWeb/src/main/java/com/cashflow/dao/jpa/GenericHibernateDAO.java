@@ -2,8 +2,10 @@ package com.cashflow.dao.jpa;
 
 import java.util.List;
 
+import org.apache.commons.lang.Validate;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Criterion;
 import org.slf4j.Logger;
@@ -35,7 +37,9 @@ public class GenericHibernateDAO<T> {
      *            class to persist
      */
     public GenericHibernateDAO(final Class<T> persistentClass, final SessionFactory sessionFactory) {
-        super();
+        Validate.notNull(persistentClass);
+        Validate.notNull(sessionFactory);
+
         this.persistentClass = persistentClass;
         this.sessionFactory = sessionFactory;
     }
@@ -48,12 +52,14 @@ public class GenericHibernateDAO<T> {
      */
     @Transactional
     public boolean persist(final T entity) {
-        boolean isSuccess = false;
+        Validate.notNull(entity);
+
+        boolean isSuccess = true;
         try {
-            sessionFactory.getCurrentSession().persist(entity);
-            isSuccess = true;
+            getSession().persist(entity);
         } catch (final HibernateException e) {
             LOGGER.error("An exception occured during the operations. Exception message: " + e.getMessage());
+            isSuccess = false;
         }
         return isSuccess;
     }
@@ -66,12 +72,14 @@ public class GenericHibernateDAO<T> {
      */
     @Transactional
     public boolean merge(final T entity) {
-        boolean isSuccess = false;
+        Validate.notNull(entity);
+
+        boolean isSuccess = true;
         try {
-            sessionFactory.getCurrentSession().merge(entity);
-            isSuccess = true;
+            getSession().merge(entity);
         } catch (final HibernateException e) {
             LOGGER.error("An exception occured during the operations. Exception message: " + e.getMessage());
+            isSuccess = false;
         }
         return isSuccess;
     }
@@ -85,7 +93,7 @@ public class GenericHibernateDAO<T> {
     @Transactional
     @SuppressWarnings("unchecked")
     public List<T> findByCriteria(final Criterion... criterion) {
-        final Criteria crit = sessionFactory.getCurrentSession().createCriteria(persistentClass);
+        final Criteria crit = getSession().createCriteria(persistentClass);
         if (criterion != null) {
             for (final Criterion c : criterion) {
                 crit.add(c);
@@ -104,8 +112,12 @@ public class GenericHibernateDAO<T> {
     @SuppressWarnings("unchecked")
     @Transactional
     public T findById(final long entityId) {
-        return (T) sessionFactory.getCurrentSession().get(persistentClass, entityId);
+        return (T) getSession().get(persistentClass, entityId);
 
+    }
+
+    private Session getSession() {
+        return sessionFactory.getCurrentSession();
     }
 
 }

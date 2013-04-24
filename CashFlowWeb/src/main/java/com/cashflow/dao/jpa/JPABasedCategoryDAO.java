@@ -3,6 +3,7 @@ package com.cashflow.dao.jpa;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.Validate;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -29,8 +30,10 @@ public class JPABasedCategoryDAO implements CategoryDAO {
      *            {@link Mapper}
      */
     @Autowired
-    public JPABasedCategoryDAO(@Qualifier("categoryGenericDAO") final GenericHibernateDAO<CategoryEntity> dao, final Mapper mapper) {
-        super();
+    public JPABasedCategoryDAO(final Mapper mapper, @Qualifier("categoryGenericDAO") final GenericHibernateDAO<CategoryEntity> dao) {
+        Validate.notNull(mapper);
+        Validate.notNull(dao);
+
         this.dao = dao;
         this.mapper = mapper;
     }

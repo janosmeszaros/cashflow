@@ -3,6 +3,7 @@ package com.cashflow.dao.jpa;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.Validate;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component;
 import com.cashflow.dao.BillDAO;
 import com.cashflow.dao.objects.BillEntity;
 import com.cashflow.domain.Bill;
+import com.cashflow.domain.Category;
 
 /**
  * Hibernate based implementation for bill dao interface.
@@ -30,7 +32,9 @@ public class JPABasedBillDAO implements BillDAO {
      */
     @Autowired
     public JPABasedBillDAO(final Mapper mapper, @Qualifier("billGenericDAO") final GenericHibernateDAO<BillEntity> dao) {
-        super();
+        Validate.notNull(mapper);
+        Validate.notNull(dao);
+
         this.mapper = mapper;
         this.dao = dao;
     }
@@ -69,6 +73,12 @@ public class JPABasedBillDAO implements BillDAO {
     }
 
     private Bill convertToBill(final BillEntity entity) {
-        return mapper.map(entity, Bill.class);
+        final Category category =
+                Category.builder(entity.getCategory().getName()).categoryId(String.valueOf(entity.getCategory().getCategoryId())).build();
+
+        return Bill.builder(entity.getAmount(), entity.getDate(), entity.getDeadlineDate()).billId(String.valueOf(entity.getBillId()))
+                .category(category).interval(entity.getInterval()).isPayed(entity.isPayed()).note(entity.getNote())
+                .payedDate(entity.getPayedDate()).build();
+
     }
 }

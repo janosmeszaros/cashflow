@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import com.cashflow.dao.StatementDAO;
 import com.cashflow.dao.objects.StatementEntity;
+import com.cashflow.domain.Category;
 import com.cashflow.domain.RecurringInterval;
 import com.cashflow.domain.Statement;
 import com.cashflow.domain.StatementType;
@@ -23,6 +24,8 @@ import com.cashflow.domain.StatementType;
  */
 @Component
 public class JPABasedStatementDAO implements StatementDAO {
+    private static final String RECURRING_INTERVAL = "recurringInterval";
+    private static final String TYPE = "type";
     private final Mapper mapper;
     private final GenericHibernateDAO<StatementEntity> dao;
 
@@ -35,7 +38,9 @@ public class JPABasedStatementDAO implements StatementDAO {
      */
     @Autowired
     public JPABasedStatementDAO(final Mapper mapper, @Qualifier("statementGenericDAO") final GenericHibernateDAO<StatementEntity> dao) {
-        super();
+        Validate.notNull(mapper);
+        Validate.notNull(dao);
+
         this.mapper = mapper;
         this.dao = dao;
     }
@@ -79,26 +84,31 @@ public class JPABasedStatementDAO implements StatementDAO {
     }
 
     private Statement convertToStatement(final StatementEntity entity) {
-        return mapper.map(entity, Statement.class);
+        final Category category =
+                Category.builder(entity.getCategory().getName()).categoryId(String.valueOf(entity.getCategory().getCategoryId())).build();
+
+        return Statement.builder(entity.getAmount(), entity.getDate()).category(category).note(entity.getNote())
+                .recurringInterval(entity.getRecurringInterval()).statementId(String.valueOf(entity.getStatementId()))
+                .type(entity.getType()).build();
     }
 
     @Override
     public List<Statement> getExpenses() {
-        final SimpleExpression expression = Restrictions.eq("type", StatementType.Expense);
+        final SimpleExpression expression = Restrictions.eq(TYPE, StatementType.Expense);
         final List<StatementEntity> entityList = dao.findByCriteria(expression);
         return convertToStatementList(entityList);
     }
 
     @Override
     public List<Statement> getIncomes() {
-        final SimpleExpression expression = Restrictions.eq("type", StatementType.Income);
+        final SimpleExpression expression = Restrictions.eq(TYPE, StatementType.Income);
         final List<StatementEntity> entityList = dao.findByCriteria(expression);
         return convertToStatementList(entityList);
     }
 
     @Override
     public List<Statement> getRecurringIncomes() {
-        final SimpleExpression expression = Restrictions.ne("recurringInterval", RecurringInterval.none);
+        final SimpleExpression expression = Restrictions.ne(RECURRING_INTERVAL, RecurringInterval.none);
         final List<StatementEntity> entityList = dao.findByCriteria(expression);
         return convertToStatementList(entityList);
     }
