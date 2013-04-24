@@ -38,6 +38,11 @@ public class HomeController {
     @Autowired
     private CategoryPropertyEditor categoryPropertyEditor;
 
+    /**
+     * Binder init
+     * @param dataBinder
+     *            binder
+     */
     @InitBinder
     public void setDataBinder(final WebDataBinder dataBinder) {
         dataBinder.setAutoGrowNestedPaths(false);
@@ -206,10 +211,12 @@ public class HomeController {
     }
 
     /**
-     * Anyád
+     * Add category
      * @param category
+     *            category
      * @param model
-     * @return
+     *            model
+     * @return view
      */
     @RequestMapping(value = "/add_category", method = RequestMethod.POST)
     public String addCategory(final CategoryDTO category, final Model model) {
