@@ -38,7 +38,9 @@ public class JPABasedStatementDAO implements StatementDAO {
      */
     @Autowired
     public JPABasedStatementDAO(final Mapper mapper, @Qualifier("statementGenericDAO") final GenericHibernateDAO<StatementEntity> dao) {
-        super();
+        Validate.notNull(mapper);
+        Validate.notNull(dao);
+
         this.mapper = mapper;
         this.dao = dao;
     }

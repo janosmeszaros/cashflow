@@ -60,6 +60,21 @@ public class JPABasedStatementDaoTest {
         when(dao.findByCriteria((Criterion[]) anyObject())).thenReturn(returnableList);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWhenMapperIsNullThenShouldThrowException() {
+        new JPABasedStatementDAO(null, dao);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWhenDAOIsNullThenShouldThrowException() {
+        new JPABasedStatementDAO(mapper, null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWhenBothArgsAreNullThenShouldThrowException() {
+        new JPABasedStatementDAO(null, null);
+    }
+
     @Test
     public void testSaveWhenStatementIsOkThenShouldConvertToEntityThenSave() {
         when(dao.persist((StatementEntity) anyObject())).thenReturn(true);
