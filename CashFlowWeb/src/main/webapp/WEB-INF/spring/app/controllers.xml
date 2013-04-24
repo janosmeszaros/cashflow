@@ -20,9 +20,10 @@
 		class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
 
 	<bean id="dozer" class="org.dozer.DozerBeanMapper" />
+    
 	<bean id="messageSource"
 		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
-		<property name="basename" value="WEB-INF/messages/messages" />
+		<property name="basename" value="/WEB-INF/messages/messages" />
 		<property name="defaultEncoding" value="UTF-8" />
 	</bean>
 

@@ -38,6 +38,10 @@ public class HomeController {
     @Autowired
     private CategoryPropertyEditor categoryPropertyEditor;
 
+    /**
+     * Set DataBinder.
+     * @param dataBinder {@link WebDataBinder}
+     */
     @InitBinder
     public void setDataBinder(final WebDataBinder dataBinder) {
         dataBinder.setAutoGrowNestedPaths(false);
@@ -161,8 +165,7 @@ public class HomeController {
     private Statement createStatement(final StatementDTO statement) {
         final CategoryDTO categoryDTO = statement.getCategory();
         final Category category = Category.builder(categoryDTO.getName()).categoryId(categoryDTO.getCategoryId()).build();
-        return Statement.builder(statement.getAmount(), statement.getDate()).note(statement.getNote()).type(statement.getType())
-                .category(category)
+        return Statement.builder(statement.getAmount(), statement.getDate()).note(statement.getNote()).type(statement.getType()).category(category)
                 .recurringInterval(statement.getInterval()).build();
     }
 
@@ -194,10 +197,10 @@ public class HomeController {
     }
 
     /**
-     * Selects the list page.
+     * Selects the add_category page.
      * @param model
      *            {@link Model}
-     * @return list
+     * @return add_category
      */
     @RequestMapping(value = "/add_category", method = RequestMethod.GET)
     public String addCategory(final Model model) {
@@ -206,10 +209,10 @@ public class HomeController {
     }
 
     /**
-     * Anyád
-     * @param category
-     * @param model
-     * @return
+     * Post an add_category page.
+     * @param category {@link CategoryDTO}
+     * @param model {@link Model}
+     * @return to the home page
      */
     @RequestMapping(value = "/add_category", method = RequestMethod.POST)
     public String addCategory(final CategoryDTO category, final Model model) {

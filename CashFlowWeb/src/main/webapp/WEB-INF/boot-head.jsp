@@ -81,7 +81,7 @@
             <form class="navbar-form pull-right">
               <input class="span2"  type="text" placeholder="Email" >
               <input class="span2" type="password" placeholder="<spring:message code="label.password"/>">
-              <button type="submit" class="btn"> <spring:message code="navbar.sing_in"/> </button>
+              <button type="submit" class="btn"> <spring:message code="navbar.sign_in"/> </button>
             </form>
           </div><!--/.nav-collapse -->
         </div>
