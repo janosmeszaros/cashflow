@@ -104,6 +104,15 @@ public class JPABasedCategoryDAOTest {
         assertThat(categories, contains(category));
     }
 
+    @Test
+    public void testGetCategoryByIdWhenCalledThenShouldReturnACategory() {
+        when(dao.findById(Long.valueOf(ID_STR))).thenReturn(categoryEntity);
+
+        final Category returnedCategory = underTest.getCategoryById(ID_STR);
+
+        assertThat(returnedCategory, equalTo(category));
+    }
+
     private CategoryEntity createCategoryEntity(final Category category) {
         final CategoryEntity entity = new CategoryEntity();
         entity.setCategoryId(Long.valueOf(category.getCategoryId()));

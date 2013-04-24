@@ -131,4 +131,13 @@ public class GenericHibernateDAOTest {
         verify(criteria).list();
     }
 
+    @Test
+    public void testFindByCriteriaWhenCalledNullThenShouldCreateCriterionAndCallListOnIt() {
+        underTest.findByCriteria((Criterion[]) null);
+
+        verify(session).createCriteria(PERSISTENT_CLASS);
+        verify(criteria, times(0)).add((Criterion) anyObject());
+        verify(criteria).list();
+    }
+
 }
