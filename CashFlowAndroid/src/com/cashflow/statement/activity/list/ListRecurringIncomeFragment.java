@@ -7,7 +7,7 @@ import java.util.List;
 import android.content.Intent;
 
 import com.cashflow.domain.Statement;
-import com.cashflow.statement.activity.EditIncomeActivity;
+import com.cashflow.statement.activity.edit.EditIncomeActivity;
 
 public class ListRecurringIncomeFragment extends ListStatementFragment {
 

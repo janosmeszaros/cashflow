@@ -28,7 +28,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.cashflow.R;
 import com.cashflow.dao.StatementDAO;
 import com.cashflow.domain.Statement;
-import com.cashflow.statement.activity.EditStatementActivity;
+import com.cashflow.statement.activity.edit.EditStatementActivity;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.inject.Inject;
 

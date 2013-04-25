@@ -42,6 +42,7 @@ import com.cashflow.domain.Category;
 import com.cashflow.domain.RecurringInterval;
 import com.cashflow.domain.Statement;
 import com.cashflow.service.Balance;
+import com.cashflow.statement.activity.edit.EditIncomeActivity;
 import com.cashflow.statement.database.AndroidStatementDAO;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 import com.xtremelabs.robolectric.shadows.ShadowButton;

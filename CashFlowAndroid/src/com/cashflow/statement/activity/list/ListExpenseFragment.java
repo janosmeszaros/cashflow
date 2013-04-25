@@ -7,7 +7,7 @@ import java.util.List;
 import android.content.Intent;
 
 import com.cashflow.domain.Statement;
-import com.cashflow.statement.activity.EditStatementActivity;
+import com.cashflow.statement.activity.edit.EditStatementActivity;
 
 public class ListExpenseFragment extends ListStatementFragment {
 

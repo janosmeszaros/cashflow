@@ -1,4 +1,4 @@
-package com.cashflow.statement.activity;
+package com.cashflow.statement.activity.edit;
 
 import static android.view.View.VISIBLE;
 import roboguice.inject.InjectView;

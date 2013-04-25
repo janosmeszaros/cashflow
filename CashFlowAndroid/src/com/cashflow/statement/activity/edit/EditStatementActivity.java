@@ -1,4 +1,4 @@
-package com.cashflow.statement.activity;
+package com.cashflow.statement.activity.edit;
 
 import static com.cashflow.constants.Constants.ID_EXTRA;
 
