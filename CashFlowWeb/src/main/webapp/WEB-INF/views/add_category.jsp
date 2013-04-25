@@ -7,14 +7,19 @@
 <c:url value="add_category" var="addUrl" />
 <div class="container">
 
-	<form:form class="form-horizontal" modelAttribute="category"
-			action="${addUrl}" method="post">
-		<fieldset>
-			<legend> New Category </legend>
+  <form:form class="form-horizontal" modelAttribute="category"
+    action="${addUrl}" method="post">
+    <fieldset>
+      <legend>
+        <spring:message code="navbar.add_category" />
+      </legend>
 
-			<tag:textRow label="Name:" path="name" />
-			<tag:submit_button />
-	</fieldset>
-	</form:form>
+      <c:set var="nameLabel">
+        <spring:message code="label.name" />
+      </c:set>
+      <tag:textRow label="${nameLabel}" path="name" />
+      <tag:submit_button />
+    </fieldset>
+  </form:form>
 
 </div>
