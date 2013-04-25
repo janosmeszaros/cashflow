@@ -11,7 +11,7 @@
     </appender>
 
     <!-- Application Loggers -->
-    <logger name="org.application">
+    <logger name="com.cashflow">
         <level value="debug" />
     </logger>
 
@@ -33,7 +33,7 @@
     </logger>
 
     <logger name="org.hibernate">
-        <level value="warn" />
+        <level value=warn />
     </logger>
 
 

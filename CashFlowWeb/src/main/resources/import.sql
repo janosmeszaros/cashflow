@@ -1,0 +1,1 @@
+insert into category (categoryId, name) values (nextval('hibernate_sequence'), 'Uncategorized');
