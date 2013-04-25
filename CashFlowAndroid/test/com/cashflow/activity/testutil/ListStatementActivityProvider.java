@@ -9,8 +9,19 @@ import com.google.inject.Provider;
  */
 public class ListStatementActivityProvider implements Provider<ListStatementFragment> {
 
+    private final ListStatementFragment fragment;
+
+    /**
+     * Constructor.
+     * @param fragment which will be returned be get();
+     */
+    public ListStatementActivityProvider(final ListStatementFragment fragment) {
+        super();
+        this.fragment = fragment;
+    }
+
     @Override
     public ListStatementFragment get() {
-        return new ListStatementFragment();
+        return fragment;
     }
 }
