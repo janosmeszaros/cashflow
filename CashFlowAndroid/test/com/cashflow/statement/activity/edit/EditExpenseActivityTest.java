@@ -36,7 +36,7 @@ import android.widget.TextView;
 import com.cashflow.R;
 import com.cashflow.activity.components.DateButtonOnClickListener;
 import com.cashflow.activity.testutil.ActivityModule;
-import com.cashflow.activity.testutil.EditExpenseActivityProvider;
+import com.cashflow.activity.testutil.EditStatementActivityProvider;
 import com.cashflow.category.activity.CreateCategoryActivity;
 import com.cashflow.category.database.AndroidCategoryDAO;
 import com.cashflow.dao.CategoryDAO;
@@ -96,7 +96,7 @@ public class EditExpenseActivityTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        final ActivityModule module = new ActivityModule(new EditExpenseActivityProvider());
+        final ActivityModule module = new ActivityModule(new EditStatementActivityProvider(new EditExpenseActivity()));
 
         setUpPersistentService();
         addBindings(module);

@@ -50,12 +50,19 @@ public class EditIncomeActivity extends EditStatementActivity {
     protected boolean isValuesChanged() {
         final RecurringInterval interval = (RecurringInterval) recurringSpinner.getSelectedItem();
 
-        boolean isChanged = super.isValuesChanged();
+        final boolean valuesChanged = super.isValuesChanged();
 
-        if (!isChanged && !interval.equals(originalStatement.getRecurringInterval())) {
-            isChanged = true;
-        }
-        return isChanged;
+        final boolean recurringCheckBoxChanged = isRecurringCheckBoxChanged();
+        final boolean changed = valuesChanged || (isIntervalChanged(interval) || recurringCheckBoxChanged);
+        return changed;
+    }
+
+    private boolean isIntervalChanged(final RecurringInterval interval) {
+        return !interval.equals(originalStatement.getRecurringInterval());
+    }
+
+    private boolean isRecurringCheckBoxChanged() {
+        return originalStatement.getRecurringInterval().equals(RecurringInterval.none) == recurringCheckBox.isChecked();
     }
 
     @Override
@@ -67,16 +74,23 @@ public class EditIncomeActivity extends EditStatementActivity {
 
     @Override
     protected Statement createStatement() {
+        RecurringInterval interval;
         final String amountStr = amountText.getText().toString();
         final String date = dateButton.getText().toString();
         final String note = notesText.getText().toString();
         final Category category = (Category) categorySpinner.getSelectedItem();
         final String statementId = originalStatement.getStatementId();
 
+        if (recurringCheckBox.isChecked()) {
+            interval = (RecurringInterval) recurringSpinner.getSelectedItem();
+        } else {
+            interval = RecurringInterval.none;
+        }
+
         final Statement income =
                 Statement.builder(amountStr, date).note(note).type(StatementType.Income)
                         .statementId(statementId).category(category)
-                        .recurringInterval((RecurringInterval) recurringSpinner.getSelectedItem()).build();
+                        .recurringInterval(interval).build();
         return income;
     }
 
