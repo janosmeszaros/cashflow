@@ -28,7 +28,6 @@ import com.actionbarsherlock.view.MenuItem;
 import com.cashflow.R;
 import com.cashflow.dao.StatementDAO;
 import com.cashflow.domain.Statement;
-import com.cashflow.statement.activity.edit.EditStatementActivity;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.inject.Inject;
 
@@ -45,10 +44,10 @@ public abstract class ListStatementFragment extends RoboSherlockFragment impleme
 
     private static final Logger LOG = LoggerFactory.getLogger(ListStatementFragment.class);
 
+    protected final List<String> selectedIds = new ArrayList<String>();
     private final List<Integer> selectedPositions = new ArrayList<Integer>();
     private ActionMode actionMode;
 
-    protected final List<String> selectedIds = new ArrayList<String>();
     @Inject
     protected StatementDAO statementDAO;
     @InjectView(R.id.list_statement)
@@ -77,10 +76,6 @@ public abstract class ListStatementFragment extends RoboSherlockFragment impleme
         final SimpleCursorAdapter adapter = createAdapter(cursor);
         list.setAdapter(adapter);
     }
-
-    /**
-     * Starts the edit statement interface. Add actual values to the {@link EditStatementActivity}'s intent under the proper extra.
-     */
 
     @Override
     public void onResume() {

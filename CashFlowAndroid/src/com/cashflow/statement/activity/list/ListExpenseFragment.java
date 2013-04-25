@@ -9,6 +9,10 @@ import android.content.Intent;
 import com.cashflow.domain.Statement;
 import com.cashflow.statement.activity.edit.EditStatementActivity;
 
+/**
+ * List expense fragment.
+ * @author Janos_Gyula_Meszaros
+ */
 public class ListExpenseFragment extends ListStatementFragment {
 
     @Override

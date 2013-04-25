@@ -4,6 +4,10 @@ import com.cashflow.R;
 import com.cashflow.domain.Category;
 import com.cashflow.domain.Statement;
 
+/**
+ * Edit expense activity.
+ * @author Janos_Gyula_Meszaros
+ */
 public class EditExpenseActivity extends EditStatementActivity {
 
     @Override
