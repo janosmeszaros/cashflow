@@ -1,7 +1,5 @@
 package com.cashflow.dao.objects;
 
-import java.util.Date;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -10,6 +8,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import com.cashflow.domain.RecurringInterval;
 
@@ -24,9 +25,9 @@ public class BillEntity {
     @GeneratedValue
     private long billId;
     private String amount;
-    private Date date;
-    private Date payedDate;
-    private Date deadlineDate;
+    private String date;
+    private String payedDate;
+    private String deadlineDate;
     private String note;
     @ManyToOne(cascade = CascadeType.REMOVE)
     private CategoryEntity category;
@@ -42,15 +43,15 @@ public class BillEntity {
         this.amount = amount;
     }
 
-    public void setDate(final Date date) {
+    public void setDate(final String date) {
         this.date = date;
     }
 
-    public void setPayedDate(final Date payedDate) {
+    public void setPayedDate(final String payedDate) {
         this.payedDate = payedDate;
     }
 
-    public void setDeadlineDate(final Date deadlineDate) {
+    public void setDeadlineDate(final String deadlineDate) {
         this.deadlineDate = deadlineDate;
     }
 
@@ -78,15 +79,15 @@ public class BillEntity {
         return amount;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public Date getPayedDate() {
+    public String getPayedDate() {
         return payedDate;
     }
 
-    public Date getDeadlineDate() {
+    public String getDeadlineDate() {
         return deadlineDate;
     }
 
@@ -104,6 +105,16 @@ public class BillEntity {
 
     public RecurringInterval getInterval() {
         return interval;
+    }
+
+    @Override
+    public int hashCode() {
+        return HashCodeBuilder.reflectionHashCode(this);
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return EqualsBuilder.reflectionEquals(this, obj);
     }
 
 }

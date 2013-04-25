@@ -1,13 +1,18 @@
 package com.cashflow.dao.jpa;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.dozer.DozerBeanMapper;
 import org.dozer.Mapper;
+import org.hibernate.criterion.Criterion;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -38,12 +43,36 @@ public class JPABasedStatementDaoTest {
             .category(Category.builder(CATEGORY_NAME).categoryId(CATEGORY_ID).build())
             .recurringInterval(RecurringInterval.valueOf(INTERVAL_STR))
             .statementId(ID_STR).build();
+    private final StatementEntity statementEntity = createStatementEntity(incomeStatement);
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
+        initMocks();
+
         underTest = new JPABasedStatementDAO(mapper, dao);
+    }
+
+    private void initMocks() {
+        final List<StatementEntity> returnableList = new ArrayList<StatementEntity>();
+        returnableList.add(statementEntity);
+        when(dao.findByCriteria((Criterion[]) anyObject())).thenReturn(returnableList);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWhenMapperIsNullThenShouldThrowException() {
+        new JPABasedStatementDAO(null, dao);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWhenDAOIsNullThenShouldThrowException() {
+        new JPABasedStatementDAO(mapper, null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWhenBothArgsAreNullThenShouldThrowException() {
+        new JPABasedStatementDAO(null, null);
     }
 
     @Test
@@ -73,7 +102,7 @@ public class JPABasedStatementDaoTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testUpdateWhenStatementParamIsNullThenShouldThrowException() {
-        underTest.update(null, "0");
+        underTest.update(null, ID_STR);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -99,6 +128,47 @@ public class JPABasedStatementDaoTest {
         final boolean isUpdated = underTest.update(incomeStatement, incomeStatement.getStatementId());
 
         assertThat(isUpdated, equalTo(false));
+    }
+
+    @Test
+    public void testGetAllStatementsWhenCalledShouldReturnListOfStatements() {
+        final List<StatementEntity> returnableList = new ArrayList<StatementEntity>();
+        returnableList.add(statementEntity);
+        when(dao.findByCriteria()).thenReturn(returnableList);
+
+        final List<Statement> returnedList = underTest.getAllStatements();
+
+        assertThat(returnedList, contains(incomeStatement));
+    }
+
+    @Test
+    public void testGetExpensesWhenCalledShouldReturnListOfStatement() {
+        final List<Statement> returnedList = underTest.getExpenses();
+
+        assertThat(returnedList, contains(incomeStatement));
+    }
+
+    @Test
+    public void testGetIncomesWhenCalledShouldReturnListOfStatement() {
+        final List<Statement> returnedList = underTest.getIncomes();
+
+        assertThat(returnedList, contains(incomeStatement));
+    }
+
+    @Test
+    public void testGetRecurringIncomesWhenCalledShouldReturnListOfStatement() {
+        final List<Statement> returnedList = underTest.getRecurringIncomes();
+
+        assertThat(returnedList, contains(incomeStatement));
+    }
+
+    @Test
+    public void testGetStatementByIdWhenCalledShouldReturnStatement() {
+        when(dao.findById(Long.valueOf(ID_STR))).thenReturn(statementEntity);
+
+        final Statement returnedStatement = underTest.getStatementById(ID_STR);
+
+        assertThat(returnedStatement, equalTo(incomeStatement));
     }
 
     private StatementEntity createStatementEntity(final Statement statement) {
