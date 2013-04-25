@@ -25,7 +25,6 @@ import com.google.inject.Inject;
 /**
  * Add income fragment. Parent's class <code>setType</code> and <code>setRecurringSpinner</code> should called from onViewCreated method.
  * @author Janos_Gyula_Meszaros
- *
  */
 public class AddIncomeFragment extends AddStatementFragment {
     private static final Logger LOG = LoggerFactory.getLogger(AddIncomeFragment.class);

@@ -1,7 +1,5 @@
 package com.cashflow.activity;
 
-import static com.cashflow.constants.Constants.STATEMENT_TYPE_EXTRA;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,8 +17,8 @@ import android.widget.TabWidget;
 
 import com.actionbarsherlock.view.Window;
 import com.cashflow.R;
-import com.cashflow.domain.StatementType;
-import com.cashflow.statement.activity.ListStatementFragment;
+import com.cashflow.statement.activity.ListExpenseFragment;
+import com.cashflow.statement.activity.ListIncomeFragment;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
 
 /**
@@ -52,18 +50,13 @@ public class ListActivity extends RoboSherlockFragmentActivity {
     }
 
     private void addIncomeTab() {
-        final Bundle bundle = new Bundle();
-        bundle.putString(STATEMENT_TYPE_EXTRA, StatementType.Income.toString());
         mTabsAdapter.addTab(mTabHost.newTabSpec("income").setIndicator(getString(R.string.title_activity_list_incomes)),
-                ListStatementFragment.class,
-                bundle);
+                ListIncomeFragment.class, null);
     }
 
     private void addExpenseTab() {
-        final Bundle bundle = new Bundle();
-        bundle.putString(STATEMENT_TYPE_EXTRA, StatementType.Expense.toString());
         mTabsAdapter.addTab(mTabHost.newTabSpec("expense").setIndicator(getString(R.string.title_activity_list_expenses)),
-                ListStatementFragment.class, bundle);
+                ListExpenseFragment.class, null);
     }
 
     @Override
