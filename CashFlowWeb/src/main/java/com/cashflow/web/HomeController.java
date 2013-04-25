@@ -147,7 +147,7 @@ public class HomeController {
     }
 
     /**
-     * Selects the add_statement page.
+     * Posts the add_statement page.
      * @param statement
      *            {@link StatementDTO}
      * @param model
@@ -179,6 +179,7 @@ public class HomeController {
     public String addBill(final Model model) {
         LOGGER.info("Register");
         model.addAttribute("bill", new BillDTO());
+        addCategories(model);
 
         return "add_bill";
     }
