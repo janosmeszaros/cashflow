@@ -17,8 +17,8 @@ import android.widget.TabWidget;
 
 import com.actionbarsherlock.view.Window;
 import com.cashflow.R;
-import com.cashflow.statement.activity.ListExpenseFragment;
-import com.cashflow.statement.activity.ListIncomeFragment;
+import com.cashflow.statement.activity.list.ListExpenseFragment;
+import com.cashflow.statement.activity.list.ListIncomeFragment;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
 
 /**

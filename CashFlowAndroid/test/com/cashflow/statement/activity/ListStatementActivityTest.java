@@ -32,6 +32,7 @@ import com.cashflow.database.DatabaseContracts.AbstractCategory;
 import com.cashflow.domain.Category;
 import com.cashflow.domain.RecurringInterval;
 import com.cashflow.domain.Statement;
+import com.cashflow.statement.activity.list.ListStatementFragment;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 /**
