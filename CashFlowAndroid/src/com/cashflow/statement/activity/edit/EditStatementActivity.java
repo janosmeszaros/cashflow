@@ -28,7 +28,6 @@ import com.cashflow.dao.CategoryDAO;
 import com.cashflow.dao.StatementDAO;
 import com.cashflow.domain.Category;
 import com.cashflow.domain.Statement;
-import com.cashflow.domain.StatementType;
 import com.google.inject.Inject;
 
 /**
@@ -41,39 +40,50 @@ import com.google.inject.Inject;
  * </p>
  * @author Janos_Gyula_Meszaros
  */
-public class EditStatementActivity extends RoboFragmentActivity {
+public abstract class EditStatementActivity extends RoboFragmentActivity {
     private static final int REQUEST_CODE_FOR_CATEGORY = 1;
 
     private static final Logger LOG = LoggerFactory.getLogger(EditStatementActivity.class);
 
     @InjectView(R.id.amountText)
-    private EditText amountText;
+    protected EditText amountText;
     @InjectView(R.id.dateButton)
-    private Button dateButton;
+    protected Button dateButton;
     @InjectView(R.id.notesText)
-    private EditText notesText;
+    protected EditText notesText;
     @InjectView(R.id.categorySpinner)
-    private Spinner categorySpinner;
+    protected Spinner categorySpinner;
     @InjectView(R.id.createCategoryButton)
-    private ImageButton createCategoryButton;
+    protected ImageButton createCategoryButton;
     @InjectView(R.id.submitButton)
-    private Button submit;
+    protected Button submit;
     @Inject
-    private StatementDAO statementDAO;
+    protected StatementDAO statementDAO;
     @Inject
-    private CategoryDAO categoryDAO;
+    protected CategoryDAO categoryDAO;
     @Inject
-    private DateButtonOnClickListener listener;
+    protected DateButtonOnClickListener listener;
 
-    private StatementType type = StatementType.Expense;
-    private Statement originalStatement;
+    protected Statement originalStatement;
 
-    protected Statement getOriginalStatement() {
-        return originalStatement;
+    protected abstract void setTitle();
+
+    protected abstract void setContent();
+
+    protected abstract Statement createStatement();
+
+    protected void fillFieldsWithData() {
+        amountText.setText(originalStatement.getAmount());
+        notesText.setText(originalStatement.getNote());
+        dateButton.setText(originalStatement.getDate());
+
+        final ArrayAdapter<Category> adapter = setCategorySpinner();
+        final int position = adapter.getPosition(originalStatement.getCategory());
+        categorySpinner.setSelection(position);
     }
 
     @Override
-    protected void onCreate(final Bundle savedInstanceState) {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LOG.debug("EditStatementActivity is creating...");
 
@@ -82,16 +92,6 @@ public class EditStatementActivity extends RoboFragmentActivity {
         getOriginalData();
         fillFieldsWithData();
         setTitle();
-    }
-
-    private void setUpButtons() {
-        createCategoryButton.setOnClickListener(new CreateCategoryOnClickListener());
-        submit.setOnClickListener(new SubmitButtonOnClickListener());
-        dateButton.setOnClickListener(listener);
-    }
-
-    protected void setContent() {
-        setContentView(R.layout.add_expense_statement_fragment);
     }
 
     protected boolean isValuesChanged() {
@@ -103,25 +103,16 @@ public class EditStatementActivity extends RoboFragmentActivity {
         return isSomeThingChanged(amount, date, note, category);
     }
 
+    private void setUpButtons() {
+        createCategoryButton.setOnClickListener(new CreateCategoryOnClickListener());
+        submit.setOnClickListener(new SubmitButtonOnClickListener());
+        dateButton.setOnClickListener(listener);
+    }
+
     private boolean isSomeThingChanged(final String amount, final String date, final String note, final Category category) {
         return !amount.equals(originalStatement.getAmount()) || !date.equals(originalStatement.getDate())
                 || !note.equals(originalStatement.getNote())
                 || !category.equals(originalStatement.getCategory());
-    }
-
-    protected void setTitle() {
-        setTitle(R.string.title_activity_edit_expenses);
-    }
-
-    protected void fillFieldsWithData() {
-        amountText.setText(originalStatement.getAmount());
-        notesText.setText(originalStatement.getNote());
-        dateButton.setText(originalStatement.getDate());
-        type = originalStatement.getType();
-
-        final ArrayAdapter<Category> adapter = setCategorySpinner();
-        final int position = adapter.getPosition(originalStatement.getCategory());
-        categorySpinner.setSelection(position);
     }
 
     private ArrayAdapter<Category> setCategorySpinner() {
@@ -130,16 +121,6 @@ public class EditStatementActivity extends RoboFragmentActivity {
 
         categorySpinner.setAdapter(adapter);
         return adapter;
-    }
-
-    protected Statement createStatement() {
-        final String amountStr = amountText.getText().toString();
-        final String date = dateButton.getText().toString();
-        final String note = notesText.getText().toString();
-        final Category category = (Category) categorySpinner.getSelectedItem();
-        final String statementId = originalStatement.getStatementId();
-
-        return Statement.builder(amountStr, date).note(note).type(type).statementId(statementId).category(category).build();
     }
 
     private void getOriginalData() {

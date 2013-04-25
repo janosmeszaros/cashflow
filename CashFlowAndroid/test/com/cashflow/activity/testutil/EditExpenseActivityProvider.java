@@ -1,5 +1,6 @@
 package com.cashflow.activity.testutil;
 
+import com.cashflow.statement.activity.edit.EditExpenseActivity;
 import com.cashflow.statement.activity.edit.EditStatementActivity;
 import com.google.inject.Provider;
 
@@ -8,11 +9,11 @@ import com.google.inject.Provider;
  * @author Janos_Gyula_Meszaros
  *
  */
-public class EditStatementActivityProvider implements Provider<EditStatementActivity> {
+public class EditExpenseActivityProvider implements Provider<EditStatementActivity> {
 
     @Override
     public EditStatementActivity get() {
-        return new EditStatementActivity();
+        return new EditExpenseActivity();
     }
 
 }

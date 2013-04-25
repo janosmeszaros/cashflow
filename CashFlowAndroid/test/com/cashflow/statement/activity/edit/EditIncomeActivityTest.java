@@ -1,4 +1,4 @@
-package com.cashflow.statement.activity;
+package com.cashflow.statement.activity.edit;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -35,14 +35,13 @@ import android.widget.TextView;
 import com.cashflow.R;
 import com.cashflow.activity.components.DateButtonOnClickListener;
 import com.cashflow.activity.testutil.ActivityModule;
-import com.cashflow.activity.testutil.EditStatementActivityProvider;
+import com.cashflow.activity.testutil.EditExpenseActivityProvider;
 import com.cashflow.dao.CategoryDAO;
 import com.cashflow.dao.StatementDAO;
 import com.cashflow.domain.Category;
 import com.cashflow.domain.RecurringInterval;
 import com.cashflow.domain.Statement;
 import com.cashflow.service.Balance;
-import com.cashflow.statement.activity.edit.EditIncomeActivity;
 import com.cashflow.statement.database.AndroidStatementDAO;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 import com.xtremelabs.robolectric.shadows.ShadowButton;
@@ -79,7 +78,7 @@ public class EditIncomeActivityTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        final ActivityModule module = new ActivityModule(new EditStatementActivityProvider());
+        final ActivityModule module = new ActivityModule(new EditExpenseActivityProvider());
 
         setUpPersistentService();
         addBindings(module);

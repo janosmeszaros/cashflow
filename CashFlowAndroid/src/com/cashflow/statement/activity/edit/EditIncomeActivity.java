@@ -2,7 +2,6 @@ package com.cashflow.statement.activity.edit;
 
 import static android.view.View.VISIBLE;
 import roboguice.inject.InjectView;
-import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
@@ -11,6 +10,7 @@ import android.widget.SpinnerAdapter;
 
 import com.cashflow.R;
 import com.cashflow.activity.components.RecurringCheckBoxOnClickListener;
+import com.cashflow.domain.Category;
 import com.cashflow.domain.RecurringInterval;
 import com.cashflow.domain.Statement;
 import com.cashflow.domain.StatementType;
@@ -19,7 +19,6 @@ import com.google.inject.Inject;
 /**
  * Activity for modify incomes.
  * @author Janos_Gyula_Meszaros
- *
  */
 public class EditIncomeActivity extends EditStatementActivity {
 
@@ -38,11 +37,6 @@ public class EditIncomeActivity extends EditStatementActivity {
     private SpinnerAdapter spinnerAdapter;
 
     @Override
-    protected void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     protected void setContent() {
         setContentView(R.layout.add_income_statement_fragment);
     }
@@ -58,7 +52,7 @@ public class EditIncomeActivity extends EditStatementActivity {
 
         boolean isChanged = super.isValuesChanged();
 
-        if (!isChanged && !interval.equals(getOriginalStatement().getRecurringInterval())) {
+        if (!isChanged && !interval.equals(originalStatement.getRecurringInterval())) {
             isChanged = true;
         }
         return isChanged;
@@ -73,10 +67,16 @@ public class EditIncomeActivity extends EditStatementActivity {
 
     @Override
     protected Statement createStatement() {
-        final Statement expense = super.createStatement();
-        final Statement income = Statement.builder(expense.getAmount(), expense.getDate()).note(expense.getNote()).type(StatementType.Income)
-                .statementId(expense.getStatementId()).category(expense.getCategory())
-                .recurringInterval((RecurringInterval) recurringSpinner.getSelectedItem()).build();
+        final String amountStr = amountText.getText().toString();
+        final String date = dateButton.getText().toString();
+        final String note = notesText.getText().toString();
+        final Category category = (Category) categorySpinner.getSelectedItem();
+        final String statementId = originalStatement.getStatementId();
+
+        final Statement income =
+                Statement.builder(amountStr, date).note(note).type(StatementType.Income)
+                        .statementId(statementId).category(category)
+                        .recurringInterval((RecurringInterval) recurringSpinner.getSelectedItem()).build();
         return income;
     }
 
@@ -89,7 +89,7 @@ public class EditIncomeActivity extends EditStatementActivity {
 
     @SuppressWarnings("unchecked")
     private void setSelectedItem() {
-        final RecurringInterval interval = getOriginalStatement().getRecurringInterval();
+        final RecurringInterval interval = originalStatement.getRecurringInterval();
         if (!RecurringInterval.none.equals(interval)) {
             recurringCheckBox.setChecked(true);
             recurringCheckBoxArea.setVisibility(VISIBLE);
