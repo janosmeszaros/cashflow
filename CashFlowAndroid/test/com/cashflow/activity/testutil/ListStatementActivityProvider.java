@@ -1,6 +1,6 @@
 package com.cashflow.activity.testutil;
 
-import com.cashflow.statement.activity.ListStatementFragment;
+import com.cashflow.statement.activity.list.ListStatementFragment;
 import com.google.inject.Provider;
 
 /**
@@ -9,8 +9,19 @@ import com.google.inject.Provider;
  */
 public class ListStatementActivityProvider implements Provider<ListStatementFragment> {
 
+    private final ListStatementFragment fragment;
+
+    /**
+     * Constructor.
+     * @param fragment which will be returned be get();
+     */
+    public ListStatementActivityProvider(final ListStatementFragment fragment) {
+        super();
+        this.fragment = fragment;
+    }
+
     @Override
     public ListStatementFragment get() {
-        return new ListStatementFragment();
+        return fragment;
     }
 }

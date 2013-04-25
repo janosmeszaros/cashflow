@@ -22,6 +22,7 @@
     <string name="title_activity_add_expense">Add Expense</string>
     <string name="title_activity_list_expenses">List Expenses</string>
     <string name="title_activity_list_incomes">List Incomes</string>
+    <string name="title_activity_list_recurringincomes">Recurring Incomes</string>
     <string name="title_activity_edit_incomes">Edit Income</string>
     <string name="title_activity_edit_expenses">Edit Expense</string>
     <string name="title_activity_create_category">Create Category</string>

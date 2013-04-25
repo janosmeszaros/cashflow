@@ -1,4 +1,4 @@
-package com.cashflow.statement.activity;
+package com.cashflow.statement.activity.edit;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -57,16 +57,21 @@ public class EditIncomeActivityTest {
     private static final String NOTE = "notes";
     private static final String DATE = "2013";
     private static final String AMOUNT = "1234";
-    private static final RecurringInterval INTERVAL = RecurringInterval.biweekly;
-    private static final RecurringInterval NONE_INTERVAL = RecurringInterval.none;
+    private static final RecurringInterval CHANGED_INTERVAL = RecurringInterval.biweekly;
+    private static final RecurringInterval INTERVAL = RecurringInterval.weekly;
     private static final Category CATEGORY = Category.builder("category").categoryId(CATEGORY_ID).build();
     private static final Category CHANGED_CATEGORY = Category.builder("changed_category").categoryId("4").build();
-    private static final Statement INCOME_STATEMENT = Statement.builder(AMOUNT, DATE).note(NOTE).type(Income).statementId(INCOME_ID)
-            .category(CATEGORY).recurringInterval(NONE_INTERVAL).build();
+    private static final Statement RECURRING_STATEMENT = Statement.builder(AMOUNT, DATE).note(NOTE).type(Income).statementId(INCOME_ID)
+            .category(CATEGORY).recurringInterval(INTERVAL).build();
+    private static final Statement NON_RECURRING_STATEMENT = Statement.builder(AMOUNT, DATE).note(NOTE).type(Income).statementId(INCOME_ID)
+            .category(CATEGORY).recurringInterval(RecurringInterval.none).build();
 
     private EditIncomeActivity underTest;
     private final ArrayAdapter<RecurringInterval> intervalArrayAdapter = new ArrayAdapter<RecurringInterval>(underTest,
             android.R.layout.simple_spinner_dropdown_item, RecurringInterval.values());
+
+    private ShadowFragmentActivity shadowFragmentActivity;
+    private Button submit;
 
     @Mock
     private AndroidStatementDAO statementDAO;
@@ -78,7 +83,7 @@ public class EditIncomeActivityTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        final ActivityModule module = new ActivityModule(new EditStatementActivityProvider());
+        final ActivityModule module = new ActivityModule(new EditStatementActivityProvider(new EditIncomeActivity()));
 
         setUpPersistentService();
         addBindings(module);
@@ -86,8 +91,11 @@ public class EditIncomeActivityTest {
         ActivityModule.setUp(this, module);
 
         underTest = new EditIncomeActivity();
-        underTest.setIntent(setUpIntentData(INCOME_STATEMENT));
+        underTest.setIntent(setUpIntentData(RECURRING_STATEMENT));
         underTest.onCreate(null);
+
+        shadowFragmentActivity = shadowOf(underTest);
+        submit = (Button) underTest.findViewById(R.id.submitButton);
     }
 
     @After
@@ -123,16 +131,22 @@ public class EditIncomeActivityTest {
 
     @Test
     public void testOnCreateWhenRecurringIsNoneThenRecurringCheckBoxShouldBeUnchekedAndSpinnerValueIsNone() {
+        when(statementDAO.getStatementById(INCOME_ID)).thenReturn(NON_RECURRING_STATEMENT);
+
+        underTest = new EditIncomeActivity();
+        underTest.setIntent(setUpIntentData(NON_RECURRING_STATEMENT));
+        underTest.onCreate(null);
+
         final CheckBox checkbox = (CheckBox) underTest.findViewById(R.id.recurring_checkbox_income);
         final Spinner interval = (Spinner) underTest.findViewById(R.id.recurring_spinner);
-        assertThat((RecurringInterval) interval.getSelectedItem(), equalTo(NONE_INTERVAL));
+        assertThat((RecurringInterval) interval.getSelectedItem(), equalTo(NON_RECURRING_STATEMENT.getRecurringInterval()));
         assertThat(checkbox.isChecked(), equalTo(false));
     }
 
     @Test
     public void testOnCreateWhenRecurringIsOtherThenNoneThenRecurringCheckBoxShouldBeCheckedAndSpinnerValueIsSettedToCorrectValue() {
-        final Statement statement = Statement.builder(AMOUNT, DATE).statementId("12").category(CATEGORY).note(NOTE).recurringInterval(INTERVAL)
-                .type(Income).build();
+        final Statement statement = Statement.builder(AMOUNT, DATE).statementId("12").category(CATEGORY).note(NOTE)
+                .recurringInterval(CHANGED_INTERVAL).type(Income).build();
         underTest.setIntent(setUpIntentData(statement));
         when(statementDAO.getStatementById("12")).thenReturn(statement);
         underTest.onCreate(null);
@@ -140,16 +154,14 @@ public class EditIncomeActivityTest {
         final Spinner interval = (Spinner) underTest.findViewById(R.id.recurring_spinner);
         final CheckBox checkbox = (CheckBox) underTest.findViewById(R.id.recurring_checkbox_income);
 
-        assertThat((RecurringInterval) interval.getSelectedItem(), equalTo(INTERVAL));
+        assertThat((RecurringInterval) interval.getSelectedItem(), equalTo(CHANGED_INTERVAL));
         assertThat(checkbox.isChecked(), equalTo(true));
     }
 
     @Test
     public void testSubmitWhenRecurringIntervalHasChangedThenShouldCallProperFunctionAndResultCodeShouldBeOK() {
-        final ShadowFragmentActivity shadowFragmentActivity = shadowOf(underTest);
-        final Button submit = (Button) underTest.findViewById(R.id.submitButton);
-        final Statement changedStatement = Statement.builder(AMOUNT, DATE).note(NOTE).type(Income).statementId(INCOME_ID).recurringInterval(INTERVAL)
-                .category(CATEGORY).build();
+        final Statement changedStatement = Statement.builder(AMOUNT, DATE).note(NOTE).type(Income).statementId(INCOME_ID)
+                .recurringInterval(CHANGED_INTERVAL).category(CATEGORY).build();
         setViewsValues(changedStatement);
 
         submit.performClick();
@@ -160,10 +172,25 @@ public class EditIncomeActivityTest {
     }
 
     @Test
+    public void testSubmitWhenRecurringCheckboxIsUncheckedThenIncomesIntervalShouldSetToNone() {
+        setViewsValues(RECURRING_STATEMENT);
+        setCheckBoxCheckedTo(false);
+
+        submit.performClick();
+
+        verify(statementDAO, times(1)).update(NON_RECURRING_STATEMENT, NON_RECURRING_STATEMENT.getStatementId());
+        assertThat(shadowFragmentActivity.getResultCode(), equalTo(RESULT_OK));
+        assertThat(shadowFragmentActivity.isFinishing(), equalTo(true));
+    }
+
+    private void setCheckBoxCheckedTo(final boolean value) {
+        final CheckBox checkBox = (CheckBox) underTest.findViewById(R.id.recurring_checkbox_income);
+        checkBox.setChecked(value);
+    }
+
+    @Test
     public void testSubmitNothingHasChangedThenShouldCallProperFunctionAndResultCodeShouldBeCanceled() {
-        final ShadowFragmentActivity shadowFragmentActivity = shadowOf(underTest);
-        final Button submit = (Button) underTest.findViewById(R.id.submitButton);
-        setViewsValues(INCOME_STATEMENT);
+        setViewsValues(RECURRING_STATEMENT);
 
         submit.performClick();
 
@@ -173,10 +200,8 @@ public class EditIncomeActivityTest {
 
     @Test
     public void testSubmitWhenRecurringIntervalAndDateHasChangedThenShouldCallProperFunctionAndResultCodeShouldBeOK() {
-        final ShadowFragmentActivity shadowFragmentActivity = shadowOf(underTest);
-        final Button submit = (Button) underTest.findViewById(R.id.submitButton);
         final Statement changedStatement = Statement.builder(AMOUNT, CHANGED_DATE).note(NOTE).type(Income).statementId(INCOME_ID)
-                .recurringInterval(INTERVAL).category(CATEGORY).build();
+                .recurringInterval(CHANGED_INTERVAL).category(CATEGORY).build();
         setViewsValues(changedStatement);
 
         submit.performClick();
@@ -188,10 +213,8 @@ public class EditIncomeActivityTest {
 
     @Test
     public void testSubmitWhenCategoryHasChangedThenShouldCallProperFunctionAndResultCodeShouldBeOK() {
-        final ShadowFragmentActivity shadowFragmentActivity = shadowOf(underTest);
-        final Button submit = (Button) underTest.findViewById(R.id.submitButton);
         final Statement changedNoteStatement = Statement.builder(AMOUNT, DATE).note(NOTE).type(Income).statementId(INCOME_ID)
-                .recurringInterval(NONE_INTERVAL).category(CHANGED_CATEGORY).build();
+                .recurringInterval(INTERVAL).category(CHANGED_CATEGORY).build();
         setViewsValues(changedNoteStatement);
 
         submit.performClick();
@@ -203,9 +226,8 @@ public class EditIncomeActivityTest {
 
     @Test
     public void testSubmitWhenSomethingHappendInDBThenShouldShowToastWithDatabaseError() {
-        final Button submit = (Button) underTest.findViewById(R.id.submitButton);
         final Statement changedNoteStatement = Statement.builder(AMOUNT, DATE).note(NOTE).type(Income).statementId(INCOME_ID)
-                .recurringInterval(NONE_INTERVAL).category(CHANGED_CATEGORY).build();
+                .recurringInterval(INTERVAL).category(CHANGED_CATEGORY).build();
         setViewsValues(changedNoteStatement);
         when(statementDAO.update(changedNoteStatement, INCOME_ID)).thenReturn(false);
 
@@ -270,7 +292,7 @@ public class EditIncomeActivityTest {
 
         when(statementDAO.getExpenses()).thenReturn(expenses);
         when(statementDAO.getIncomes()).thenReturn(incomes);
-        when(statementDAO.getStatementById(INCOME_ID)).thenReturn(INCOME_STATEMENT);
+        when(statementDAO.getStatementById(INCOME_ID)).thenReturn(RECURRING_STATEMENT);
         when(statementDAO.update((Statement) anyObject(), anyString())).thenReturn(true);
         final List<Category> categories = new ArrayList<Category>();
         categories.add(CATEGORY);

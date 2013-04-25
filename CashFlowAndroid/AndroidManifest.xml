@@ -23,9 +23,9 @@
         </activity>
         <activity android:name="com.cashflow.statement.activity.AddStatementFragment" />
         <activity android:name="com.cashflow.statement.activity.AddIncomeFragment" />
-        <activity android:name="com.cashflow.statement.activity.EditStatementActivity" />
-        <activity android:name="com.cashflow.statement.activity.EditIncomeActivity" />
-        <activity android:name="com.cashflow.statement.activity.ListStatementFragment" />
+        <activity android:name="com.cashflow.statement.activity.edit.EditStatementActivity" />
+        <activity android:name="com.cashflow.statement.activity.edit.EditIncomeActivity" />
+        <activity android:name="com.cashflow.statement.activity.list.ListStatementFragment" />
         <activity android:name="com.cashflow.category.activity.CreateCategoryActivity" />
         <activity android:name="com.cashflow.bill.activity.AddBillFragment" />
         <activity android:name="com.cashflow.activity.ActionsActivity" />

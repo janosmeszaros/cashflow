@@ -1,8 +1,5 @@
-package com.cashflow.statement.activity;
+package com.cashflow.statement.activity.list;
 
-import static com.cashflow.constants.Constants.EDIT_ACTIVITY_CODE;
-import static com.cashflow.constants.Constants.ID_EXTRA;
-import static com.cashflow.constants.Constants.STATEMENT_TYPE_EXTRA;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.PROJECTION;
 import static com.cashflow.database.DatabaseContracts.AbstractStatement.TO_VIEWS;
 
@@ -13,9 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import roboguice.inject.InjectView;
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.Intent;
 import android.database.MatrixCursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -32,17 +26,17 @@ import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.cashflow.R;
+import com.cashflow.dao.StatementDAO;
 import com.cashflow.domain.Statement;
-import com.cashflow.domain.StatementType;
-import com.cashflow.statement.database.AndroidStatementDAO;
+import com.cashflow.statement.activity.edit.EditStatementActivity;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.inject.Inject;
 
 /**
- * Basic class to list statements. The type is setted from intent's <code>STATEMENT_TYPE_EXTRA</code> extra.
+ * Basic class to list statements.
  * @author Janos_Gyula_Meszaros
  */
-public class ListStatementFragment extends RoboSherlockFragment implements OnCheckedChangeListener {
+public abstract class ListStatementFragment extends RoboSherlockFragment implements OnCheckedChangeListener {
     private static final int EDIT_ID = 1;
     private static final int DELETE_ID = 0;
     private static final int GROUP_ID = 0;
@@ -51,16 +45,18 @@ public class ListStatementFragment extends RoboSherlockFragment implements OnChe
 
     private static final Logger LOG = LoggerFactory.getLogger(ListStatementFragment.class);
 
-    private StatementType type;
-    private final List<String> selectedIds = new ArrayList<String>();
     private final List<Integer> selectedPositions = new ArrayList<Integer>();
     private ActionMode actionMode;
 
+    protected final List<String> selectedIds = new ArrayList<String>();
     @Inject
-    private AndroidStatementDAO statementDAO;
-
+    protected StatementDAO statementDAO;
     @InjectView(R.id.list_statement)
     private ListView list;
+
+    protected abstract void editButtonOnClick();
+
+    protected abstract List<Statement> getDataFromDatabase();
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
@@ -74,35 +70,23 @@ public class ListStatementFragment extends RoboSherlockFragment implements OnChe
         LOG.debug("ListStatementActivity is creating...");
 
         setHasOptionsMenu(true);
-        setStatementType();
-        getDataFromDatabase();
+    }
 
-        LOG.debug("ListStatementActivity has created with type: " + type);
+    private void fillUpListView(final List<Statement> data) {
+        final MatrixCursor cursor = fillUpCursor(data);
+        final SimpleCursorAdapter adapter = createAdapter(cursor);
+        list.setAdapter(adapter);
     }
 
     /**
      * Starts the edit statement interface. Add actual values to the {@link EditStatementActivity}'s intent under the proper extra.
      */
-    private void editButtonOnClick() {
-        LOG.debug("Edit button clicked");
-        Intent intent;
-        if (type.isIncome()) {
-            intent = new Intent(getActivity(), EditIncomeActivity.class);
-        } else {
-            intent = new Intent(getActivity(), EditStatementActivity.class);
-        }
-        addExtras(selectedIds.get(0), intent);
-        startActivityForResult(intent, EDIT_ACTIVITY_CODE);
-    }
 
     @Override
-    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        LOG.debug("ListStatementActivity's onActivityResult method called with params: \nrequestCode: " + requestCode + "\nresultCode: "
-                + requestCode);
-        if (isEditActivity(requestCode, resultCode)) {
-            getDataFromDatabase();
-        }
+    public void onResume() {
+        super.onResume();
+        final List<Statement> data = getDataFromDatabase();
+        fillUpListView(data);
     }
 
     @Override
@@ -150,32 +134,17 @@ public class ListStatementFragment extends RoboSherlockFragment implements OnChe
         return text.getText().toString();
     }
 
-    private void addExtras(final String statementId, final Intent intent) {
-        intent.putExtra(ID_EXTRA, statementId);
-    }
-
-    private boolean isEditActivity(final int requestCode, final int resultCode) {
-        return (resultCode == Activity.RESULT_OK) && (requestCode == EDIT_ACTIVITY_CODE);
-    }
-
-    @SuppressLint("NewApi")
-    private void getDataFromDatabase() {
-        LOG.debug("Starting query for type: " + type);
-
-        List<Statement> statementList;
-
-        if (type.isIncome()) {
-            statementList = statementDAO.getIncomes();
-        } else {
-            statementList = statementDAO.getExpenses();
-        }
-
+    private MatrixCursor fillUpCursor(final List<Statement> statementList) {
         final MatrixCursor cursor = new MatrixCursor(PROJECTION);
         for (final Statement statement : statementList) {
-            cursor.addRow(new String[] { statement.getStatementId(), statement.getAmount(), statement.getCategory().getName(), statement.getDate(),
+            cursor.addRow(new String[] { statement.getStatementId(), statement.getAmount(), statement.getCategory().getName(),
+                statement.getDate(),
                 statement.getNote(), statement.getRecurringInterval().toString() });
         }
+        return cursor;
+    }
 
+    private SimpleCursorAdapter createAdapter(final MatrixCursor cursor) {
         final SimpleCursorAdapter adapter =
                 new SimpleCursorAdapter(getActivity(), R.layout.list_statements_row, cursor, PROJECTION, TO_VIEWS) {
                     @Override
@@ -188,15 +157,7 @@ public class ListStatementFragment extends RoboSherlockFragment implements OnChe
                         return view;
                     }
                 };
-
-        list.setAdapter(adapter);
-
-        LOG.debug("Query has done.");
-    }
-
-    private void setStatementType() {
-        final Bundle bundle = getArguments();
-        type = StatementType.valueOf(bundle.getString(STATEMENT_TYPE_EXTRA));
+        return adapter;
     }
 
     private final class AnActionModeOfEpicProportions implements ActionMode.Callback {

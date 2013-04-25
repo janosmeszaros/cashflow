@@ -1,4 +1,4 @@
-package com.cashflow.statement.activity;
+package com.cashflow.statement.activity.edit;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -44,8 +44,8 @@ import com.cashflow.dao.StatementDAO;
 import com.cashflow.domain.Category;
 import com.cashflow.domain.RecurringInterval;
 import com.cashflow.domain.Statement;
-import com.cashflow.statement.activity.EditStatementActivity.CreateCategoryOnClickListener;
-import com.cashflow.statement.activity.EditStatementActivity.SubmitButtonOnClickListener;
+import com.cashflow.statement.activity.edit.EditStatementActivity.CreateCategoryOnClickListener;
+import com.cashflow.statement.activity.edit.EditStatementActivity.SubmitButtonOnClickListener;
 import com.cashflow.statement.database.AndroidStatementDAO;
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
@@ -63,7 +63,7 @@ import com.xtremelabs.robolectric.shadows.ShadowToast;
  *
  */
 @RunWith(RobolectricTestRunner.class)
-public class EditStatementActivityTest {
+public class EditExpenseActivityTest {
     private static final String ERROR = "Error";
     private static final String CHANGED_NOTE = "changedNote";
     private static final String CHANGED_DATE = "2012";
@@ -96,14 +96,14 @@ public class EditStatementActivityTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        final ActivityModule module = new ActivityModule(new EditStatementActivityProvider());
+        final ActivityModule module = new ActivityModule(new EditStatementActivityProvider(new EditExpenseActivity()));
 
         setUpPersistentService();
         addBindings(module);
 
         ActivityModule.setUp(this, module);
 
-        underTest = new EditStatementActivity();
+        underTest = new EditExpenseActivity();
         underTest.setIntent(setUpIntentData(EXPENSE_STATEMENT));
         underTest.onCreate(null);
     }
