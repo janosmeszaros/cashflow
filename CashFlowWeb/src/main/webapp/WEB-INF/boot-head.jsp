@@ -50,7 +50,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="brand" href="${home}">CashFlow</a>
+          <a class="brand active" href="${home}">CashFlow</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
               <li class="active"><a href="#"><spring:message code="navbar.home"/></a></li>
@@ -58,8 +58,8 @@
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <spring:message code="navbar.list"/> <b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                  <li><a href="list"> <spring:message code="navbar.incomes"/> </a></li>
-                  <li><a href="#"> <spring:message code="navbar.expenses"/> </a></li>
+                  <li><a href="list_incomes"> <spring:message code="navbar.incomes"/> </a></li>
+                  <li><a href="list_expenses"> <spring:message code="navbar.expenses"/> </a></li>
                   <li class="divider"></li>
                   <li class="nav-header"> <spring:message code="navbar.recurring"/> </li>
                   <li><a href="#"> <spring:message code="navbar.incomes"/> </a></li>
@@ -74,7 +74,7 @@
                   <li><a href="add_bill"> <spring:message code="navbar.add_bill"/> </a></li>
                   <li class="divider"></li>
                   <li class="nav-header"> <spring:message code="navbar.others"/> </li>
-                  <li><a href="add_category"> <spring:message code="navbar.add_category"/> </a></li>
+                  <li><a href="manage_categories"> <spring:message code="navbar.manage_categories"/> </a></li>
                 </ul>
               </li>
             </ul>
