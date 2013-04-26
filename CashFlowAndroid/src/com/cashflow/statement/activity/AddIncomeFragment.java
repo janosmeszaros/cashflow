@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -17,8 +18,10 @@ import android.widget.SpinnerAdapter;
 
 import com.cashflow.R;
 import com.cashflow.activity.components.RecurringCheckBoxOnClickListener;
+import com.cashflow.domain.Category;
 import com.cashflow.domain.RecurringInterval;
 import com.cashflow.domain.Statement;
+import com.cashflow.domain.Statement.Builder;
 import com.cashflow.domain.StatementType;
 import com.google.inject.Inject;
 
@@ -29,6 +32,8 @@ import com.google.inject.Inject;
 public class AddIncomeFragment extends AddStatementFragment {
     private static final Logger LOG = LoggerFactory.getLogger(AddIncomeFragment.class);
 
+    @InjectView(R.id.incomeDateButton)
+    private Button dateButton;
     @Inject
     private RecurringCheckBoxOnClickListener checkBoxListener;
     @Inject
@@ -51,17 +56,14 @@ public class AddIncomeFragment extends AddStatementFragment {
     }
 
     @Override
-    public void onViewCreated(final View view, final Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        activateRecurringArea();
-    }
-
-    @Override
     protected Statement createStatement() {
-        final Statement statement = super.createStatement();
-        final Statement.Builder builder = Statement.builder(statement.getAmount(), statement.getDate()).note(statement.getNote())
-                .type(StatementType.Income).category(statement.getCategory());
+        final String amountStr = getAmountText().getText().toString();
+        final String date = dateButton.getText().toString();
+        final String note = getNotesText().getText().toString();
+        final Category category = (Category) getCategorySpinner().getSelectedItem();
+
+        final Builder builder = Statement.builder(amountStr, date);
+        builder.note(note).type(StatementType.Income).category(category);
 
         if (recurringCheckBox.isChecked()) {
             builder.recurringInterval((RecurringInterval) recurringSpinner.getSelectedItem());
@@ -78,10 +80,16 @@ public class AddIncomeFragment extends AddStatementFragment {
         }
     }
 
-    private void activateRecurringArea() {
+    @Override
+    protected void activateRecurringArea() {
         recurringCheckBox.setOnClickListener(checkBoxListener);
         recurringArea.setVisibility(VISIBLE);
         recurringSpinner.setAdapter(spinnerAdapter);
+    }
+
+    @Override
+    protected Button getDateButton() {
+        return dateButton;
     }
 
 }

@@ -13,8 +13,8 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.cashflow.R;
 import com.cashflow.bill.activity.AddBillFragment;
+import com.cashflow.statement.activity.AddExpenseFragment;
 import com.cashflow.statement.activity.AddIncomeFragment;
-import com.cashflow.statement.activity.AddStatementFragment;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
 
 /**
@@ -100,7 +100,7 @@ public class ActionsActivity extends RoboSherlockFragmentActivity implements Act
                 fragment = new AddIncomeFragment();
                 break;
             case 1:
-                fragment = new AddStatementFragment();
+                fragment = new AddExpenseFragment();
                 break;
             case 2:
                 fragment = new AddBillFragment();

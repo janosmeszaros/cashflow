@@ -1,6 +1,7 @@
 package com.cashflow.activity.components;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.mockito.Matchers.anyInt;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -18,7 +19,6 @@ import android.app.Activity;
 import android.widget.Button;
 import android.widget.DatePicker;
 
-import com.cashflow.R;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 @RunWith(RobolectricTestRunner.class)
@@ -44,7 +44,7 @@ public class OnDateSetListenerServiceTest {
         Mockito.when(datePickerMock.getYear()).thenReturn(2013);
         Mockito.when(datePickerMock.getMonth()).thenReturn(3);
         Mockito.when(datePickerMock.getDayOfMonth()).thenReturn(28);
-        Mockito.when(activity.findViewById(R.id.dateButton)).thenReturn(dateButton);
+        Mockito.when(activity.findViewById(anyInt())).thenReturn(dateButton);
         final DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM);
         final Calendar calendar = Calendar.getInstance();
         calendar.set(2013, 3, 28);

@@ -8,7 +8,7 @@ import static com.cashflow.database.DatabaseContracts.AbstractBill.COLUMN_NAME_D
 import static com.cashflow.database.DatabaseContracts.AbstractBill.COLUMN_NAME_DATE_PAYED;
 import static com.cashflow.database.DatabaseContracts.AbstractBill.COLUMN_NAME_IS_PAYED;
 import static com.cashflow.database.DatabaseContracts.AbstractBill.COLUMN_NAME_NOTE;
-import static com.cashflow.database.DatabaseContracts.AbstractBill.PROJECTION;
+import static com.cashflow.database.DatabaseContracts.AbstractBill.PROJECTION_WITH_ALIAS;
 import static com.cashflow.database.DatabaseContracts.AbstractBill.STATEMENT_INNER_JOINED_CATEGORY;
 import static com.cashflow.database.DatabaseContracts.AbstractBill.TABLE_NAME;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -150,7 +150,7 @@ public class AndroidBillDAOTest {
 
     @Test
     public void testGetAllBillsWhenCalledThenReturnListOfBills() {
-        when(database.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION, null, null, null, null, null)).thenReturn(cursorMock);
+        when(database.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION_WITH_ALIAS, null, null, null, null, null)).thenReturn(cursorMock);
         setupCursorMock();
         final List<Bill> list = new ArrayList<Bill>();
         list.add(PAYED_BILL);
@@ -158,7 +158,7 @@ public class AndroidBillDAOTest {
         final List<Bill> bills = underTest.getAllBills();
 
         verify(provider).getReadableDb();
-        verify(database).query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION, null, null, null, null, null);
+        verify(database).query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION_WITH_ALIAS, null, null, null, null, null);
         assertThat(list, equalTo(bills));
     }
 

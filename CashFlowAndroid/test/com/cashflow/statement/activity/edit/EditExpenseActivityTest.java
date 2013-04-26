@@ -120,7 +120,7 @@ public class EditExpenseActivityTest {
 
     @Test
     public void testOnCreateWhenCalledThenShouldSetTheListenerClassesToButtons() {
-        final Button button = (Button) underTest.findViewById(R.id.dateButton);
+        final Button button = (Button) underTest.findViewById(R.id.expenseDateButton);
         final ShadowTextView shadowButton = Robolectric.shadowOf(button);
         final ImageButton createCategoryButton = (ImageButton) underTest.findViewById(R.id.createCategoryButton);
         final ShadowImageView shadowCreateCategoryButton = Robolectric.shadowOf(createCategoryButton);
@@ -135,7 +135,7 @@ public class EditExpenseActivityTest {
     public void testOnCreateShouldFillUpViewsWithDataFromIntent() {
         final TextView amount = (TextView) underTest.findViewById(R.id.amountText);
         final TextView note = (TextView) underTest.findViewById(R.id.notesText);
-        final Button date = (Button) underTest.findViewById(R.id.dateButton);
+        final Button date = (Button) underTest.findViewById(R.id.expenseDateButton);
         final Spinner categorySpinner = (Spinner) underTest.findViewById(R.id.categorySpinner);
         assertThat(amount.getText().toString(), equalTo(AMOUNT));
         assertThat(note.getText().toString(), equalTo(NOTE));
@@ -317,7 +317,7 @@ public class EditExpenseActivityTest {
         notes.setText(statement.getNote());
         final EditText amount = (EditText) underTest.findViewById(R.id.amountText);
         amount.setText(statement.getAmount());
-        final Button dateButton = (Button) underTest.findViewById(R.id.dateButton);
+        final Button dateButton = (Button) underTest.findViewById(R.id.expenseDateButton);
         dateButton.setText(statement.getDate());
         final Spinner categorySpinner = (Spinner) underTest.findViewById(R.id.categorySpinner);
         final List<Category> categories = new ArrayList<Category>();

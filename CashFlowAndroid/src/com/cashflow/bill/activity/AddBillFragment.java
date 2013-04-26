@@ -53,7 +53,7 @@ public class AddBillFragment extends RoboFragment {
     private EditText notesText;
     @InjectView(R.id.categorySpinner)
     private Spinner categorySpinner;
-    @InjectView(R.id.dateButton)
+    @InjectView(R.id.billDateButton)
     private Button deadLineDateButton;
     @InjectView(R.id.recurring_area)
     private LinearLayout recurringArea;

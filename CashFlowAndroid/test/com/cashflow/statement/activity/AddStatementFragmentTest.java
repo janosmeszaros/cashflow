@@ -103,7 +103,7 @@ public class AddStatementFragmentTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        final ActivityModule module = new ActivityModule(new FragmentProviderWithRoboFragmentActivity(new AddStatementFragment()));
+        final ActivityModule module = new ActivityModule(new FragmentProviderWithRoboFragmentActivity(new AddExpenseFragment()));
         setUpMocks();
         addBindings(module);
         ActivityModule.setUp(this, module);
@@ -121,7 +121,7 @@ public class AddStatementFragmentTest {
         final Calendar calendar = Calendar.getInstance();
         final DateFormat fmtDateAndTime = DateFormat.getDateInstance(DateFormat.MEDIUM);
         final String date = fmtDateAndTime.format(calendar.getTime());
-        final Button buttonButton = (Button) underTest.getView().findViewById(R.id.dateButton);
+        final Button buttonButton = (Button) underTest.getView().findViewById(R.id.expenseDateButton);
 
         underTest.onViewCreated(underTest.getView(), null);
 
@@ -240,7 +240,7 @@ public class AddStatementFragmentTest {
     private void setViewsValues(final Statement statement) {
         final EditText notes = (EditText) underTest.getView().findViewById(R.id.notesText);
         final EditText amount = (EditText) underTest.getView().findViewById(R.id.amountText);
-        final Button button = (Button) underTest.getView().findViewById(R.id.dateButton);
+        final Button button = (Button) underTest.getView().findViewById(R.id.expenseDateButton);
         final Spinner categorySpinner = (Spinner) underTest.getView().findViewById(R.id.categorySpinner);
 
         notes.setText(statement.getNote());

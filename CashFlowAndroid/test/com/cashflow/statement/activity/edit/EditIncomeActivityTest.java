@@ -111,7 +111,7 @@ public class EditIncomeActivityTest {
 
     @Test
     public void testOnCreateWhenCalledThenShouldSetTheListenerClassToTheDateButton() {
-        final Button button = (Button) underTest.findViewById(R.id.dateButton);
+        final Button button = (Button) underTest.findViewById(R.id.incomeDateButton);
         final ShadowTextView shadowButton = shadowOf(button);
         assertThat((DateButtonOnClickListener) shadowButton.getOnClickListener(), equalTo(listener));
     }
@@ -122,7 +122,7 @@ public class EditIncomeActivityTest {
         final ShadowTextView amountShadow = shadowOf(amount);
         final TextView note = (TextView) underTest.findViewById(R.id.notesText);
         final ShadowTextView noteShadow = shadowOf(note);
-        final Button date = (Button) underTest.findViewById(R.id.dateButton);
+        final Button date = (Button) underTest.findViewById(R.id.incomeDateButton);
         final ShadowButton dateShadow = (ShadowButton) shadowOf(date);
         assertThat(amountShadow.getText().toString(), equalTo(AMOUNT));
         assertThat(noteShadow.getText().toString(), equalTo(NOTE));
@@ -242,7 +242,7 @@ public class EditIncomeActivityTest {
         notes.setText(statement.getNote());
         final EditText amount = (EditText) underTest.findViewById(R.id.amountText);
         amount.setText(statement.getAmount());
-        final Button dateButton = (Button) underTest.findViewById(R.id.dateButton);
+        final Button dateButton = (Button) underTest.findViewById(R.id.incomeDateButton);
         dateButton.setText(statement.getDate());
         final Spinner categorySpinner = (Spinner) underTest.findViewById(R.id.categorySpinner);
         final List<Category> categories = new ArrayList<Category>();

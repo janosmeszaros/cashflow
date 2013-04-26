@@ -17,6 +17,7 @@ import android.widget.TabWidget;
 
 import com.actionbarsherlock.view.Window;
 import com.cashflow.R;
+import com.cashflow.bill.activity.ListBillFragment;
 import com.cashflow.statement.activity.list.ListExpenseFragment;
 import com.cashflow.statement.activity.list.ListIncomeFragment;
 import com.cashflow.statement.activity.list.ListRecurringIncomeFragment;
@@ -45,6 +46,7 @@ public class ListActivity extends RoboSherlockFragmentActivity {
         addIncomeTab();
         addExpenseTab();
         addRecurringIncomeTab();
+        addListBillTab();
 
         if (savedInstanceState != null) {
             mTabHost.setCurrentTabByTag(savedInstanceState.getString("tab"));
@@ -64,6 +66,11 @@ public class ListActivity extends RoboSherlockFragmentActivity {
     private void addRecurringIncomeTab() {
         mTabsAdapter.addTab(mTabHost.newTabSpec("recurringIncome").setIndicator(getString(R.string.title_activity_list_recurringincomes)),
                 ListRecurringIncomeFragment.class, null);
+    }
+
+    private void addListBillTab() {
+        mTabsAdapter.addTab(mTabHost.newTabSpec("bill").setIndicator(getString(R.string.title_activity_list_bill)),
+                ListBillFragment.class, null);
     }
 
     @Override

@@ -171,7 +171,7 @@ public class AddIncomeFragmentTest {
     private void setViewsValues(final Statement statement) {
         final EditText notes = (EditText) underTest.getView().findViewById(R.id.notesText);
         final EditText amount = (EditText) underTest.getView().findViewById(R.id.amountText);
-        final Button button = (Button) underTest.getView().findViewById(R.id.dateButton);
+        final Button button = (Button) underTest.getView().findViewById(R.id.incomeDateButton);
         final Spinner spinner = (Spinner) underTest.getView().findViewById(R.id.recurring_spinner);
         final Spinner categorySpinner = (Spinner) underTest.getView().findViewById(R.id.categorySpinner);
 

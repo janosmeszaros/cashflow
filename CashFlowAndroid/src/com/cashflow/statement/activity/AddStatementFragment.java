@@ -12,10 +12,8 @@ import roboguice.inject.InjectView;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,15 +28,13 @@ import com.cashflow.dao.CategoryDAO;
 import com.cashflow.dao.StatementDAO;
 import com.cashflow.domain.Category;
 import com.cashflow.domain.Statement;
-import com.cashflow.domain.Statement.Builder;
-import com.cashflow.domain.StatementType;
 import com.google.inject.Inject;
 
 /**
  * AddStatement Base class. Default type is Expense.
  * @author Janos_Gyula_Meszaros
  */
-public class AddStatementFragment extends RoboFragment {
+public abstract class AddStatementFragment extends RoboFragment {
 
     private static final Logger LOG = LoggerFactory.getLogger(AddStatementFragment.class);
     private static final int CREATE_CATEGORY_ACTIVITY_ID = 1;
@@ -52,8 +48,6 @@ public class AddStatementFragment extends RoboFragment {
 
     @InjectView(R.id.amountText)
     private EditText amountText;
-    @InjectView(R.id.dateButton)
-    private Button dateButton;
     @InjectView(R.id.notesText)
     private EditText notesText;
     @InjectView(R.id.categorySpinner)
@@ -63,13 +57,23 @@ public class AddStatementFragment extends RoboFragment {
     @InjectView(R.id.submitButton)
     private Button submit;
 
-    private final StatementType type = StatementType.Expense;
-
-    @Override
-    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-        LOG.debug("AddStatementFragment is creating...");
-        return inflater.inflate(R.layout.add_expense_statement_fragment, container, false);
+    public EditText getAmountText() {
+        return amountText;
     }
+
+    public EditText getNotesText() {
+        return notesText;
+    }
+
+    public Spinner getCategorySpinner() {
+        return categorySpinner;
+    }
+
+    protected abstract Button getDateButton();
+
+    protected abstract void activateRecurringArea();
+
+    protected abstract Statement createStatement();
 
     @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState) {
@@ -78,6 +82,7 @@ public class AddStatementFragment extends RoboFragment {
         setUpDateButton();
         setCategorySpinner();
         setUpButtons();
+        activateRecurringArea();
     }
 
     @Override
@@ -104,21 +109,9 @@ public class AddStatementFragment extends RoboFragment {
     private void setUpDateButton() {
         final Calendar calendar = Calendar.getInstance();
         final DateFormat fmtDateAndTime = DateFormat.getDateInstance(DateFormat.MEDIUM);
-        dateButton.setText(fmtDateAndTime.format(calendar.getTime()));
+        getDateButton().setText(fmtDateAndTime.format(calendar.getTime()));
 
-        dateButton.setOnClickListener(dateListener);
-    }
-
-    protected Statement createStatement() {
-        final String amountStr = amountText.getText().toString();
-        final String date = dateButton.getText().toString();
-        final String note = notesText.getText().toString();
-        final Category category = (Category) categorySpinner.getSelectedItem();
-
-        final Builder builder = Statement.builder(amountStr, date);
-        builder.note(note).type(type).category(category);
-
-        return builder.build();
+        getDateButton().setOnClickListener(dateListener);
     }
 
     class CreateCategoryOnClickListener implements OnClickListener {

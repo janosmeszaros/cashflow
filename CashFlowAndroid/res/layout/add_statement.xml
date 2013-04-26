@@ -68,40 +68,19 @@
             android:prompt="@string/label_category" />
 
         <ImageButton
-            style="?android:attr/buttonStyleSmall"
             android:id="@+id/createCategoryButton"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:contentDescription="@string/title_activity_create_category"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:src="@android:drawable/ic_menu_add" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/LinearLayoutDate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/LinearLayoutCategory" >
-
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/date_label"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <Button
-            android:id="@+id/dateButton"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:layout_marginLeft="40dp" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/LinearLayoutNote"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/LinearLayoutDate" >
+        android:layout_below="@id/LinearLayoutCategory" >
 
         <TextView
             android:id="@+id/textView1"
@@ -119,6 +98,5 @@
             android:ems="10"
             android:inputType="textMultiLine" />
     </LinearLayout>
-
 
 </RelativeLayout>

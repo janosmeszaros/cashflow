@@ -42,9 +42,9 @@ import com.cashflow.category.database.AndroidCategoryDAO;
 import com.cashflow.dao.BillDAO;
 import com.cashflow.dao.CategoryDAO;
 import com.cashflow.domain.Bill;
-import com.cashflow.domain.RecurringInterval;
 import com.cashflow.domain.Bill.Builder;
 import com.cashflow.domain.Category;
+import com.cashflow.domain.RecurringInterval;
 import com.google.inject.Inject;
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
@@ -101,7 +101,7 @@ public class AddBillFragmentTest {
 
     @Test
     public void testOnViewCreatedWhenCalledShouldSetDateButton() {
-        final Button dateButton = (Button) underTest.getView().findViewById(R.id.dateButton);
+        final Button dateButton = (Button) underTest.getView().findViewById(R.id.billDateButton);
 
         underTest.onViewCreated(underTest.getView(), null);
 
@@ -270,7 +270,7 @@ public class AddBillFragmentTest {
         final EditText amountText = (EditText) underTest.getView().findViewById(R.id.amountText);
         final EditText notesText = (EditText) underTest.getView().findViewById(R.id.notesText);
         final Spinner categorySpinner = (Spinner) underTest.getView().findViewById(R.id.categorySpinner);
-        final Button deadLineDateButton = (Button) underTest.getView().findViewById(R.id.dateButton);
+        final Button deadLineDateButton = (Button) underTest.getView().findViewById(R.id.billDateButton);
         final CheckBox recurringCheckBox = (CheckBox) underTest.getView().findViewById(R.id.recurring_checkbox_bill);
 
         amountText.setText(testBill.getAmount());
