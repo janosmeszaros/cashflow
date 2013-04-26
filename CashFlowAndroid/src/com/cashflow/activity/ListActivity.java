@@ -30,18 +30,20 @@ import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmen
 public class ListActivity extends RoboSherlockFragmentActivity {
 
     @InjectView(android.R.id.tabhost)
-    private TabHost mTabHost;
+    private TabHost tabHost;
     @InjectView(R.id.pager)
-    private ViewPager mViewPager;
-    private TabsAdapter mTabsAdapter;
+    private ViewPager viewPager;
+    private TabsAdapter tabsAdapter;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.list_fragments);
-        mTabHost.setup();
-        mTabsAdapter = new TabsAdapter(this, mTabHost, mViewPager);
+        tabHost.setup();
+        tabsAdapter = new TabsAdapter(this, tabHost, viewPager);
+
+        viewPager.setOffscreenPageLimit(3);
 
         addIncomeTab();
         addExpenseTab();
@@ -49,34 +51,34 @@ public class ListActivity extends RoboSherlockFragmentActivity {
         addListBillTab();
 
         if (savedInstanceState != null) {
-            mTabHost.setCurrentTabByTag(savedInstanceState.getString("tab"));
+            tabHost.setCurrentTabByTag(savedInstanceState.getString("tab"));
         }
     }
 
     private void addIncomeTab() {
-        mTabsAdapter.addTab(mTabHost.newTabSpec("income").setIndicator(getString(R.string.title_activity_list_incomes)),
+        tabsAdapter.addTab(tabHost.newTabSpec("income").setIndicator(getString(R.string.title_activity_list_incomes)),
                 ListIncomeFragment.class, null);
     }
 
     private void addExpenseTab() {
-        mTabsAdapter.addTab(mTabHost.newTabSpec("expense").setIndicator(getString(R.string.title_activity_list_expenses)),
+        tabsAdapter.addTab(tabHost.newTabSpec("expense").setIndicator(getString(R.string.title_activity_list_expenses)),
                 ListExpenseFragment.class, null);
     }
 
     private void addRecurringIncomeTab() {
-        mTabsAdapter.addTab(mTabHost.newTabSpec("recurringIncome").setIndicator(getString(R.string.title_activity_list_recurringincomes)),
+        tabsAdapter.addTab(tabHost.newTabSpec("recurringIncome").setIndicator(getString(R.string.title_activity_list_recurringincomes)),
                 ListRecurringIncomeFragment.class, null);
     }
 
     private void addListBillTab() {
-        mTabsAdapter.addTab(mTabHost.newTabSpec("bill").setIndicator(getString(R.string.title_activity_list_bill)),
+        tabsAdapter.addTab(tabHost.newTabSpec("bill").setIndicator(getString(R.string.title_activity_list_bill)),
                 ListBillFragment.class, null);
     }
 
     @Override
     protected void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("tab", mTabHost.getCurrentTabTag());
+        outState.putString("tab", tabHost.getCurrentTabTag());
     }
 
     /**
@@ -84,9 +86,9 @@ public class ListActivity extends RoboSherlockFragmentActivity {
      * @author Janos_Gyula_Meszaros
      */
     public static class TabsAdapter extends FragmentPagerAdapter implements TabHost.OnTabChangeListener, ViewPager.OnPageChangeListener {
-        private final Context mContext;
-        private final TabHost mTabHost;
-        private final ViewPager mViewPager;
+        private final Context context;
+        private final TabHost tabHost;
+        private final ViewPager viewPager;
         private final List<TabInfo> mTabs = new ArrayList<TabInfo>();
 
         /**
@@ -100,13 +102,13 @@ public class ListActivity extends RoboSherlockFragmentActivity {
          */
         public TabsAdapter(final FragmentActivity activity, final TabHost tabHost, final ViewPager pager) {
             super(activity.getSupportFragmentManager());
-            mContext = activity;
-            mTabHost = tabHost;
-            mViewPager = pager;
+            this.context = activity;
+            this.tabHost = tabHost;
+            this.viewPager = pager;
 
-            mTabHost.setOnTabChangedListener(this);
-            mViewPager.setAdapter(this);
-            mViewPager.setOnPageChangeListener(this);
+            tabHost.setOnTabChangedListener(this);
+            viewPager.setAdapter(this);
+            viewPager.setOnPageChangeListener(this);
         }
 
         /**
@@ -119,12 +121,12 @@ public class ListActivity extends RoboSherlockFragmentActivity {
          *            args
          */
         public void addTab(final TabHost.TabSpec tabSpec, final Class<?> clss, final Bundle args) {
-            tabSpec.setContent(new DummyTabFactory(mContext));
+            tabSpec.setContent(new DummyTabFactory(context));
             final String tag = tabSpec.getTag();
 
             final TabInfo info = new TabInfo(tag, clss, args);
             mTabs.add(info);
-            mTabHost.addTab(tabSpec);
+            tabHost.addTab(tabSpec);
             notifyDataSetChanged();
         }
 
@@ -136,13 +138,13 @@ public class ListActivity extends RoboSherlockFragmentActivity {
         @Override
         public Fragment getItem(final int position) {
             final TabInfo info = mTabs.get(position);
-            return Fragment.instantiate(mContext, info.clss.getName(), info.args);
+            return Fragment.instantiate(context, info.clss.getName(), info.args);
         }
 
         @Override
         public void onTabChanged(final String tabId) {
-            final int position = mTabHost.getCurrentTab();
-            mViewPager.setCurrentItem(position);
+            final int position = tabHost.getCurrentTab();
+            viewPager.setCurrentItem(position);
         }
 
         @Override
@@ -151,10 +153,10 @@ public class ListActivity extends RoboSherlockFragmentActivity {
 
         @Override
         public void onPageSelected(final int position) {
-            final TabWidget widget = mTabHost.getTabWidget();
+            final TabWidget widget = tabHost.getTabWidget();
             final int oldFocusability = widget.getDescendantFocusability();
             widget.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
-            mTabHost.setCurrentTab(position);
+            tabHost.setCurrentTab(position);
             widget.setDescendantFocusability(oldFocusability);
         }
 

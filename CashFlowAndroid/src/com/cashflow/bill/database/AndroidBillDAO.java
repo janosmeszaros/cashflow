@@ -10,7 +10,7 @@ import static com.cashflow.database.DatabaseContracts.AbstractBill.COLUMN_NAME_D
 import static com.cashflow.database.DatabaseContracts.AbstractBill.COLUMN_NAME_INTERVAL;
 import static com.cashflow.database.DatabaseContracts.AbstractBill.COLUMN_NAME_IS_PAYED;
 import static com.cashflow.database.DatabaseContracts.AbstractBill.COLUMN_NAME_NOTE;
-import static com.cashflow.database.DatabaseContracts.AbstractBill.PROJECTION;
+import static com.cashflow.database.DatabaseContracts.AbstractBill.PROJECTION_WITH_ALIAS;
 import static com.cashflow.database.DatabaseContracts.AbstractBill.STATEMENT_INNER_JOINED_CATEGORY;
 import static com.cashflow.database.DatabaseContracts.AbstractBill.TABLE_NAME;
 
@@ -99,7 +99,7 @@ public class AndroidBillDAO implements BillDAO {
     public List<Bill> getAllBills() {
         final SQLiteDatabase database = provider.getReadableDb();
         // TODO Bill PROJECTION has too few column.
-        final Cursor query = database.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION, null, null, null, null, null);
+        final Cursor query = database.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION_WITH_ALIAS, null, null, null, null, null);
         return createListFromCursor(query);
     }
 
