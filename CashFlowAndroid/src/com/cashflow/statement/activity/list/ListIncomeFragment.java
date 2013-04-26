@@ -17,13 +17,13 @@ public class ListIncomeFragment extends ListStatementFragment {
 
     @Override
     protected List<Statement> getDataFromDatabase() {
-        return statementDAO.getIncomes();
+        return getStatementDAO().getIncomes();
     }
 
     @Override
     protected void editButtonOnClick() {
         final Intent intent = new Intent(getActivity(), EditIncomeActivity.class);
-        intent.putExtra(ID_EXTRA, selectedIds.get(0));
+        intent.putExtra(ID_EXTRA, getSelectedIds().get(0));
         startActivity(intent);
     }
 

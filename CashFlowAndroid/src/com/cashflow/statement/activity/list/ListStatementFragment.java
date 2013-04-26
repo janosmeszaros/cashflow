@@ -44,12 +44,12 @@ public abstract class ListStatementFragment extends RoboSherlockFragment impleme
 
     private static final Logger LOG = LoggerFactory.getLogger(ListStatementFragment.class);
 
-    protected final List<String> selectedIds = new ArrayList<String>();
+    private final List<String> selectedIds = new ArrayList<String>();
     private final List<Integer> selectedPositions = new ArrayList<Integer>();
     private ActionMode actionMode;
 
     @Inject
-    protected StatementDAO statementDAO;
+    private StatementDAO statementDAO;
     @InjectView(R.id.list_statement)
     private ListView list;
 
@@ -137,6 +137,14 @@ public abstract class ListStatementFragment extends RoboSherlockFragment impleme
                 statement.getNote(), statement.getRecurringInterval().toString() });
         }
         return cursor;
+    }
+
+    protected StatementDAO getStatementDAO() {
+        return statementDAO;
+    }
+
+    protected List<String> getSelectedIds() {
+        return selectedIds;
     }
 
     private SimpleCursorAdapter createAdapter(final MatrixCursor cursor) {

@@ -17,13 +17,13 @@ public class ListExpenseFragment extends ListStatementFragment {
 
     @Override
     protected List<Statement> getDataFromDatabase() {
-        return statementDAO.getExpenses();
+        return getStatementDAO().getExpenses();
     }
 
     @Override
     protected void editButtonOnClick() {
         final Intent intent = new Intent(getActivity(), EditStatementActivity.class);
-        intent.putExtra(ID_EXTRA, selectedIds.get(0));
+        intent.putExtra(ID_EXTRA, getSelectedIds().get(0));
         startActivity(intent);
     }
 
