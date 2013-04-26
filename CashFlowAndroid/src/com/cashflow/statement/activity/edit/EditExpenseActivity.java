@@ -1,5 +1,8 @@
 package com.cashflow.statement.activity.edit;
 
+import roboguice.inject.InjectView;
+import android.widget.Button;
+
 import com.cashflow.R;
 import com.cashflow.domain.Category;
 import com.cashflow.domain.Statement;
@@ -9,6 +12,9 @@ import com.cashflow.domain.Statement;
  * @author Janos_Gyula_Meszaros
  */
 public class EditExpenseActivity extends EditStatementActivity {
+
+    @InjectView(R.id.expenseDateButton)
+    private Button dateButton;
 
     @Override
     protected void setTitle() {
@@ -22,14 +28,20 @@ public class EditExpenseActivity extends EditStatementActivity {
 
     @Override
     protected Statement createStatement() {
-        final String amountStr = amountText.getText().toString();
+        final String amountStr = getAmountText().getText().toString();
         final String date = dateButton.getText().toString();
-        final String note = notesText.getText().toString();
-        final Category category = (Category) categorySpinner.getSelectedItem();
-        final String statementId = originalStatement.getStatementId();
+        final String note = getNotesText().getText().toString();
+        final Category category = (Category) getCategorySpinner().getSelectedItem();
+        final String statementId = getOriginalStatement().getStatementId();
 
-        return Statement.builder(amountStr, date).note(note).type(originalStatement.getType()).statementId(statementId).category(category)
+        return Statement.builder(amountStr, date).note(note).type(getOriginalStatement().getType()).statementId(statementId)
+                .category(category)
                 .build();
+    }
+
+    @Override
+    protected Button getDateButton() {
+        return dateButton;
     }
 
 }

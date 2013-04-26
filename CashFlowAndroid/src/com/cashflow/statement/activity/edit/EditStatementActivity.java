@@ -46,25 +46,23 @@ public abstract class EditStatementActivity extends RoboFragmentActivity {
     private static final Logger LOG = LoggerFactory.getLogger(EditStatementActivity.class);
 
     @InjectView(R.id.amountText)
-    protected EditText amountText;
-    @InjectView(R.id.dateButton)
-    protected Button dateButton;
+    private EditText amountText;
     @InjectView(R.id.notesText)
-    protected EditText notesText;
+    private EditText notesText;
     @InjectView(R.id.categorySpinner)
-    protected Spinner categorySpinner;
+    private Spinner categorySpinner;
     @InjectView(R.id.createCategoryButton)
-    protected ImageButton createCategoryButton;
+    private ImageButton createCategoryButton;
     @InjectView(R.id.submitButton)
-    protected Button submit;
+    private Button submit;
     @Inject
-    protected StatementDAO statementDAO;
+    private StatementDAO statementDAO;
     @Inject
-    protected CategoryDAO categoryDAO;
+    private CategoryDAO categoryDAO;
     @Inject
-    protected DateButtonOnClickListener listener;
+    private DateButtonOnClickListener listener;
 
-    protected Statement originalStatement;
+    private Statement originalStatement;
 
     protected abstract void setTitle();
 
@@ -72,10 +70,12 @@ public abstract class EditStatementActivity extends RoboFragmentActivity {
 
     protected abstract Statement createStatement();
 
+    protected abstract Button getDateButton();
+
     protected void fillFieldsWithData() {
         amountText.setText(originalStatement.getAmount());
         notesText.setText(originalStatement.getNote());
-        dateButton.setText(originalStatement.getDate());
+        getDateButton().setText(originalStatement.getDate());
 
         final ArrayAdapter<Category> adapter = setCategorySpinner();
         final int position = adapter.getPosition(originalStatement.getCategory());
@@ -96,7 +96,7 @@ public abstract class EditStatementActivity extends RoboFragmentActivity {
 
     protected boolean isValuesChanged() {
         final String amount = amountText.getText().toString();
-        final String date = dateButton.getText().toString();
+        final String date = getDateButton().getText().toString();
         final String note = notesText.getText().toString();
         final Category category = (Category) categorySpinner.getSelectedItem();
 
@@ -106,7 +106,7 @@ public abstract class EditStatementActivity extends RoboFragmentActivity {
     private void setUpButtons() {
         createCategoryButton.setOnClickListener(new CreateCategoryOnClickListener());
         submit.setOnClickListener(new SubmitButtonOnClickListener());
-        dateButton.setOnClickListener(listener);
+        getDateButton().setOnClickListener(listener);
     }
 
     private boolean isSomeThingChanged(final String amount, final String date, final String note, final Category category) {
@@ -135,6 +135,22 @@ public abstract class EditStatementActivity extends RoboFragmentActivity {
             final ArrayAdapter<Category> adapter = setCategorySpinner();
             categorySpinner.setSelection(adapter.getCount() - 1);
         }
+    }
+
+    public EditText getAmountText() {
+        return amountText;
+    }
+
+    public EditText getNotesText() {
+        return notesText;
+    }
+
+    public Spinner getCategorySpinner() {
+        return categorySpinner;
+    }
+
+    public Statement getOriginalStatement() {
+        return originalStatement;
     }
 
     protected class CreateCategoryOnClickListener implements OnClickListener {
