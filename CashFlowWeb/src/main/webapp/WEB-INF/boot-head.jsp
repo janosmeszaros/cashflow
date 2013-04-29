@@ -26,6 +26,7 @@
     <link href="${url}css/bootstrap-responsive.min.css" rel="stylesheet">
     <link href="${url}css/font-awesome.min.css" rel="stylesheet" >
     <link href="${url}css/datepicker.css" rel="stylesheet" >
+    <link href="${url}css/jquery.dataTables.css" rel="stylesheet" >
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
