@@ -2,15 +2,11 @@ package com.cashflow.web;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import org.dozer.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
@@ -19,13 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.cashflow.dao.CategoryDAO;
-import com.cashflow.dao.StatementDAO;
 import com.cashflow.domain.Category;
-import com.cashflow.domain.Statement;
-import com.cashflow.domain.StatementType;
 import com.cashflow.web.dto.BillDTO;
 import com.cashflow.web.dto.CategoryDTO;
-import com.cashflow.web.dto.StatementDTO;
 
 /**
  * Sample controller for going to the home page with a message
@@ -33,8 +25,6 @@ import com.cashflow.web.dto.StatementDTO;
 @Controller
 public class HomeController {
     private static final Logger LOGGER = LoggerFactory.getLogger(HomeController.class);
-    @Autowired
-    private StatementDAO statementDAO;
     @Autowired
     private CategoryDAO categoryDAO;
     @Autowired
@@ -94,25 +84,6 @@ public class HomeController {
         return "redirect:/";
     }
 
-    /**
-     * Selects the add_statement page.
-     * @param model
-     *            {@link Model}
-     * @return add_statement
-     */
-    @RequestMapping(value = "/add_income", method = RequestMethod.GET)
-    public String addIncome(final Model model) {
-        final StatementDTO income = new StatementDTO();
-        income.setType(StatementType.Income);
-        model.addAttribute("category", new CategoryDTO());
-
-        model.addAttribute("statement", income);
-        model.addAttribute("is_income", true);
-        addCategories(model);
-
-        return "add_statement";
-    }
-
     private void addCategories(final Model model) {
         final List<Category> allCategories = categoryDAO.getAllCategories();
         model.addAttribute("categories", convertToCategoryList(allCategories));
@@ -133,64 +104,6 @@ public class HomeController {
         return mapper.map(category, CategoryDTO.class);
     }
 
-    private List<StatementDTO> convertToStatementList(final List<Statement> list) {
-        final List<StatementDTO> statementList = new ArrayList<StatementDTO>();
-
-        for (final Statement entity : list) {
-            final StatementDTO category = convertToStatement(entity);
-            statementList.add(category);
-        }
-
-        return statementList;
-    }
-
-    private StatementDTO convertToStatement(final Statement statement) {
-        return mapper.map(statement, StatementDTO.class);
-    }
-
-    /**
-     * Selects the add_statement page.
-     * @param model
-     *            {@link Model}
-     * @return add_statement
-     */
-    @RequestMapping(value = "/add_expense", method = RequestMethod.GET)
-    public String addExpense(final Model model) {
-        final StatementDTO expense = new StatementDTO();
-        expense.setType(StatementType.Expense);
-        model.addAttribute("category", new CategoryDTO());
-
-        model.addAttribute("statement", expense);
-        model.addAttribute("is_income", false);
-        addCategories(model);
-
-        return "add_statement";
-    }
-
-    /**
-     * Posts the add_statement page.
-     * @param statement
-     *            {@link StatementDTO}
-     * @param model
-     *            {@link Model}
-     * @return redirect:/
-     */
-    @RequestMapping(value = "/add_statement", method = RequestMethod.POST)
-    public String addStatement(final StatementDTO statement, final Model model) {
-
-        final Statement statementToSave = createStatement(statement);
-
-        statementDAO.save(statementToSave);
-        return "redirect:/";
-    }
-
-    private Statement createStatement(final StatementDTO statement) {
-        final CategoryDTO categoryDTO = statement.getCategory();
-        final Category category = Category.builder(categoryDTO.getName()).categoryId(categoryDTO.getCategoryId()).build();
-        return Statement.builder(statement.getAmount(), statement.getDate()).note(statement.getNote()).type(statement.getType()).category(category)
-                .recurringInterval(statement.getInterval()).build();
-    }
-
     /**
      * Selects the add_bill page.
      * @param model
@@ -205,48 +118,6 @@ public class HomeController {
         addCategories(model);
 
         return "add_bill";
-    }
-
-    /**
-     * Selects the list_incomes page.
-     * @param model {@link Model}
-     * @param locale {@link Locale}
-     * @return list_statements
-     */
-    @RequestMapping(value = "/list_incomes", method = RequestMethod.GET)
-    public String listIncomes(final Model model, final Locale locale) {
-
-        final ApplicationContext applicationContext = new ClassPathXmlApplicationContext("i18n.xml");
-        final ReloadableResourceBundleMessageSource bean = (ReloadableResourceBundleMessageSource) applicationContext.getBean("messageSource");
-
-        LOGGER.info("List incomes.");
-
-        final String listIncomes = bean.getMessage("label.list_incomes", null, locale);
-        model.addAttribute("legendLabel", listIncomes);
-        model.addAttribute("statements", convertToStatementList(statementDAO.getIncomes()));
-
-        ((ClassPathXmlApplicationContext) applicationContext).close();
-        return "list_statements";
-    }
-
-    /**
-     * Selects the list_expenses page.
-     * @param model {@link Model}
-     * @param locale {@link Locale}
-     * @return list_statements
-     */
-    @RequestMapping(value = "/list_expenses", method = RequestMethod.GET)
-    public String listExpenses(final Model model, final Locale locale) {
-        final ApplicationContext applicationContext = new ClassPathXmlApplicationContext("i18n.xml");
-        final ReloadableResourceBundleMessageSource bean = (ReloadableResourceBundleMessageSource) applicationContext.getBean("messageSource");
-
-        LOGGER.info("List expenses.");
-        final String listExpenses = bean.getMessage("label.list_expenses", null, locale);
-        model.addAttribute("legendLabel", listExpenses);
-        model.addAttribute("statements", convertToStatementList(statementDAO.getExpenses()));
-
-        ((ClassPathXmlApplicationContext) applicationContext).close();
-        return "list_statements";
     }
 
     /**
