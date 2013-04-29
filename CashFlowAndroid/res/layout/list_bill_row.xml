@@ -83,14 +83,13 @@
             android:layout_weight="1"
             android:textIsSelectable="false" />
 
-        <TextView
-            android:id="@+id/row_isPayed"
+        <Button
+            android:id="@+id/row_pay_button"
+            style="@style/BlueBtn"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="marquee"
-            android:singleLine="true"
-            android:text="default"
-            android:textIsSelectable="false" />
+            android:layout_height="33dp"
+            android:text="@string/pay_bill"
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/row_payedDate"

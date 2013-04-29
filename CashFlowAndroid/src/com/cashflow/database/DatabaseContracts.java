@@ -140,12 +140,10 @@ public final class DatabaseContracts {
 
         public static final String[] PROJECTION = new String[] { _ID, COLUMN_NAME_AMOUNT,
             COLUMN_NAME_DATE_ADDED,
-            COLUMN_NAME_DATE_PAYED, AbstractCategory.COLUMN_NAME_CATEGORY_NAME, COLUMN_NAME_DATE_DEADLINE, COLUMN_NAME_NOTE,
-            COLUMN_NAME_IS_PAYED };
+            COLUMN_NAME_DATE_PAYED, AbstractCategory.COLUMN_NAME_CATEGORY_NAME, COLUMN_NAME_DATE_DEADLINE, COLUMN_NAME_NOTE };
 
         public static final int[] TO_VIEWS = { R.id.row_id, R.id.row_amount, R.id.row_date, R.id.row_payedDate, R.id.row_category,
-            R.id.row_deadline, R.id.row_note,
-            R.id.row_isPayed };
+            R.id.row_deadline, R.id.row_note };
 
         public static final String SQL_CREATE_ENTRIES = CREATE_TABLE + TABLE_NAME + OPEN_PARENTHESIS + _ID + " INTEGER PRIMARY KEY,"
                 + COLUMN_NAME_AMOUNT + INTEGER_TYPE + COMMA_SEP + COLUMN_NAME_DATE_ADDED + TEXT_TYPE + COMMA_SEP

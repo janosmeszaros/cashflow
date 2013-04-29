@@ -1,5 +1,11 @@
 <resources>
-      <style name="WindowTitleBackground" >   
-        <item name="android:background">@android:color/transparent</item>       
+
+    <style name="WindowTitleBackground">
+        <item name="android:background">@android:color/transparent</item>
     </style>
+
+    <style name="BlueBtn">
+        <item name="android:background">@drawable/btn_blue</item>
+    </style>
+
 </resources>

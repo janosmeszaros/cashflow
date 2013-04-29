@@ -45,5 +45,6 @@
     <string name="recurring_bill_label">Recurring interval</string>
     <string name="income_string">Income</string>
     <string name="expense_string">Expense</string>
+    <string name="pay_bill">pay</string>
 
 </resources>
