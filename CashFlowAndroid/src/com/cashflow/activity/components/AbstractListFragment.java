@@ -2,6 +2,7 @@ package com.cashflow.activity.components;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import android.os.Bundle;
 import android.view.View;
@@ -29,7 +30,7 @@ public abstract class AbstractListFragment extends RoboSherlockFragment implemen
     private static final String DELETE = "Delete";
 
     private final List<String> selectedIds = new ArrayList<String>();
-    private final List<Integer> selectedPositions = new ArrayList<Integer>();
+    private final List<Integer> selectedPositions = new CopyOnWriteArrayList<Integer>();
     private ActionMode actionMode;
 
     protected abstract ListView getList();
