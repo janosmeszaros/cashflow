@@ -8,23 +8,24 @@ import java.util.List;
 import roboguice.inject.InjectView;
 import android.database.MatrixCursor;
 import android.os.Bundle;
+import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 
 import com.cashflow.R;
+import com.cashflow.activity.components.CustomCursorAdapter;
+import com.cashflow.activity.components.AbstractListFragment;
 import com.cashflow.dao.BillDAO;
 import com.cashflow.domain.Bill;
-import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.inject.Inject;
 
 /**
  * List bill fragment.
  * @author Janos_Gyula_Meszaros
  */
-public class ListBillFragment extends RoboSherlockFragment {
+public class ListBillFragment extends AbstractListFragment {
 
     @Inject
     private BillDAO billDAO;
@@ -56,7 +57,7 @@ public class ListBillFragment extends RoboSherlockFragment {
 
     private void fillUpListView(final List<Bill> data) {
         final MatrixCursor cursor = fillUpCursor(data);
-        final SimpleCursorAdapter adapter = createAdapter(cursor);
+        final CursorAdapter adapter = createAdapter(cursor);
         list.setAdapter(adapter);
     }
 
@@ -71,9 +72,21 @@ public class ListBillFragment extends RoboSherlockFragment {
         return cursor;
     }
 
-    private SimpleCursorAdapter createAdapter(final MatrixCursor cursor) {
-        final SimpleCursorAdapter adapter =
-                new SimpleCursorAdapter(getActivity(), R.layout.list_bill_row, cursor, PROJECTION, TO_VIEWS);
+    private CursorAdapter createAdapter(final MatrixCursor cursor) {
+        final CustomCursorAdapter adapter =
+                new CustomCursorAdapter(getActivity(), R.layout.list_bill_row, cursor, PROJECTION, TO_VIEWS);
+        adapter.setListener(this);
         return adapter;
+    }
+
+    @Override
+    protected ListView getList() {
+        return list;
+    }
+
+    @Override
+    protected void editButtonOnClick() {
+        // TODO Auto-generated method stub
+
     }
 }
