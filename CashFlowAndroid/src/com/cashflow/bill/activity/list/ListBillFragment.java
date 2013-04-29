@@ -1,9 +1,14 @@
-package com.cashflow.bill.activity;
+package com.cashflow.bill.activity.list;
 
 import static com.cashflow.database.DatabaseContracts.AbstractBill.PROJECTION;
 import static com.cashflow.database.DatabaseContracts.AbstractBill.TO_VIEWS;
 
+import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import roboguice.inject.InjectView;
 import android.database.MatrixCursor;
@@ -11,11 +16,12 @@ import android.os.Bundle;
 import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.cashflow.R;
-import com.cashflow.activity.components.CustomCursorAdapter;
 import com.cashflow.activity.components.AbstractListFragment;
 import com.cashflow.dao.BillDAO;
 import com.cashflow.domain.Bill;
@@ -25,7 +31,8 @@ import com.google.inject.Inject;
  * List bill fragment.
  * @author Janos_Gyula_Meszaros
  */
-public class ListBillFragment extends AbstractListFragment {
+public class ListBillFragment extends AbstractListFragment implements OnClickListener {
+    private static final Logger LOG = LoggerFactory.getLogger(ListBillFragment.class);
 
     @Inject
     private BillDAO billDAO;
@@ -73,9 +80,10 @@ public class ListBillFragment extends AbstractListFragment {
     }
 
     private CursorAdapter createAdapter(final MatrixCursor cursor) {
-        final CustomCursorAdapter adapter =
-                new CustomCursorAdapter(getActivity(), R.layout.list_bill_row, cursor, PROJECTION, TO_VIEWS);
-        adapter.setListener(this);
+        final BillCursorAdapter adapter =
+                new BillCursorAdapter(getActivity(), R.layout.list_bill_row, cursor, PROJECTION, TO_VIEWS);
+        adapter.setCheckboxListener(this);
+        adapter.setPayButtonOnClickListener(this);
         return adapter;
     }
 
@@ -88,5 +96,24 @@ public class ListBillFragment extends AbstractListFragment {
     protected void editButtonOnClick() {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public void onClick(final View view) {
+        LOG.debug("Pay button pressed!");
+        final View row = (View) view.getParent().getParent();
+        final TextView billId = (TextView) row.findViewById(R.id.row_id);
+        final Bill bill = billDAO.getBillById(billId.getText().toString());
+        final DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM);
+        final Calendar myCalendar = Calendar.getInstance();
+
+        final Bill newBill =
+                Bill.builder(bill.getAmount(), bill.getDate(), bill.getDeadlineDate()).billId(bill.getBillId())
+                        .category(bill.getCategory())
+                        .interval(bill.getInterval()).isPayed(true).note(bill.getNote())
+                        .payedDate(dateFormatter.format(myCalendar.getTime()))
+                        .build();
+
+        billDAO.update(newBill, billId.getText().toString());
     }
 }

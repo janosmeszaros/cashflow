@@ -75,7 +75,7 @@ public abstract class ListStatementFragment extends AbstractListFragment {
     private CursorAdapter createAdapter(final MatrixCursor cursor) {
         final CustomCursorAdapter adapter =
                 new CustomCursorAdapter(getActivity(), R.layout.list_statements_row, cursor, PROJECTION, TO_VIEWS);
-        adapter.setListener(this);
+        adapter.setCheckboxListener(this);
         return adapter;
     }
 

@@ -76,20 +76,21 @@
             android:gravity="center_vertical"
             android:textIsSelectable="false" />
 
-        <TextView
-            android:id="@+id/row_interval"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textIsSelectable="false" />
+<!--         <TextView -->
+<!--             android:id="@+id/row_interval" -->
+<!--             android:layout_width="wrap_content" -->
+<!--             android:layout_height="wrap_content" -->
+<!--             android:layout_weight="1" -->
+<!--             android:textIsSelectable="false" /> -->
 
         <Button
             android:id="@+id/row_pay_button"
             style="@style/BlueBtn"
             android:layout_width="wrap_content"
-            android:layout_height="33dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="marquee"
             android:text="@string/pay_bill"
-            android:textSize="12sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/row_payedDate"
@@ -97,6 +98,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="marquee"
             android:singleLine="true"
+            android:visibility="gone"
             android:textIsSelectable="false" />
 
         <TextView

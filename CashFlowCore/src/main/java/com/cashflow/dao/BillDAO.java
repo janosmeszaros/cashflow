@@ -34,4 +34,12 @@ public interface BillDAO {
      */
     List<Bill> getAllBills();
 
+    /**
+     * Return one {@link Bill} by it's id.
+     * @param billId
+     *            {@link Bill} id
+     * @return {@link Bill}
+     */
+    Bill getBillById(String billId);
+
 }

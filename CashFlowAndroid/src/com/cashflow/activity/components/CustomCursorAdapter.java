@@ -15,7 +15,7 @@ import com.cashflow.R;
  * @author Janos_Gyula_Meszaros
  */
 public class CustomCursorAdapter extends SimpleCursorAdapter {
-    private OnCheckedChangeListener listener;
+    private OnCheckedChangeListener checkBoxListener;
 
     /**
      * Constructor.
@@ -35,8 +35,8 @@ public class CustomCursorAdapter extends SimpleCursorAdapter {
         super(activity, listStatementsRow, cursor, projection, toViews);
     }
 
-    public void setListener(final OnCheckedChangeListener listener) {
-        this.listener = listener;
+    public void setCheckboxListener(final OnCheckedChangeListener listener) {
+        this.checkBoxListener = listener;
     }
 
     @Override
@@ -44,7 +44,7 @@ public class CustomCursorAdapter extends SimpleCursorAdapter {
         final View view = super.getView(position, convertView, parent);
 
         final CheckBox checkBox = (CheckBox) view.findViewById(R.id.selectedCheckbox);
-        checkBox.setOnCheckedChangeListener(listener);
+        checkBox.setOnCheckedChangeListener(checkBoxListener);
 
         return view;
     }

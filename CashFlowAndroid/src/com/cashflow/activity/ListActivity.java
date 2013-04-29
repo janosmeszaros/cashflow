@@ -17,7 +17,7 @@ import android.widget.TabWidget;
 
 import com.actionbarsherlock.view.Window;
 import com.cashflow.R;
-import com.cashflow.bill.activity.ListBillFragment;
+import com.cashflow.bill.activity.list.ListBillFragment;
 import com.cashflow.statement.activity.list.ListExpenseFragment;
 import com.cashflow.statement.activity.list.ListIncomeFragment;
 import com.cashflow.statement.activity.list.ListRecurringIncomeFragment;
