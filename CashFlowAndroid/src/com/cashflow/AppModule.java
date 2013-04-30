@@ -6,6 +6,7 @@ import com.cashflow.activity.components.DateButtonOnClickListener;
 import com.cashflow.activity.components.DatePickerFragment;
 import com.cashflow.activity.components.RecurringCheckBoxOnClickListener;
 import com.cashflow.bill.database.AndroidBillDAO;
+import com.cashflow.bill.database.BillService;
 import com.cashflow.category.database.AndroidCategoryDAO;
 import com.cashflow.dao.BillDAO;
 import com.cashflow.dao.CategoryDAO;
@@ -36,6 +37,7 @@ public class AppModule implements Module {
         binder.bind(RecurringCheckBoxOnClickListener.class);
         binder.bind(SpinnerAdapter.class).toProvider(RecurringIntervalArrayAdapterProvider.class);
         binder.bind(SQLiteDbProvider.class).to(DbHelperSQLiteDbProvider.class);
+        binder.bind(BillService.class);
     }
 
     @Provides

@@ -3,8 +3,6 @@ package com.cashflow.bill.activity.list;
 import static com.cashflow.database.DatabaseContracts.AbstractBill.PROJECTION;
 import static com.cashflow.database.DatabaseContracts.AbstractBill.TO_VIEWS;
 
-import java.text.DateFormat;
-import java.util.Calendar;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -23,7 +21,7 @@ import android.widget.TextView;
 
 import com.cashflow.R;
 import com.cashflow.activity.components.AbstractListFragment;
-import com.cashflow.dao.BillDAO;
+import com.cashflow.bill.database.BillService;
 import com.cashflow.domain.Bill;
 import com.google.inject.Inject;
 
@@ -35,7 +33,7 @@ public class ListBillFragment extends AbstractListFragment implements OnClickLis
     private static final Logger LOG = LoggerFactory.getLogger(ListBillFragment.class);
 
     @Inject
-    private BillDAO billDAO;
+    private BillService billService;
     @InjectView(R.id.list_statement)
     private ListView list;
 
@@ -59,7 +57,7 @@ public class ListBillFragment extends AbstractListFragment implements OnClickLis
     }
 
     private List<Bill> getDataFromDatabase() {
-        return billDAO.getAllBills();
+        return billService.getAllBills();
     }
 
     private void fillUpListView(final List<Bill> data) {
@@ -101,9 +99,8 @@ public class ListBillFragment extends AbstractListFragment implements OnClickLis
     @Override
     public void onClick(final View view) {
         LOG.debug("Pay button pressed!");
-        final Bill bill = getSelectedBill(view);
-        final Bill payedBill = createPayedBill(bill);
-        billDAO.update(payedBill, payedBill.getBillId());
+        final String billId = getSelectedBillId(view);
+        billService.payBill(billId);
         refreshView();
     }
 
@@ -111,22 +108,10 @@ public class ListBillFragment extends AbstractListFragment implements OnClickLis
         this.onResume();
     }
 
-    private Bill getSelectedBill(final View view) {
+    private String getSelectedBillId(final View view) {
         final View row = (View) view.getParent().getParent();
         final TextView billId = (TextView) row.findViewById(R.id.row_id);
-        return billDAO.getBillById(billId.getText().toString());
+        return billId.getText().toString();
     }
 
-    private Bill createPayedBill(final Bill bill) {
-        final DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM);
-        final Calendar myCalendar = Calendar.getInstance();
-
-        final Bill newBill =
-                Bill.builder(bill.getAmount(), bill.getDate(), bill.getDeadlineDate()).billId(bill.getBillId())
-                        .category(bill.getCategory())
-                        .interval(bill.getInterval()).isPayed(true).note(bill.getNote())
-                        .payedDate(dateFormatter.format(myCalendar.getTime()))
-                        .build();
-        return newBill;
-    }
 }
