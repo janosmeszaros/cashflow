@@ -10,7 +10,7 @@
     <div class="input-append date" id="datepicker"
       data-date="2013.04.26." data-date-format="yyyy.mm.dd.">
       <form:input path="${path}" class="span2" size="16" type="text" value="2013.04.26."/>
-      <span class="add-on"><i class="icon-calendar"></i></span>
+      <span class="add-on btn"><i class="icon-calendar"></i></span>
     </div>
   </div>
 </div>

@@ -57,7 +57,7 @@
       <tag:amount_row currency="huf"></tag:amount_row>
 
       <tag:category_row></tag:category_row>
-      
+
       <c:set var="dateLabel">
         <spring:message code="label.date" />:
       </c:set>
@@ -65,9 +65,14 @@
 
       <tag:textarea></tag:textarea>
 
-      <%--             <c:if test="${is_income}"> --%>
-      <%--               <tag:recurring_selector></tag:recurring_selector> --%>
-      <%--             </c:if> --%>
+      <c:choose>
+        <c:when test="${is_income}">
+          <tag:recurring_selector></tag:recurring_selector>
+        </c:when>
+        <c:otherwise>
+          <form:input type="hidden" path="interval" />
+        </c:otherwise>
+      </c:choose>
 
       <form:input type="hidden" path="type" />
 

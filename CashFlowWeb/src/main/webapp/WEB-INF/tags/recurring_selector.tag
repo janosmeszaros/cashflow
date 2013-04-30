@@ -4,7 +4,7 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 
 <c:set var="title">
-  <spring:message code="label.recurring_type" />
+  <spring:message code="label.recurring_type" />:
 </c:set>
 <c:set var="none">
   <spring:message code="label.none" />
@@ -30,18 +30,18 @@
   <label class="control-label">${title}</label>
   <div class="controls">
     <label class="radio inline"> <form:radiobutton
-        path="interval" name="radios" value="None" checked="checked" />
+        path="interval" name="radios" value="none" checked="checked" />
       ${none}
     </label> <label class="radio inline"> <form:radiobutton
-        path="interval" name="radios" value="Daily" /> ${daily}
+        path="interval" name="radios" value="daily" /> ${daily}
     </label> <label class="radio inline"> <form:radiobutton
-        path="interval" name="radios" value="Weekly" /> ${weekly}
+        path="interval" name="radios" value="weekly" /> ${weekly}
     </label> <label class="radio inline"> <form:radiobutton
-        path="interval" name="radios" value="Biweekly" /> ${biweekly}
+        path="interval" name="radios" value="biweekly" /> ${biweekly}
     </label> <label class="radio inline"> <form:radiobutton
-        path="interval" name="radios" value="Monthly" /> ${monthly}
+        path="interval" name="radios" value="monthly" /> ${monthly}
     </label> <label class="radio inline"> <form:radiobutton
-        path="interval" name="radios" value="Annually" /> ${annually}
+        path="interval" name="radios" value="annually" /> ${annually}
     </label>
   </div>
 </div>

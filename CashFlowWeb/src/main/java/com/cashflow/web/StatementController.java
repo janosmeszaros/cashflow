@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.cashflow.dao.CategoryDAO;
 import com.cashflow.dao.StatementDAO;
 import com.cashflow.domain.Category;
+import com.cashflow.domain.RecurringInterval;
 import com.cashflow.domain.Statement;
 import com.cashflow.domain.StatementType;
 import com.cashflow.web.dto.CategoryDTO;
@@ -52,7 +53,6 @@ public class StatementController {
         dataBinder.setAutoGrowNestedPaths(false);
 
         dataBinder.registerCustomEditor(CategoryDTO.class, categoryPropertyEditor);
-
     }
 
     /**
@@ -86,6 +86,7 @@ public class StatementController {
         LOGGER.info("Add Expense.");
         final StatementDTO expense = new StatementDTO();
         expense.setType(StatementType.Expense);
+        expense.setInterval(RecurringInterval.none);
         model.addAttribute("category", new CategoryDTO());
 
         model.addAttribute("statement", expense);
