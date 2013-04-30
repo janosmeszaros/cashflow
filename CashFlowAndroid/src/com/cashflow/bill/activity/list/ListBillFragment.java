@@ -101,9 +101,23 @@ public class ListBillFragment extends AbstractListFragment implements OnClickLis
     @Override
     public void onClick(final View view) {
         LOG.debug("Pay button pressed!");
+        final Bill bill = getSelectedBill(view);
+        final Bill payedBill = createPayedBill(bill);
+        billDAO.update(payedBill, payedBill.getBillId());
+        refreshView();
+    }
+
+    private void refreshView() {
+        this.onResume();
+    }
+
+    private Bill getSelectedBill(final View view) {
         final View row = (View) view.getParent().getParent();
         final TextView billId = (TextView) row.findViewById(R.id.row_id);
-        final Bill bill = billDAO.getBillById(billId.getText().toString());
+        return billDAO.getBillById(billId.getText().toString());
+    }
+
+    private Bill createPayedBill(final Bill bill) {
         final DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM);
         final Calendar myCalendar = Calendar.getInstance();
 
@@ -113,7 +127,6 @@ public class ListBillFragment extends AbstractListFragment implements OnClickLis
                         .interval(bill.getInterval()).isPayed(true).note(bill.getNote())
                         .payedDate(dateFormatter.format(myCalendar.getTime()))
                         .build();
-
-        billDAO.update(newBill, billId.getText().toString());
+        return newBill;
     }
 }
