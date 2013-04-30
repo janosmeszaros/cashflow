@@ -26,7 +26,7 @@
 <script type="text/javascript">
 <!--
 	function showAddCategory() {
-		$('#myModal').modal('toggle');
+		$('#categoryModal').modal('toggle');
 	}
 //-->
 </script>

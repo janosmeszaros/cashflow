@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.commons.lang.Validate;
 import org.dozer.Mapper;
+import org.hibernate.criterion.LogicalExpression;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.SimpleExpression;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,26 +85,33 @@ public class JPABasedStatementDAO implements StatementDAO {
     }
 
     private Statement convertToStatement(final StatementEntity entity) {
-        final Category category =
-                Category.builder(entity.getCategory().getName()).categoryId(String.valueOf(entity.getCategory().getCategoryId())).build();
+        final Category category = Category.builder(entity.getCategory().getName()).categoryId(String.valueOf(entity.getCategory().getCategoryId()))
+                .build();
 
         return Statement.builder(entity.getAmount(), entity.getDate()).category(category).note(entity.getNote())
-                .recurringInterval(entity.getRecurringInterval()).statementId(String.valueOf(entity.getStatementId()))
-                .type(entity.getType()).build();
+                .recurringInterval(entity.getRecurringInterval()).statementId(String.valueOf(entity.getStatementId())).type(entity.getType()).build();
     }
 
     @Override
     public List<Statement> getExpenses() {
-        final SimpleExpression expression = Restrictions.eq(TYPE, StatementType.Expense);
+        final LogicalExpression expression = createNonRecurringStatementExpressionByType(StatementType.Expense);
+
         final List<StatementEntity> entityList = dao.findByCriteria(expression);
         return convertToStatementList(entityList);
     }
 
     @Override
     public List<Statement> getIncomes() {
-        final SimpleExpression expression = Restrictions.eq(TYPE, StatementType.Income);
+        final LogicalExpression expression = createNonRecurringStatementExpressionByType(StatementType.Income);
+
         final List<StatementEntity> entityList = dao.findByCriteria(expression);
         return convertToStatementList(entityList);
+    }
+
+    private LogicalExpression createNonRecurringStatementExpressionByType(final StatementType statementType) {
+        final SimpleExpression type = Restrictions.eq(TYPE, statementType);
+        final SimpleExpression interval = Restrictions.eq(RECURRING_INTERVAL, RecurringInterval.none);
+        return Restrictions.and(type, interval);
     }
 
     @Override

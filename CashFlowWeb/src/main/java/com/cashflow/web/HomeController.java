@@ -18,6 +18,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cashflow.dao.CategoryDAO;
 import com.cashflow.domain.Category;
@@ -46,7 +47,6 @@ public class HomeController {
         dataBinder.setAutoGrowNestedPaths(false);
 
         dataBinder.registerCustomEditor(CategoryDTO.class, categoryPropertyEditor);
-
     }
 
     /**
@@ -134,6 +134,7 @@ public class HomeController {
     @RequestMapping(value = "/add_category", method = RequestMethod.GET)
     public String addCategory(final Model model) {
         model.addAttribute("category", new CategoryDTO());
+
         return "add_category";
     }
 
@@ -141,9 +142,10 @@ public class HomeController {
      * Post an add_category page.
      * @param category {@link CategoryDTO}
      * @param model {@link Model}
-     * @return to the home page
+     * @return string
      */
     @RequestMapping(value = "/add_category", method = RequestMethod.POST)
+    @ResponseBody
     public String addCategory(final CategoryDTO category, final Model model) {
         LOGGER.info("Save category: " + category);
 
@@ -152,7 +154,9 @@ public class HomeController {
 
         categoryDAO.save(categoryToSave);
 
-        return "redirect:/";
+        //        addCategories(model);
+
+        return "";
     }
 
     /**
