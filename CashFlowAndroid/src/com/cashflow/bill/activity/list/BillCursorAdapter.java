@@ -12,7 +12,6 @@ import org.joda.time.format.DateTimeFormatter;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.MatrixCursor;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -46,7 +45,7 @@ public class BillCursorAdapter extends CustomCursorAdapter {
      * @param toViews
      *            toViews
      */
-    public BillCursorAdapter(final FragmentActivity activity, final int listStatementsRow, final MatrixCursor cursor,
+    public BillCursorAdapter(final FragmentActivity activity, final int listStatementsRow, final Cursor cursor,
             final String[] projection, final int[] toViews) {
         super(activity, listStatementsRow, cursor, projection, toViews);
     }

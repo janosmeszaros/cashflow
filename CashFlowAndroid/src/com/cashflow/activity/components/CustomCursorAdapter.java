@@ -1,6 +1,6 @@
 package com.cashflow.activity.components;
 
-import android.database.MatrixCursor;
+import android.database.Cursor;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.View;
@@ -30,7 +30,7 @@ public class CustomCursorAdapter extends SimpleCursorAdapter {
      * @param toViews
      *            toViews
      */
-    public CustomCursorAdapter(final FragmentActivity activity, final int listStatementsRow, final MatrixCursor cursor,
+    public CustomCursorAdapter(final FragmentActivity activity, final int listStatementsRow, final Cursor cursor,
             final String[] projection, final int[] toViews) {
         super(activity, listStatementsRow, cursor, projection, toViews);
     }

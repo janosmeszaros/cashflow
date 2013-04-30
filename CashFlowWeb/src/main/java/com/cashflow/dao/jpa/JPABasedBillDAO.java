@@ -81,4 +81,10 @@ public class JPABasedBillDAO implements BillDAO {
                 .payedDate(entity.getPayedDate()).build();
 
     }
+
+    @Override
+    public Bill getBillById(final String billId) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }
