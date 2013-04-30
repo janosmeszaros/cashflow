@@ -9,6 +9,7 @@ import static com.cashflow.database.DatabaseContracts.AbstractBill.COLUMN_NAME_D
 import static com.cashflow.database.DatabaseContracts.AbstractBill.COLUMN_NAME_IS_PAYED;
 import static com.cashflow.database.DatabaseContracts.AbstractBill.COLUMN_NAME_NOTE;
 import static com.cashflow.database.DatabaseContracts.AbstractBill.PROJECTION_WITH_ALIAS;
+import static com.cashflow.database.DatabaseContracts.AbstractBill.SELECT_BILL_BY_ID;
 import static com.cashflow.database.DatabaseContracts.AbstractBill.STATEMENT_INNER_JOINED_CATEGORY;
 import static com.cashflow.database.DatabaseContracts.AbstractBill.TABLE_NAME;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -36,6 +37,7 @@ import com.cashflow.database.DatabaseContracts.AbstractCategory;
 import com.cashflow.database.SQLiteDbProvider;
 import com.cashflow.domain.Bill;
 import com.cashflow.domain.Category;
+import com.cashflow.exceptions.IllegalBillIdException;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 /**
@@ -160,6 +162,35 @@ public class AndroidBillDAOTest {
         verify(provider).getReadableDb();
         verify(database).query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION_WITH_ALIAS, null, null, null, null, null);
         assertThat(list, equalTo(bills));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetBillByIdWhenIdIsEmptyThenShouldThrowException() {
+        underTest.getBillById("");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetBillByIdWhenIdIsNullThenShouldThrowException() {
+        underTest.getBillById(null);
+    }
+
+    @Test
+    public void testGetBillByIdWhenIdIsOkThenShouldReturnOneBill() {
+        setupCursorMock();
+        when(cursorMock.getCount()).thenReturn(1);
+        when(database.rawQuery(SELECT_BILL_BY_ID, new String[]{PAYED_ID})).thenReturn(cursorMock);
+
+        final Bill bill = underTest.getBillById(PAYED_ID);
+
+        assertThat(bill, equalTo(PAYED_BILL));
+    }
+
+    @Test(expected = IllegalBillIdException.class)
+    public void testGetBillByIdWhenIdIsNotFoundThenShouldThrowException() {
+        when(database.rawQuery(SELECT_BILL_BY_ID, new String[]{PAYED_ID})).thenReturn(cursorMock);
+        when(cursorMock.getCount()).thenReturn(0);
+
+        underTest.getBillById(PAYED_ID);
     }
 
     private void setupCursorMock() {
