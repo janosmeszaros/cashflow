@@ -2,11 +2,16 @@ package com.cashflow.web;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
+import org.apache.commons.lang.WordUtils;
 import org.dozer.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
@@ -141,7 +146,9 @@ public class HomeController {
     @RequestMapping(value = "/add_category", method = RequestMethod.POST)
     public String addCategory(final CategoryDTO category, final Model model) {
         LOGGER.info("Save category: " + category);
-        final Category categoryToSave = Category.builder(category.getName()).categoryId(category.getCategoryId()).build();
+
+        final String categoryName = WordUtils.capitalize(category.getName());
+        final Category categoryToSave = Category.builder(categoryName).categoryId(category.getCategoryId()).build();
 
         categoryDAO.save(categoryToSave);
 
@@ -150,15 +157,33 @@ public class HomeController {
 
     /**
      * Selects the manage_categories page.
-     * @param model
-     *            {@link Model}
+     * @param model {@link Model}
+     * @param locale {@link Locale}
      * @return manage_categories
      */
     @RequestMapping(value = "/manage_categories", method = RequestMethod.GET)
-    public String manageCategories(final Model model) {
+    public String manageCategories(final Model model, final Locale locale) {
         LOGGER.info("Manage categories.");
         addCategories(model);
 
+        putDataTableMessagesIntoTheModel(model, locale);
+
         return "manage_categories";
+    }
+
+    private void putDataTableMessagesIntoTheModel(final Model model, final Locale locale) {
+        final ApplicationContext applicationContext = new ClassPathXmlApplicationContext("i18n.xml");
+        final ReloadableResourceBundleMessageSource bean = (ReloadableResourceBundleMessageSource) applicationContext.getBean("messageSource");
+
+        final String[] keys = new String[]{"sort_ascending", "sort_descending", "first", "last", "next", "previous", "empty_table", "info",
+            "info_empty", "info_filtered", "info_postfix", "info_thousands", "length_menu", "loading_records", "processing", "search", "zero_records"};
+
+        for (final String key : keys) {
+            final String value = bean.getMessage("table." + key, null, locale);
+            LOGGER.debug("table." + key + " = " + value);
+            model.addAttribute(key, value);
+        }
+
+        ((ClassPathXmlApplicationContext) applicationContext).close();
     }
 }

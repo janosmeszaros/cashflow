@@ -11,7 +11,7 @@
     action="${addUrl}" method="post">
     <fieldset>
       <legend>
-        <spring:message code="navbar.add_category" />
+        <spring:message code="label.add_category" />
       </legend>
 
       <c:set var="nameLabel">
