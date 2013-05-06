@@ -63,7 +63,7 @@
                   <li><a href="list_expenses"> <spring:message code="navbar.expenses"/> </a></li>
                   <li class="divider"></li>
                   <li class="nav-header"> <spring:message code="navbar.recurring"/> </li>
-                  <li><a href="#"> <spring:message code="navbar.incomes"/> </a></li>
+                  <li><a href="list_recurring_incomes"> <spring:message code="navbar.incomes"/> </a></li>
                   <li><a href="#"> <spring:message code="navbar.bills"/> </a></li>
                 </ul>
               </li>

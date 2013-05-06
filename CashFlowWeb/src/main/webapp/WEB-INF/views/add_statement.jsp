@@ -72,7 +72,7 @@
           <tag:recurring_selector></tag:recurring_selector>
         </c:when>
         <c:otherwise>
-          <form:input type="hidden" path="interval" />
+          <form:input type="hidden" path="recurringInterval" />
         </c:otherwise>
       </c:choose>
 

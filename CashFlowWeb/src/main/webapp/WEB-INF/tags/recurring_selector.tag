@@ -30,18 +30,18 @@
   <label class="control-label">${title}</label>
   <div class="controls">
     <label class="radio inline"> <form:radiobutton
-        path="interval" name="radios" value="none" checked="checked" />
+        path="recurringInterval" name="radios" value="none" checked="checked" />
       ${none}
     </label> <label class="radio inline"> <form:radiobutton
-        path="interval" name="radios" value="daily" /> ${daily}
+        path="recurringInterval" name="radios" value="daily" /> ${daily}
     </label> <label class="radio inline"> <form:radiobutton
-        path="interval" name="radios" value="weekly" /> ${weekly}
+        path="recurringInterval" name="radios" value="weekly" /> ${weekly}
     </label> <label class="radio inline"> <form:radiobutton
-        path="interval" name="radios" value="biweekly" /> ${biweekly}
+        path="recurringInterval" name="radios" value="biweekly" /> ${biweekly}
     </label> <label class="radio inline"> <form:radiobutton
-        path="interval" name="radios" value="monthly" /> ${monthly}
+        path="recurringInterval" name="radios" value="monthly" /> ${monthly}
     </label> <label class="radio inline"> <form:radiobutton
-        path="interval" name="radios" value="annually" /> ${annually}
+        path="recurringInterval" name="radios" value="annually" /> ${annually}
     </label>
   </div>
 </div>

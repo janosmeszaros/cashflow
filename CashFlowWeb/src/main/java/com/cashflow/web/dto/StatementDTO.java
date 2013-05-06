@@ -17,14 +17,14 @@ public class StatementDTO {
     private String note;
     private String date;
     private StatementType type;
-    private RecurringInterval interval;
+    private RecurringInterval recurringInterval;
 
     /**
      * Convert DTO to statement.
      * @return {@link Statement}
      */
     public Statement convert() {
-        return Statement.builder(amount, date).category(category.convert()).note(note).recurringInterval(interval).statementId(statementId)
+        return Statement.builder(amount, date).category(category.convert()).note(note).recurringInterval(recurringInterval).statementId(statementId)
                 .type(type).build();
     }
 
@@ -76,12 +76,12 @@ public class StatementDTO {
         this.type = type;
     }
 
-    public RecurringInterval getInterval() {
-        return interval;
+    public RecurringInterval getRecurringInterval() {
+        return recurringInterval;
     }
 
-    public void setInterval(final RecurringInterval interval) {
-        this.interval = interval;
+    public void setRecurringInterval(final RecurringInterval recurringInterval) {
+        this.recurringInterval = recurringInterval;
     }
 
     @Override

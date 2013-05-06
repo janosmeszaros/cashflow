@@ -86,11 +86,12 @@ public class StatementController {
         LOGGER.info("Add Expense.");
         final StatementDTO expense = new StatementDTO();
         expense.setType(StatementType.Expense);
-        expense.setInterval(RecurringInterval.none);
+        expense.setRecurringInterval(RecurringInterval.none);
         model.addAttribute("category", new CategoryDTO());
 
         model.addAttribute("statement", expense);
         model.addAttribute("is_income", false);
+
         addCategories(model);
 
         return "add_statement";
@@ -112,7 +113,11 @@ public class StatementController {
         statementDAO.save(statementToSave);
 
         if (statementToSave.getType().isIncome()) {
-            redirect = "redirect:/list_incomes";
+            if (statementToSave.getRecurringInterval().compareTo(RecurringInterval.none) == 0) {
+                redirect = "redirect:/list_incomes";
+            } else {
+                redirect = "redirect:/list_recurring_incomes";
+            }
         } else {
             redirect = "redirect:/list_expenses";
         }
@@ -136,6 +141,7 @@ public class StatementController {
         final String listIncomes = bean.getMessage("label.list_incomes", null, locale);
         model.addAttribute("legendLabel", listIncomes);
         model.addAttribute("statements", convertToStatementList(statementDAO.getIncomes()));
+        model.addAttribute("is_recurring", false);
 
         putDataTableMessagesIntoTheModel(model, locale);
 
@@ -158,6 +164,32 @@ public class StatementController {
         final String listExpenses = bean.getMessage("label.list_expenses", null, locale);
         model.addAttribute("legendLabel", listExpenses);
         model.addAttribute("statements", convertToStatementList(statementDAO.getExpenses()));
+        model.addAttribute("is_recurring", false);
+
+        putDataTableMessagesIntoTheModel(model, locale);
+
+        ((ClassPathXmlApplicationContext) applicationContext).close();
+        return "list_statements";
+    }
+
+    /**
+     * Selects the list_recurring_incomes page.
+     * @param model {@link Model}
+     * @param locale {@link Locale}
+     * @return list_statements
+     */
+    @RequestMapping(value = "/list_recurring_incomes", method = RequestMethod.GET)
+    public String listRecurringIncomes(final Model model, final Locale locale) {
+
+        final ApplicationContext applicationContext = new ClassPathXmlApplicationContext("i18n.xml");
+        final ReloadableResourceBundleMessageSource bean = (ReloadableResourceBundleMessageSource) applicationContext.getBean("messageSource");
+
+        LOGGER.info("List recurring incomes.");
+
+        final String listIncomes = bean.getMessage("label.list_recurring_incomes", null, locale);
+        model.addAttribute("legendLabel", listIncomes);
+        model.addAttribute("statements", convertToStatementList(statementDAO.getRecurringIncomes()));
+        model.addAttribute("is_recurring", true);
 
         putDataTableMessagesIntoTheModel(model, locale);
 
@@ -189,15 +221,18 @@ public class StatementController {
         final CategoryDTO categoryDTO = statement.getCategory();
         final Category category = Category.builder(categoryDTO.getName()).categoryId(categoryDTO.getCategoryId()).build();
         return Statement.builder(statement.getAmount(), statement.getDate()).note(statement.getNote()).type(statement.getType()).category(category)
-                .recurringInterval(statement.getInterval()).build();
+                .recurringInterval(statement.getRecurringInterval()).build();
     }
 
     private List<StatementDTO> convertToStatementList(final List<Statement> list) {
         final List<StatementDTO> statementList = new ArrayList<StatementDTO>();
 
         for (final Statement entity : list) {
-            final StatementDTO category = convertToStatement(entity);
-            statementList.add(category);
+
+            LOGGER.debug(entity.toString());
+            final StatementDTO statement = convertToStatement(entity);
+            LOGGER.debug(statement.toString());
+            statementList.add(statement);
         }
 
         return statementList;
@@ -216,7 +251,6 @@ public class StatementController {
 
         for (final String key : keys) {
             final String value = bean.getMessage("table." + key, null, locale);
-            LOGGER.debug("table." + key + " = " + value);
             model.addAttribute(key, value);
         }
 
