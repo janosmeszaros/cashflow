@@ -19,7 +19,7 @@ public final class Bill {
     private final String note;
     private final Category category;
     private final boolean payed;
-    private final RecurringInterval interval;
+    private final RecurringInterval recurringInterval;
 
     private Bill(final Builder builder) {
         super();
@@ -31,7 +31,7 @@ public final class Bill {
         note = builder.note;
         category = builder.category;
         payed = builder.payed;
-        interval = builder.interval;
+        recurringInterval = builder.interval;
     }
 
     public String getBillId() {
@@ -66,8 +66,8 @@ public final class Bill {
         return payed;
     }
 
-    public RecurringInterval getInterval() {
-        return interval;
+    public RecurringInterval getRecurringInterval() {
+        return recurringInterval;
     }
 
     @Override

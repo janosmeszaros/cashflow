@@ -276,12 +276,12 @@ public class AddBillFragmentTest {
         amountText.setText(testBill.getAmount());
         notesText.setText(testBill.getNote());
         deadLineDateButton.setText(testBill.getDeadlineDate());
-        if (RecurringInterval.none.equals(testBill.getInterval())) {
+        if (RecurringInterval.none.equals(testBill.getRecurringInterval())) {
             recurringCheckBox.setChecked(false);
         } else {
             recurringCheckBox.setChecked(true);
             final Spinner recurringSpinner = (Spinner) underTest.getView().findViewById(R.id.recurring_spinner);
-            final int position = arrayAdapter.getPosition(testBill.getInterval());
+            final int position = arrayAdapter.getPosition(testBill.getRecurringInterval());
             recurringSpinner.setSelection(position);
         }
 

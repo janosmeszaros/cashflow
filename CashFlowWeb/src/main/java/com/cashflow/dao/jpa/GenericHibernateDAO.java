@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Implements basic dao features with hibernate.
+ * Implements basic DAO features with hibernate.
  * @author Janos_Gyula_Meszaros
  * @param <T>
  */
@@ -24,7 +24,7 @@ public class GenericHibernateDAO<T> {
     private Class<T> persistentClass;
 
     /**
-     * Default constructor. Needed because spring aop.
+     * Default constructor. Needed because spring AOP.
      */
     public GenericHibernateDAO() {
     }
@@ -45,10 +45,10 @@ public class GenericHibernateDAO<T> {
     }
 
     /**
-     * Persist the given entity to db.
+     * Persist the given entity to database.
      * @param entity
      *            entity.
-     * @return <code>true</code> if succesfull.
+     * @return <code>true</code> if successful.
      */
     @Transactional
     public boolean persist(final T entity) {
@@ -65,7 +65,7 @@ public class GenericHibernateDAO<T> {
     }
 
     /**
-     * Merge the given entity to db.
+     * Merge the given entity to database.
      * @param entity
      *            entity
      * @return <code>true</code> if successful.

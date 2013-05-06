@@ -113,7 +113,7 @@ public class AndroidBillDAO implements BillDAO {
         values.put(COLUMN_NAME_NOTE, bill.getNote());
         values.put(COLUMN_NAME_CATEGORY, bill.getCategory().getCategoryId());
         values.put(COLUMN_NAME_IS_PAYED, bill.isPayed() ? TRUE : FALSE);
-        values.put(COLUMN_NAME_INTERVAL, bill.getInterval().toString());
+        values.put(COLUMN_NAME_INTERVAL, bill.getRecurringInterval().toString());
 
         return values;
     }

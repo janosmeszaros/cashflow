@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cashflow.dao.CategoryDAO;
 import com.cashflow.domain.Category;
-import com.cashflow.web.dto.BillDTO;
 import com.cashflow.web.dto.CategoryDTO;
 
 /**
@@ -107,22 +106,6 @@ public class HomeController {
 
     private CategoryDTO convertToCategory(final Category category) {
         return mapper.map(category, CategoryDTO.class);
-    }
-
-    /**
-     * Selects the add_bill page.
-     * @param model
-     *            {@link Model}
-     * @return add_bill
-     */
-    @RequestMapping(value = "/add_bill", method = RequestMethod.GET)
-    public String addBill(final Model model) {
-        LOGGER.info("Register");
-        model.addAttribute("bill", new BillDTO());
-        model.addAttribute("category", new CategoryDTO());
-        addCategories(model);
-
-        return "add_bill";
     }
 
     /**
