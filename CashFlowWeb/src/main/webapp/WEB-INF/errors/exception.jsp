@@ -33,29 +33,15 @@ body {
     <div class="hero-unit center">
       <h1>
         <spring:message code="error.exception" />
+        <small><font face="Tahoma" color="red"> <spring:message code="label.error" /> ${pageContext.errorData.statusCode} </font></small>
       </h1>
       <br />
-      <p align="left">
-        <b>Error:</b> ${pageContext.exception.cause}
-      </p>
-      <br />
+     
       <p>
-        <b>URI:</b> ${pageContext.errorData.requestURI}
+        <spring:message code="error.exception_message" />
       </p>
       <br />
-      <p>
-        <b>Status code:</b><font face="Tahoma" color="red">
-          ${pageContext.errorData.statusCode} </font>
-      </p>
-      <br />
-      <!--       <p> -->
-      <!--         <b>Stack trace:</b> -->
-      <%--               <c:forEach var="trace" --%>
-      <%--                  items="${pageContext.exception.stackTrace}">  --%>
-      <%--               <p>${trace}</p>  --%>
-      <%--                </c:forEach>  --%>
-      <!--       </p> -->
-      <!--       <br /> -->
+
 
       <a href="${home}" class="btn btn-large btn-info"><i
         class="icon-home icon-white"></i> <spring:message

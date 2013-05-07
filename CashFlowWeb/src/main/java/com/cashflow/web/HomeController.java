@@ -167,7 +167,6 @@ public class HomeController {
 
         for (final String key : keys) {
             final String value = bean.getMessage("table." + key, null, locale);
-            LOGGER.debug("table." + key + " = " + value);
             model.addAttribute(key, value);
         }
 

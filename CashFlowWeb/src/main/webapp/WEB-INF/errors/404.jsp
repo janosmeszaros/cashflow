@@ -33,18 +33,13 @@ body {
     <div class="hero-unit center">
       <h1>
         <spring:message code="error.page_not_found" />
-        <small><font face="Tahoma" color="red">  <spring:message code="error.code" /> </font></small>
+        <small><font face="Tahoma" color="red">  <spring:message code="label.error" /> 404</font></small>
       </h1>
       <br />
       <p>
       <spring:message code="error.message" />
-<!--         The page you requested could not be found, either contact your -->
-<!--         webmaster or try again. Use your browsers <b>Back</b> button to -->
-<!--         navigate to the page you have previously come from -->
-<!--       </p> -->
-<!--       <p> -->
-<!--         <b>Or you could just press this neat little button:</b> -->
-<!--       </p> -->
+      </p>
+
       <a href="${home}" class="btn btn-large btn-info"><i
         class="icon-home icon-white"></i>  <spring:message code="error.take_me_home" /> </a>
     </div>
