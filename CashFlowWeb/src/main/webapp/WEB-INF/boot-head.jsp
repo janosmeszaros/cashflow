@@ -54,7 +54,7 @@
           <a class="brand active" href="${home}">CashFlow</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li class="active"><a href="#"><spring:message code="navbar.home"/></a></li>
+              <li><a href="#"><spring:message code="navbar.home"/></a></li>
               <li><a href="#about"><spring:message code="navbar.about"/></a></li>
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <spring:message code="navbar.list"/> <b class="caret"></b></a>
