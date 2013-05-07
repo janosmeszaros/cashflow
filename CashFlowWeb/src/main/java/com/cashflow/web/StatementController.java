@@ -24,6 +24,7 @@ import com.cashflow.domain.Category;
 import com.cashflow.domain.RecurringInterval;
 import com.cashflow.domain.Statement;
 import com.cashflow.domain.StatementType;
+import com.cashflow.service.Balance;
 import com.cashflow.web.dto.CategoryDTO;
 import com.cashflow.web.dto.StatementDTO;
 
@@ -195,6 +196,24 @@ public class StatementController {
 
         ((ClassPathXmlApplicationContext) applicationContext).close();
         return "list_statements";
+    }
+
+    /**
+     * Selects the main page and populates the model with balance informations.
+     * @param model {@link Model}
+     * @return main
+     */
+    @RequestMapping(value = "/main", method = RequestMethod.GET)
+    public String main(final Model model) {
+        LOGGER.info("Main page.");
+
+        final Balance balance = Balance.getInstance(statementDAO);
+
+        model.addAttribute("incomes", balance.getIncomes());
+        model.addAttribute("expenses", balance.getExpenses());
+        model.addAttribute("balance", balance.getBalance());
+
+        return "main";
     }
 
     private void addCategories(final Model model) {
