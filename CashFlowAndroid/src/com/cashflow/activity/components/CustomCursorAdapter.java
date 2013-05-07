@@ -43,10 +43,14 @@ public class CustomCursorAdapter extends SimpleCursorAdapter {
     public View getView(final int position, final View convertView, final ViewGroup parent) {
         final View view = super.getView(position, convertView, parent);
 
-        final CheckBox checkBox = (CheckBox) view.findViewById(R.id.selectedCheckbox);
-        checkBox.setOnCheckedChangeListener(checkBoxListener);
+        setListenerToCheckBox(view);
 
         return view;
+    }
+
+    private void setListenerToCheckBox(final View view) {
+        final CheckBox checkBox = (CheckBox) view.findViewById(R.id.selectedCheckbox);
+        checkBox.setOnCheckedChangeListener(checkBoxListener);
     }
 
 }

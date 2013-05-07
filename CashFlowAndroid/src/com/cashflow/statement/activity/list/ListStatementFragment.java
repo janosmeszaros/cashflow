@@ -15,8 +15,8 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.cashflow.R;
-import com.cashflow.activity.components.CustomCursorAdapter;
 import com.cashflow.activity.components.AbstractListFragment;
+import com.cashflow.activity.components.CustomCursorAdapter;
 import com.cashflow.dao.StatementDAO;
 import com.cashflow.domain.Statement;
 import com.google.inject.Inject;
@@ -45,17 +45,17 @@ public abstract class ListStatementFragment extends AbstractListFragment {
         return inflater.inflate(R.layout.activity_list_statements, container, false);
     }
 
-    private void fillUpListView(final List<Statement> data) {
-        final MatrixCursor cursor = fillUpCursor(data);
-        final CursorAdapter adapter = createAdapter(cursor);
-        list.setAdapter(adapter);
-    }
-
     @Override
     public void onResume() {
         super.onResume();
         final List<Statement> data = getDataFromDatabase();
         fillUpListView(data);
+    }
+
+    private void fillUpListView(final List<Statement> data) {
+        final MatrixCursor cursor = fillUpCursor(data);
+        final CursorAdapter adapter = createAdapter(cursor);
+        list.setAdapter(adapter);
     }
 
     private MatrixCursor fillUpCursor(final List<Statement> statementList) {
@@ -68,15 +68,15 @@ public abstract class ListStatementFragment extends AbstractListFragment {
         return cursor;
     }
 
-    protected StatementDAO getStatementDAO() {
-        return statementDAO;
-    }
-
     private CursorAdapter createAdapter(final MatrixCursor cursor) {
         final CustomCursorAdapter adapter =
-                new CustomCursorAdapter(getActivity(), R.layout.list_statements_row, cursor, PROJECTION, TO_VIEWS);
+                new StatementCursorAdapter(getActivity(), R.layout.list_statements_row, cursor, PROJECTION, TO_VIEWS);
         adapter.setCheckboxListener(this);
         return adapter;
+    }
+
+    protected StatementDAO getStatementDAO() {
+        return statementDAO;
     }
 
 }
