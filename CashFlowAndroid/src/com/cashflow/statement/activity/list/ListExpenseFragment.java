@@ -7,7 +7,7 @@ import java.util.List;
 import android.content.Intent;
 
 import com.cashflow.domain.Statement;
-import com.cashflow.statement.activity.edit.EditStatementActivity;
+import com.cashflow.statement.activity.edit.EditExpenseActivity;
 
 /**
  * List expense fragment.
@@ -22,7 +22,7 @@ public class ListExpenseFragment extends ListStatementFragment {
 
     @Override
     protected void editButtonOnClick() {
-        final Intent intent = new Intent(getActivity(), EditStatementActivity.class);
+        final Intent intent = new Intent(getActivity(), EditExpenseActivity.class);
         intent.putExtra(ID_EXTRA, getSelectedIds().get(0));
         startActivity(intent);
     }
