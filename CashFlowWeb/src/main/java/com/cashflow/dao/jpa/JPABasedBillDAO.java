@@ -87,4 +87,10 @@ public class JPABasedBillDAO implements BillDAO {
         // TODO Auto-generated method stub
         return null;
     }
+
+    @Override
+    public void delete(final Bill bill) {
+        // TODO Auto-generated method stub
+
+    }
 }

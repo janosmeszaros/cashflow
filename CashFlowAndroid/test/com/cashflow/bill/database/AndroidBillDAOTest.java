@@ -193,6 +193,33 @@ public class AndroidBillDAOTest {
         underTest.getBillById(PAYED_ID);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testDeleteWhenParamIsNullThenShouldThrowException() {
+        underTest.delete(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testDeleteWhenParamsIdIsEmptyThenShouldThrowException() {
+        final Bill bill = Bill.builder(AMOUNT, DATE, DATE).billId("").build();
+
+        underTest.delete(bill);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testDeleteWhenParamsIdIsNullThenShouldThrowException() {
+        final Bill bill = Bill.builder(AMOUNT, DATE, DATE).billId(null).build();
+
+        underTest.delete(bill);
+    }
+
+    @Test
+    public void testDeleteWhenParamIsOkThenShouldDeleteFromDB() {
+        underTest.delete(PAYED_BILL);
+
+        verify(provider).getWritableDb();
+        verify(database).delete(TABLE_NAME, _ID + EQUALS, new String[]{PAYED_BILL.getBillId()});
+    }
+
     private void setupCursorMock() {
         when(cursorMock.moveToNext()).thenReturn(true, false);
 

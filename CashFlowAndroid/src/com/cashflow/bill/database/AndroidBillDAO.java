@@ -98,9 +98,18 @@ public class AndroidBillDAO implements BillDAO {
     }
 
     @Override
+    public void delete(final Bill bill) {
+        Validate.notNull(bill);
+        Validate.notEmpty(bill.getBillId());
+
+        final SQLiteDatabase database = provider.getWritableDb();
+        database.delete(TABLE_NAME, _ID + EQUALS, new String[] { bill.getBillId() });
+    }
+
+    @Override
     public List<Bill> getAllBills() {
         final SQLiteDatabase database = provider.getReadableDb();
-        // TODO Bill PROJECTION has too few column.
+
         final Cursor query = database.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION_WITH_ALIAS, null, null, null, null, null);
         return createListFromCursor(query);
     }

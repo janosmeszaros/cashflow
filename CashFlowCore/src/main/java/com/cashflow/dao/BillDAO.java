@@ -29,6 +29,13 @@ public interface BillDAO {
     boolean update(Bill bill, String billId);
 
     /**
+     * Delete the given {@link Bill} from database.
+     * @param bill
+     *            {@link Bill} to delete.
+     */
+    void delete(Bill bill);
+
+    /**
      * Returns all {@link Bill}.
      * @return {@link List} of all {@link Bill}.
      */
