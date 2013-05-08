@@ -37,6 +37,8 @@ public abstract class AbstractListFragment extends RoboSherlockFragment implemen
 
     protected abstract void editButtonOnClick();
 
+    protected abstract void deleteButtonOnClick();
+
     @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -122,6 +124,8 @@ public abstract class AbstractListFragment extends RoboSherlockFragment implemen
             final int statementId = item.getItemId();
             if (statementId == EDIT_ID) {
                 editButtonOnClick();
+            } else if (statementId == DELETE_ID) {
+                deleteButtonOnClick();
             }
 
             mode.finish();

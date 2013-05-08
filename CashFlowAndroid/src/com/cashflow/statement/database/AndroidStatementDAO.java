@@ -99,7 +99,7 @@ public class AndroidStatementDAO implements StatementDAO {
 
     private boolean updateStatement(final String statementId, final ContentValues values) {
         final SQLiteDatabase database = provider.getWritableDb();
-        final int updatedRows = database.update(TABLE_NAME, values, _ID + EQUALS, new String[]{statementId});
+        final int updatedRows = database.update(TABLE_NAME, values, _ID + EQUALS, new String[] { statementId });
 
         LOG.debug("Num of rows updated: " + updatedRows);
         return isUpdateSuccessed(updatedRows);
@@ -109,10 +109,6 @@ public class AndroidStatementDAO implements StatementDAO {
         return update > 0;
     }
 
-    /**
-     * Returns all the {@link Statement}.
-     * @return {@link List} of {@link Statement} which contains the data.
-     */
     @Override
     public List<Statement> getAllStatements() {
         final Cursor query = queryAllStatements();
@@ -159,6 +155,15 @@ public class AndroidStatementDAO implements StatementDAO {
     }
 
     @Override
+    public void delete(final Statement statement) {
+        Validate.notNull(statement);
+        Validate.notEmpty(statement.getStatementId());
+
+        final SQLiteDatabase database = provider.getWritableDb();
+        database.delete(TABLE_NAME, _ID + EQUALS, new String[] { statement.getStatementId() });
+    }
+
+    @Override
     public List<Statement> getExpenses() {
         final Cursor cursor = queryExpenses();
 
@@ -168,7 +173,6 @@ public class AndroidStatementDAO implements StatementDAO {
     private Cursor queryExpenses() {
         final SQLiteDatabase dataBase = provider.getReadableDb();
         return dataBase.query(STATEMENT_INNER_JOINED_CATEGORY, PROJECTION_WITH_ALIAS, EXPENSE_SELECTION, null, null, null, null);
-
     }
 
     @Override
@@ -216,7 +220,7 @@ public class AndroidStatementDAO implements StatementDAO {
 
     private Cursor queryStatementById(final String statementId) {
         final SQLiteDatabase dataBase = provider.getReadableDb();
-        return dataBase.rawQuery(SELECT_STATEMENT_BY_ID, new String[]{statementId});
+        return dataBase.rawQuery(SELECT_STATEMENT_BY_ID, new String[] { statementId });
     }
 
     private void idCheck(final String statementId) {

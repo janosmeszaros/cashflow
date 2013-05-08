@@ -97,6 +97,12 @@ public class ListBillFragment extends AbstractListFragment implements OnClickLis
     }
 
     @Override
+    protected void deleteButtonOnClick() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
     public void onClick(final View view) {
         LOG.debug("Pay button pressed!");
         final String billId = getSelectedBillId(view);

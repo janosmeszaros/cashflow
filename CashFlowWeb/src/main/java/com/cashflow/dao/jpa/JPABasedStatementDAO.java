@@ -118,4 +118,10 @@ public class JPABasedStatementDAO implements StatementDAO {
         final StatementEntity entity = dao.findById(Long.parseLong(statementId));
         return convertToStatement(entity);
     }
+
+    @Override
+    public void delete(final Statement statement) {
+        // TODO Auto-generated method stub
+
+    }
 }

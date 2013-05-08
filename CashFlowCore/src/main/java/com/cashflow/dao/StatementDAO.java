@@ -29,6 +29,13 @@ public interface StatementDAO {
     boolean update(Statement statement, String statementId);
 
     /**
+     * Deletes the given {@link Statement} from database.
+     * @param statement
+     *            {@link Statement} to delete.
+     */
+    void delete(Statement statement);
+
+    /**
      * Returns all the {@link Statement}.
      * @return {@link List} of {@link Statement}.
      */

@@ -32,7 +32,22 @@ public abstract class ListStatementFragment extends AbstractListFragment {
     @InjectView(R.id.list_statement)
     private ListView list;
 
+    private CursorAdapter adapter;
+
     protected abstract List<Statement> getDataFromDatabase();
+
+    @Override
+    protected void deleteButtonOnClick() {
+        deleteAllSelectedStatement();
+        refreshListView();
+    }
+
+    private void deleteAllSelectedStatement() {
+        for (final String id : getSelectedIds()) {
+            final Statement statementToDelete = statementDAO.getStatementById(id);
+            statementDAO.delete(statementToDelete);
+        }
+    }
 
     @Override
     protected ListView getList() {
@@ -46,16 +61,35 @@ public abstract class ListStatementFragment extends AbstractListFragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        final List<Statement> data = getDataFromDatabase();
-        fillUpListView(data);
+    public void onViewCreated(final View view, final Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        createListView();
     }
 
-    private void fillUpListView(final List<Statement> data) {
-        final MatrixCursor cursor = fillUpCursor(data);
-        final CursorAdapter adapter = createAdapter(cursor);
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        refreshListView();
+    }
+
+    private void refreshListView() {
+        final MatrixCursor cursor = createCursor();
+        adapter.changeCursor(cursor);
+        adapter.notifyDataSetChanged();
+    }
+
+    private void createListView() {
+        final MatrixCursor cursor = createCursor();
+        adapter = createAdapter(cursor);
         list.setAdapter(adapter);
+    }
+
+    private MatrixCursor createCursor() {
+        final List<Statement> data = getDataFromDatabase();
+        final MatrixCursor cursor = fillUpCursor(data);
+        return cursor;
     }
 
     private MatrixCursor fillUpCursor(final List<Statement> statementList) {

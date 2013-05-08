@@ -135,7 +135,8 @@ public class AndroidStatementDAOTest {
 
     @Test
     public void testUpdateWhenStatementIsIncomeThenShouldUpdateAndReturnTrue() {
-        when(database.update(eq(TABLE_NAME), (ContentValues) anyObject(), eq(_ID + EQUALS), eq(new String[]{incomeStatement.getStatementId()}))).thenReturn(1);
+        when(database.update(eq(TABLE_NAME), (ContentValues) anyObject(), eq(_ID + EQUALS), eq(new String[]{incomeStatement.getStatementId()})))
+                .thenReturn(1);
 
         final boolean updated = underTest.update(incomeStatement, incomeStatement.getStatementId());
 
@@ -145,7 +146,8 @@ public class AndroidStatementDAOTest {
 
     @Test
     public void testUpdateWhenStatementIsExpenseThenShouldUpdateAndReturnTrue() {
-        when(database.update(eq(TABLE_NAME), (ContentValues) anyObject(), eq(_ID + EQUALS), eq(new String[]{incomeStatement.getStatementId()}))).thenReturn(1);
+        when(database.update(eq(TABLE_NAME), (ContentValues) anyObject(), eq(_ID + EQUALS), eq(new String[]{incomeStatement.getStatementId()})))
+                .thenReturn(1);
 
         final boolean updated = underTest.update(incomeStatement, expenseStatement.getStatementId());
 
@@ -257,6 +259,33 @@ public class AndroidStatementDAOTest {
         when(database.rawQuery(SELECT_STATEMENT_BY_ID, new String[]{STATEMENT_ID})).thenReturn(cursorMock);
 
         underTest.getStatementById(STATEMENT_ID);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testDeleteWhenParamIsNullThenShouldThrowException() {
+        underTest.delete(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testDeleteWhenParamsIdIsNullThenShouldThrowException() {
+        final Statement statement = Statement.builder(AMOUNT_STR, DATE_STR).statementId(null).build();
+
+        underTest.delete(statement);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testDeleteWhenParamsIdIsEmptyThenShouldThrowException() {
+        final Statement statement = Statement.builder(AMOUNT_STR, DATE_STR).statementId("").build();
+
+        underTest.delete(statement);
+    }
+
+    @Test
+    public void testDeleteWhenParamIsOkThenShouldDeleteFromDB() {
+        underTest.delete(incomeStatement);
+
+        verify(provider).getWritableDb();
+        verify(database).delete(TABLE_NAME, _ID + EQUALS, new String[]{incomeStatement.getStatementId()});
     }
 
     private void setupCursorMock(final int statementType) {
