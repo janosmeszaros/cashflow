@@ -18,6 +18,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cashflow.R;
 import com.cashflow.activity.components.AbstractListFragment;
@@ -112,6 +113,13 @@ public class ListBillFragment extends AbstractListFragment implements OnClickLis
         deleteAllSelectedBill();
 
         refreshListView();
+        showWarning();
+    }
+
+    private void showWarning() {
+        Toast.makeText(getActivity(), "Warning! Deletion has no effect for the expenses which are assosiated with payed bills.",
+                Toast.LENGTH_LONG)
+                .show();
     }
 
     private void deleteAllSelectedBill() {
