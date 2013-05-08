@@ -52,11 +52,10 @@ public abstract class AbstractListFragment extends RoboSherlockFragment implemen
 
         if (isChecked) {
             addSelectedId(view);
+            actionMode.invalidate();
         } else {
             removeFromSelection(view);
         }
-
-        actionMode.invalidate();
     }
 
     private void removeFromSelection(final View view) {

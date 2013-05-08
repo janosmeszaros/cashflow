@@ -5,6 +5,7 @@ import java.util.List;
 
 import roboguice.inject.InjectView;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -15,7 +16,7 @@ import android.view.ViewGroup;
 import android.widget.TabHost;
 import android.widget.TabWidget;
 
-import com.actionbarsherlock.view.Window;
+import com.actionbarsherlock.app.ActionBar;
 import com.cashflow.R;
 import com.cashflow.bill.activity.list.ListBillFragment;
 import com.cashflow.statement.activity.list.ListExpenseFragment;
@@ -38,8 +39,12 @@ public class ListActivity extends RoboSherlockFragmentActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setActionBar();
         setContentView(R.layout.list_fragments);
+        setupTabs(savedInstanceState);
+    }
+
+    private void setupTabs(final Bundle savedInstanceState) {
         tabHost.setup();
         tabsAdapter = new TabsAdapter(this, tabHost, viewPager);
 
@@ -53,6 +58,12 @@ public class ListActivity extends RoboSherlockFragmentActivity {
         if (savedInstanceState != null) {
             tabHost.setCurrentTabByTag(savedInstanceState.getString("tab"));
         }
+    }
+
+    private void setActionBar() {
+        final Drawable drawable = getResources().getDrawable(R.drawable.main_header_selector);
+        final ActionBar actionBar = getSupportActionBar();
+        actionBar.setBackgroundDrawable(drawable);
     }
 
     private void addIncomeTab() {

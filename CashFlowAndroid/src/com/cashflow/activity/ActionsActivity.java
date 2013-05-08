@@ -2,6 +2,7 @@ package com.cashflow.activity;
 
 import java.util.Locale;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -31,16 +32,15 @@ public class ActionsActivity extends RoboSherlockFragmentActivity implements Act
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tabbed_actions);
 
-        actionBar = getSupportActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayShowHomeEnabled(false);
+        setupActionBar();
+        setupTabs();
+    }
 
+    private void setupTabs() {
         final SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-
         mViewPager.setOnPageChangeListener(this);
 
         for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
@@ -50,6 +50,15 @@ public class ActionsActivity extends RoboSherlockFragmentActivity implements Act
             tab.setTabListener(this);
             actionBar.addTab(tab);
         }
+    }
+
+    private void setupActionBar() {
+        final Drawable drawable = getResources().getDrawable(R.drawable.main_header_selector);
+        actionBar = getSupportActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+        actionBar.setBackgroundDrawable(drawable);
+        actionBar.setTitle(getResources().getString(R.string.title_activity_actions));
     }
 
     @Override

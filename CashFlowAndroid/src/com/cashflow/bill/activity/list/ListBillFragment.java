@@ -117,7 +117,7 @@ public class ListBillFragment extends AbstractListFragment implements OnClickLis
     }
 
     private void showWarning() {
-        Toast.makeText(getActivity(), "Warning! Deletion has no effect for the expenses which are assosiated with payed bills.",
+        Toast.makeText(getActivity(), "Warning! Deletion has no effect for the expenses which are associated with payed bills.",
                 Toast.LENGTH_LONG)
                 .show();
     }
