@@ -37,19 +37,6 @@ public abstract class ListStatementFragment extends AbstractListFragment {
     protected abstract List<Statement> getDataFromDatabase();
 
     @Override
-    protected void deleteButtonOnClick() {
-        deleteAllSelectedStatement();
-        refreshListView();
-    }
-
-    private void deleteAllSelectedStatement() {
-        for (final String id : getSelectedIds()) {
-            final Statement statementToDelete = statementDAO.getStatementById(id);
-            statementDAO.delete(statementToDelete);
-        }
-    }
-
-    @Override
     protected ListView getList() {
         return list;
     }
@@ -65,19 +52,6 @@ public abstract class ListStatementFragment extends AbstractListFragment {
         super.onViewCreated(view, savedInstanceState);
 
         createListView();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        refreshListView();
-    }
-
-    private void refreshListView() {
-        final MatrixCursor cursor = createCursor();
-        adapter.changeCursor(cursor);
-        adapter.notifyDataSetChanged();
     }
 
     private void createListView() {
@@ -107,6 +81,32 @@ public abstract class ListStatementFragment extends AbstractListFragment {
                 new StatementCursorAdapter(getActivity(), R.layout.list_statements_row, cursor, PROJECTION, TO_VIEWS);
         adapter.setCheckboxListener(this);
         return adapter;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        refreshListView();
+    }
+
+    private void refreshListView() {
+        final MatrixCursor cursor = createCursor();
+        adapter.changeCursor(cursor);
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void deleteButtonOnClick() {
+        deleteAllSelectedStatement();
+        refreshListView();
+    }
+
+    private void deleteAllSelectedStatement() {
+        for (final String id : getSelectedIds()) {
+            final Statement statementToDelete = statementDAO.getStatementById(id);
+            statementDAO.delete(statementToDelete);
+        }
     }
 
     protected StatementDAO getStatementDAO() {

@@ -58,4 +58,14 @@ public class BillService {
     public List<Bill> getAllBills() {
         return billDAO.getAllBills();
     }
+
+    /**
+     * Delete the bill which is belongs to id.
+     * @param billId
+     *            {@link Bill}'s id.
+     */
+    public void delete(final String billId) {
+        final Bill billToDelete = billDAO.getBillById(billId);
+        billDAO.delete(billToDelete);
+    }
 }

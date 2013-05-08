@@ -37,6 +37,8 @@ public class ListBillFragment extends AbstractListFragment implements OnClickLis
     @InjectView(R.id.list_statement)
     private ListView list;
 
+    private CursorAdapter adapter;
+
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
@@ -47,26 +49,31 @@ public class ListBillFragment extends AbstractListFragment implements OnClickLis
     public void onViewCreated(final View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setHasOptionsMenu(true);
+
+        createListView();
+    }
+
+    private void createListView() {
+        final MatrixCursor cursor = createCursor();
+        adapter = createAdapter(cursor);
+        list.setAdapter(adapter);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        final List<Bill> data = getDataFromDatabase();
-        fillUpListView(data);
+
+        refreshListView();
     }
 
-    private List<Bill> getDataFromDatabase() {
-        return billService.getAllBills();
+    private void refreshListView() {
+        final MatrixCursor cursor = createCursor();
+        adapter.changeCursor(cursor);
+        adapter.notifyDataSetChanged();
     }
 
-    private void fillUpListView(final List<Bill> data) {
-        final MatrixCursor cursor = fillUpCursor(data);
-        final CursorAdapter adapter = createAdapter(cursor);
-        list.setAdapter(adapter);
-    }
-
-    private MatrixCursor fillUpCursor(final List<Bill> billList) {
+    private MatrixCursor createCursor() {
+        final List<Bill> billList = getDataFromDatabase();
         final MatrixCursor cursor = new MatrixCursor(PROJECTION);
         for (final Bill bill : billList) {
             cursor.addRow(new String[] { bill.getBillId(), bill.getAmount(), bill.getDate(), bill.getPayedDate(),
@@ -75,6 +82,10 @@ public class ListBillFragment extends AbstractListFragment implements OnClickLis
                 bill.getNote(), String.valueOf(bill.isPayed()) });
         }
         return cursor;
+    }
+
+    private List<Bill> getDataFromDatabase() {
+        return billService.getAllBills();
     }
 
     private CursorAdapter createAdapter(final MatrixCursor cursor) {
@@ -98,8 +109,15 @@ public class ListBillFragment extends AbstractListFragment implements OnClickLis
 
     @Override
     protected void deleteButtonOnClick() {
-        // TODO Auto-generated method stub
+        deleteAllSelectedBill();
 
+        refreshListView();
+    }
+
+    private void deleteAllSelectedBill() {
+        for (final String id : getSelectedIds()) {
+            billService.delete(id);
+        }
     }
 
     @Override
