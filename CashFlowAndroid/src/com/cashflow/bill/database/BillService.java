@@ -49,7 +49,7 @@ public class BillService {
         final Bill newBill =
                 Bill.builder(bill.getAmount(), bill.getDate(), bill.getDeadlineDate()).billId(bill.getBillId())
                         .category(bill.getCategory())
-                        .interval(bill.getInterval()).isPayed(true).note(bill.getNote())
+                        .interval(bill.getRecurringInterval()).isPayed(true).note(bill.getNote())
                         .payedDate(dateFormatter.format(myCalendar.getTime()))
                         .build();
         return newBill;

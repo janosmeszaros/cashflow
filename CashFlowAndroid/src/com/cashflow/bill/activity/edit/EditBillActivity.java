@@ -115,7 +115,7 @@ public class EditBillActivity extends RoboSherlockActivity {
 
     @SuppressWarnings("unchecked")
     private void setSelectedItem() {
-        final RecurringInterval interval = originalBill.getInterval();
+        final RecurringInterval interval = originalBill.getRecurringInterval();
         if (!RecurringInterval.none.equals(interval)) {
             recurringCheckBox.setChecked(true);
             recurringCheckBoxArea.setVisibility(VISIBLE);
