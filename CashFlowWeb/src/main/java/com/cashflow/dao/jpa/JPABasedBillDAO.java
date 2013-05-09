@@ -77,7 +77,7 @@ public class JPABasedBillDAO implements BillDAO {
                 Category.builder(entity.getCategory().getName()).categoryId(String.valueOf(entity.getCategory().getCategoryId())).build();
 
         return Bill.builder(entity.getAmount(), entity.getDate(), entity.getDeadlineDate()).billId(String.valueOf(entity.getBillId()))
-                .category(category).interval(entity.getInterval()).isPayed(entity.isPayed()).note(entity.getNote())
+                .category(category).interval(entity.getRecurringInterval()).isPayed(entity.isPayed()).note(entity.getNote())
                 .payedDate(entity.getPayedDate()).build();
 
     }

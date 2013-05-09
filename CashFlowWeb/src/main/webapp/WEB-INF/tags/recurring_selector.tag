@@ -2,9 +2,11 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ attribute name="withNoneOption" required="true"
+  type="java.lang.Boolean"%>
 
 <c:set var="title">
-  <spring:message code="label.recurring_type" />
+  <spring:message code="label.recurring_type" />:
 </c:set>
 <c:set var="none">
   <spring:message code="label.none" />
@@ -29,19 +31,39 @@
 <div class="control-group">
   <label class="control-label">${title}</label>
   <div class="controls">
+
+    <c:choose>
+      <c:when test="${withNoneOption}">
+        <label class="radio inline"> <form:radiobutton
+            path="recurringInterval" name="radios" value="none"
+            checked="checked" /> ${none}
+        </label>
+        <label class="radio inline"> <form:radiobutton
+            path="recurringInterval" name="radios" value="daily" />
+          ${daily}
+        </label>
+
+      </c:when>
+      <c:otherwise>
+        <label class="radio inline"> <form:radiobutton
+            path="recurringInterval" name="radios" value="daily" checked="checked"/>
+          ${daily}
+        </label>
+      </c:otherwise>
+    </c:choose>
+
     <label class="radio inline"> <form:radiobutton
-        path="interval" name="radios" value="None" checked="checked" />
-      ${none}
+        path="recurringInterval" name="radios" value="weekly" />
+      ${weekly}
     </label> <label class="radio inline"> <form:radiobutton
-        path="interval" name="radios" value="Daily" /> ${daily}
+        path="recurringInterval" name="radios" value="biweekly" />
+      ${biweekly}
     </label> <label class="radio inline"> <form:radiobutton
-        path="interval" name="radios" value="Weekly" /> ${weekly}
+        path="recurringInterval" name="radios" value="monthly" />
+      ${monthly}
     </label> <label class="radio inline"> <form:radiobutton
-        path="interval" name="radios" value="Biweekly" /> ${biweekly}
-    </label> <label class="radio inline"> <form:radiobutton
-        path="interval" name="radios" value="Monthly" /> ${monthly}
-    </label> <label class="radio inline"> <form:radiobutton
-        path="interval" name="radios" value="Annually" /> ${annually}
+        path="recurringInterval" name="radios" value="annually" />
+      ${annually}
     </label>
   </div>
 </div>

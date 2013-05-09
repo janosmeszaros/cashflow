@@ -5,7 +5,7 @@
 <%@ attribute name="currency" required="true" type="java.lang.String"%>
 
 <c:set var="title">
-  <spring:message code="label.amount" />
+  <spring:message code="label.amount" />:
 </c:set>
 
 

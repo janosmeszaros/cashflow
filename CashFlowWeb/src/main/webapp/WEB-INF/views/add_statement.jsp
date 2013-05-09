@@ -7,6 +7,8 @@
 <c:url value="/add_statement" var="addUrl" />
 <div class="container">
 
+  <tag:add_category_modal></tag:add_category_modal>
+
   <form:form class="form-horizontal" modelAttribute="statement"
     action="${addUrl}" method="post">
     <fieldset>
@@ -27,16 +29,24 @@
       <tag:amount_row currency="huf"></tag:amount_row>
 
       <tag:category_row></tag:category_row>
+
       <c:set var="dateLabel">
-        <spring:message code="label.date" />
+        <spring:message code="label.date" />:
       </c:set>
       <tag:datepicker path="date" title="${dateLabel}"></tag:datepicker>
 
       <tag:textarea></tag:textarea>
 
-<%--       <c:if test="${is_income}"> --%>
-<%--         <tag:recurring_selector></tag:recurring_selector> --%>
-<%--       </c:if> --%>
+      <c:choose>
+        <c:when test="${is_income}">
+          <tag:recurring_selector withNoneOption="true"></tag:recurring_selector>
+        </c:when>
+        <c:otherwise>
+          <form:input type="hidden" path="recurringInterval" />
+        </c:otherwise>
+      </c:choose>
+
+      <form:input type="hidden" path="type" />
 
       <tag:submit_button />
 

@@ -2,26 +2,27 @@ package com.cashflow.web;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
+import org.apache.commons.lang.WordUtils;
 import org.dozer.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cashflow.dao.CategoryDAO;
-import com.cashflow.dao.StatementDAO;
 import com.cashflow.domain.Category;
-import com.cashflow.domain.Statement;
-import com.cashflow.domain.StatementType;
-import com.cashflow.web.dto.BillDTO;
 import com.cashflow.web.dto.CategoryDTO;
-import com.cashflow.web.dto.StatementDTO;
 
 /**
  * Sample controller for going to the home page with a message
@@ -29,8 +30,6 @@ import com.cashflow.web.dto.StatementDTO;
 @Controller
 public class HomeController {
     private static final Logger LOGGER = LoggerFactory.getLogger(HomeController.class);
-    @Autowired
-    private StatementDAO dao;
     @Autowired
     private CategoryDAO categoryDAO;
     @Autowired
@@ -47,7 +46,6 @@ public class HomeController {
         dataBinder.setAutoGrowNestedPaths(false);
 
         dataBinder.registerCustomEditor(CategoryDTO.class, categoryPropertyEditor);
-
     }
 
     /**
@@ -90,24 +88,6 @@ public class HomeController {
         return "redirect:/";
     }
 
-    /**
-     * Selects the add_statement page.
-     * @param model
-     *            {@link Model}
-     * @return add_statement
-     */
-    @RequestMapping(value = "/add_income", method = RequestMethod.GET)
-    public String addIncome(final Model model) {
-        final StatementDTO income = new StatementDTO();
-        income.setType(StatementType.Income);
-
-        model.addAttribute("statement", income);
-        model.addAttribute("is_income", true);
-        addCategories(model);
-
-        return "add_statement";
-    }
-
     private void addCategories(final Model model) {
         final List<Category> allCategories = categoryDAO.getAllCategories();
         model.addAttribute("categories", convertToCategoryList(allCategories));
@@ -129,75 +109,6 @@ public class HomeController {
     }
 
     /**
-     * Selects the add_statement page.
-     * @param model
-     *            {@link Model}
-     * @return add_statement
-     */
-    @RequestMapping(value = "/add_expense", method = RequestMethod.GET)
-    public String addExpense(final Model model) {
-        final StatementDTO expense = new StatementDTO();
-        expense.setType(StatementType.Expense);
-
-        model.addAttribute("statement", expense);
-        model.addAttribute("is_income", false);
-        addCategories(model);
-
-        return "add_statement";
-    }
-
-    /**
-     * Posts the add_statement page.
-     * @param statement
-     *            {@link StatementDTO}
-     * @param model
-     *            {@link Model}
-     * @return add_statement
-     */
-    @RequestMapping(value = "/add_statement", method = RequestMethod.POST)
-    public String addStatement(final StatementDTO statement, final Model model) {
-        final Statement statementToSave = createStatement(statement);
-
-        dao.save(statementToSave);
-        return "redirect:/";
-    }
-
-    private Statement createStatement(final StatementDTO statement) {
-        final CategoryDTO categoryDTO = statement.getCategory();
-        final Category category = Category.builder(categoryDTO.getName()).categoryId(categoryDTO.getCategoryId()).build();
-        return Statement.builder(statement.getAmount(), statement.getDate()).note(statement.getNote()).type(statement.getType()).category(category)
-                .recurringInterval(statement.getInterval()).build();
-    }
-
-    /**
-     * Selects the add_bill page.
-     * @param model
-     *            {@link Model}
-     * @return add_bill
-     */
-    @RequestMapping(value = "/add_bill", method = RequestMethod.GET)
-    public String addBill(final Model model) {
-        LOGGER.info("Register");
-        model.addAttribute("bill", new BillDTO());
-        addCategories(model);
-
-        return "add_bill";
-    }
-
-    /**
-     * Selects the list page.
-     * @param model
-     *            {@link Model}
-     * @return list
-     */
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public String list(final Model model) {
-        LOGGER.info("Register");
-        model.addAttribute("controllerMessage", "List:");
-        return "list";
-    }
-
-    /**
      * Selects the add_category page.
      * @param model
      *            {@link Model}
@@ -206,6 +117,7 @@ public class HomeController {
     @RequestMapping(value = "/add_category", method = RequestMethod.GET)
     public String addCategory(final Model model) {
         model.addAttribute("category", new CategoryDTO());
+
         return "add_category";
     }
 
@@ -213,14 +125,52 @@ public class HomeController {
      * Post an add_category page.
      * @param category {@link CategoryDTO}
      * @param model {@link Model}
-     * @return to the home page
+     * @return string
      */
     @RequestMapping(value = "/add_category", method = RequestMethod.POST)
+    @ResponseBody
     public String addCategory(final CategoryDTO category, final Model model) {
-        final Category categoryToSave = Category.builder(category.getName()).categoryId(category.getCategoryId()).build();
+        LOGGER.info("Save category: " + category);
+
+        final String categoryName = WordUtils.capitalize(category.getName());
+        final Category categoryToSave = Category.builder(categoryName).categoryId(category.getCategoryId()).build();
 
         categoryDAO.save(categoryToSave);
 
-        return "redirect:/";
+        //        addCategories(model);
+
+        return "";
+    }
+
+    /**
+     * Selects the manage_categories page.
+     * @param model {@link Model}
+     * @param locale {@link Locale}
+     * @return manage_categories
+     */
+    @RequestMapping(value = "/manage_categories", method = RequestMethod.GET)
+    public String manageCategories(final Model model, final Locale locale) {
+        LOGGER.info("Manage categories.");
+        addCategories(model);
+
+        putDataTableMessagesIntoTheModel(model, locale);
+
+        return "manage_categories";
+    }
+
+    private void putDataTableMessagesIntoTheModel(final Model model, final Locale locale) {
+        final ApplicationContext applicationContext = new ClassPathXmlApplicationContext("i18n.xml");
+        final ReloadableResourceBundleMessageSource bean = (ReloadableResourceBundleMessageSource) applicationContext.getBean("messageSource");
+
+        final String[] keys = new String[]{"sort_ascending", "sort_descending", "first", "last", "next", "previous", "empty_table", "info",
+            "info_empty", "info_filtered", "info_postfix", "info_thousands", "length_menu", "loading_records", "processing", "search", "zero_records"};
+
+        for (final String key : keys) {
+            final String value = bean.getMessage("table." + key, null, locale);
+            LOGGER.debug("table." + key + " = " + value);
+            model.addAttribute(key, value);
+        }
+
+        ((ClassPathXmlApplicationContext) applicationContext).close();
     }
 }

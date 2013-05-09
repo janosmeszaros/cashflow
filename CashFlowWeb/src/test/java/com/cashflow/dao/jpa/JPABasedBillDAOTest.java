@@ -124,7 +124,7 @@ public class JPABasedBillDAOTest {
         entity.setCategory(categoryEntity);
         entity.setDate(bill.getDate());
         entity.setNote(bill.getNote());
-        entity.setInterval(bill.getInterval());
+        entity.setRecurringInterval(bill.getRecurringInterval());
         entity.setBillId(Integer.parseInt(bill.getBillId()));
         entity.setDeadlineDate(bill.getDeadlineDate());
         entity.setPayed(bill.isPayed());

@@ -5,7 +5,8 @@
 
 <div class="container">
 
-  <form:form modelAttribute="bill" class="form-horizontal">
+<c:url value="/add_bill" var="addUrl" />
+  <form:form modelAttribute="bill" class="form-horizontal" action="${addUrl}" method="post">
     <fieldset>
 
       <!-- Form Name -->
@@ -25,11 +26,11 @@
       <c:set var="deadline">
         <spring:message code="label.deadline" />
       </c:set>
-      <tag:datepicker path="deadlineDate" title="${deadline}"></tag:datepicker>
+      <tag:datepicker path="deadlineDate" title="${deadline}:"></tag:datepicker>
 
       <tag:textarea></tag:textarea>
 
-      <tag:recurring_selector></tag:recurring_selector>
+      <tag:recurring_selector withNoneOption="false"></tag:recurring_selector>
 
       <c:set var="submit">
         <spring:message code="label.submit" />

@@ -9,7 +9,7 @@
   <div class="controls">
     <div class="input-append">
 
-      <form:input path="${path}" id="amounttext" name="amounttext"
+      <form:input path="${path}" id="text_input" name="text_input"
         class="span2"  type="text" required="required" />
     </div>
 

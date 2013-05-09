@@ -33,7 +33,7 @@ public class BillEntity {
     private CategoryEntity category;
     private boolean payed;
     @Enumerated(EnumType.STRING)
-    private RecurringInterval interval;
+    private RecurringInterval recurringInterval;
 
     public void setBillId(final long billId) {
         this.billId = billId;
@@ -67,8 +67,8 @@ public class BillEntity {
         this.payed = payed;
     }
 
-    public void setInterval(final RecurringInterval interval) {
-        this.interval = interval;
+    public void setRecurringInterval(final RecurringInterval interval) {
+        this.recurringInterval = interval;
     }
 
     public long getBillId() {
@@ -103,8 +103,8 @@ public class BillEntity {
         return payed;
     }
 
-    public RecurringInterval getInterval() {
-        return interval;
+    public RecurringInterval getRecurringInterval() {
+        return recurringInterval;
     }
 
     @Override

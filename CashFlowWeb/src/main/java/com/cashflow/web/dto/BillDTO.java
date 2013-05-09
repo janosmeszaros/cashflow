@@ -1,6 +1,7 @@
 package com.cashflow.web.dto;
 
-import com.cashflow.domain.Bill;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import com.cashflow.domain.RecurringInterval;
 
 /**
@@ -16,16 +17,7 @@ public class BillDTO {
     private String note;
     private CategoryDTO category = new CategoryDTO();
     private boolean payed;
-    private RecurringInterval interval;
-
-    /**
-     * Convert to {@link Bill}.
-     * @return {@link Bill}.
-     */
-    public Bill convert() {
-        return Bill.builder(amount, date, deadlineDate).billId(billId).category(category.convert()).interval(interval).isPayed(payed)
-                .note(note).payedDate(payedDate).build();
-    }
+    private RecurringInterval recurringInterval;
 
     public String getBillId() {
         return billId;
@@ -91,12 +83,17 @@ public class BillDTO {
         this.payed = payed;
     }
 
-    public RecurringInterval getInterval() {
-        return interval;
+    public RecurringInterval getRecurringInterval() {
+        return recurringInterval;
     }
 
-    public void setInterval(final RecurringInterval interval) {
-        this.interval = interval;
+    public void setRecurringInterval(final RecurringInterval interval) {
+        recurringInterval = interval;
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 
 }
