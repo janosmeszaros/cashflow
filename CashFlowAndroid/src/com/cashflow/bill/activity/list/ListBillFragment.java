@@ -1,5 +1,6 @@
 package com.cashflow.bill.activity.list;
 
+import static com.cashflow.constants.Constants.ID_EXTRA;
 import static com.cashflow.database.DatabaseContracts.AbstractBill.PROJECTION;
 import static com.cashflow.database.DatabaseContracts.AbstractBill.TO_VIEWS;
 
@@ -9,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import roboguice.inject.InjectView;
+import android.content.Intent;
 import android.database.MatrixCursor;
 import android.os.Bundle;
 import android.support.v4.widget.CursorAdapter;
@@ -22,6 +24,7 @@ import android.widget.Toast;
 
 import com.cashflow.R;
 import com.cashflow.activity.components.AbstractListFragment;
+import com.cashflow.bill.activity.edit.EditBillActivity;
 import com.cashflow.bill.database.BillService;
 import com.cashflow.domain.Bill;
 import com.google.inject.Inject;
@@ -104,8 +107,9 @@ public class ListBillFragment extends AbstractListFragment implements OnClickLis
 
     @Override
     protected void editButtonOnClick() {
-        // TODO Auto-generated method stub
-
+        final Intent intent = new Intent(getActivity(), EditBillActivity.class);
+        intent.putExtra(ID_EXTRA, getSelectedIds().get(0));
+        startActivity(intent);
     }
 
     @Override

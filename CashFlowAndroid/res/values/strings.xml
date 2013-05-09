@@ -46,5 +46,6 @@
     <string name="income_string">Income</string>
     <string name="expense_string">Expense</string>
     <string name="pay_bill">pay</string>
+    <string name="title_activity_edit_bill">Edit bill</string>
 
 </resources>
