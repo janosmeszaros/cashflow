@@ -48,6 +48,7 @@ public class AndroidBillDAOTest {
     private static final String NOTE = "note";
     private static final String UNPAYED_ID = "2";
     private static final String PAYED_ID = "1";
+    private static final long FAILED = -1L;
     private static final String DATE = "03.04.2013";
     private static final String AMOUNT = "1234";
     private static final String CATEGORY_ID = "0";
@@ -92,30 +93,30 @@ public class AndroidBillDAOTest {
     public void testSaveWhenPayedBillThenShouldSaveToDatabase() {
         when(database.insert(eq(TABLE_NAME), (String) eq(null), (ContentValues) anyObject())).thenReturn(1L);
 
-        final boolean saved = underTest.save(PAYED_BILL);
+        final long savedBillId = underTest.save(PAYED_BILL);
 
         verify(provider).getWritableDb();
-        assertThat(saved, equalTo(true));
+        assertThat(String.valueOf(savedBillId), equalTo(PAYED_ID));
     }
 
     @Test
     public void testSaveWhenUnPayedBillThenShouldSaveToDatabase() {
-        when(database.insert(eq(TABLE_NAME), (String) eq(null), (ContentValues) anyObject())).thenReturn(1L);
+        when(database.insert(eq(TABLE_NAME), (String) eq(null), (ContentValues) anyObject())).thenReturn(2L);
 
-        final boolean saved = underTest.save(UNPAYED_BILL);
+        final long savedBillId = underTest.save(UNPAYED_BILL);
 
         verify(provider).getWritableDb();
-        assertThat(saved, equalTo(true));
+        assertThat(String.valueOf(savedBillId), equalTo(UNPAYED_ID));
     }
 
     @Test
     public void testSaveWhenBillIsOkButSomethingHappensInInsertionThenShouldReturnFalse() {
-        when(database.insert(eq(TABLE_NAME), (String) eq(null), (ContentValues) anyObject())).thenReturn(-1L);
+        when(database.insert(eq(TABLE_NAME), (String) eq(null), (ContentValues) anyObject())).thenReturn(FAILED);
 
-        final boolean saved = underTest.save(PAYED_BILL);
+        final long savedBillId = underTest.save(PAYED_BILL);
 
         verify(provider).getWritableDb();
-        assertThat(saved, equalTo(false));
+        assertThat(savedBillId, equalTo(FAILED));
     }
 
     @Test(expected = IllegalArgumentException.class)

@@ -42,13 +42,14 @@ import com.cashflow.category.database.AndroidCategoryDAO;
 import com.cashflow.dao.BillDAO;
 import com.cashflow.dao.CategoryDAO;
 import com.cashflow.domain.Bill;
-import com.cashflow.domain.RecurringInterval;
 import com.cashflow.domain.Bill.Builder;
 import com.cashflow.domain.Category;
+import com.cashflow.domain.RecurringInterval;
 import com.google.inject.Inject;
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 import com.xtremelabs.robolectric.shadows.ShadowActivity;
+import com.xtremelabs.robolectric.shadows.ShadowButton;
 import com.xtremelabs.robolectric.shadows.ShadowIntent;
 import com.xtremelabs.robolectric.shadows.ShadowTextView;
 import com.xtremelabs.robolectric.shadows.ShadowToast;
@@ -56,6 +57,8 @@ import com.xtremelabs.robolectric.shadows.ShadowToast;
 @RunWith(RobolectricTestRunner.class)
 public class AddBillFragmentTest {
     private static final String EXCEPTION = "Exception";
+    private static final long BILL_ID = 1L;
+    private static final long FAIL = -1L;
 
     private static final Category CATEGORY = Category.builder("cat").categoryId("0").build();
 
@@ -199,23 +202,25 @@ public class AddBillFragmentTest {
     @Test
     public void testSubmitButtonOnClickWhenEverythingIsFineAndNotRecurringThenShouldSaveBill() {
         final Button submitButton = (Button) underTest.getView().findViewById(R.id.submitButton);
+        final ShadowButton submitShadow = (ShadowButton) Robolectric.shadowOf(submitButton);
         final Bill testBill = createTestBill(false);
         fillViewsWithData(testBill);
 
-        submitButton.performClick();
+        submitShadow.performClick();
 
-        verify(billDAO).save(testBill);
+        verify(billDAO).save(any(Bill.class));
     }
 
     @Test
     public void testSubmitButtonOnClickWhenEverythingIsFineAndRecurringThenShouldSaveBill() {
         final Button submitButton = (Button) underTest.getView().findViewById(R.id.submitButton);
+        final ShadowButton submitShadow = (ShadowButton) Robolectric.shadowOf(submitButton);
         final Bill testBill = createTestBill(true);
         fillViewsWithData(testBill);
 
-        submitButton.performClick();
+        submitShadow.performClick();
 
-        verify(billDAO).save(testBill);
+        verify(billDAO).save(any(Bill.class));
     }
 
     @Test
@@ -224,7 +229,7 @@ public class AddBillFragmentTest {
         final ShadowActivity shadowActivity = Robolectric.shadowOf(activity);
         final Bill testBill = createTestBill(true);
         fillViewsWithData(testBill);
-        when(billDAO.save((Bill) any())).thenReturn(true);
+        when(billDAO.save((Bill) any())).thenReturn(BILL_ID);
 
         submitButton.performClick();
 
@@ -238,7 +243,7 @@ public class AddBillFragmentTest {
         final String toastText = activity.getResources().getString(R.string.database_error);
         final Bill testBill = createTestBill(true);
         fillViewsWithData(testBill);
-        when(billDAO.save((Bill) any())).thenReturn(false);
+        when(billDAO.save((Bill) any())).thenReturn(FAIL);
 
         submitButton.performClick();
 
@@ -295,6 +300,7 @@ public class AddBillFragmentTest {
         billbuilder.note("Note");
         billbuilder.isPayed(false);
         billbuilder.payedDate("");
+        billbuilder.billId(String.valueOf(BILL_ID));
 
         if (isRecurring) {
             billbuilder.interval(RecurringInterval.annually);

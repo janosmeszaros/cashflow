@@ -69,23 +69,19 @@ public class AndroidStatementDAO implements StatementDAO {
     }
 
     @Override
-    public boolean save(final Statement statement) {
+    public long save(final Statement statement) {
         nullCheck(statement);
         final ContentValues values = createContentValue(statement);
         return persistStatement(values);
     }
 
-    private boolean persistStatement(final ContentValues values) {
+    private long persistStatement(final ContentValues values) {
         final SQLiteDatabase database = provider.getWritableDb();
         final long newRowId = database.insert(TABLE_NAME, null, values);
 
         LOG.debug("New row created with row ID: " + newRowId);
 
-        return isSuccessful(newRowId);
-    }
-
-    private boolean isSuccessful(final long newRowId) {
-        return newRowId >= 0;
+        return newRowId;
     }
 
     @Override

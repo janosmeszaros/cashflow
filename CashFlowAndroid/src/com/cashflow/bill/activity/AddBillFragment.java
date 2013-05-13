@@ -112,7 +112,7 @@ public class AddBillFragment extends RoboFragment {
     }
 
     private boolean isProperResult(final int requestCode, final int resultCode) {
-        return REQUEST_CODE == requestCode && resultCode == Activity.RESULT_OK;
+        return (REQUEST_CODE == requestCode) && (resultCode == Activity.RESULT_OK);
     }
 
     @Override
@@ -126,8 +126,7 @@ public class AddBillFragment extends RoboFragment {
     private void setCategorySpinner() {
         final List<Category> list = categoryDAO.getAllCategories();
 
-        final ArrayAdapter<Category> adapter =
-                new ArrayAdapter<Category>(getActivity(), android.R.layout.simple_spinner_dropdown_item, list);
+        final ArrayAdapter<Category> adapter = new ArrayAdapter<Category>(getActivity(), android.R.layout.simple_spinner_dropdown_item, list);
         categorySpinner.setAdapter(adapter);
     }
 
@@ -167,7 +166,7 @@ public class AddBillFragment extends RoboFragment {
 
             try {
                 final Bill billToSave = createBill();
-                if (billDAO.save(billToSave)) {
+                if (billDAO.save(billToSave) >= 0) {
                     parent.setResult(Activity.RESULT_OK);
                     parent.finish();
                 } else {

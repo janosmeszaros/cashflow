@@ -52,7 +52,7 @@ public class CreateCategoryActivity extends RoboActivity {
 
             try {
                 final Category category = createCategory(name);
-                if (categoryDAO.save(category)) {
+                if (categoryDAO.save(category) >= 0) {
                     finishActivity();
                 } else {
                     showToast(getString(R.string.database_error));

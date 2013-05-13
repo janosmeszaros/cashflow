@@ -58,21 +58,17 @@ public class AndroidBillDAO implements BillDAO {
     }
 
     @Override
-    public boolean save(final Bill bill) {
+    public long save(final Bill bill) {
         Validate.notNull(bill);
         final ContentValues valuesToSave = createContentValues(bill);
         return persistBill(valuesToSave);
     }
 
-    private boolean persistBill(final ContentValues values) {
+    private long persistBill(final ContentValues values) {
         final SQLiteDatabase database = provider.getWritableDb();
         final long newRowId = database.insert(TABLE_NAME, null, values);
         LOG.debug("New row created with row ID: " + newRowId);
-        return isSuccesfulSave(newRowId);
-    }
-
-    private boolean isSuccesfulSave(final long newRowId) {
-        return newRowId >= 0;
+        return newRowId;
     }
 
     @Override
@@ -86,7 +82,7 @@ public class AndroidBillDAO implements BillDAO {
 
     private boolean persistUpdate(final String billId, final ContentValues values) {
         final SQLiteDatabase database = provider.getWritableDb();
-        final int updatedRows = database.update(TABLE_NAME, values, _ID + EQUALS, new String[] { billId });
+        final int updatedRows = database.update(TABLE_NAME, values, _ID + EQUALS, new String[]{billId});
         LOG.debug("Num of rows updated: " + updatedRows);
         return isSuccessfulUpdate(updatedRows);
     }
@@ -144,9 +140,8 @@ public class AndroidBillDAO implements BillDAO {
             final boolean isPayed = TRUE.equals(isPayedString);
             final Category cat = Category.builder(categoryName).categoryId(categoryId).build();
 
-            final Bill bill =
-                    Bill.builder(amount, date, deadline).isPayed(isPayed).payedDate(payedDate).category(cat).note(note).billId(billId)
-                            .build();
+            final Bill bill = Bill.builder(amount, date, deadline).isPayed(isPayed).payedDate(payedDate).category(cat).note(note).billId(billId)
+                    .build();
             result.add(bill);
         }
         return result;

@@ -5,6 +5,7 @@ import static com.cashflow.domain.StatementType.Income;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -51,6 +52,7 @@ import com.google.inject.Inject;
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 import com.xtremelabs.robolectric.shadows.ShadowActivity;
+import com.xtremelabs.robolectric.shadows.ShadowButton;
 import com.xtremelabs.robolectric.shadows.ShadowImageView;
 import com.xtremelabs.robolectric.shadows.ShadowIntent;
 import com.xtremelabs.robolectric.shadows.ShadowTextView;
@@ -154,11 +156,12 @@ public class AddStatementFragmentTest {
     @Test
     public void testSubmitValidExpenseThenShouldSetTheResultToOkAndCloseTheActivity() {
         final Button submit = (Button) underTest.getView().findViewById(R.id.submitButton);
+        final ShadowButton submitShadow = (ShadowButton) Robolectric.shadowOf(submit);
         final ShadowActivity shadowActivity = Robolectric.shadowOf(activity);
         setViewsValues(VALID_STATEMENT);
-        when(statementDAO.save(VALID_STATEMENT)).thenReturn(true);
+        when(statementDAO.save(any(Statement.class))).thenReturn(1L);
 
-        submit.performClick();
+        submitShadow.performClick();
 
         assertThat(shadowActivity.getResultCode(), equalTo(Activity.RESULT_OK));
         assertThat(shadowActivity.isFinishing(), equalTo(true));
@@ -167,10 +170,11 @@ public class AddStatementFragmentTest {
     @Test
     public void testSubmitWhenSomethingWentWrongThenShouldShowAToast() {
         final Button submit = (Button) underTest.getView().findViewById(R.id.submitButton);
+        final ShadowButton submitShadow = (ShadowButton) Robolectric.shadowOf(submit);
         setViewsValues(INVALID_STATEMENT);
-        when(statementDAO.save(INVALID_STATEMENT)).thenReturn(false);
+        when(statementDAO.save(any(Statement.class))).thenReturn(-1L);
 
-        submit.performClick();
+        submitShadow.performClick();
 
         final String toastText = activity.getResources().getString(R.string.database_error);
         assertThat(ShadowToast.getTextOfLatestToast(), equalTo(toastText));
@@ -179,10 +183,11 @@ public class AddStatementFragmentTest {
     @Test
     public void testSubmitWhenSaveStatementThrowsExceptionThenShouldShowAToastWithTheExcpetionMessage() {
         final Button submit = (Button) underTest.getView().findViewById(R.id.submitButton);
+        final ShadowButton submitShadow = (ShadowButton) Robolectric.shadowOf(submit);
         setViewsValues(VALID_STATEMENT);
         when(statementDAO.save(VALID_STATEMENT)).thenThrow(new IllegalArgumentException(ERROR));
 
-        submit.performClick();
+        submitShadow.performClick();
 
         assertThat(ShadowToast.getTextOfLatestToast(), equalTo(ERROR));
     }

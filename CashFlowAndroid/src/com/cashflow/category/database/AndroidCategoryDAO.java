@@ -33,9 +33,8 @@ public class AndroidCategoryDAO implements CategoryDAO {
     private final SQLiteDbProvider provider;
 
     /**
-     * Default constructor which get an Provider.
-     * @param provider
-     *            {@link SQLiteDbProvider} to get database.
+     * Default constructor which get a Provider.
+     * @param provider {@link SQLiteDbProvider} to get database.
      */
     @Inject
     public AndroidCategoryDAO(final SQLiteDbProvider provider) {
@@ -44,23 +43,19 @@ public class AndroidCategoryDAO implements CategoryDAO {
     }
 
     @Override
-    public boolean save(final Category category) {
+    public long save(final Category category) {
         Validate.notNull(category);
         final ContentValues values = createContentValues(category);
         return persistCategory(values);
     }
 
-    private boolean persistCategory(final ContentValues values) {
+    private long persistCategory(final ContentValues values) {
         final SQLiteDatabase database = provider.getWritableDb();
         final long newRowId = database.insert(TABLE_NAME, null, values);
 
         LOG.debug("New row created with row ID: " + newRowId);
 
-        return isSuccessful(newRowId);
-    }
-
-    private boolean isSuccessful(final long newRowId) {
-        return newRowId >= 0;
+        return newRowId;
     }
 
     @Override
@@ -74,7 +69,7 @@ public class AndroidCategoryDAO implements CategoryDAO {
 
     private boolean persistUpdate(final String categoryId, final ContentValues values) {
         final SQLiteDatabase database = provider.getWritableDb();
-        final int update = database.update(TABLE_NAME, values, _ID + EQUALS, new String[] { categoryId });
+        final int update = database.update(TABLE_NAME, values, _ID + EQUALS, new String[]{categoryId});
         LOG.debug("Num of rows updated: " + update);
         return isUpdateSuccessed(update);
     }
@@ -91,8 +86,7 @@ public class AndroidCategoryDAO implements CategoryDAO {
 
     private Cursor queryAllCategories() {
         final SQLiteDatabase database = provider.getReadableDb();
-        final Cursor query = database.query(TABLE_NAME, PROJECTION, null, null, null, null, null);
-        return query;
+        return database.query(TABLE_NAME, PROJECTION, null, null, null, null, null);
     }
 
     private ContentValues createContentValues(final Category category) {

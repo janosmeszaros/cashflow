@@ -75,20 +75,20 @@ public class AndroidCategoryDAOTest {
     public void testSaveWhenCategoryIsOkThenShouldSaveToDatabase() {
         when(database.insert(eq(TABLE_NAME), (String) eq(null), (ContentValues) anyObject())).thenReturn(1L);
 
-        final boolean saved = underTest.save(CATEGORY);
+        final long savedCategoryId = underTest.save(CATEGORY);
 
         verify(provider).getWritableDb();
-        assertThat(saved, equalTo(true));
+        assertThat(savedCategoryId, equalTo(1L));
     }
 
     @Test
     public void testSaveWhenCategoryIsOkButSomethingHappensInInsertionThenShouldReturnFalse() {
         when(database.insert(eq(TABLE_NAME), (String) eq(null), (ContentValues) anyObject())).thenReturn(-1L);
 
-        final boolean saved = underTest.save(CATEGORY);
+        final long savedCategoryId = underTest.save(CATEGORY);
 
         verify(provider).getWritableDb();
-        assertThat(saved, equalTo(false));
+        assertThat(savedCategoryId, equalTo(-1L));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -103,7 +103,8 @@ public class AndroidCategoryDAOTest {
 
     @Test
     public void testUpdateWhenCategoryIsOkThenShouldUpdateAndReturnTrue() {
-        when(database.update(eq(TABLE_NAME), (ContentValues) anyObject(), eq(_ID + EQUALS), eq(new String[]{CATEGORY.getCategoryId()}))).thenReturn(1);
+        when(database.update(eq(TABLE_NAME), (ContentValues) anyObject(), eq(_ID + EQUALS), eq(new String[]{CATEGORY.getCategoryId()})))
+                .thenReturn(1);
 
         final boolean updated = underTest.update(CATEGORY, CATEGORY.getCategoryId());
 
@@ -113,7 +114,8 @@ public class AndroidCategoryDAOTest {
 
     @Test
     public void testUpdateWhenSomethingHappensInInsertionThenShouldReturnFalse() {
-        when(database.update(eq(TABLE_NAME), (ContentValues) anyObject(), eq(_ID + EQUALS), eq(new String[]{CATEGORY.getCategoryId()}))).thenReturn(-1);
+        when(database.update(eq(TABLE_NAME), (ContentValues) anyObject(), eq(_ID + EQUALS), eq(new String[]{CATEGORY.getCategoryId()}))).thenReturn(
+                -1);
 
         final boolean updated = underTest.update(CATEGORY, CATEGORY.getCategoryId());
 

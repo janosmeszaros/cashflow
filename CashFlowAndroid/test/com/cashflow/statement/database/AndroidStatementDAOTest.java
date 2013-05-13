@@ -97,30 +97,30 @@ public class AndroidStatementDAOTest {
     public void testSaveWhenStatementIsIncomeThenShouldSaveToDatabase() {
         when(database.insert(eq(TABLE_NAME), (String) eq(null), (ContentValues) anyObject())).thenReturn(1L);
 
-        final boolean saved = underTest.save(incomeStatement);
+        final long savedStatementId = underTest.save(incomeStatement);
 
         verify(provider).getWritableDb();
-        assertThat(saved, equalTo(true));
+        assertThat(savedStatementId, equalTo(1L));
     }
 
     @Test
     public void testSaveWhenStatementIsExpenseThenShouldSaveToDatabase() {
         when(database.insert(eq(TABLE_NAME), (String) eq(null), (ContentValues) anyObject())).thenReturn(1L);
 
-        final boolean saved = underTest.save(expenseStatement);
+        final long savedStatementId = underTest.save(expenseStatement);
 
         verify(provider).getWritableDb();
-        assertThat(saved, equalTo(true));
+        assertThat(savedStatementId, equalTo(1L));
     }
 
     @Test
     public void testSaveWhenStatementIsOkButSomethingHappensInInsertionThenShouldReturnFalse() {
         when(database.insert(eq(TABLE_NAME), (String) eq(null), (ContentValues) anyObject())).thenReturn(-1L);
 
-        final boolean saved = underTest.save(incomeStatement);
+        final long savedStatementId = underTest.save(incomeStatement);
 
         verify(provider).getWritableDb();
-        assertThat(saved, equalTo(false));
+        assertThat(savedStatementId, equalTo(-1L));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -135,7 +135,8 @@ public class AndroidStatementDAOTest {
 
     @Test
     public void testUpdateWhenStatementIsIncomeThenShouldUpdateAndReturnTrue() {
-        when(database.update(eq(TABLE_NAME), (ContentValues) anyObject(), eq(_ID + EQUALS), eq(new String[]{incomeStatement.getStatementId()}))).thenReturn(1);
+        when(database.update(eq(TABLE_NAME), (ContentValues) anyObject(), eq(_ID + EQUALS), eq(new String[]{incomeStatement.getStatementId()})))
+                .thenReturn(1);
 
         final boolean updated = underTest.update(incomeStatement, incomeStatement.getStatementId());
 
@@ -145,7 +146,8 @@ public class AndroidStatementDAOTest {
 
     @Test
     public void testUpdateWhenStatementIsExpenseThenShouldUpdateAndReturnTrue() {
-        when(database.update(eq(TABLE_NAME), (ContentValues) anyObject(), eq(_ID + EQUALS), eq(new String[]{incomeStatement.getStatementId()}))).thenReturn(1);
+        when(database.update(eq(TABLE_NAME), (ContentValues) anyObject(), eq(_ID + EQUALS), eq(new String[]{incomeStatement.getStatementId()})))
+                .thenReturn(1);
 
         final boolean updated = underTest.update(incomeStatement, expenseStatement.getStatementId());
 
