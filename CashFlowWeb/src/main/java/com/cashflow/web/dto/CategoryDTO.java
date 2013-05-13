@@ -1,12 +1,14 @@
 package com.cashflow.web.dto;
 
+import java.io.Serializable;
+
 import com.cashflow.domain.Category;
 
 /**
  * DTO for category.
  * @author Janos_Gyula_Meszaros
  */
-public class CategoryDTO {
+public class CategoryDTO implements Serializable {
     private String categoryId = "";
     private String name = "";
 

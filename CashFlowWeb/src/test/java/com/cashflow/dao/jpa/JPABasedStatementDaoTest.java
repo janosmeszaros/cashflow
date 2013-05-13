@@ -26,6 +26,8 @@ import com.cashflow.domain.Statement;
 import com.cashflow.domain.StatementType;
 
 public class JPABasedStatementDaoTest {
+    private static final long STATEMENT_ID = 1L;
+    private static final long FAILED = -1L;
     private static final String ID_STR = "0";
     private static final String AMOUNT_STR = "1234";
     private static final String CATEGORY_ID = "1";
@@ -40,8 +42,7 @@ public class JPABasedStatementDaoTest {
     private JPABasedStatementDAO underTest;
     private final Mapper mapper = new DozerBeanMapper();
     private final Statement incomeStatement = Statement.builder(AMOUNT_STR, DATE_STR).note(NOTE).type(StatementType.Income)
-            .category(Category.builder(CATEGORY_NAME).categoryId(CATEGORY_ID).build())
-            .recurringInterval(RecurringInterval.valueOf(INTERVAL_STR))
+            .category(Category.builder(CATEGORY_NAME).categoryId(CATEGORY_ID).build()).recurringInterval(RecurringInterval.valueOf(INTERVAL_STR))
             .statementId(ID_STR).build();
     private final StatementEntity statementEntity = createStatementEntity(incomeStatement);
 
@@ -77,13 +78,15 @@ public class JPABasedStatementDaoTest {
 
     @Test
     public void testSaveWhenStatementIsOkThenShouldConvertToEntityThenSave() {
-        when(dao.persist((StatementEntity) anyObject())).thenReturn(true);
+        final StatementEntity savedStatement = new StatementEntity();
+        savedStatement.setStatementId(STATEMENT_ID);
+        when(dao.persist((StatementEntity) anyObject())).thenReturn(savedStatement);
         final StatementEntity statementEntity = createStatementEntity(incomeStatement);
 
-        final boolean isSaved = underTest.save(incomeStatement);
+        final long savedStatementId = underTest.save(incomeStatement);
 
         verify(dao).persist(statementEntity);
-        assertThat(isSaved, equalTo(true));
+        assertThat(savedStatementId, equalTo(STATEMENT_ID));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -93,11 +96,13 @@ public class JPABasedStatementDaoTest {
 
     @Test
     public void testSaveWhenEntityAlreadyExistsThenShouldReturnFalse() {
-        when(dao.persist((StatementEntity) anyObject())).thenReturn(false);
+        final StatementEntity savedStatement = new StatementEntity();
+        savedStatement.setStatementId(FAILED);
+        when(dao.persist((StatementEntity) anyObject())).thenReturn(savedStatement);
 
-        final boolean isSaved = underTest.save(incomeStatement);
+        final long savedStatementId = underTest.save(incomeStatement);
 
-        assertThat(isSaved, equalTo(false));
+        assertThat(savedStatementId, equalTo(FAILED));
     }
 
     @Test(expected = IllegalArgumentException.class)

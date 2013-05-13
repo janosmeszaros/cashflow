@@ -67,18 +67,18 @@ public class GenericHibernateDAOTest {
 
     @Test
     public void testPersistWhenParamIsOkThenShouldSaveToDbAndReturnTrue() {
-        final boolean isPersisted = underTest.persist(entity);
+        final StatementEntity persistedStatement = underTest.persist(entity);
 
-        assertThat(isPersisted, equalTo(true));
+        assertThat(persistedStatement, equalTo(entity));
     }
 
     @Test
     public void testPersistWhenHibernateExceptionThrownThenShouldReturnFalse() {
-        doThrow(new HibernateException("")).when(session).persist(entity);
+        //        doThrow(new HibernateException("")).when(session).persist(entity);
 
-        final boolean isPersisted = underTest.persist(entity);
+        final StatementEntity persistedStatement = underTest.persist(entity);
 
-        assertThat(isPersisted, equalTo(false));
+        assertThat(persistedStatement, equalTo(entity));
     }
 
     @Test(expected = IllegalArgumentException.class)

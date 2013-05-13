@@ -7,7 +7,6 @@
 <c:url value="/add_statement" var="addUrl" />
 <div class="container">
 
-  <tag:add_category_modal></tag:add_category_modal>
 
   <form:form class="form-horizontal" modelAttribute="statement"
     action="${addUrl}" method="post">
@@ -50,6 +49,7 @@
 
       <tag:submit_button />
 
+      <tag:add_category_modal></tag:add_category_modal>
     </fieldset>
   </form:form>
 

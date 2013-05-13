@@ -5,9 +5,12 @@ import java.util.List;
 
 import org.apache.commons.lang.Validate;
 import org.dozer.Mapper;
+import org.hibernate.HibernateException;
 import org.hibernate.criterion.LogicalExpression;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.SimpleExpression;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -25,6 +28,7 @@ import com.cashflow.domain.StatementType;
  */
 @Component
 public class JPABasedStatementDAO implements StatementDAO {
+    private static final Logger LOGGER = LoggerFactory.getLogger(JPABasedStatementDAO.class);
     private static final String RECURRING_INTERVAL = "recurringInterval";
     private static final String TYPE = "type";
     private final Mapper mapper;
@@ -47,11 +51,22 @@ public class JPABasedStatementDAO implements StatementDAO {
     }
 
     @Override
-    public boolean save(final Statement statement) {
+    public long save(final Statement statement) {
         Validate.notNull(statement);
 
         final StatementEntity entity = generateEntity(statement);
-        return dao.persist(entity);
+
+        long newStatementId;
+
+        try {
+            final StatementEntity persistedStatement = dao.persist(entity);
+            newStatementId = persistedStatement.getStatementId();
+        } catch (final HibernateException e) {
+            LOGGER.error("An exception occured during the operations. Exception message: " + e.getMessage());
+            newStatementId = -1;
+        }
+
+        return newStatementId;
     }
 
     private StatementEntity generateEntity(final Statement statement) {

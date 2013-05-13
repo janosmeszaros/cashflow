@@ -14,7 +14,7 @@
   <div class="controls ">
     <div class="input-append">
       <form:select path="category" itemLabel="name"
-        items="${categories}" id="selectbasic" name="selectbasic"
+        items="${categories}" id="select_category" name="select_category"
         itemValue="categoryId" class="input-xlarge" />
       <span class="add-on btn" onclick="showAddCategory()"><i
         class="icon-plus-sign-alt"></i></span>

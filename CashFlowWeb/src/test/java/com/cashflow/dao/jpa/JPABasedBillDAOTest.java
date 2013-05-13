@@ -22,6 +22,8 @@ import com.cashflow.domain.Bill;
 import com.cashflow.domain.Category;
 
 public class JPABasedBillDAOTest {
+    private static final long BILL_ID = 1L;
+    private static final long FAILED = -1L;
     private static final String ID_STR = "0";
     private static final String AMOUNT_STR = "1234";
     private static final String CATEGORY_ID = "1";
@@ -62,23 +64,27 @@ public class JPABasedBillDAOTest {
     }
 
     @Test
-    public void testSaveWhenCalledThenReturnTrueIfWasSuccess() {
-        when(dao.persist(billEntity)).thenReturn(true);
+    public void testSaveWhenCalledThenReturnTheEntityIfWasSuccess() {
+        final BillEntity savedEntity = new BillEntity();
+        savedEntity.setBillId(BILL_ID);
+        when(dao.persist(billEntity)).thenReturn(savedEntity);
 
-        final boolean isSaved = underTest.save(bill);
+        final long savedBillId = underTest.save(bill);
 
         verify(dao).persist(billEntity);
-        assertThat(isSaved, equalTo(true));
+        assertThat(savedBillId, equalTo(BILL_ID));
     }
 
     @Test
     public void testSaveWhenCalledThenReturnFalseIfWasUnsuccess() {
-        when(dao.persist(billEntity)).thenReturn(false);
+        final BillEntity savedEntity = new BillEntity();
+        savedEntity.setBillId(FAILED);
+        when(dao.persist(billEntity)).thenReturn(savedEntity);
 
-        final boolean isSaved = underTest.save(bill);
+        final long savedBillId = underTest.save(bill);
 
         verify(dao).persist(billEntity);
-        assertThat(isSaved, equalTo(false));
+        assertThat(savedBillId, equalTo(FAILED));
     }
 
     @Test
@@ -92,7 +98,7 @@ public class JPABasedBillDAOTest {
     }
 
     @Test
-    public void testSavUpdateWhenCalledThenReturnTrueIfWasSuccess() {
+    public void testSavUpdateWhenCalledThenReturnMinusOneIfWasSuccess() {
         when(dao.merge(billEntity)).thenReturn(true);
 
         final boolean isUpdated = underTest.update(bill, ID_STR);

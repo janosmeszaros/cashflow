@@ -51,17 +51,16 @@ public class GenericHibernateDAO<T> {
      * @return <code>true</code> if successful.
      */
     @Transactional
-    public boolean persist(final T entity) {
+    public T persist(final T entity) {
         Validate.notNull(entity);
 
-        boolean isSuccess = true;
-        try {
-            getSession().persist(entity);
-        } catch (final HibernateException e) {
-            LOGGER.error("An exception occured during the operations. Exception message: " + e.getMessage());
-            isSuccess = false;
-        }
-        return isSuccess;
+        //        try {
+        getSession().persist(entity);
+        //        } catch (final HibernateException e) {
+        //            LOGGER.error("An exception occured during the operations. Exception message: " + e.getMessage());
+        //            isSuccess = false;
+        //        }
+        return entity;
     }
 
     /**

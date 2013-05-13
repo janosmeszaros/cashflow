@@ -47,6 +47,10 @@
 			"sZeroRecords" : '${zero_records}'
 		}
 	});
+	
+	$('[rel=tooltip]').tooltip('toggle');
+	$('[rel=tooltip]').tooltip('toggle');
+	
 </script>
 </body>
 
