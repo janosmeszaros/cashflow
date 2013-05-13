@@ -14,9 +14,9 @@ public interface StatementDAO {
      * Persists values to the database.
      * @param statement
      *            {@link Statement} to save.
-     * @return <code>true</code> if save was successful, <code>false</code> otherwise.
+     * @return the row ID of the newly inserted row, or -1 if an error occurred
      */
-    boolean save(Statement statement);
+    long save(Statement statement);
 
     /**
      * Updates a {@link Statement} with specified id.

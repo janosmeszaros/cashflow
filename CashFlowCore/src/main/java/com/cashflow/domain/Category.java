@@ -1,5 +1,6 @@
 package com.cashflow.domain;
 
+import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
@@ -13,8 +14,8 @@ public final class Category {
     private final String name;
 
     private Category(final Builder builder) {
-        this.categoryId = builder.categoryId;
-        this.name = builder.name;
+        categoryId = builder.categoryId;
+        name = builder.name;
     }
 
     public String getCategoryId() {
@@ -55,40 +56,26 @@ public final class Category {
      * @author Janos_Gyula_Meszaros
      */
     public static final class Builder {
-        private static final String DEFAULT_NAME = "uncategorized";
         private String categoryId = "0";
-        private String name = DEFAULT_NAME;
+        private final String name;
 
         /**
-         * Constructor with mandatory parameters. If empty then set to <code>DEFAULT_NAME</code>.
-         * @param name
-         *            name
+         * Constructor with mandatory parameters. If empty then throws {@link IllegalArgumentException}.
+         * @param name of the category
          */
         private Builder(final String name) {
-            if (validateName(name)) {
-                this.name = name;
-            }
-        }
-
-        private boolean validateName(final String name) {
-            return !name.isEmpty();
+            Validate.notEmpty(name);
+            this.name = name;
         }
 
         /**
          * Set ID for category if name is not default.
-         * @param categoryId
-         *            ID of {@link Category}.
+         * @param categoryId ID of {@link Category}.
          * @return {@link Builder}
          */
         public Builder categoryId(final String categoryId) {
-            if (isNameNotDefault()) {
-                this.categoryId = categoryId;
-            }
+            this.categoryId = categoryId;
             return this;
-        }
-
-        private boolean isNameNotDefault() {
-            return !DEFAULT_NAME.equals(name);
         }
 
         /**

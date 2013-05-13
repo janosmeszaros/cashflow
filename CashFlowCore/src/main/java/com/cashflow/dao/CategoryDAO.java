@@ -14,9 +14,9 @@ public interface CategoryDAO {
      * Persists a {@link Category} into the database.
      * @param category
      *            {@link Category} for save.
-     * @return <code>true</code> if save was successful, <code>false</code> otherwise.
+     * @return the row ID of the newly inserted row, or -1 if an error occurred
      */
-    boolean save(Category category);
+    long save(Category category);
 
     /**
      * Updates a {@link Category} row with specified id.
