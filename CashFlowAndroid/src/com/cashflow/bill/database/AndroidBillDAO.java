@@ -99,7 +99,7 @@ public class AndroidBillDAO implements BillDAO {
         Validate.notEmpty(bill.getBillId());
 
         final SQLiteDatabase database = provider.getWritableDb();
-        database.delete(TABLE_NAME, _ID + EQUALS, new String[] { bill.getBillId() });
+        database.delete(TABLE_NAME, _ID + EQUALS, new String[]{bill.getBillId()});
     }
 
     @Override
@@ -132,7 +132,7 @@ public class AndroidBillDAO implements BillDAO {
 
     private Cursor queryBillById(final String billId) {
         final SQLiteDatabase dataBase = provider.getReadableDb();
-        return dataBase.rawQuery(SELECT_BILL_BY_ID, new String[] { billId });
+        return dataBase.rawQuery(SELECT_BILL_BY_ID, new String[]{billId});
     }
 
     private ContentValues createContentValues(final Bill bill) {
@@ -152,6 +152,14 @@ public class AndroidBillDAO implements BillDAO {
 
     private List<Bill> createListFromCursor(final Cursor cursor) {
         final List<Bill> result = new ArrayList<Bill>();
+
+        while (cursor.moveToNext()) {
+            result.add(getBillFromCursor(cursor));
+        }
+        return result;
+    }
+
+    private Bill getBillFromCursor(final Cursor cursor) {
         final int idIndex = cursor.getColumnIndexOrThrow(BILL_ID_ALIAS);
         final int amountIndex = cursor.getColumnIndexOrThrow(COLUMN_NAME_AMOUNT);
         final int addedDateIndex = cursor.getColumnIndexOrThrow(COLUMN_NAME_DATE_ADDED);
@@ -162,25 +170,21 @@ public class AndroidBillDAO implements BillDAO {
         final int categoryNameIndex = cursor.getColumnIndexOrThrow(AbstractCategory.COLUMN_NAME_CATEGORY_NAME);
         final int categoryIdIndex = cursor.getColumnIndexOrThrow(AbstractCategory.CATEGORY_ID_ALIAS);
 
-        while (cursor.moveToNext()) {
-            final String billId = cursor.getString(idIndex);
-            final String amount = cursor.getString(amountIndex);
-            final String date = cursor.getString(addedDateIndex);
-            final String deadline = cursor.getString(deadLineDateIndex);
-            final String isPayedString = cursor.getString(isPayedIndex);
-            final String note = cursor.getString(noteIndex);
-            final String payedDate = cursor.getString(payedDateIndex);
-            final String categoryId = cursor.getString(categoryIdIndex);
-            final String categoryName = cursor.getString(categoryNameIndex);
+        final String billId = cursor.getString(idIndex);
+        final String amount = cursor.getString(amountIndex);
+        final String date = cursor.getString(addedDateIndex);
+        final String deadline = cursor.getString(deadLineDateIndex);
+        final String isPayedString = cursor.getString(isPayedIndex);
+        final String note = cursor.getString(noteIndex);
+        final String payedDate = cursor.getString(payedDateIndex);
+        final String categoryId = cursor.getString(categoryIdIndex);
+        final String categoryName = cursor.getString(categoryNameIndex);
 
-            final boolean isPayed = TRUE.equals(isPayedString);
-            final Category cat = Category.builder(categoryName).categoryId(categoryId).build();
+        final boolean isPayed = TRUE.equals(isPayedString);
+        final Category cat = Category.builder(categoryName).categoryId(categoryId).build();
 
-            final Bill bill = Bill.builder(amount, date, deadline).isPayed(isPayed).payedDate(payedDate).category(cat).note(note).billId(billId)
-                    .build();
-            result.add(bill);
-        }
-        return result;
+        final Bill bill = Bill.builder(amount, date, deadline).isPayed(isPayed).payedDate(payedDate).category(cat).note(note).billId(billId).build();
+        return bill;
     }
 
 }
