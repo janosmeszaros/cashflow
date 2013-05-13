@@ -21,6 +21,8 @@ import com.cashflow.domain.Category;
 
 public class JPABasedCategoryDAOTest {
     private static final String CATEGORY_NAME = "category";
+    private static final long CATEGORY_ID = 1L;
+    private static final long FAILED = -1L;
     private static final String ID_STR = "0";
     @Mock
     private GenericHibernateDAO<CategoryEntity> dao;
@@ -54,22 +56,26 @@ public class JPABasedCategoryDAOTest {
 
     @Test
     public void testSaveWhenCalledThenReturnTrueIfWasSuccess() {
-        when(dao.persist(categoryEntity)).thenReturn(true);
+        final CategoryEntity savedCategory = new CategoryEntity();
+        savedCategory.setCategoryId(CATEGORY_ID);
+        when(dao.persist(categoryEntity)).thenReturn(savedCategory);
 
-        final boolean isSaved = underTest.save(category);
+        final long savedCategoryId = underTest.save(category);
 
         verify(dao).persist(categoryEntity);
-        assertThat(isSaved, equalTo(true));
+        assertThat(savedCategoryId, equalTo(CATEGORY_ID));
     }
 
     @Test
     public void testSaveWhenCalledThenReturnFalseIfWasUnsuccess() {
-        when(dao.persist(categoryEntity)).thenReturn(false);
+        final CategoryEntity savedCategory = new CategoryEntity();
+        savedCategory.setCategoryId(FAILED);
+        when(dao.persist(categoryEntity)).thenReturn(savedCategory);
 
-        final boolean isSaved = underTest.save(category);
+        final long savedCategoryId = underTest.save(category);
 
         verify(dao).persist(categoryEntity);
-        assertThat(isSaved, equalTo(false));
+        assertThat(savedCategoryId, equalTo(FAILED));
     }
 
     @Test

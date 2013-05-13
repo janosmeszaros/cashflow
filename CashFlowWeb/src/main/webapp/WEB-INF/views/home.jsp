@@ -36,10 +36,6 @@
 
       <hr>
 
-
-      <footer>
-        <p>&copy; CashFlow 2013</p>
-      </footer>
-    </div> <!-- /container -->
+</div> <!-- /container -->
 
 

@@ -4,6 +4,15 @@
 <c:url var="url" value="/resources/" />
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
+<footer>
+  <div class="footer footer-wrapper navbar navbar-fixed-bottom">
+    <div class="container narrow row-fluid">
+      <p>&copy; CashFlow 2013</p>
+    </div>
+  </div>
+</footer>
+
+
 <!-- Le javascript
     ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
@@ -38,6 +47,10 @@
 			"sZeroRecords" : '${zero_records}'
 		}
 	});
+	
+	$('[rel=tooltip]').tooltip('toggle');
+	$('[rel=tooltip]').tooltip('toggle');
+	
 </script>
 </body>
 

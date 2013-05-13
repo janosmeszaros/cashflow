@@ -101,8 +101,7 @@ public abstract class AddStatementFragment extends RoboFragment {
     private void setCategorySpinner() {
         final List<Category> list = categoryDAO.getAllCategories();
 
-        final ArrayAdapter<Category> adapter =
-                new ArrayAdapter<Category>(getActivity(), android.R.layout.simple_spinner_dropdown_item, list);
+        final ArrayAdapter<Category> adapter = new ArrayAdapter<Category>(getActivity(), android.R.layout.simple_spinner_dropdown_item, list);
         categorySpinner.setAdapter(adapter);
     }
 
@@ -135,11 +134,12 @@ public abstract class AddStatementFragment extends RoboFragment {
             final Activity activity = getActivity();
 
             try {
-                if (statementDAO.save(statement)) {
+                if (statementDAO.save(statement) >= 0) {
                     LOG.debug("Statement saved: " + statement.toString());
                     activity.setResult(Activity.RESULT_OK);
                     activity.finish();
                 } else {
+                    LOG.debug("Statement save failed.");
                     showToast(activity, activity.getString(R.string.database_error));
                 }
             } catch (final IllegalArgumentException e) {

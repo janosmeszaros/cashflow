@@ -14,9 +14,9 @@ public interface BillDAO {
      * Persists values to the database.
      * @param bill
      *            {@link Bill} to save.
-     * @return <code>true</code> if save was successful, <code>false</code> otherwise.
+     * @return the row ID of the newly inserted row, or -1 if an error occurred
      */
-    boolean save(Bill bill);
+    long save(Bill bill);
 
     /**
      * Updates a row with specified id.

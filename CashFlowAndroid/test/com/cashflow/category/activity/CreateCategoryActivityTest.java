@@ -28,6 +28,7 @@ import com.cashflow.domain.Category;
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 import com.xtremelabs.robolectric.shadows.ShadowActivity;
+import com.xtremelabs.robolectric.shadows.ShadowButton;
 import com.xtremelabs.robolectric.shadows.ShadowTextView;
 import com.xtremelabs.robolectric.shadows.ShadowToast;
 
@@ -78,10 +79,11 @@ public class CreateCategoryActivityTest {
         final ShadowActivity shadowActivity = Robolectric.shadowOf(underTest);
         final EditText categoryName = (EditText) underTest.findViewById(R.id.categoryNameText);
         final Button submit = (Button) underTest.findViewById(R.id.createCategoryButton);
+        final ShadowButton submitShadow = (ShadowButton) Robolectric.shadowOf(submit);
         categoryName.setText(CATEGORY_NAME);
-        when(categoryDAO.save(CATEGORY)).thenReturn(true);
+        when(categoryDAO.save(CATEGORY)).thenReturn(1L);
 
-        submit.performClick();
+        submitShadow.performClick();
 
         verify(categoryDAO).save(CATEGORY);
         assertThat(underTest.isFinishing(), equalTo(true));
@@ -92,10 +94,11 @@ public class CreateCategoryActivityTest {
     public void testOnClickWhenCreateCategoryIsUnsuccessfulThenShouldShowToast() {
         final EditText categoryName = (EditText) underTest.findViewById(R.id.categoryNameText);
         final Button submit = (Button) underTest.findViewById(R.id.createCategoryButton);
+        final ShadowButton submitShadow = (ShadowButton) Robolectric.shadowOf(submit);
         categoryName.setText(CATEGORY_NAME);
-        when(categoryDAO.save(CATEGORY)).thenReturn(false);
+        when(categoryDAO.save(CATEGORY)).thenReturn(-1L);
 
-        submit.performClick();
+        submitShadow.performClick();
 
         verify(categoryDAO).save(CATEGORY);
         assertThat(underTest.isFinishing(), equalTo(false));
@@ -105,8 +108,9 @@ public class CreateCategoryActivityTest {
     @Test
     public void testOnClickWhenNameIsEmptyThenShouldShowToast() {
         final Button submit = (Button) underTest.findViewById(R.id.createCategoryButton);
+        final ShadowButton submitShadow = (ShadowButton) Robolectric.shadowOf(submit);
 
-        submit.performClick();
+        submitShadow.performClick();
 
         assertThat(underTest.isFinishing(), equalTo(false));
         assertThat(ShadowToast.shownToastCount(), equalTo(1));

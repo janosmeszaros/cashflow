@@ -37,6 +37,8 @@
       </c:set>
 
       <tag:submit_button />
+      
+      <tag:add_category_modal></tag:add_category_modal>
 
     </fieldset>
   </form:form>

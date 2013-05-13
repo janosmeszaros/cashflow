@@ -355,7 +355,7 @@ public class EditExpenseActivityTest {
         when(statementDAO.getStatementById(EXPENSE_ID)).thenReturn(EXPENSE_STATEMENT);
         when(statementDAO.getExpenses()).thenReturn(expenses);
         when(statementDAO.getIncomes()).thenReturn(incomes);
-        when(statementDAO.save((Statement) anyObject())).thenReturn(true);
+        when(statementDAO.save((Statement) anyObject())).thenReturn(1L);
         when(statementDAO.update((Statement) anyObject(), anyString())).thenReturn(true);
 
         when(categoryDAO.getAllCategories()).thenReturn(categories);

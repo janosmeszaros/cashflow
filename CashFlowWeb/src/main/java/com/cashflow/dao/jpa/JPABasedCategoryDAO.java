@@ -5,6 +5,9 @@ import java.util.List;
 
 import org.apache.commons.lang.Validate;
 import org.dozer.Mapper;
+import org.hibernate.HibernateException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -19,6 +22,7 @@ import com.cashflow.domain.Category;
  */
 @Component
 public class JPABasedCategoryDAO implements CategoryDAO {
+    private static final Logger LOGGER = LoggerFactory.getLogger(JPABasedCategoryDAO.class);
     private final Mapper mapper;
     private final GenericHibernateDAO<CategoryEntity> dao;
 
@@ -39,9 +43,20 @@ public class JPABasedCategoryDAO implements CategoryDAO {
     }
 
     @Override
-    public boolean save(final Category category) {
+    public long save(final Category category) {
         final CategoryEntity categoryEntity = generateCategoryEntity(category);
-        return dao.persist(categoryEntity);
+        long newCategoryId;
+
+        try {
+            final CategoryEntity persistedCategory = dao.persist(categoryEntity);
+            newCategoryId = persistedCategory.getCategoryId();
+        } catch (final HibernateException e) {
+            LOGGER.error("An exception occured during the operations. Exception message: " + e.getMessage());
+            newCategoryId = -1;
+        }
+        LOGGER.debug("Saved category id: " + newCategoryId);
+
+        return newCategoryId;
     }
 
     private CategoryEntity generateCategoryEntity(final Category category) {

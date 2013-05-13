@@ -48,6 +48,8 @@ import com.xtremelabs.robolectric.shadows.ShadowToast;
 @RunWith(RobolectricTestRunner.class)
 public class AddIncomeFragmentTest {
 
+    private static final long STATEMENT_ID = 1L;
+    private static final long FAILED_PERSIST = -1L;
     private static final String NOTES = "notes";
     private static final String DATE = "2013";
     private static final String AMOUNT = "1234";
@@ -105,7 +107,7 @@ public class AddIncomeFragmentTest {
         final Statement statement = Statement.builder(AMOUNT, DATE).note(NOTES).type(Income).category(CATEGORY)
                 .recurringInterval(RecurringInterval.none).build();
         setViewsValues(statement);
-        when(statementDAO.save(statement)).thenReturn(true);
+        when(statementDAO.save(statement)).thenReturn(STATEMENT_ID);
 
         shadowButton.performClick();
 
@@ -122,7 +124,7 @@ public class AddIncomeFragmentTest {
         final Statement statement = Statement.builder(AMOUNT, DATE).category(CATEGORY).note(NOTES).type(Income)
                 .recurringInterval(RecurringInterval.biweekly).build();
         setViewsValues(statement);
-        when(statementDAO.save(statement)).thenReturn(true);
+        when(statementDAO.save(statement)).thenReturn(STATEMENT_ID);
 
         shadowButton.performClick();
 
@@ -138,7 +140,7 @@ public class AddIncomeFragmentTest {
         final Statement statement = Statement.builder(INVALID_AMOUNT, DATE).category(CATEGORY).note(NOTES).type(Income)
                 .recurringInterval(RecurringInterval.none).build();
         setViewsValues(statement);
-        when(statementDAO.save(statement)).thenReturn(false);
+        when(statementDAO.save(statement)).thenReturn(FAILED_PERSIST);
 
         shadowButton.performClick();
 
